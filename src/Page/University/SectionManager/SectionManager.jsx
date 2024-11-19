@@ -1,27 +1,22 @@
-import React, {useState} from 'react'
+
 import Table from "../../../Component/TableComponent/Table";
 import TableBody from "../../../Component/TableBodyComponent/TableBody";
+import React from "react";
+
+const SectionManager = () => {
 
 
-const MajorManager = () => {
-    const headers = ["STT", "Tên khoa", "Tên ngành học", "Mã ngành học", "Số lượng sinh viên", "trạng thái", "Thao tác"];
+    const headers = ["STT", "Tên khoa", "trạng thái", "Thao tác"];
     const data = [
         {
             data: [
                 <a>1</a>,
                 "Công nghệ thông tin",
-                "Lập trình web",
-                "MN001",
-                "200",
                 "Hoạt động"
             ],
             actions: [
                 {className: 'btn-info', icon: "fa-solid fa-info", onClick: (item) => console.log('edit:', item)},
-                {
-                    className: 'btn-warning',
-                    icon: 'fa-regular fa-pen-to-square',
-                    onClick: (item) => console.log('edit:', item)
-                },
+                {className: 'btn-warning', icon: 'fa-regular fa-pen-to-square', onClick: (item) => console.log('edit:', item)},
                 {className: 'btn-danger', icon: 'fa-solid fa-trash', onClick: (item) => console.log('edit:', item)}
             ]
         },
@@ -37,31 +32,19 @@ const MajorManager = () => {
                                     <div className="col-4 mb-3">
                                         <div className="card">
                                             <div className="card-body">
-                                                <h1 className="card-title">Thông tin ngành</h1>
+                                                <h1 className="card-title">Thông tin Khoa</h1>
                                                 <form className="row g-3">
                                                     <div className="col-md-12">
                                                         <label htmlFor="_dm-inputEmail2"
                                                                className="form-label">Tên khoa</label>
                                                         <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên khoa"/>
+                                                               className="form-control"/>
                                                     </div>
-                                                    <div className="col-md-12">
+                                                    <div className="col-sm-12">
                                                         <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Tên ngành học</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên ngành học"/>
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Mã ngành học</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên ngành học"/>
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Số lượng sinh viên</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên ngành học"/>
+                                                               className="form-label">Mô tả</label>
+                                                        <textarea className="form-control" placeholder="Message"
+                                                                  rows="5"></textarea>
                                                     </div>
                                                     <div className="col-sm-12">
                                                         <label htmlFor="status" className="form-label">Trạng
@@ -103,9 +86,10 @@ const MajorManager = () => {
                                     <div className="col-8 mb-3">
                                         <div className="card mb-3">
                                             <div className="card-header -4 mb-3">
-                                                <h1 className="card-title mb-3">Danh sách ngành</h1>
+                                                <h1 className="card-title mb-3">Danh sách Khoa</h1>
                                                 <div className="row">
                                                     <div className="col-md-6 d-flex gap-1 align-items-center mb-3">
+
                                                     </div>
                                                     <div
                                                         className="col-md-6 d-flex gap-1 align-items-center justify-content-md-end mb-3">
@@ -117,13 +101,32 @@ const MajorManager = () => {
                                                             <button className="btn btn-icon btn-outline-light"><i
                                                                 className="demo-pli-download-from-cloud fs-5"></i>
                                                             </button>
-
+                                                            <button
+                                                                className="btn btn-icon btn-outline-light dropdown-toggle dropdown-toggle-split"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span className="visually-hidden">Toggle Dropdown</span>
+                                                            </button>
+                                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                                <li><a className="dropdown-item" href="#">Action</a>
+                                                                </li>
+                                                                <li><a className="dropdown-item" href="#">Another
+                                                                    action</a>
+                                                                </li>
+                                                                <li><a className="dropdown-item" href="#">Something else
+                                                                    here</a></li>
+                                                                <li>
+                                                                    <hr className="dropdown-divider"/>
+                                                                </li>
+                                                                <li><a className="dropdown-item" href="#">Separated
+                                                                    link</a>
+                                                                </li>
+                                                            </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="card-body">
-                                                <div className="table-responsove ">
+                                            <div className="table-responsove">
                                                     <Table headers={headers}>
                                                         <TableBody rows={data}/>
                                                     </Table>
@@ -161,8 +164,7 @@ const MajorManager = () => {
                     </div>
                 </div>
             </section>
-
         </>
     )
 }
-export default MajorManager;
+export default SectionManager;

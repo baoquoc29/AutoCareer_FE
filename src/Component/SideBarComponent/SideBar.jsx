@@ -25,7 +25,7 @@ export function SideBar({userName, userRole, profileImg, menuItems,caption }) {
                                         <a href="#"
                                            className={`mininav-toggle nav-link ${isOpen[index] ? 'active' : 'collapsed'}`}
                                            onClick={()=>toggleMenu(index)}><i
-                                            className={`demo-pli-${item.icon} fs-5 me-2`}></i>
+                                            className={`${item.icon}`}></i>
                                             <span key={index} className="nav-label ms-1">{item.label}</span>
                                         </a>
                                         {item.subMenu && (
@@ -34,7 +34,7 @@ export function SideBar({userName, userRole, profileImg, menuItems,caption }) {
                                                 {item.subMenu.map((item, index) => (
                                                     <li key={index} className="nav-item">
                                                         <NavLink to={item.link} className="nav-link">
-                                                            <i className={`demo-pli-${item.icon} fs-5 me-2`}></i>
+                                                            <i className={`${item.icon}`}></i>
                                                             {item.label}
                                                         </NavLink>
                                                     </li>

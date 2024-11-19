@@ -12,6 +12,10 @@ import LockScreen from "../Component/LockScreenComponent/LockScreen";
 import PageError from "../Page/PageError404/PageError";
 import Profile from "../Page/ProfileUser/Profile";
 import MajorManager from "../Page/University/MajorManager/MajorManager";
+import InstructionalManager from "../Page/University/InstructionalManager/InstructionalManager";
+import SectionManager from "../Page/University/SectionManager/SectionManager";
+import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager";
+import InstructionalEdit from "../Page/University/InstructionalManager/InstructionalEdit/InstructionalEdit";
 
 export function AppRouter() {
     return (
@@ -29,6 +33,10 @@ export function AppRouter() {
                     <Route path={"/university"} element={<University/>}/>
                     <Route path={"/profile-user"} element={<Profile/>}/>
                     <Route path={"/major-manager"} element={<MajorManager/>}/>
+                    <Route path={"/instructional-manager"} element={<InstructionalManager/>}/>
+                    <Route path={"/instructional-edit"} element={<InstructionalEdit/>}/>
+                    <Route path={"/section-manager"} element={<SectionManager/>}/>
+                    <Route path={"/workshop-manager"} element={<WorkShopManager/>}/>
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
             </Routes>

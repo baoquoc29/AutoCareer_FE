@@ -11,10 +11,37 @@ export function UniversityTemplate() {
     };
     const menuItems = [
         {
-            label: 'Các màn hình chính',
-            icon: '',
+            label: 'Trường đại học',
+            icon: 'fa-solid fa-school',
             subMenu: [
-                { label: 'Quản lý ngành học', link: '/major-manager', icon: '' },
+                {label: 'Danh sách giáo vụ', link: '/instructional-manager', icon: ''},
+                {label: 'Danh sách khoa', link: '/section-manager', icon: ''},
+                {label: 'Danh sách ngành ', link: '/major-manager', icon: ''},
+            ]
+        },
+        {
+            label: 'Sự kiện',
+            icon: 'fa-solid fa-store',
+            subMenu: [
+                {label: 'Danh sách sự kiện', link: '/workshop-manager', icon: ''},
+                {label: 'Công ty tham gia', link: '/section-manager', icon: ''},
+                {label: 'Công ty chờ duyệt', link: '/major-manager', icon: ''},
+            ]
+        },
+        {
+            label: 'Công việc',
+            icon: 'fa-solid fa-briefcase',
+            subMenu: [
+                {label: 'Danh sách công việc', link: '/workshop-manager', icon: ''},
+                {label: 'Đề xuất công việc', link: '/section-manager', icon: ''},
+                {label: 'Yêu cầu hợp tác', link: '/section-manager', icon: ''}
+            ]
+        },
+        {
+            label: 'Thống kê',
+            icon: 'home',
+            subMenu: [
+                {label: '123', link: '', icon: ''},
             ]
         }
     ];
@@ -22,14 +49,14 @@ export function UniversityTemplate() {
         <>
             <div id="root" className={`root tm--primary-mn ${isMenuOpen ? 'mn--max' : 'mn--min'}`}>
                 <Header toggleSidebar={toggleSidebar} link={'/university'}/>
-                    <SideBar
-                        userName="Đại học Kinh Tế Quốc Dân"
-                        userRole="University"
-                        profileImg="./assets/img/profile-photos/1.png"
-                        caption="Quản lý trường đại học"
-                        menuItems={menuItems}
-                    />
-                    <Outlet/>
+                <SideBar
+                    userName="Đại học Kinh Tế Quốc Dân"
+                    userRole="University"
+                    profileImg="./assets/img/profile-photos/1.png"
+                    caption="Quản lý trường đại học"
+                    menuItems={menuItems}
+                />
+                <Outlet/>
             </div>
         </>
     )
