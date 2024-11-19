@@ -18,7 +18,7 @@ const TableBody = ({rows}) => {
                         {row.actions.map((action, actionIndex) => (
                             <button
                                 type="button"
-                                className={`btn ${action.className}`}
+                                className={`btn mx-1 ${action.className}`}
                                 key={actionIndex}
                                 onClick={() => handleActionClick(action, row)}
                             >
