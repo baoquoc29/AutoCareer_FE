@@ -1,14 +1,37 @@
 import React from 'react';
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import Button from "../ButtonComponent/Button";
+import {logoutUser} from "../../Redux/actions/UserThunk";
+import {TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
 
-export function Header({toggleSidebar,link}) {
+
+export function Header({toggleSidebar, link}) {
+    const {userData} = useSelector((state) => state.UserReducer);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem(TOKEN);
+        if (token) {
+            dispatch(logoutUser(token));
+            localStorage.removeItem(TOKEN);
+            localStorage.removeItem(USER_LOGIN);
+            setTimeout(() => {
+                navigate('/');
+            }, 2000)
+
+        } else {
+            console.log('No token found');
+        }
+    };
     return (
         <>
             <header className="header">
                 <div className="header__inner">
                     <div className="header__brand">
                         <div className="brand-wrap">
-                            <NavLink to={link}  className="brand-img stretched-link">
+                            <NavLink to={link} className="brand-img stretched-link">
                                 <img src="./assets/img/logo.svg" alt="Nifty Logo" className="Career Bridge" width="16"
                                      height="16"/>
                             </NavLink>
@@ -125,14 +148,15 @@ export function Header({toggleSidebar,link}) {
                                                  loading="lazy"/>
                                         </div>
                                         <div className="flex-grow-1 ms-3">
-                                            <h5 className="mb-0">Aaron Chavez</h5>
+                                            <h5 className="mb-0">{userData.username.length > 20 ? userData.username.slice(0, 15) + "..." : userData.username}</h5>
                                             <span
-                                                className="text-body-secondary fst-italic">Vai trò: University</span>
+                                                className="text-body-secondary fst-italic">Vai trò:{userData.role.name}</span>
                                         </div>
                                     </div>
                                     <div>
                                         <div className="list-group list-group-borderless h-100 py-3">
-                                            <NavLink to={'/profile-user'} className="list-group-item list-group-item-action">
+                                            <NavLink to={'/profile-user'}
+                                                     className="list-group-item list-group-item-action">
                                                 <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                             </NavLink>
                                             <NavLink
@@ -140,10 +164,11 @@ export function Header({toggleSidebar,link}) {
                                                 to={"/lock-screen"}>
                                                 <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
                                             </NavLink>
-                                            <NavLink to={"/"} href="#"
-                                                     className="list-group-item list-group-item-action">
-                                                <i className="demo-pli-unlock fs-5 me-2"></i> Đăng xuất
-                                            </NavLink>
+                                            <Button onClick={handleLogout}
+                                                    className={"list-group-item list-group-item-action"}>
+                                                Đăng xuất
+                                            </Button>
+
                                         </div>
                                     </div>
 

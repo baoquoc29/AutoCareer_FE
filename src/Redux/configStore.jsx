@@ -1,16 +1,18 @@
 import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
-import createMiddleWareSaga from 'redux-saga';
-import {rootSaga} from "./actions/rootSaga";
+import {thunk} from "redux-thunk";
+import {UserReducer} from "./reducers/UserReducer";
+import {SectionReducer} from "./reducers/SectionReducer";
+import {LoadingReducer} from "./reducers/LoadingReducer";
 
 
 
-const middlewareSaga = createMiddleWareSaga();
 const rootReducer = combineReducers({
-
+    UserReducer,
+    SectionReducer,
+    LoadingReducer,
 });
 
-const store = legacy_createStore(rootReducer, applyMiddleware(middlewareSaga));
+const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
 
 
-middlewareSaga.run(rootSaga);
 export default store;

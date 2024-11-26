@@ -16,6 +16,7 @@ import InstructionalManager from "../Page/University/InstructionalManager/Instru
 import SectionManager from "../Page/University/SectionManager/SectionManager";
 import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager";
 import InstructionalEdit from "../Page/University/InstructionalManager/InstructionalEdit/InstructionalEdit";
+import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
 
 export function AppRouter() {
     return (
@@ -29,7 +30,7 @@ export function AppRouter() {
                     <Route path={"/reset-password"} element={<PasswordReminder/>}/>
                     <Route path={"/lock-screen"} element={<LockScreen/>}/>
                 </Route>
-                <Route element={<UniversityTemplate/>}>
+                <Route element={<PrivateRoute> <UniversityTemplate/> </PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
                     <Route path={"/profile-user"} element={<Profile/>}/>
                     <Route path={"/major-manager"} element={<MajorManager/>}/>
