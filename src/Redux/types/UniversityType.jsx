@@ -1,0 +1,1 @@
+export const SET_UNIVERSITY = "SET_UNIVERSITY";

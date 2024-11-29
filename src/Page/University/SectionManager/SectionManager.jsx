@@ -1,19 +1,39 @@
-import Table from "../../../Component/TableComponent/Table";
-import TableBody from "../../../Component/TableBodyComponent/TableBody";
-import React, {useEffect} from "react";
+
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {create_section, get_all_sections} from "../../../Redux/actions/SectionThunk";
 import {useFormik} from "formik";
-import FormInput from "../../../Component/FormInputComponent/FormInputComponent";
+import {Button, Card, Form, Input, Pagination, Space, Table} from 'antd';
+import {DeleteOutlined, DownloadOutlined, EditOutlined, InfoCircleOutlined, ReloadOutlined, SearchOutlined} from "@ant-design/icons";
+import {doc as XLSX} from "prettier";
+import * as Yup from "yup";
 
 
 const SectionManager = () => {
     const dispatch = useDispatch();
     const sections = useSelector((state) => state.SectionReducer.sections);
+    const [searchText, setSearchText] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
 
     useEffect(() => {
         dispatch(get_all_sections())
     }, []);
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchText(value);
+        const filtered = sections.filter((section) =>
+            section.name.toLowerCase().includes(value.toLowerCase()) ||
+            section.description.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredData(filtered);
+    };
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(filteredData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sections");
+        XLSX.writeFile(workbook, "Sections.xlsx");
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -21,27 +41,54 @@ const SectionManager = () => {
             description: "",
             status: "ACTIVE"
         },
+        validationSchema: Yup.object({
+            name: Yup.string()
+                .required('Tên khoa là bắt buộc')
+                .min(3, 'Tên khoa phải có ít nhất 3 ký tự'),
+            description: Yup.string().required('Mô tả là bắt buộc'),
+        }),
         onSubmit: (values) => {
             dispatch(create_section(values));
+            console.log(values)
         }
-    })
+    });
 
-    const headers = ["STT", "Tên khoa", "trạng thái", "Thao tác"];
-    const row = sections.map((section, index) => ({
-        data: [
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid
-            <a key={section.id}>{index + 1}</a>, section.name, section.status ? "Hoạt động" : "Tạm ngưng"
-        ],
-        actions: [
-            {className: 'btn-info', icon: "fa-solid fa-info", onClick: (item) => console.log('edit:', item)},
-            {
-                className: 'btn-warning',
-                icon: 'fa-regular fa-pen-to-square',
-                onClick: (item) => console.log('edit:', item)
-            },
-            {className: 'btn-danger', icon: 'fa-solid fa-trash', onClick: (item) => console.log('edit:', item)}
-        ]
-    }))
+    const columns = [
+        {title: 'STT', dataIndex: 'stt', key: 'stt', sorter: (a, b) => a.stt - b.stt},
+        {title: 'Tên khoa', dataIndex: 'name', key: 'name', sorter: (a, b) => a.name.localeCompare(b.name)},
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            sorter: (a, b) => a.status.localeCompare(b.status),
+            render: (text) => (text === 'ACTIVE' ? 'Hoạt động' : 'Tạm ngưng')
+        },
+        {
+            title: 'Thao tác', key: 'actions', render: (text, record) => (<Space size="middle">
+                    <Button color="primary" variant="outlined" icon={<InfoCircleOutlined/>}
+                            onClick={() => console.log('info:', record)} disabled={record.status !== 'ACTIVE'}/>
+                    <Button color="default" variant="outlined" icon={<EditOutlined/>}
+                            onClick={() => console.log('edit:', record)} disabled={record.status !== 'ACTIVE'}/>
+                    {record.status === 'ACTIVE' ? (
+                        <Button color="danger" variant="outlined" icon={<DeleteOutlined/>}
+                                onClick={() => console.log('delete:', record)}/>
+                    ) : (
+                        <Button
+                            icon={<ReloadOutlined/>}
+                            onClick={() => console.log('restore:', record)}
+                        />
+                    )}
+                </Space>
+            ),
+        },
+    ];
+
+    const data = sections.map((section, index) => ({
+        key: section.id,
+        stt: index + 1,
+        name: section.name,
+        status: section.status,
+    }));
     return (
         <>
             <section id="content" className="content">
@@ -50,135 +97,52 @@ const SectionManager = () => {
                         <section>
                             <div className="container mt-5">
                                 <div className="row">
-                                    <div className="col-4 mb-3">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h1 className="card-title">Thông tin Khoa</h1>
-                                                <form className="row g-3" onSubmit={formik.handleSubmit}>
-                                                    <div className="col-md-12">
-                                                        <FormInput
-                                                            onChange={formik.handleChange}
-                                                            name="name"
-                                                            label="Name"
-                                                            value={formik.values.name}/>
-                                                    </div>
-                                                    <div className="col-sm-12">
-                                                        <FormInput
-                                                            onChange={formik.handleChange}
-                                                            name="description"
-                                                            label="Description"
-                                                            value={formik.values.description}/>
-                                                    </div>
-                                                    <div className="col-sm-12">
-                                                        <label htmlFor="status" className="form-label">Trạng
-                                                            thái</label>
-                                                        <div>
-                                                            <div className="form-check form-check-inline">
-                                                                <input
-                                                                    type="radio"
-                                                                    id="statusActive"
-                                                                    name="status"
-                                                                    value="active"
-                                                                    className="form-check-input"
-                                                                    checked
-                                                                />
-                                                                <label className="form-check-label"
-                                                                       htmlFor="statusActive">Hoạt động</label>
-                                                            </div>
-                                                            <div className="form-check form-check-inline">
-                                                                <input
-                                                                    type="radio"
-                                                                    id="statusInactive"
-                                                                    name="status"
-                                                                    value="inactive"
-                                                                    className="form-check-input"
-                                                                />
-                                                                <label className="form-check-label"
-                                                                       htmlFor="statusInactive">Không hoạt động</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <button type="submit" className="btn btn-primary"> Thêm</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-8 mb-3">
-                                        <div className="card mb-3">
-                                            <div className="card-header -4 mb-3">
-                                                <h1 className="card-title mb-3">Danh sách Khoa</h1>
-                                                <div className="row">
-                                                    <div className="col-md-6 d-flex gap-1 align-items-center mb-3">
+                                    <div className="col-md-4 mb-3 border-5">
+                                        <Card title="Thông tin Khoa">
+                                            <Form layout="vertical" onFinish={formik.handleSubmit} requiredMark={true}
+                                                  name="trigger">
+                                                <Form.Item hasFeedback label="Tên khoa" name="Tên khoa"
+                                                           validateTrigger="onBlur" required={true}
+                                                           rules={[
+                                                               {
+                                                                   required: true,
+                                                                   message: "Tên khoa không được bỏ trống"
+                                                               },
+                                                               {min: 10, message: "Tên khoa phải có ít nhất 10 ký tự"},
+                                                               {max: 100, message: "Tên khoa tối đa 100 ký tự"}]}
+                                                           help={formik.errors.name && formik.touched.name ? formik.errors.name : null}
+                                                           validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}>
 
-                                                    </div>
-                                                    <div
-                                                        className="col-md-6 d-flex gap-1 align-items-center justify-content-md-end mb-3">
-                                                        <div className="form-group">
-                                                            <input type="text" placeholder="Search..."
-                                                                   className="form-control" autoComplete="off"/>
-                                                        </div>
-                                                        <div className="btn-group">
-                                                            <button className="btn btn-icon btn-outline-light"><i
-                                                                className="demo-pli-download-from-cloud fs-5"></i>
-                                                            </button>
-                                                            <button
-                                                                className="btn btn-icon btn-outline-light dropdown-toggle dropdown-toggle-split"
-                                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                                <span className="visually-hidden">Toggle Dropdown</span>
-                                                            </button>
-                                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                                <li><a className="dropdown-item" href="#">Action</a>
-                                                                </li>
-                                                                <li><a className="dropdown-item" href="#">Another
-                                                                    action</a>
-                                                                </li>
-                                                                <li><a className="dropdown-item" href="#">Something else
-                                                                    here</a></li>
-                                                                <li>
-                                                                    <hr className="dropdown-divider"/>
-                                                                </li>
-                                                                <li><a className="dropdown-item" href="#">Separated
-                                                                    link</a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+                                                    <Input onChange={formik.handleChange} value={formik.values.name}
+                                                           name="name"/>
+                                                </Form.Item>
+
+                                                <Form.Item label="Mô tả" name="description">
+                                                    <Input.TextArea onChange={formik.handleChange}
+                                                                    value={formik.values.description}
+                                                                    name="description" autoSize={{minRows: 8}}/>
+                                                </Form.Item>
+                                                <Form.Item>
+                                                    <Button type="primary" htmlType="submit">Thêm</Button>
+                                                </Form.Item>
+                                            </Form>
+                                        </Card>
+                                    </div>
+                                    <div className="col-md-8 mb-3">
+                                        <Card title="Danh sách Khoa">
+                                            <div className="table-responsive">
+                                                <div className="d-flex justify-content-between mb-3">
+                                                    <Input placeholder="Search..." value={searchText}
+                                                           onChange={handleSearch} prefix={<SearchOutlined/>}
+                                                           style={{width: 200}}/>
+                                                    <Button icon={<DownloadOutlined/>} onClick={exportToExcel}>Xuất sang
+                                                        Excel</Button>
                                                 </div>
+                                                <Table columns={columns} dataSource={data} pagination={false}/>
                                             </div>
-                                            <div className="card-body">
-                                                <div className="table-responsove">
-                                                    <Table headers={headers}>
-                                                        <TableBody rows={row}/>
-                                                    </Table>
-                                                </div>
-                                                <nav className="text-align-center mt-5" aria-label="Table navigation">
-                                                    <ul className="pagination justify-content-center">
-                                                        <li className="page-item disabled">
-                                                            <a className="page-link">Previous</a>
-                                                        </li>
-                                                        <li className="page-item active" aria-current="page">
-                                                            <span className="page-link">1</span>
-                                                        </li>
-                                                        <li className="page-item"><a className="page-link"
-                                                                                     href="#">2</a>
-                                                        </li>
-                                                        <li className="page-item"><a className="page-link"
-                                                                                     href="#">3</a>
-                                                        </li>
-                                                        <li className="page-item disabled"><a className="page-link"
-                                                                                              href="#">...</a></li>
-                                                        <li className="page-item"><a className="page-link"
-                                                                                     href="#">5</a>
-                                                        </li>
-                                                        <li className="page-item">
-                                                            <a className="page-link" href="#">Next</a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
-                                            </div>
-                                        </div>
+                                            <Pagination className="text-center mt-5" total={sections.length}
+                                                        pageSize={5} showSizeChanger={false}/>
+                                        </Card>
                                     </div>
                                 </div>
                             </div>

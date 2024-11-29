@@ -1,13 +1,5 @@
-import {userService} from "../../Service/UserService";
-import {
-    DISPLAY_LOADING, HIDE_LOADING,
-    LOGIN_SUCCESS,
-    LOGOUT_SUCCESS,
-    STATUS_CODE,
-    TOKEN,
-    USER_LOGIN
-} from "../../Utils/Setting/Config";
-import {delay} from "framer-motion";
+import {DISPLAY_LOADING, HIDE_LOADING, LOGIN_SUCCESS, LOGOUT_SUCCESS, STATUS_CODE, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
+import {userService} from "../../Service/UserService/UserService";
 
 
 export const loginUser = (username, password) => async (dispatch) => {
@@ -15,6 +7,7 @@ export const loginUser = (username, password) => async (dispatch) => {
         const res = await userService.login(username, password);
         console.log(res);
         if (res.data && res.data.accessToken) {
+            console.log(res.data)
             const {accessToken, username: user, role} = res.data;
             const userDetails = {
                 username: user,

@@ -1,7 +1,12 @@
-const WorkShopManager=()=> {
+import React from 'react';
+
+
+
+const WorkShopManager = () => {
+
     return (
         <>
-            <h1>WorkShopManager</h1>
+      <p>work shop</p>
         </>
     )
 }

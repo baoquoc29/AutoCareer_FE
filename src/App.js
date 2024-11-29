@@ -1,7 +1,9 @@
 import {createBrowserHistory} from 'history'
 import './App.css';
 import {AppRouter} from "./Router/AppRouter";
-import {Loading} from "./Component/LoadingComponent/Loading";
+import {Loading} from "./Component/LoadingComponent/Loading"
+import 'react-toastify/dist/ReactToastify.css';
+import {ToastContainer} from "react-toastify";
 export const history = createBrowserHistory();
 
 function App() {
@@ -9,6 +11,7 @@ function App() {
         <>
             <Loading />
             <AppRouter/>
+            <ToastContainer />
         </>
     );
 }
