@@ -1,4 +1,4 @@
-import {baseService} from "./BaseService";
+import {baseService} from "../BaseService";
 
 export class UserService extends baseService {
     // eslint-disable-next-line no-useless-constructor

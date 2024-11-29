@@ -1,31 +1,75 @@
-import React, {useState} from 'react'
-import Table from "../../../Component/TableComponent/Table";
-import TableBody from "../../../Component/TableBodyComponent/TableBody";
+import React, {useEffect, useState} from 'react'
+import {useDispatch, useSelector} from "react-redux";
+import {create_section} from "../../../Redux/actions/SectionThunk";
+import {doc as XLSX} from "prettier";
+import {Button, Card, Input} from "antd";
+import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
+import {create_major, get_all_majors, get_major_id} from "../../../Redux/actions/MajorThunk";
+import MajorTable from "./MajorTable";
+import MajorForm from "./MajorForm";
+import MajorDetailModal from "./Modal";
+import {toast} from "react-toastify";
 
 
 const MajorManager = () => {
-    const headers = ["STT", "Tên khoa", "Tên ngành học", "Mã ngành học", "Số lượng sinh viên", "trạng thái", "Thao tác"];
-    const data = [
-        {
-            data: [
-                <a>1</a>,
-                "Công nghệ thông tin",
-                "Lập trình web",
-                "MN001",
-                "200",
-                "Hoạt động"
-            ],
-            actions: [
-                {className: 'btn-info', icon: "fa-solid fa-info", onClick: (item) => console.log('edit:', item)},
-                {
-                    className: 'btn-warning',
-                    icon: 'fa-regular fa-pen-to-square',
-                    onClick: (item) => console.log('edit:', item)
-                },
-                {className: 'btn-danger', icon: 'fa-solid fa-trash', onClick: (item) => console.log('edit:', item)}
-            ]
-        },
-    ];
+    const dispatch = useDispatch();
+    const majors = useSelector((state) => state.MajorReducer.majors);
+    const [selectedMajor, setSelectedMajor] = useState(null);
+    const [searchText, setSearchText] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        dispatch(get_all_majors());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (selectedMajor) {
+            dispatch(get_major_id(selectedMajor.id));
+        }
+    }, [selectedMajor, dispatch]);
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchText(value);
+        const filtered = majors.filter((section) =>
+            section.name.toLowerCase().includes(value.toLowerCase()) ||
+            section.description.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredData(filtered);
+    };
+
+    const handleInfo = (record) => {
+        setSelectedMajor(record);
+        setOpen(true);
+    };
+
+    const exportToExcel = () => {
+        if (filteredData && filteredData.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(filteredData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Chuyên ngành');
+            XLSX.writeFile(workbook, 'Chuyên Ngành.xlsx');
+        } else {
+          toast.error("'Không có dữ liệu để xuất Excel!'") ;
+        }
+    };
+    const data = majors.map((majors, index) => ({
+        id: majors.id,
+        stt: index + 1,
+        name: majors.name,
+        code: majors.code,
+        numberStudent: majors.numberStudent,
+        status: majors.status,
+        description: majors.description,
+    }));
+    const handleSubmit = (values) => {
+        dispatch(create_major(values))
+            .then(()=>{
+                dispatch(get_all_majors());
+                toast.success("Thêm chuyên ngành thành công")
+            })
+    };
     return (
         <>
             <section id="content" className="content">
@@ -34,126 +78,23 @@ const MajorManager = () => {
                         <section>
                             <div className="container mt-5">
                                 <div className="row">
-                                    <div className="col-4 mb-3">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h1 className="card-title">Thông tin ngành</h1>
-                                                <form className="row g-3">
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Tên khoa</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên khoa"/>
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Tên ngành học</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên ngành học"/>
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Mã ngành học</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên ngành học"/>
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="_dm-inputEmail2"
-                                                               className="form-label">Số lượng sinh viên</label>
-                                                        <input id="_dm-inputEmail2" type="email"
-                                                               className="form-control" placeholder="Tên ngành học"/>
-                                                    </div>
-                                                    <div className="col-sm-12">
-                                                        <label htmlFor="status" className="form-label">Trạng
-                                                            thái</label>
-                                                        <div>
-                                                            <div className="form-check form-check-inline">
-                                                                <input
-                                                                    type="radio"
-                                                                    id="statusActive"
-                                                                    name="status"
-                                                                    value="active"
-                                                                    className="form-check-input"
-                                                                    checked
-                                                                />
-                                                                <label className="form-check-label"
-                                                                       htmlFor="statusActive">Hoạt động</label>
-                                                            </div>
-                                                            <div className="form-check form-check-inline">
-                                                                <input
-                                                                    type="radio"
-                                                                    id="statusInactive"
-                                                                    name="status"
-                                                                    value="inactive"
-                                                                    className="form-check-input"
-                                                                />
-                                                                <label className="form-check-label"
-                                                                       htmlFor="statusInactive">Không hoạt động</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <button type="submit" className="btn btn-primary"> Thêm
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
+                                    <div className="col-lg-4 mb-3 border-5">
+                                        <Card title="Thông tin chuyên ngành">
+                                            <MajorForm onSubmit={handleSubmit}/>
+                                        </Card>
                                     </div>
-                                    <div className="col-8 mb-3">
-                                        <div className="card mb-3">
-                                            <div className="card-header -4 mb-3">
-                                                <h1 className="card-title mb-3">Danh sách ngành</h1>
-                                                <div className="row">
-                                                    <div className="col-md-6 d-flex gap-1 align-items-center mb-3">
-                                                    </div>
-                                                    <div
-                                                        className="col-md-6 d-flex gap-1 align-items-center justify-content-md-end mb-3">
-                                                        <div className="form-group">
-                                                            <input type="text" placeholder="Search..."
-                                                                   className="form-control" autoComplete="off"/>
-                                                        </div>
-                                                        <div className="btn-group">
-                                                            <button className="btn btn-icon btn-outline-light"><i
-                                                                className="demo-pli-download-from-cloud fs-5"></i>
-                                                            </button>
-
-                                                        </div>
-                                                    </div>
+                                    <div className="col-lg-8 mb-3">
+                                        <Card title="Danh sách chuyên ngành">
+                                            <div className="table-responsive">
+                                                <div className="d-flex mb-3">
+                                                    <Input  placeholder="Search..." value={searchText}
+                                                           onChange={handleSearch} prefix={<SearchOutlined/>}/>
+                                                    <Button type="default" icon={<DownloadOutlined/>}
+                                                            onClick={exportToExcel}>Export to Excel</Button>
                                                 </div>
+                                                <MajorTable data={data} onInfo={handleInfo}/>
                                             </div>
-                                            <div className="card-body">
-                                                <div className="table-responsove ">
-                                                    <Table headers={headers}>
-                                                        <TableBody rows={data}/>
-                                                    </Table>
-                                                </div>
-                                                <nav className="text-align-center mt-5" aria-label="Table navigation">
-                                                    <ul className="pagination justify-content-center">
-                                                        <li className="page-item disabled">
-                                                            <a className="page-link">Previous</a>
-                                                        </li>
-                                                        <li className="page-item active" aria-current="page">
-                                                            <span className="page-link">1</span>
-                                                        </li>
-                                                        <li className="page-item"><a className="page-link"
-                                                                                     href="#">2</a>
-                                                        </li>
-                                                        <li className="page-item"><a className="page-link"
-                                                                                     href="#">3</a>
-                                                        </li>
-                                                        <li className="page-item disabled"><a className="page-link"
-                                                                                              href="#">...</a></li>
-                                                        <li className="page-item"><a className="page-link"
-                                                                                     href="#">5</a>
-                                                        </li>
-                                                        <li className="page-item">
-                                                            <a className="page-link" href="#">Next</a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
-                                            </div>
-                                        </div>
+                                        </Card>
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +102,7 @@ const MajorManager = () => {
                     </div>
                 </div>
             </section>
-
+            <MajorDetailModal open={open} onClose={() => setOpen(false)} major={selectedMajor} />
         </>
     )
 }

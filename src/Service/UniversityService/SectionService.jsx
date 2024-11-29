@@ -1,4 +1,4 @@
-import {baseService} from "./BaseService";
+import {baseService} from "../BaseService";
 
 
 export class SectionService extends baseService {

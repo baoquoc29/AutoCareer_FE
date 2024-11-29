@@ -1,4 +1,4 @@
-import {sectionService} from "../../Service/SectionService";
+import {sectionService} from "../../Service/UniversityService/SectionService";
 import {CREATE_SECTION, SET_SECTIONS} from "../types/SectionType";
 
 export const get_all_sections = () => {
@@ -22,6 +22,7 @@ export const create_section = (formData) => {
                 type: CREATE_SECTION,
                 payload: res.data
             })
+            dispatch(get_all_sections());
         } catch (error) {
             console.log(error);
         }
