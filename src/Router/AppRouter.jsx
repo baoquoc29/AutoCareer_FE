@@ -10,7 +10,7 @@ import { University } from "../Page/University/University";
 import { UniversityTemplate } from "../Template/UniversityTemplate/UniversityTemplate";
 import LockScreen from "../Component/LockScreenComponent/LockScreen";
 import PageError from "../Page/PageError404/PageError";
-import Profile from "../Page/ProfileUser/Profile";
+import Profile from "../Page/ProfileUser/ProfileUniversity/Profile";
 import MajorManager from "../Page/University/MajorManager/MajorManager";
 import InstructionalManager from "../Page/University/InstructionalManager/InstructionalManager";
 import SectionManager from "../Page/University/SectionManager/SectionManager";
