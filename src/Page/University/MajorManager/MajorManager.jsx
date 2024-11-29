@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {create_section} from "../../../Redux/actions/SectionThunk";
 import {doc as XLSX} from "prettier";
 import {Button, Card, Input} from "antd";
 import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
