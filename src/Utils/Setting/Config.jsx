@@ -1,11 +1,11 @@
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export const DISPLAY_LOADING = 'DISPLAY_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 
-export const DOMAIN = ''
+export const DOMAIN = 'http://localhost:1111/auto_career'
 export const TOKEN = 'accessToken'
 
 export const USER_LOGIN = 'USER_LOGIN';
