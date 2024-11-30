@@ -1,7 +1,7 @@
 import {Button, Space, Table} from "antd";
-import {DeleteOutlined, EditOutlined, InfoCircleOutlined, ReloadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
 
-const MajorTable = ({ data, onInfo, onEdit, onDelete, onRestore }) => {
+const MajorTable = ({ data, onInfo, onEdit, onDelete }) => {
      const columns = [
          { title: 'STT', dataIndex: 'stt', key: 'stt', sorter: (a, b) => a.stt - b.stt },
          { title: 'Tên ngành', dataIndex: 'name', key: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },
@@ -10,13 +10,9 @@ const MajorTable = ({ data, onInfo, onEdit, onDelete, onRestore }) => {
          {
              title: 'Thao tác', key: 'actions', render: (text, record) => (
                  <Space size="middle">
-                     <Button icon={<InfoCircleOutlined />} onClick={() => onInfo(record)} disabled={record.status !== 'ACTIVE'} />
-                     <Button color="primary" icon={<EditOutlined />} onClick={() => onEdit(record)} disabled={record.status !== 'ACTIVE'} />
-                     {record.status === 'ACTIVE' ? (
-                         <Button danger={true} icon={<DeleteOutlined />} onClick={() => onDelete(record)} />
-                     ) : (
-                         <Button icon={<ReloadOutlined />} onClick={() => onRestore(record)} />
-                     )}
+                     <Button icon={<InfoCircleOutlined />} onClick={() => onInfo(record)}  />
+                     <Button color="primary" icon={<EditOutlined />} onClick={() => onEdit(record.id)}  />
+                     <Button danger={true} icon={<DeleteOutlined />} onClick={() => onDelete(record.id)} />
                  </Space>
              ),
          },
