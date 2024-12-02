@@ -4,6 +4,9 @@ import {UserReducer} from "./reducers/UserReducer";
 import {SectionReducer} from "./reducers/SectionReducer";
 import {LoadingReducer} from "./reducers/LoadingReducer";
 import {MajorReducer} from "./reducers/MajorReducer";
+import { IndustryReducer } from "./reducers/IndustryReducer";
+import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
+import {EmployeeReducer} from "./reducers/EmployeeReducer";
 
 
 const rootReducer = combineReducers({
@@ -11,6 +14,8 @@ const rootReducer = combineReducers({
     SectionReducer,
     LoadingReducer,
     MajorReducer,
+    IndustryReducer,
+    EmployeeReducer,
 });
 
 const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
