@@ -12,9 +12,9 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
         },
         {
             title: "Mã nhân viên",
-            dataIndex: "codeEmployee",
-            key: "codeEmployee",
-            sorter: (a, b) => a.codeEmployee.localeCompare(b.codeEmployee),
+            dataIndex: "employeeCode",
+            key: "employeeCode",
+            sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
         },
         {
             title: "Ảnh",
@@ -65,7 +65,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
                     <Button color="primary" icon={<EditOutlined/>} onClick={() => onEdit(record)}
                             disabled={record.status !== 'ACTIVE'}/>
                     {record.status === 'ACTIVE' ? (
-                        <Button danger={true} icon={<DeleteOutlined/>} onClick={() => console.log(record)}/>
+                        <Button danger={true} icon={<DeleteOutlined/>} onClick={() => onDetle(record.id)}/>
                     ) : (
                         <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>
                     )}
@@ -75,7 +75,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
     ];
     return (
         <>
-            <Table columns={columns} dataSource={data} pagination={false} />
+            <Table columns={columns} dataSource={data} pagination={false} rowKey="id" />
         </>
     )
 }

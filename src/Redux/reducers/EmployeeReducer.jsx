@@ -2,7 +2,7 @@ import {CREATE_EMPLOYEE, DELETE_EMPLOYEE, SET_EMPLOYEE, SET_EMPLOYEE_ID, UPDATE_
 
 const initialState = {
     employees: [],
-    employeeId: {},
+    employeeId: null,
 }
 
 export const EmployeeReducer = (state = initialState, action) => {
@@ -17,18 +17,18 @@ export const EmployeeReducer = (state = initialState, action) => {
                 ...state,
                 employeeId: action.payload,
             };
-        // case CREATE_EMPLOYEE:
-        //     return {
-        //         ...state,
-        //     };
-        // case UPDATE_EMPLOYEE:
-        //     return {
-        //         ...state,
-        //     };
-        // case DELETE_EMPLOYEE:
-        //     return {
-        //         ...state,
-        //     };
+        case CREATE_EMPLOYEE:
+            return {
+                ...state,
+            };
+        case UPDATE_EMPLOYEE:
+            return {
+                ...state,
+            };
+        case DELETE_EMPLOYEE:
+            return {
+                ...state,
+            };
         default:
             return {...state}
     }

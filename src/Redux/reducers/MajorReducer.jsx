@@ -1,4 +1,4 @@
-import {CREATE_MAJOR, SET_MAJOR, SET_MAJOR_ID} from "../types/MajorType";
+import {CREATE_MAJOR, DELETE_MAJOR_ID, SET_MAJOR, SET_MAJOR_ID} from "../types/MajorType";
 
 
 const initialState = {
@@ -21,6 +21,11 @@ export const MajorReducer = (state = initialState, action) => {
         case CREATE_MAJOR:
             return {
                 ...state
+            }
+        case DELETE_MAJOR_ID:
+            return {
+                ...state,
+                majorsId: action.payload
             }
         default:
             return {...state}

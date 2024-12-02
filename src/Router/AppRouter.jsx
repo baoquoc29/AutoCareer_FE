@@ -1,16 +1,16 @@
-import { Route, Routes } from "react-router-dom";
-import { SignIn } from "../Page/Login/Signin/SignIn";
-import { AccountTypeSelection } from "../Page/Login/AccountTypeSelection/AccountTypeSelection";
-import { SignUpUniversity } from "../Page/Login/Signup/SignUpUniversity";
-import { PasswordReminder } from "../Page/Login/PasswordReminder/PasswordReminder";
-import { history } from "../App";
-import { SignUpBusiness } from "../Page/Login/Signup/SignUpBusiness";
-import { UserTemplate } from "../Template/UserTemplate/UserTemplate";
-import { University } from "../Page/University/University";
-import { UniversityTemplate } from "../Template/UniversityTemplate/UniversityTemplate";
+import {Route, Routes} from "react-router-dom";
+import {SignIn} from "../Page/Login/Signin/SignIn";
+import {AccountTypeSelection} from "../Page/Login/AccountTypeSelection/AccountTypeSelection";
+import {SignUpUniversity} from "../Page/Login/Signup/SignUpUniversity";
+import {PasswordReminder} from "../Page/Login/PasswordReminder/PasswordReminder";
+import {history} from "../App";
+import {SignUpBusiness} from "../Page/Login/Signup/SignUpBusiness";
+import {UserTemplate} from "../Template/UserTemplate/UserTemplate";
+import {University} from "../Page/University/University";
+import {UniversityTemplate} from "../Template/UniversityTemplate/UniversityTemplate";
 import LockScreen from "../Component/LockScreenComponent/LockScreen";
 import PageError from "../Page/PageError404/PageError";
-import Profile from "../Page/ProfileUser/Profile";
+import Profile from "../Page/ProfileUser/ProfileUniversity/Profile";
 import MajorManager from "../Page/University/MajorManager/MajorManager";
 import InstructionalManager from "../Page/University/InstructionalManager/InstructionalManager";
 import SectionManager from "../Page/University/SectionManager/SectionManager";
@@ -19,8 +19,8 @@ import InstructionalEdit from "../Page/University/InstructionalManager/Instructi
 import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
 import { BusinessTemplate } from "../Template/BusinessTemplate/BusinessTemplate";
 import { Business } from "../Page/Business/Business";
-import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
 import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
+import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
 
 export function AppRouter() {
   return (
@@ -66,7 +66,7 @@ export function AppRouter() {
         >
           <Route path={"/business"} element={<Business />} />
           <Route path={"/industry-manager"} element={<IndustryManager />} />
-          <Route path={"/employee-manager"} element={<EmployeeManager />} />
+            <Route path={"/employee-manager"} element={<EmployeeManager />} />
         </Route>
         <Route path={"*"} element={<PageError />} />
       </Routes>

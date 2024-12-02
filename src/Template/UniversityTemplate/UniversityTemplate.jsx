@@ -3,8 +3,10 @@ import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
 import {useState} from "react";
 import {useSelector} from "react-redux";
+import {DOMAIN} from "../../Utils/Setting/Config";
 
 export function UniversityTemplate() {
+    const university = useSelector(state => state.UserReducer.userData?.university);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {userData} = useSelector((state) => state.UserReducer);
     const toggleSidebar = () => {
@@ -53,7 +55,7 @@ export function UniversityTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    profileImg="./assets/img/profile-photos/1.png"
+                    profileImg={`${DOMAIN}/api/v1/image/resource?imageId=${university.logoImageId}`}
                     caption="Quản lý trường đại học"
                     menuItems={menuItems}
                 />

@@ -1,0 +1,81 @@
+.card-custom {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-custom {
+    background-color: #ffffff;
+    border: none;
+}
+
+.card .header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.card .img-fluid {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+}
+
+.card .logo-image {
+    width: 100%;
+    max-width: 150px;
+}
+
+.card p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.card a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+.badge-pill {
+    padding: 0.5em 1em;
+    font-size: 1rem;
+}
+
+.badge-blue {
+    background:  #d7f9fa; /* Gradient từ xanh lá sang xanh đậm */
+    color: #24447f;
+}
+
+
+.badge-blue-dark {
+    background: #2d99ae; /* Gradient từ xanh dương sáng sang xanh đậm */
+    color: white;
+}
+
+
+.btn-custom {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+}

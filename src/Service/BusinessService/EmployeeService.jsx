@@ -9,16 +9,16 @@ export class EmployeeService extends baseService {
       return this.get('api/employees/get-all');
     };
     create_employee = () =>{
-        return this.get('api/employees/create');
+        return this.post('api/employees/create');
     };
-    get_employee_by_id = () =>{
-        return this.get('api/employees/{employeeId}');
+    get_employee_by_id = (employeeId) =>{
+        return this.get(`api/employees/${employeeId}`);
     };
-    update_employee = () =>{
-        return this.get('api/employees/{employeeId}');
+    update_employee = (employeeId) =>{
+        return this.put(`api/employees/${employeeId}`);
     };
-    delete_employee = () =>{
-        return this.get('api/employees/{employeeId}');
+    delete_employee = (employeeId) =>{
+        return this.delete(`api/employees/${employeeId}`);
     };
 }
 

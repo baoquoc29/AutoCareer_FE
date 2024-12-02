@@ -5,14 +5,9 @@ import {userService} from "../../Service/UserService/UserService";
 export const loginUser = (username, password) => async (dispatch) => {
     try {
         const res = await userService.login(username, password);
-        console.log(res);
+        console.log(res.data);
         if (res.data && res.data.accessToken) {
-            console.log(res.data)
-            const {accessToken, username: user, role} = res.data;
-            const userDetails = {
-                username: user,
-                role: role
-            };
+            const {accessToken, ...userDetails } = res.data;
             localStorage.setItem(TOKEN, accessToken);
             localStorage.setItem(USER_LOGIN, JSON.stringify(userDetails));
             dispatch({

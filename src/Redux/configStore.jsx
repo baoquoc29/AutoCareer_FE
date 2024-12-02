@@ -5,7 +5,6 @@ import {SectionReducer} from "./reducers/SectionReducer";
 import {LoadingReducer} from "./reducers/LoadingReducer";
 import {MajorReducer} from "./reducers/MajorReducer";
 import { IndustryReducer } from "./reducers/IndustryReducer";
-import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
 import {EmployeeReducer} from "./reducers/EmployeeReducer";
 
 
