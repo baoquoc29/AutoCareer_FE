@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {create_section} from "../../../Redux/actions/SectionThunk";
 import {doc as XLSX} from "prettier";
 import {Button, Card, Input} from "antd";
 import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
-import {create_major, get_all_majors, get_major_id} from "../../../Redux/actions/MajorThunk";
+import {
+    create_major,
+    delete_major_id,
+    get_all_majors,
+    get_major_id
+} from "../../../Redux/actions/MajorThunk";
 import MajorTable from "./MajorTable";
 import MajorForm from "./MajorForm";
 import MajorDetailModal from "./Modal";
@@ -43,6 +47,23 @@ const MajorManager = () => {
         setSelectedMajor(record);
         setOpen(true);
     };
+    const handleSubmit = (values) => {
+        dispatch(create_major(values))
+            .then(() => {
+                dispatch(get_all_majors());
+
+            })
+    };
+    const handleDelete = (id) => {
+        dispatch(delete_major_id(id))
+            .then(() => {
+                toast.success("Xóa chuyên ngành thành công")
+                dispatch(get_all_majors())
+            })
+            .catch((error) => {
+                toast.success(error.messages)
+            })
+    }
 
     const exportToExcel = () => {
         if (filteredData && filteredData.length > 0) {
@@ -51,7 +72,7 @@ const MajorManager = () => {
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Chuyên ngành');
             XLSX.writeFile(workbook, 'Chuyên Ngành.xlsx');
         } else {
-          toast.error("'Không có dữ liệu để xuất Excel!'") ;
+            toast.error("'Không có dữ liệu để xuất Excel!'");
         }
     };
     const data = majors.map((majors, index) => ({
@@ -63,13 +84,7 @@ const MajorManager = () => {
         status: majors.status,
         description: majors.description,
     }));
-    const handleSubmit = (values) => {
-        dispatch(create_major(values))
-            .then(()=>{
-                dispatch(get_all_majors());
-                toast.success("Thêm chuyên ngành thành công")
-            })
-    };
+
     return (
         <>
             <section id="content" className="content">
@@ -87,12 +102,12 @@ const MajorManager = () => {
                                         <Card title="Danh sách chuyên ngành">
                                             <div className="table-responsive">
                                                 <div className="d-flex mb-3">
-                                                    <Input  placeholder="Search..." value={searchText}
+                                                    <Input placeholder="Search..." value={searchText}
                                                            onChange={handleSearch} prefix={<SearchOutlined/>}/>
                                                     <Button type="default" icon={<DownloadOutlined/>}
                                                             onClick={exportToExcel}>Export to Excel</Button>
                                                 </div>
-                                                <MajorTable data={data} onInfo={handleInfo}/>
+                                                <MajorTable data={data} onInfo={handleInfo} onDelete={handleDelete}/>
                                             </div>
                                         </Card>
                                     </div>
@@ -102,9 +117,7 @@ const MajorManager = () => {
                     </div>
                 </div>
             </section>
-            <MajorDetailModal open={open}
-                              onClose={() => setOpen(false)}
-                              major={selectedMajor} />
+            <MajorDetailModal open={open} onClose={() => setOpen(false)} major={selectedMajor}/>
         </>
     )
 }
