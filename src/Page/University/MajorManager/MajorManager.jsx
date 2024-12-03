@@ -102,7 +102,9 @@ const MajorManager = () => {
                     </div>
                 </div>
             </section>
-            <MajorDetailModal open={open} onClose={() => setOpen(false)} major={selectedMajor} />
+            <MajorDetailModal open={open}
+                              onClose={() => setOpen(false)}
+                              major={selectedMajor} />
         </>
     )
 }
