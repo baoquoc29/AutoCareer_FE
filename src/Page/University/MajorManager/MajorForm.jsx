@@ -1,52 +1,57 @@
 import {useFormik} from "formik";
 import {Button, Col, Form, Input, Row, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
+import {validateField} from "../../../Utils/Validation/MajorValidation";
 import {useEffect} from "react";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
-import {validateField} from "../../../Utils/Validation/MajorValidation";
 
-const MajorForm = ({onSubmit}) => {
-    const dispatch = useDispatch();
+
+const MajorForm = ({onSubmit, initialValues}) => {
     const sections = useSelector(state => state.SectionReducer.sections);
+    const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(get_all_sections())
-    }, [dispatch]);
-    const handleSectionChange = (value) => {
-        console.log("Selected Section ID:", value); // Log giá trị ID của section được chọn
-        formik.setFieldValue('sectionId', value);
-    };
+        if (sections.length === 0) {
+            dispatch(get_all_sections());
+        }
+    }, [dispatch, sections.length]);
     const formik = useFormik({
         initialValues: {
-            sectionId: '',
-            name: '',
-            code: '',
-            numberStudent: '',
-            description: '',
-            status: 'ACTIVE',
+            sectionId: initialValues?.sectionId || '',
+            name: initialValues?.name || '',
+            code: initialValues?.code || '',
+            numberStudent: initialValues?.numberStudent || '',
+            description: initialValues?.description || '',
         },
-        onSubmit,
+        enableReinitialize: true,
+        onSubmit: async (values) => {
+            try {
+                await onSubmit(values);
+            } catch (err) {
+                console.error("Error submitting form:", err);
+            }
+        },
     });
     return (
         <>
             <Form layout="vertical" onFinish={formik.handleSubmit} requiredMark={true} name="trigger">
                 <Form.Item label="Tên khoa" required={true} rules={validateField("section")}>
-                    <Select
-                        showSearch
-                        autoFocus={true}
-                        placeholder="Tìm kiếm khoa"
-                        optionFilterProp="label"
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={sections.map(section => ({value: section.id, label: section.name}))}
-                        onChange={handleSectionChange}
-                        value={formik.values.sectionId}
+                    <Select style={{width: 340}}
+                            showSearch
+                            autoFocus={true}
+                            placeholder="Tìm kiếm khoa"
+                            optionFilterProp="label"
+                            filterSort={(optionA, optionB) =>
+                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                            }
+                            options={sections.map(section => ({value: section.id, label: section.name}))}
+                            onChange={(value) => formik.setFieldValue('sectionId', value)}
+                            value={formik.values.sectionId || undefined}
                     />
                 </Form.Item>
 
                 <Form.Item
                     label="Tên chuyên ngành"
-                    name="Tên ngành"
+                    name="name"
                     required={true}
                     rules={validateField("name")}
                 >
@@ -70,7 +75,7 @@ const MajorForm = ({onSubmit}) => {
                             required={true}
                             rules={validateField("numberStudent")}
                         >
-                            <Input onChange={formik.handleChange} value={formik.values.numberStudent}
+                            <Input type="number" onChange={formik.handleChange} value={formik.values.numberStudent}
                                    name="numberStudent"/>
                         </Form.Item>
                     </Col>

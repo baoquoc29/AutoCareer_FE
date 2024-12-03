@@ -18,6 +18,9 @@ export class MajorService extends baseService {
     delete_major = (id) => {
         return this.delete(`api/major/delete/${id}`)
     }
+    update_major = (id,formData) => {
+        return this.post(`api/major/update/${id}`, formData)
+    }
 }
 
 export const majorService = new MajorService();
