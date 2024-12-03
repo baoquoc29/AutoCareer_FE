@@ -35,9 +35,7 @@ export class baseService {
     }
 
     get = (url) => {
-
         const token = localStorage.getItem(TOKEN);
-        console.log(token)
         const config = {
             url: `${DOMAIN}/${url}`,
             method: 'GET',
