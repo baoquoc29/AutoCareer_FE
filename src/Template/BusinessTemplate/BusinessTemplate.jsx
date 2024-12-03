@@ -16,7 +16,7 @@ export function BusinessTemplate() {
       icon: "fa-solid fa-school",
       subMenu: [
         {
-          label: "Danh sách ngành nghề",
+          label: "Danh sách ngành",
           link: "/industry-manager",
           icon: "",
         },
@@ -59,7 +59,7 @@ export function BusinessTemplate() {
           userName={userData.username}
           userRole={userData.role.name}
           profileImg="./assets/img/profile-photos/1.png"
-          caption="Quản lý trường đại học"
+          caption="Quản lý Doanh nghiệp"
           menuItems={menuItems}
         />
         <Outlet />
