@@ -61,7 +61,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             title: 'Thao tác', key: 'actions', render: (text, record) => (
                 <Space size="middle">
                     <Button icon={<InfoCircleOutlined/>} onClick={() => onInfo(record)}
-                            disabled={record.status !== 'ACTIVE'}/>
+                            /*disabled={record.status !== 'ACTIVE'}*//>
                     <Button color="primary" icon={<EditOutlined/>} onClick={() => onEdit(record)}
                             disabled={record.status !== 'ACTIVE'}/>
                     {record.status === 'ACTIVE' ? (

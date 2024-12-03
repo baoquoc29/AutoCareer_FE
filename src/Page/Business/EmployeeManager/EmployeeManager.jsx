@@ -12,6 +12,7 @@ import {
 import EmployeeTable from "./EmployeeTable";
 import EmployeeDetail from "./EmployeeDetail";
 import {toast} from "react-toastify";
+import {NavLink} from "react-router-dom";
 
 const EmployeeManager = () => {
     const dispatch = useDispatch();
@@ -37,14 +38,6 @@ const EmployeeManager = () => {
         setOpen(true);
     };
 
-    //tao moi nhan vien
-    const handleSubmit = (values) => {
-        dispatch(create_employee(values))
-            .then(() => {
-                dispatch(get_all_employees());
-
-            })
-    };
 
     //xoa nhan vien
     const handleDelete = (employeeId) => {
@@ -84,7 +77,9 @@ const EmployeeManager = () => {
                                             <div className="table-responsive">
                                                 <div className="d-flex mb-3">
                                                     <Button type="primary" icon={<PlusOutlined/>}>
-                                                        Thêm mới
+                                                        <NavLink to={"/employee-create"} >
+                                                            Thêm mới
+                                                        </NavLink>
                                                     </Button>
                                                 </div>
                                                 <EmployeeTable

@@ -21,6 +21,7 @@ import { BusinessTemplate } from "../Template/BusinessTemplate/BusinessTemplate"
 import { Business } from "../Page/Business/Business";
 import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
 import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
+import EmployeeCreate from "../Page/Business/EmployeeManager/EmployeeCreate";
 
 export function AppRouter() {
   return (
@@ -48,10 +49,7 @@ export function AppRouter() {
           <Route path={"/university"} element={<University />} />
           <Route path={"/profile-user"} element={<Profile />} />
           <Route path={"/major-manager"} element={<MajorManager />} />
-          <Route
-            path={"/instructional-manager"}
-            element={<InstructionalManager />}
-          />
+          <Route path={"/instructional-manager"} element={<InstructionalManager />}/>
           <Route path={"/instructional-edit"} element={<InstructionalEdit />} />
           <Route path={"/section-manager"} element={<SectionManager />} />
           <Route path={"/workshop-manager"} element={<WorkShopManager />} />
@@ -66,7 +64,8 @@ export function AppRouter() {
         >
           <Route path={"/business"} element={<Business />} />
           <Route path={"/industry-manager"} element={<IndustryManager />} />
-            <Route path={"/employee-manager"} element={<EmployeeManager />} />
+          <Route path={"/employee-manager"} element={<EmployeeManager />} />
+          <Route path={"/employee-create"} element={<EmployeeCreate />} />
         </Route>
         <Route path={"*"} element={<PageError />} />
       </Routes>

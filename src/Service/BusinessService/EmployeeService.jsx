@@ -8,8 +8,8 @@ export class EmployeeService extends baseService {
     get_all_employee_by_id_business = () =>{
       return this.get('api/employees/get-all');
     };
-    create_employee = () =>{
-        return this.post('api/employees/create');
+    employee_create = (formData) => {
+        return this.postFormData('api/employees/create', formData);
     };
     get_employee_by_id = (employeeId) =>{
         return this.get(`api/employees/${employeeId}`);
