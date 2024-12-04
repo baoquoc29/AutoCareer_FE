@@ -1,0 +1,422 @@
+import React, { useEffect, useState } from "react";
+import { Form, Input, Upload, Button, Select, DatePicker, Row, Col, Modal } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useDispatch, useSelector } from "react-redux";
+import { create_work_shop, get_all_ward, get_all_provinces, get_all_district } from "../../../Redux/actions/WorkShopThunk";
+import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
+import styled from 'styled-components';
+import dayjs from "dayjs";
+import ReactQuill from "react-quill";
+
+const { Option } = Select;
+
+// Styled Components
+const Container = styled.div`
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 24px;
+    background-color: #ffffff;
+    width: 100%; 
+    height: auto; 
+`;
+
+const StyledQuill = styled(ReactQuill)`
+    .ql-editor {
+        min-height: 200px;
+        line-height: 1.6;
+        white-space: normal;
+        word-wrap: break-word; 
+        overflow-wrap: break-word; 
+        width: 100%;
+        word-break: break-word; 
+    }
+`;
+
+
+const Title = styled.h3`
+    color: #1890ff;
+    margin-bottom: 24px;
+`;
+
+const FormItem = styled(Form.Item)`
+    .ant-form-item-label > label {
+        color: #595959;
+        font-weight: 500;
+    }
+`;
+
+const ButtonGroup = styled.div`
+    text-align: right;
+    margin-top: 24px;
+
+    .ant-btn-primary {
+        background-color: #1890ff;
+        border-color: #1890ff;
+
+        &:hover {
+            background-color: #40a9ff;
+            border-color: #40a9ff;
+        }
+    }
+
+    .ant-btn {
+        margin-left: 8px;
+    }
+`;
+
+const AddWorkShop = ({ visible, onCancel, onFinish }) => {
+    const [form] = Form.useForm();
+    const [selectedProvince, setSelectedProvince] = useState(null);
+    const [selectedDistrict, setSelectedDistrict] = useState(null);
+    const [fileList, setFileList] = useState([]);
+    const [description, setDescription] = useState("");
+    const userInfo = JSON.parse(localStorage.getItem("USER_LOGIN"));
+    const idUniversity = userInfo?.university?.id;
+    const [isImagePresent, setIsImagePresent] = useState(false);
+
+    const [isStartDateSelected, setIsStartDateSelected] = useState(false);
+    const [isEndDateSelected, setIsEndDateSelected] = useState(false);
+    const dispatch = useDispatch();
+    const { provinces, districts, wards } = useSelector(state => state.WorkShopReducer);
+    const [previewVisible, setPreviewVisible] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+
+    const handlePreview = (file) => {
+        if (!file.url && !file.preview) {
+            file.preview = URL.createObjectURL(file.originFileObj);
+        }
+        setPreviewImage(file.preview);
+        setPreviewVisible(true);
+    };
+
+    useEffect(() => {
+        dispatch(get_all_provinces());
+    }, [dispatch]);
+
+    const disablePastDates = (current) => {
+        return current && current < dayjs().startOf("day");
+    };
+
+    const disableExpirationDate = (current) => {
+        const startDate = form.getFieldValue("startDate");
+        const endDate = form.getFieldValue("endDate");
+        return current && (current < startDate || current > endDate);
+    };
+    const DraggerWrapper = styled.div`
+        transition: opacity 0.5s ease-in-out;
+        opacity: ${(props) => (props.isHidden ? 0 : 1)};
+        visibility: ${(props) => (props.isHidden ? "hidden" : "visible")};
+    `;
+
+
+
+    const handleStartDateChange = (value) => {
+        setIsStartDateSelected(!!value);
+        form.setFieldsValue({ endDate: null, expirationDate: null });
+        setIsEndDateSelected(false);
+    };
+
+    const handleEndDateChange = (value) => {
+        setIsEndDateSelected(!!value);
+        form.setFieldsValue({ expirationDate: null });
+    };
+
+    const handleProvinceChange = (value) => {
+        const provinceId = value;
+        setSelectedProvince(provinceId);  // Set the selected province
+        dispatch(get_all_district(provinceId));
+        form.setFieldsValue({ district: null, ward: null });
+        setSelectedDistrict(null);  // Reset district and ward when province changes
+    };
+
+    const handleDistrictChange = (value) => {
+        const districtId = value;
+        setSelectedDistrict(districtId);  // Set the selected district
+        dispatch(get_all_ward(districtId));
+        form.setFieldsValue({ ward: null });
+    };
+
+    const handleFileChange = ({ fileList: newFileList }) => {
+        const isValidFile = newFileList.every(file => file.type === "image/jpeg" || file.type === "image/png");
+        if (!isValidFile) {
+            toast.error("Chỉ chấp nhận file định dạng JPG/PNG.");
+            return;
+        }
+        setFileList(newFileList);
+
+        // Cập nhật trạng thái nếu có ảnh
+        setIsImagePresent(newFileList.length > 0);
+    };
+
+
+    const handleEditorChange = (value) => {
+        setDescription(value);
+    };
+
+
+    const handleOk = () => {
+        form.validateFields().then((values) => {
+            const { startDate, endDate, province, ward, district, detailAddress, expirationDate, title } = values;
+
+            // Kiểm tra thủ công các trường required
+            if (!title) {
+                toast.error("Vui lòng nhập tiêu đề!");
+                return;
+            }
+            if (!startDate) {
+                toast.error("Vui lòng chọn ngày bắt đầu!");
+                return;
+            }
+            if (!endDate) {
+                toast.error("Vui lòng chọn ngày kết thúc!");
+                return;
+            }
+            if (!expirationDate) {
+                toast.error("Vui lòng chọn ngày hết hạn!");
+                return;
+            }
+            if (!province) {
+                toast.error("Vui lòng chọn Tỉnh/Thành phố!");
+                return;
+            }
+            if (!district) {
+                toast.error("Vui lòng chọn Quận/Huyện!");
+                return;
+            }
+            if (!ward) {
+                toast.error("Vui lòng chọn Phường/Xã!");
+                return;
+            }
+
+            if (dayjs(endDate).isBefore(startDate)) {
+                toast.error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
+                return;
+            }
+            if(dayjs(startDate).isAfter(endDate)) {
+                toast.error("Ngày kết thúc không được bé hơn ngày bắt đầu!");
+                return;
+            }
+            if(dayjs(expirationDate).isAfter(endDate) || dayjs(expirationDate).isBefore(startDate)) {
+                toast.error("Ngày hết hạn không hợp lệ!");
+            }
+
+            // Tạo formData
+            const formData = new FormData();
+            formData.append("startDate", dayjs(startDate).format("YYYY-MM-DDTHH:mm"));
+            formData.append("endDate", dayjs(endDate).format("YYYY-MM-DDTHH:mm"));
+            formData.append("expireDate", dayjs(expirationDate).format("YYYY-MM-DD"));
+            formData.append("idProvince", province);
+            formData.append("idDistrict", district);
+            formData.append("idWard", ward);
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("universityId", idUniversity);
+            formData.append("addressDescription", detailAddress);
+
+            // Kiểm tra ảnh đã được chọn chưa
+            if (fileList.length === 0) {
+                toast.error("Vui lòng chọn ảnh!");
+                return;
+            }
+
+            // Đảm bảo chỉ có một ảnh được chọn
+            formData.append("imageWorkshop", fileList[0].originFileObj);
+
+            // Gửi request
+            dispatch(create_work_shop(formData))
+                .then(() => {
+                    toast.success("Hội thảo đã được thêm thành công!");
+                    form.resetFields();
+                    setFileList([]);
+                    setDescription("");
+                    onFinish();
+
+                });
+        });
+    };
+
+    if (!visible) return null;
+
+    return (
+        <Container>
+            <Title>Thêm Hội Thảo</Title>
+            <Form form={form} layout="vertical">
+                <FormItem
+                    label="Tiêu Đề"
+                    name="title"
+
+                >
+                    <Input />
+                </FormItem>
+
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <FormItem
+                            label="Ngày Bắt Đầu"
+                            name="startDate"
+
+                        >
+                            <DatePicker
+                                placeholder="Chọn ngày bắt đầu"
+                                showTime
+                                disabledDate={disablePastDates}
+                                style={{ width: "100%" }}
+                                format="YYYY-MM-DD HH:mm"
+                                onChange={handleStartDateChange}
+                            />
+                        </FormItem>
+                    </Col>
+
+                    <Col span={8}>
+                        <FormItem
+                            label="Ngày Kết Thúc"
+                            name="endDate"
+
+                        >
+                            <DatePicker
+                                placeholder="Chọn ngày kết thúc"
+                                showTime
+                                disabled={!isStartDateSelected}
+                                disabledDate={disablePastDates}
+                                style={{ width: "100%" }}
+                                format="YYYY-MM-DD HH:mm"
+                                onChange={handleEndDateChange}
+                            />
+                        </FormItem>
+                    </Col>
+
+                    <Col span={8}>
+                        <FormItem
+                            label="Ngày Hết Hạn"
+                            name="expirationDate"
+
+                        >
+                            <DatePicker placeholder="Chọn ngày hết hạn"
+                                disabled={!isEndDateSelected}
+                                disabledDate={disableExpirationDate}
+                                style={{ width: "100%" }}
+                                format="YYYY-MM-DD"
+                            />
+                        </FormItem>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <FormItem
+                            label="Tỉnh/Thành phố"
+                            name="province"
+
+                        >
+                            <Select onChange={handleProvinceChange} placeholder="Chọn tỉnh">
+                                {provinces.map(province => (
+                                    <Option key={province.id} value={province.id}>{province.name}</Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                    </Col>
+
+                    <Col span={8}>
+                        <FormItem
+                            label="Quận/Huyện"
+                            name="district"
+
+                        >
+                            <Select onChange={handleDistrictChange} disabled={!selectedProvince} placeholder="Chọn quận">
+                                {districts.map(district => (
+                                    <Option key={district.id} value={district.id}>{district.name}</Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                    </Col>
+
+                    <Col span={8}>
+                        <FormItem
+                            label="Phường/Xã"
+                            name="ward"
+
+                        >
+                            <Select disabled={!selectedDistrict} placeholder="Chọn phường">
+                                {wards.map(ward => (
+                                    <Option key={ward.id} value={ward.id}>{ward.name}</Option>
+                                ))}
+                            </Select>
+                        </FormItem>
+                    </Col>
+                </Row>
+
+                <FormItem label="Địa chỉ chi tiết" name="detailAddress">
+                    <Input.TextArea />
+                </FormItem>
+                <FormItem label="Mô tả">
+                        <StyledQuill
+                            editor={ClassicEditor}
+                            data={description}
+                            onChange={handleEditorChange}
+                ></StyledQuill>
+                </FormItem>
+
+
+
+                <FormItem label="Ảnh" name="image">
+                    {/* Hiển thị phần Upload.Dragger chỉ khi không có ảnh */}
+                    {fileList.length === 0 && (
+                        <Upload.Dragger
+                            listType="picture"
+                            fileList={fileList}
+                            onChange={handleFileChange}
+                            maxCount={1}
+                            beforeUpload={() => false} // Chặn không cho upload tự động
+                            onPreview={handlePreview}
+                            showUploadList={false} // Ẩn phần upload list trong Dragger
+                        >
+                            <div className="ant-upload-drag-icon">
+                                <UploadOutlined />
+                            </div>
+                            <p className="ant-upload-text">Kéo và thả hình ảnh vào đây</p>
+                        </Upload.Dragger>
+                    )}
+
+                    {/* Hiển thị phần UploadList để hiển thị ảnh đã tải lên */}
+                    <Upload
+                        listType="picture"
+                        fileList={fileList}
+                        onChange={handleFileChange}
+                        onPreview={handlePreview}
+                        beforeUpload={() => false}
+                        maxCount={1}
+                        showUploadList={{
+                            showRemoveIcon: true,
+                            showPreviewIcon: true,
+                        }}
+                    />
+
+                    <Modal
+                        open={previewVisible}
+                        footer={null}
+                        onCancel={() => setPreviewVisible(false)}
+                        width={800}
+                    >
+                        <img alt="preview" style={{ width: '100%' }} src={previewImage} />
+                    </Modal>
+                </FormItem>
+
+
+                <ButtonGroup>
+                    <Button onClick={onCancel}>Hủy</Button>
+                    <Button onClick={handleOk} type="primary">Lưu</Button>
+                </ButtonGroup>
+            </Form>
+        </Container>
+    );
+};
+
+AddWorkShop.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onFinish: PropTypes.func.isRequired,
+};
+
+export default AddWorkShop;
