@@ -1,4 +1,4 @@
-import {CREATE_SECTION, SET_SECTIONS} from "../types/SectionType";
+import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS} from "../types/SectionType";
 
 
 const initialState = {
@@ -13,6 +13,10 @@ export const SectionReducer = (state = initialState, action) => {
                 sections: action.payload // Lưu dữ liệu vào `sections` trong state
             };
         case CREATE_SECTION:
+            return {
+                ...state
+            }
+        case DELETE_SECTION:
             return {
                 ...state
             }
