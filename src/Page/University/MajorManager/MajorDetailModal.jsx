@@ -1,7 +1,7 @@
 import {Button, Modal} from "antd";
 
 const MajorDetailModal = ({open, onClose, major}) => {
-    if (!major) return null; // Nếu không có major, không hiển thị gì cả
+    if (!major) return null;
     return (
         <>
             <Modal open={open} onCancel={onClose} footer={null}>
@@ -13,7 +13,6 @@ const MajorDetailModal = ({open, onClose, major}) => {
                 <div className="modal-footer-right">
                     <Button type="primary" onClick={onClose}>Đóng</Button>
                 </div>
-
             </Modal>
         </>
     )

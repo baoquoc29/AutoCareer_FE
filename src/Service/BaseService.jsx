@@ -74,10 +74,8 @@ export class baseService {
         return Axios(config).then(response => response.data).catch(error => { throw error });
     }
 
-        get = (url) => {
-
+    get = (url) => {
         const token = localStorage.getItem(TOKEN);
-        console.log(token)
         const config = {
             url: `${DOMAIN}/${url}`,
             method: 'GET',
