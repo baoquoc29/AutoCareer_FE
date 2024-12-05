@@ -35,6 +35,9 @@ export const SignIn = () => {
                     case "ADMIN":
                         navigate('/admin');
                         break;
+                    case "SUB_ADMIN":
+                        navigate('/admin');
+                        break;
                     default:
                         navigate('/');
                         break;
