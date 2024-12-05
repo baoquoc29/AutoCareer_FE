@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import FormInput from "../../../Component/FormInputComponent/FormInputComponent";
 import Table from "../../../Component/TableComponent/Table";
 import TableBody from "../../../Component/TableBodyComponent/TableBody";
 import Button from "../../../Component/ButtonComponent/Button";

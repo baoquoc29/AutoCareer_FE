@@ -33,9 +33,9 @@ export const UserDropdown = ({navigate}) => {
                 <div className="dropdown-menu dropdown-menu-end w-md-200px">
                     <div className="d-flex align-items-center border-bottom px-3 py-2">
                         <div className="flex-shrink-0">
-                            {/*<img className="img-sm rounded-circle"*/}
-                            {/*     src={`${DOMAIN}/api/v1/image/resource?imageId=${university["logoImageId"]}`}*/}
-                            {/*     alt="UserNav Picture" loading="lazy"/>*/}
+                            <img className="img-sm rounded-circle"
+                                 // src={`${DOMAIN}/api/v1/image/resource?imageId=${university["logoImageId"]}`}
+                                 alt="UserNav Picture" loading="lazy"/>
                         </div>
                         <div className="flex-grow-1 ms-3">
                             <h5 className="mb-0">{userData.username.length > 20 ? userData.username.slice(0, 15) + "..." : userData.username}</h5>
