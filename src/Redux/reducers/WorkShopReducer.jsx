@@ -1,11 +1,22 @@
-import { CREATE_WORK_SHOP, SET_WORK_SHOP, GET_ALL_LOCATION, GET_ALL_DISTRICT_BY_ID, GET_ALL_WARD_BY_ID_DISTRICT, DELETE_WORK_SHOP, UPDATE_WORK_SHOP } from "../types/WorkShopType";
+import {
+    CREATE_WORK_SHOP,
+    SET_WORK_SHOP,
+    GET_ALL_LOCATION,
+    GET_ALL_DISTRICT_BY_ID,
+    GET_ALL_WARD_BY_ID_DISTRICT,
+    DELETE_WORK_SHOP,
+    UPDATE_WORK_SHOP,
+    GET_ALL_COMPANY_PENDING, GET_ALL_COMPANY_ACCEPT
+} from "../types/WorkShopType";
 
 const initialState = {
     workshops: [],
     provinces: [],
     districts: [],
     wards: [],
-    totalRecords: 0
+    totalRecords: 0,
+    pendingCompany: [],
+    acceptCompany: [],
 };
 
 
@@ -30,11 +41,23 @@ export const WorkShopReducer = (state = initialState, action) => {
                     workshop.id === action.payload.id ? action.payload : workshop // Replace updated workshop
                 ),
             };
+        case GET_ALL_COMPANY_PENDING:
+            return {
+                ...state,
+                pendingCompany: action.payload.businessList,
+            };
+        case GET_ALL_COMPANY_ACCEPT:
+            return {
+                ...state,
+                acceptCompany: action.payload.businessList,
+            };
         case GET_ALL_LOCATION:
             return {
                 ...state,
                 provinces: action.payload,
             };
+
+
         case GET_ALL_DISTRICT_BY_ID:
             return {
                 ...state,
@@ -48,7 +71,7 @@ export const WorkShopReducer = (state = initialState, action) => {
         case DELETE_WORK_SHOP:
             return {
                 ...state,
-                workshops: state.workshops.filter(workshop => workshop.id !== action.payload), // Remove workshop by ID
+                workshops: state.workshops.filter(workshop => workshop.id !== action.payload),
             };
         default:
             return state;

@@ -7,6 +7,7 @@ import WorkShopDetails from "./WorkShopDetails";
 import {Button, Card, Input, Modal, Pagination} from "antd";
 import EditWorkShop from "./EditWorkShop";
 
+
 const WorkShopManager = () => {
     const dispatch = useDispatch();
     const workshops = useSelector((state) => state.WorkShopReducer.workshops || []);

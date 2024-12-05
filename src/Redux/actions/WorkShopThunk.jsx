@@ -1,9 +1,10 @@
 import { workShopService } from "../../Service/UniversityService/WorkShopService";
 import {
-    CREATE_WORK_SHOP, DELETE_WORK_SHOP,
+    ACCEPT_WORK_SHOP,
+    CREATE_WORK_SHOP, DELETE_WORK_SHOP, GET_ALL_COMPANY, GET_ALL_COMPANY_ACCEPT, GET_ALL_COMPANY_PENDING,
     GET_ALL_DISTRICT_BY_ID,
     GET_ALL_LOCATION,
-    GET_ALL_WARD_BY_ID_DISTRICT,
+    GET_ALL_WARD_BY_ID_DISTRICT, REJECT_WORK_SHOP,
     SET_WORK_SHOP,
     UPDATE_WORK_SHOP,
 } from "../types/WorkShopType";
@@ -85,7 +86,66 @@ export const update_work_shop = (id, formData) => {
         }
     };
 };
+export const get_all_company_pending = (idWorkShop) => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_all_company_pending(idWorkShop);
 
+            dispatch({
+                type: GET_ALL_COMPANY_PENDING,
+                payload: res.data,
+            });
+        } catch (error) {
+            console.log(error.response.data.message);
+            if (error.response && error.response.status === 400) {
+                dispatch({
+                    type: GET_ALL_COMPANY_PENDING,
+                    payload: { businessList: [] },
+                });
+            }
+        }
+    };
+};
+
+export const get_all_company_accept = (idWorkShop) => {
+    return async (dispatch) => {
+        try{
+            const res = await  workShopService.get_all_company_accept(idWorkShop);
+            dispatch({
+                type: GET_ALL_COMPANY_ACCEPT,
+                payload: res.data,
+            });
+        }catch(error){
+            if (error.response) {
+                console.error("Error getting all_company_pending:", error.response, error);
+            }else if (error.request) {
+                // Lỗi khi không nhận được phản hồi từ server
+                console.error("Error request:", error.request);
+            } else {
+                // Các lỗi khác (ví dụ: lỗi cấu hình hoặc lỗi trong mã)
+                console.error("Error message:", error.message);
+            }
+        }
+    }
+}
+export const accept_company_work_shop = (formData) => {
+    return async (dispatch) => {
+        const res = await  workShopService.accept_request_company(formData);
+        dispatch({
+            type: ACCEPT_WORK_SHOP,
+            payload: res.data,
+        })
+    }
+}
+export const reject_company_work_shop = (formData) => {
+    return async (dispatch) => {
+        const res = await  workShopService.reject_request_company(formData);
+        dispatch({
+            type: REJECT_WORK_SHOP,
+            payload: res.data,
+        })
+    }
+}
 // Action to fetch all provinces
 export const get_all_provinces = () => {
     return async (dispatch) => {

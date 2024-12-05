@@ -21,7 +21,19 @@ export class WorkShopService extends baseService {
     delete_work_shop = (id) => {
         return this.delete(`api/work-shop/id/${id}`);
     };
+    get_all_company_accept = (idWorkShop) => {
+        return this.get(`api/work-shop/${idWorkShop}?state=APPROVED`);
+    }
+    get_all_company_pending = (idWorkShop) => {
+        return this.get(`api/work-shop/${idWorkShop}?state=PENDING`);
+    }
 
+    accept_request_company = (formdata) => {
+        return this.post(`api/work-shop/accept-request`,formdata);
+    }
+    reject_request_company = (formdata) => {
+        return this.post(`api/work-shop/reject-request`,formdata);
+    }
     get_all_provinces = () => {
         return this.get('api/administrative/get-all-provinces');
     };
@@ -33,6 +45,7 @@ export class WorkShopService extends baseService {
     get_wards = (districtId) => {
         return this.get(`api/administrative/get-all-wards?districtId=${districtId}`);
     };
+
 
 }
 
