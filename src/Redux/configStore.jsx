@@ -5,6 +5,7 @@ import {SectionReducer} from "./reducers/SectionReducer";
 import {LoadingReducer} from "./reducers/LoadingReducer";
 import {MajorReducer} from "./reducers/MajorReducer";
 import { IndustryReducer } from "./reducers/IndustryReducer";
+import {WorkShopReducer} from "./reducers/WorkShopReducer";
 import {SubAdminReducer} from "./reducers/SubAdminReducer";
 
 
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
     UserReducer,
     SectionReducer,
     LoadingReducer,
+    WorkShopReducer,
     MajorReducer,
     IndustryReducer,
     SubAdminReducer,

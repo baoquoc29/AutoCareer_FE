@@ -17,3 +17,7 @@ export const STATUS_CODE = {
     SERVER_ERROR: 500,
     BAD_REQUEST:400
 }
+export const statusBrowse = {
+    PENDING: "Đang chờ xử lý",
+    APPROVED: "Đã được duyệt"
+};
