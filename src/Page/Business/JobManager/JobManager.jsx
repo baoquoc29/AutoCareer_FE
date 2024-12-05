@@ -1,30 +1,25 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    delete_industry_by_id,
-    get_all_industry,
-    get_all_industry_business,
-    get_industry_detail
-} from "../../../Redux/actions/IndustryThunk";
+    get_all_job, get_job_detail,
+} from "../../../Redux/actions/JobThunk";
 import {Button, Card, Input, Pagination} from "antd";
-import IndustryTable from "./IndustryTable";
-import IndustryForm from "./IndustryForm";
-import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
+import JobTable from "./JobTable";
 
 import {
     DownloadOutlined, SearchOutlined,
 } from "@ant-design/icons";
 import * as XLSX from "xlsx";
+import JobDetailModal from "./JobDetailModel";
 
 
-const IndustryManager = () => {
+const JobManager = () => {
     const dispatch = useDispatch();
-    const industryTable = useSelector((state) => state.IndustryReducer.industries); // Cho Table
-    const selectedIndustry = useSelector((state) => state.IndustryReducer.industryDetail);
-    const industryOptions = useSelector((state) => state.IndustryReducer.industryOptions); // Cho Select
-    const totalElements = useSelector((state) => state.IndustryReducer.totalElements); // Tổng số bản ghi
-    const currentPage = useSelector((state) => state.IndustryReducer.currentPage); // Trang hiện tại
-    const pageSize = useSelector((state) => state.IndustryReducer.pageSize);
+    const jobTable = useSelector((state) => state.JobReducer.jobs); // Cho Table
+    const selectedJobDetail = useSelector((state) => state.JobReducer.selectedJobDetail);
+    const totalElements = useSelector((state) => state.JobReducer.totalElements); // Tổng số bản ghi
+    const currentPage = useSelector((state) => state.JobReducer.currentPage); // Trang hiện tại
+    const pageSize = useSelector((state) => state.JobReducer.pageSize);
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [open, setOpen] = useState(false);
@@ -32,44 +27,45 @@ const IndustryManager = () => {
 
 
     useEffect(() => {
-        dispatch(get_all_industry_business(currentPage, pageSize));
-        dispatch(get_all_industry());
-    }, [dispatch, currentPage, pageSize, load]);
+        dispatch(get_all_job(currentPage, pageSize));
+    }, [dispatch, currentPage, pageSize]);
 
     useEffect(() => {
-        setFilteredData(industryTable);
-    }, [industryTable]);
+        setFilteredData(jobTable);
+    }, [jobTable]);
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_industry_business(page, pageSize)); // Gọi API với trang và kích thước mới
+        dispatch(get_all_job(page, pageSize)); // Gọi API với trang và kích thước mới
     };
 
-    const handleDelete = (record) => {
-        dispatch(delete_industry_by_id(record.key));
-    };
+    // const handleDelete = (record) => {
+    //     dispatch(delete_industry_by_id(record.key));
+    // };
 
     const handleInfo = (record) => {
-        dispatch(get_industry_detail(record.id)); // Set only the id of the selected industry
-        setOpen(true) // Fetch the industry details
+        dispatch(get_job_detail(record.id));
+        setOpen(true); // Mở modal
     };
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value);
-        const filtered = industryTable.filter((industry) => industry.name.toLowerCase().includes(value.toLowerCase()) || industry.description.toLowerCase().includes(value.toLowerCase()));
+        const filtered = jobTable.filter((job) => job.name.toLowerCase().includes(value.toLowerCase()) || job.description.toLowerCase().includes(value.toLowerCase()));
         setFilteredData(filtered);
     };
 
-    const data = Array.isArray(filteredData) ? filteredData.map((industry, index) => ({
-        key: industry.id,
-        id : industry.industryId,
+    const data = Array.isArray(filteredData) ? filteredData.map((job, index) => ({
+        id: job.jobId,
         stt: (currentPage - 1) * pageSize + index + 1,
-        name: industry.industryName,
-        code: industry.industryCode,
-        status: industry.status,
-        createAt: industry.createAt,
-        createBy: industry.createBy,
-        updateAt: industry.updateAt,
-        updateBy: industry.updateBy
+        title: job.title,
+        expireDate: job.expireDate,
+        level: job.level,
+        salary: job.salary,
+        jobDescription: job.jobDescription,
+        requirement: job.requirement,
+        benefit: job.benefit,
+        workingTime: job.workingTime,
+        statusBrowse: job.statusBrowse,
+        status: job.status,
     })) : [];
 
     const exportToExcel = () => {
@@ -101,12 +97,12 @@ const IndustryManager = () => {
                     <section>
                         <div className="container mt-5">
                             <div className="row">
-                                <div className="col-md-4 mb-3 border-5">
-                                    <IndustryForm selectData={industryOptions} load={setLoad}/>
-                                </div>
+                                {/*<div className="col-md-4 mb-3 border-5">*/}
+                                {/*    <IndustryForm selectData={industryOptions} load={setLoad}/>*/}
+                                {/*</div>*/}
 
-                                <div className="col-md-8 mb-3">
-                                    <Card title="Danh sách Ngành nghề">
+                                <div className="col-md-12 mb-3">
+                                    <Card title="Danh sách Công việc">
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between mb-3">
                                                 <Input
@@ -123,7 +119,7 @@ const IndustryManager = () => {
                                                     Xuất sang Excel
                                                 </Button>
                                             </div>
-                                            <IndustryTable data={data} onInfo={handleInfo} onDelete={handleDelete}/>
+                                            <JobTable data={data} onInfo={handleInfo}/>
                                         </div>
                                         <Pagination
                                             current={currentPage}
@@ -140,11 +136,11 @@ const IndustryManager = () => {
                 </div>
             </div>
         </section>
-        <IndustryDetailModal
+        <JobDetailModal
             open={open}
             onClose={() => setOpen(false)}
-            industry={selectedIndustry}
+            job={selectedJobDetail}
         />
     </>);
 };
-export default IndustryManager;
+export default JobManager;

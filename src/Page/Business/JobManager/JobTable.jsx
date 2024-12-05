@@ -1,8 +1,8 @@
 import {Button, Modal, Space, Table} from "antd";
-import {DeleteOutlined, InfoCircleOutlined, ReloadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, InfoCircleOutlined, ReloadOutlined} from "@ant-design/icons";
 import {toast} from "react-toastify";
 
-const IndustryTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
+const JobTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
 
     const confirmDelete = (record) => {
         Modal.confirm({
@@ -19,8 +19,8 @@ const IndustryTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
     };
     const columns = [
         {title: 'STT', dataIndex: 'stt', key: 'stt', sorter: (a, b) => a.stt - b.stt},
-        {title: 'Mã ngành', dataIndex: 'code', key: 'code', sorter: (a, b) => a.code.localeCompare(b.code)},
-        {title: 'Tên ngành', dataIndex: 'name', key: 'name', sorter: (a, b) => a.name.localeCompare(b.name)},
+        {title: 'Tiêu đề', dataIndex: 'title', key: 'title', sorter: (a, b) => a.title.localeCompare(b.title)},
+        {title: 'Ngày hết hạn', dataIndex: 'expireDate', key: 'expireDate', sorter: (a, b) => a.expireDate.localeCompare(b.expireDate)},
         {
             title: 'Trạng thái',
             dataIndex: 'status',
@@ -31,10 +31,13 @@ const IndustryTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
         {
             title: 'Thao tác', key: 'actions', render: (text, record) => (
                 <Space size="middle">
-                    <Button icon={<InfoCircleOutlined/>} onClick={() => onInfo(record)}
+                    <Button icon={<InfoCircleOutlined/>} onClick={() =>  onInfo(record)}
                             disabled={record.status !== 'ACTIVE'}/>
+                    <Button color="primary" icon={<EditOutlined />} onClick={() => onEdit(record.id)}  />
+
                     {record.status === 'ACTIVE' ? (
                         <Button danger={true} icon={<DeleteOutlined/>} onClick={() => confirmDelete(record)}/>
+
                     ) : (
                         <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>
                     )}
@@ -48,4 +51,4 @@ const IndustryTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
         </>
     )
 }
-export default IndustryTable;
+export default JobTable;

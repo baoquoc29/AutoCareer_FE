@@ -30,11 +30,11 @@ const Profile = () => {
                                         <div className="container">
                                             <div className="card card-custom p-4">
                                                 <div className="row mb-4">
-                                                    <div className="col-md-3 text-center">
-                                                        <img
-                                                            src={`${DOMAIN}/api/v1/image/resource?imageId=${university["logoImageId"]}`}
-                                                            alt="Logo Trường" className="img-fluid logo-image"/>
-                                                    </div>
+                                                    {/*<div className="col-md-3 text-center">*/}
+                                                    {/*    <img*/}
+                                                    {/*        src={`${DOMAIN}/api/v1/image/resource?imageId=${university["logoImageId"]}`}*/}
+                                                    {/*        alt="Logo Trường" className="img-fluid logo-image"/>*/}
+                                                    {/*</div>*/}
                                                     <div className="col-md-9">
                                                         <h1>{university.name}</h1>
                                                         <p>{university.description}</p>

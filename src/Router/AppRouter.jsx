@@ -20,6 +20,7 @@ import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
 import { BusinessTemplate } from "../Template/BusinessTemplate/BusinessTemplate";
 import { Business } from "../Page/Business/Business";
 import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
+import JobManager from "../Page/Business/JobManager/JobManager";
 
 export function AppRouter() {
   return (
@@ -65,6 +66,7 @@ export function AppRouter() {
         >
           <Route path={"/business"} element={<Business />} />
           <Route path={"/industry-manager"} element={<IndustryManager />} />
+          <Route path={"/job-manager"} element={<JobManager />} />
         </Route>
         <Route path={"*"} element={<PageError />} />
       </Routes>

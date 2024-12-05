@@ -55,8 +55,8 @@ export function UniversityTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    profileImg={`${DOMAIN}/api/v1/image/resource?imageId=${university.logoImageId}`}
-                    caption="Quản lý trường đại học"
+                    // profileImg={`${DOMAIN}/api/v1/image/resource?imageId=${university.logoImageId}`}
+                    // caption="Quản lý trường đại học"
                     menuItems={menuItems}
                 />
                 <Outlet/>

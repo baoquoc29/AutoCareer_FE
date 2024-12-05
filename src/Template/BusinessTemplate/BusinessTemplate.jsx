@@ -20,6 +20,11 @@ export function BusinessTemplate() {
           link: "/industry-manager",
           icon: "",
         },
+        {
+          label: "Danh sách công việc",
+          link: "/job-manager",
+          icon: "",
+        },
         { label: "Danh sách khoa", link: "/section-manager", icon: "" },
         { label: "Danh sách ngành ", link: "/major-manager", icon: "" },
       ],

@@ -1,5 +1,6 @@
 import {industryService} from "../../Service/IndustryService/IndustryService";
 import {GET_INDUSTRIES_DETAIL, CREATE_INDUSTRIES, SET_INDUSTRIES, SET_INDUSTRY_OPTIONS} from "../types/IndustryType";
+import {toast} from "react-toastify";
 
 export const get_all_industry_business = (page = 1, size = 5) => {
     return async (dispatch) => {
@@ -63,6 +64,7 @@ export const get_industry_detail = (id) => {
             });
         } catch (error) {
             console.log(error);
+            toast.error("Không thể lấy thông tin chi tiết ngành nghề!");
         }
     };
 };
