@@ -1,8 +1,8 @@
-import { Header } from "../../Component/HeaderComponent/Header";
-import { SideBar } from "../../Component/SideBarComponent/SideBar";
-import { Outlet } from "react-router-dom";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import {Header} from "../../Component/HeaderComponent/Header";
+import {SideBar} from "../../Component/SideBarComponent/SideBar";
+import {Outlet} from "react-router-dom";
+import {useState} from "react";
+import {useSelector} from "react-redux";
 
 export function BusinessTemplate() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

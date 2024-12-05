@@ -1,4 +1,4 @@
-import {CREATE_SECTION, SET_SECTIONS} from "../types/SectionType";
+import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS} from "../types/SectionType";
 
 
 const initialState = {
@@ -16,7 +16,10 @@ export const SectionReducer = (state = initialState, action) => {
             return {
                 ...state
             }
-
+        case DELETE_SECTION:
+            return {
+                ...state
+            }
         default:
             return {...state}
     }

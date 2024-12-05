@@ -1,5 +1,5 @@
 import {majorService} from "../../Service/UniversityService/MajorService";
-import {CREATE_MAJOR, DELETE_MAJOR_ID, SET_MAJOR, SET_MAJOR_ID} from "../types/MajorType";
+import {CREATE_MAJOR, DELETE_MAJOR_ID, SET_MAJOR, SET_MAJOR_ID, UPDATE_MAJOR_ID} from "../types/MajorType";
 import {toast} from "react-toastify";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 
@@ -34,28 +34,50 @@ export const create_major = (formData) => {
         try {
             const res = await majorService.create_major(formData);
             console.log(res)
-            if (res === STATUS_CODE.SUCCESS) {
+            if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Thêm chuyên ngành thành công")
                 dispatch({
                     type: CREATE_MAJOR,
                     payload: res.data
                 })
+            } else if (res.code === STATUS_CODE.BAD_REQUEST) {
+                toast.error(res)
             }
-        }catch (error){
+        } catch (error) {
             toast.error(error.response.data.message)
         }
     }
 }
 export const delete_major_id = (id) => {
     return async (dispatch) => {
-        try{
+        try {
             const res = await majorService.delete_major(id);
-            console.log(res.data)
-            dispatch({
-                type:DELETE_MAJOR_ID,
-                payload:res.data
-            })
-        }catch (error){
+            if(res.code === STATUS_CODE.SUCCESS){
+                toast.success("Xóa khoa thành công")
+                dispatch({
+                    type: DELETE_MAJOR_ID,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
             toast.error(error.data.message)
         }
+    }
+}
+export const update_major_id = (id, formData) => {
+    return async (dispatch) => {
+        try {
+            const res = await majorService.update_major(id, formData);
+            console.log(res.data)
+            if (res === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: UPDATE_MAJOR_ID,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.data.response)
+        }
+
     }
 }

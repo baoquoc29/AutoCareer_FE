@@ -1,6 +1,12 @@
 import {NavLink} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const UserNav = ({profileImg, userName, userRole}) => {
+
+    const {userData} = useSelector((state) => state.UserReducer);
+    const isUniversityUser = userData && userData.role.name === 'UNIVERSITY';
+    const isBusinessUser = userData && userData.role.name === 'BUSINESS';
+
     return (
         <>
             <div id="_dm-mainnavProfile" className="mainnav__widget my-3 hv-outline-parent" bis_skin_checked="1">
@@ -20,10 +26,16 @@ const UserNav = ({profileImg, userName, userRole}) => {
                             <small className="text-body-secondary">Vai trò: {userRole}</small>
                         </button>
                         <div id="usernav" className="nav flex-column collapse" bis_skin_checked="1">
-                            <NavLink to={"/profile-user"} className="nav-link">
-                                <i className="demo-pli-male fs-5 me-2"></i>
-                                <span className="ms-1">Thông tin</span>
-                            </NavLink>
+                            {isUniversityUser && (
+                                <NavLink to={'/profile-university'} className="list-group-item list-group-item-action">
+                                    <i className="demo-pli-male fs-5 me-2"></i> Thông tin
+                                </NavLink>
+                            )}
+                            {isBusinessUser && (
+                                <NavLink to={'/profile-business'} className="list-group-item list-group-item-action">
+                                    <i className="demo-pli-male fs-5 me-2"></i> Thông tin
+                                </NavLink>
+                            )}
                             <NavLink to={"/"} className="nav-link">
                                 <i className="demo-pli-unlock fs-5 me-2"></i>
                                 <span className="ms-1">Đăng xuất</span>

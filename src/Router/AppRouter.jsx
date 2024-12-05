@@ -22,6 +22,7 @@ import { Business } from "../Page/Business/Business";
 import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
 import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
 import EmployeeCreate from "../Page/Business/EmployeeManager/EmployeeCreate";
+import ProfileBusiness from "../Page/ProfileUser/ProfileBusiness/ProfileBusiness";
 
 export function AppRouter() {
   return (
@@ -47,7 +48,7 @@ export function AppRouter() {
           }
         >
           <Route path={"/university"} element={<University />} />
-          <Route path={"/profile-user"} element={<Profile />} />
+          <Route path={"/profile-university"} element={<Profile />} />
           <Route path={"/major-manager"} element={<MajorManager />} />
           <Route path={"/instructional-manager"} element={<InstructionalManager />}/>
           <Route path={"/instructional-edit"} element={<InstructionalEdit />} />
@@ -66,6 +67,7 @@ export function AppRouter() {
           <Route path={"/industry-manager"} element={<IndustryManager />} />
           <Route path={"/employee-manager"} element={<EmployeeManager />} />
           <Route path={"/employee-create"} element={<EmployeeCreate />} />
+          <Route path={"/profile-business"} element={<ProfileBusiness />} />
         </Route>
         <Route path={"*"} element={<PageError />} />
       </Routes>

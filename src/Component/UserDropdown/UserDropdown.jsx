@@ -6,8 +6,13 @@ import {NavLink} from "react-router-dom";
 
 export const UserDropdown = ({navigate}) => {
     const {userData} = useSelector((state) => state.UserReducer);
-    const university = useSelector(state => state.UserReducer.userData ? state.UserReducer.userData["university"] : undefined);
+    // const university = useSelector(state => state.UserReducer.userData ? state.UserReducer.userData["university"] : undefined);
     const dispatch = useDispatch();
+
+    console.log('User Data:', userData);
+    // Hàm kiểm tra liên kết của người dùng
+    const isUniversityUser = userData && userData.role.name === 'UNIVERSITY';
+    const isBusinessUser = userData && userData.role.name === 'BUSINESS';
 
     const handleLogout = async () => {
         const token = localStorage.getItem(TOKEN);
@@ -44,9 +49,19 @@ export const UserDropdown = ({navigate}) => {
                     </div>
                     <div>
                         <div className="list-group list-group-borderless h-100 py-3">
-                            <NavLink to={'/profile-user'} className="list-group-item list-group-item-action">
-                                <i className="demo-pli-male fs-5 me-2"></i> Thông tin
-                            </NavLink>
+                            {/*<NavLink to={'/profile-user'} className="list-group-item list-group-item-action">*/}
+                            {/*    <i className="demo-pli-male fs-5 me-2"></i> Thông tin*/}
+                            {/*</NavLink>*/}
+                            {isUniversityUser && (
+                                <NavLink to={'/profile-university'} className="list-group-item list-group-item-action">
+                                    <i className="demo-pli-male fs-5 me-2"></i> Thông tin
+                                </NavLink>
+                            )}
+                            {isBusinessUser && (
+                                <NavLink to={'/profile-business'} className="list-group-item list-group-item-action">
+                                    <i className="demo-pli-male fs-5 me-2"></i> Thông tin
+                                </NavLink>
+                            )}
                             <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
                                 <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
                             </NavLink>
