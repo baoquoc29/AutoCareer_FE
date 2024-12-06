@@ -3,6 +3,7 @@ import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
 import {useState} from "react";
 import {useSelector} from "react-redux";
+import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 
 export function BusinessTemplate() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,11 +55,11 @@ export function BusinessTemplate() {
         id="root"
         className={`root tm--primary-mn ${isMenuOpen ? "mn--max" : "mn--min"}`}
       >
-        <Header toggleSidebar={toggleSidebar} link={"/university"} />
+        <Header toggleSidebar={toggleSidebar} link={"/profile-business"} />
         <SideBar
           userName={userData.username}
           userRole={userData.role.name}
-          profileImg="./assets/img/profile-photos/1.png"
+          profileImg={`${GET_IMAGE_URI}${userData.business.businessImageId}`}
           caption="Quản lý doanh nghiệp"
           menuItems={menuItems}
         />

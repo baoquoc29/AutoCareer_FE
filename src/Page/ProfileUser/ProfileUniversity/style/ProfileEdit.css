@@ -1,0 +1,114 @@
+/*!* Customizing the buttons *!*/
+/*.btn-primary {*/
+/*    background-color: #007bff;*/
+/*    border-color: #007bff;*/
+/*    font-weight: 600;*/
+/*    padding: 10px 20px;*/
+/*    font-size: 1.1rem;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.btn-primary:hover {*/
+/*    background-color: #0056b3;*/
+/*    border-color: #004085;*/
+/*}*/
+
+/*.btn-secondary {*/
+/*    background-color: #6c757d;*/
+/*    border-color: #6c757d;*/
+/*    font-weight: 600;*/
+/*    padding: 10px 20px;*/
+/*    font-size: 1.1rem;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.btn-secondary:hover {*/
+/*    background-color: #5a6268;*/
+/*    border-color: #4e555b;*/
+/*}*/
+
+/* Form styling */
+.form__university__edit .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form__university__edit label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+.form__university__edit .form-group textarea {
+    height: 150px; /* Chiều cao cố định cho textarea */
+    resize: vertical; /* Cho phép người dùng chỉ thay đổi chiều cao của textarea */
+    border-radius: 10px; /* Bo góc cho textarea */
+    border: 1px solid #ccc; /* Đường viền nhẹ */
+    padding: 10px; /* Khoảng cách giữa nội dung và viền */
+    font-size: 14px; /* Cỡ chữ cho textarea */
+    width: 100%; /* Chiều rộng đầy đủ */
+    background-color: #f8f9fa; /* Màu nền nhẹ cho textarea */
+    transition: border-color 0.3s ease-in-out; /* Hiệu ứng chuyển màu đường viền */
+}
+
+/* Thêm hiệu ứng thay đổi màu viền khi focus vào textarea */
+.form__university__edit .form-group textarea:focus {
+    border-color: #007bff; /* Đổi màu viền khi focus */
+    outline: none; /* Bỏ viền ngoài khi focus */
+}
+.form__university__edit input,
+.form__university__edit textarea {
+    border-radius: 10px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.form__university__edit .form-control {
+    padding: 12px 20px;
+    font-size: 1rem;
+}
+
+.form__university__edit .form-control-file {
+    padding: 10px;
+}
+
+/* Card styling */
+.card__university__edit {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Image preview styling */
+.form__university__edit .form-group img {
+    max-width: 100%; /* Đảm bảo ảnh không bị tràn ra ngoài khung */
+    height: auto;
+    border-radius: 15px; /* Bo góc cho ảnh */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng đổ bóng nhẹ */
+    margin-top: 15px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Thêm hiệu ứng zoom khi hover vào ảnh */
+.form__university__edit .form-group img:hover {
+    transform: scale(1.05); /* Phóng to ảnh nhẹ khi hover */
+}
+
+/* Cải thiện layout của phần ảnh đại diện */
+.form__university__edit .form-group input[type="file"] {
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+}
+
+/* Khi không có ảnh preview */
+.form__university__edit .form-group .mt-3 {
+    text-align: center;
+}
+
+.form__university__edit .form-group .mt-3 img {
+    max-height: 200px; /* Giới hạn chiều cao của ảnh */
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    border-radius: 10px; /* Bo góc cho ảnh */
+}
+
+
