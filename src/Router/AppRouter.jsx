@@ -10,13 +10,14 @@ import {University} from "../Page/University/University";
 import {UniversityTemplate} from "../Template/UniversityTemplate/UniversityTemplate";
 import LockScreen from "../Component/LockScreenComponent/LockScreen";
 import PageError from "../Page/PageError404/PageError";
-import Profile from "../Page/ProfileUser/ProfileUniversity/Profile";
+import ProfileUniversity from "../Page/ProfileUser/ProfileUniversity/ProfileUniversity";
 import MajorManager from "../Page/University/MajorManager/MajorManager";
 import InstructionalManager from "../Page/University/InstructionalManager/InstructionalManager";
 import SectionManager from "../Page/University/SectionManager/SectionManager";
 import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager";
 import InstructionalEdit from "../Page/University/InstructionalManager/InstructionalEdit/InstructionalEdit";
 import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
+import ProfileUniversityEdit from "../Page/ProfileUser/ProfileUniversity/ProfileUniversityEdit";
 
 export function AppRouter() {
     return (
@@ -32,7 +33,8 @@ export function AppRouter() {
                 </Route>
                 <Route element={<PrivateRoute> <UniversityTemplate/> </PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
-                    <Route path={"/profile-user"} element={<Profile/>}/>
+                    <Route path={"/profile-user"} element={<ProfileUniversity/>}/>
+                    <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
                     <Route path={"/major-manager"} element={<MajorManager/>}/>
                     <Route path={"/instructional-manager"} element={<InstructionalManager/>}/>
                     <Route path={"/instructional-edit"} element={<InstructionalEdit/>}/>
