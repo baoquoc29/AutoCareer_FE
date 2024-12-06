@@ -1,13 +1,20 @@
 import {useDispatch, useSelector} from "react-redux";
-import {DOMAIN, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
+import {DOMAIN, GET_IMAGE_URL, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
 import {logoutUser} from "../../Redux/actions/UserThunk";
 import {Button} from "antd";
 import {NavLink} from "react-router-dom";
+import {useEffect} from "react";
+import {get_university_id} from "../../Redux/actions/UniversityThunk";
 
 export const UserDropdown = ({navigate}) => {
-    const {userData} = useSelector((state) => state.UserReducer);
-    const university = useSelector(state => state.UserReducer.userData ? state.UserReducer.userData["university"] : undefined);
+    const user = useSelector(state => state.UserReducer.userData);
+    const universityId = user.university.id;
+    const uni = useSelector(state => state.UniversityReducer.university)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(get_university_id(universityId));
+    }, [dispatch]);
 
     const handleLogout = async () => {
         const token = localStorage.getItem(TOKEN);
@@ -34,12 +41,12 @@ export const UserDropdown = ({navigate}) => {
                     <div className="d-flex align-items-center border-bottom px-3 py-2">
                         <div className="flex-shrink-0">
                             <img className="img-sm rounded-circle"
-                                 // src={`${DOMAIN}/api/v1/image/resource?imageId=${university["logoImageId"]}`}
+                                 src={`${GET_IMAGE_URL}${uni.logoImageId}`}
                                  alt="UserNav Picture" loading="lazy"/>
                         </div>
                         <div className="flex-grow-1 ms-3">
-                            <h5 className="mb-0">{userData.username.length > 20 ? userData.username.slice(0, 15) + "..." : userData.username}</h5>
-                            <span className="text-body-secondary fst-italic">Vai trò:{userData.role.name}</span>
+                            <h5 className="mb-0">{user.username.length > 20 ? user.username.slice(0, 14) + "..." : user.username}</h5>
+                            <span className="text-body-secondary fst-italic">Vai trò:{user.role.name}</span>
                         </div>
                     </div>
                     <div>

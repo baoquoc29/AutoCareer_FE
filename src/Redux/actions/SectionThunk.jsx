@@ -1,5 +1,5 @@
 import {sectionService} from "../../Service/UniversityService/SectionService";
-import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS} from "../types/SectionType";
+import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, UPDATE_SECTION, UPDATE_SECTION_ID} from "../types/SectionType";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
@@ -46,6 +46,23 @@ export const delete_section = (id) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        }
+    }
+}
+export const update_section = (id, formData) => {
+    return async (dispatch) => {
+        try {
+            const res = await sectionService.update_section(id, formData);
+            console.log('data',res.data)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: UPDATE_SECTION_ID,
+                    payload: res.data
+                })
+                dispatch(get_all_sections());
+            }
+        } catch (error) {
+            toast.error(error)
         }
     }
 }

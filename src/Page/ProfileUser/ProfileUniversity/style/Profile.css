@@ -1,0 +1,119 @@
+/* Tổng thể */
+body {
+    background-color: #f9f9f9; /* Màu nền sáng hơn */
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Card profile */
+.card-profile-university {
+    border-radius: 10px; /* Bo góc nhỏ */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Bóng nhẹ */
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect cho card */
+.card-profile-university:hover {
+    transform: translateY(-4px); /* Nhích card lên khi hover */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Phần logo */
+.card-profile-university .img-fluid {
+    max-width: 120px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Header */
+.card-profile-university h1 {
+    font-size: 1.6rem; /* Kích thước chữ vừa đủ */
+    font-weight: 600;
+    color: #444;
+    margin: 0 0 10px 0;
+}
+
+/* Nội dung văn bản */
+.card-profile-university p {
+    font-size: 1rem; /* Giảm font cho đoạn văn */
+    line-height: 1.4;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Badge */
+.badge-pill {
+    padding: 0.4em 0.8em;
+    font-size: 0.9rem;
+    border-radius: 25px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.badge-blue {
+    background: #e0f7fa;
+    color: #00796b;
+}
+
+.badge-blue-dark {
+    background: #004d40;
+    color: #fff;
+}
+
+/* Hiệu ứng hover cho badge */
+.badge-blue:hover, .badge-blue-dark:hover {
+    background-color: #00796b;
+    color: white;
+}
+
+/* Nút chỉnh sửa */
+.btn-profile-university-custom {
+    padding: 8px 20px; /* Kích thước nút nhỏ gọn */
+    font-size: 1rem;
+    border-radius: 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect cho nút */
+.btn-profile-university-custom:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Khi hover, nút sẽ phóng to một chút */
+}
+
+/* Cải thiện layout của các phần */
+.container {
+    max-width: 1200px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+/* Các phần của card */
+.card-profile-university .row {
+    margin-bottom: 15px;
+}
+
+.card-profile-university .col-md-6 {
+    text-align: left;
+    padding: 0 10px;
+}
+
+.card-profile-university .col-md-9 {
+    text-align: left;
+    padding: 0 10px;
+}
+
+.content__header {
+    padding: 10px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+}

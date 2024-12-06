@@ -10,6 +10,9 @@ export class UniversityService extends baseService {
     get_university_id = (id) => {
         return this.get(`api/university/getById/${id}`)
     }
+    update_university_id = (id, formData) => {
+        return this.post(`api/university/update/${id}`, formData)
+    }
 }
 
 export const universityService = new UniversityService();

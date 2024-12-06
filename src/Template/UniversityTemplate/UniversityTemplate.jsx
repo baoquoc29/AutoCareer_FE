@@ -1,12 +1,20 @@
 import {Header} from "../../Component/HeaderComponent/Header";
 import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
-import {useState} from "react";
-import {useSelector} from "react-redux";
-import {DOMAIN} from "../../Utils/Setting/Config";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {GET_IMAGE_URL} from "../../Utils/Setting/Config";
+import {get_university_id} from "../../Redux/actions/UniversityThunk";
+
 
 export function UniversityTemplate() {
-    const university = useSelector(state => state.UserReducer.userData?.university);
+    const user = useSelector(state => state.UserReducer.userData);
+    const universityId = user.university.id;
+    const uni = useSelector(state => state.UniversityReducer.university);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(get_university_id(universityId));
+    }, [dispatch]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {userData} = useSelector((state) => state.UserReducer);
     const toggleSidebar = () => {
@@ -55,7 +63,7 @@ export function UniversityTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    profileImg={`${DOMAIN}/api/v1/image/resource?imageId=${university.logoImageId}`}
+                    profileImg={`${GET_IMAGE_URL}${uni.logoImageId}`}
                     caption="Quản lý trường đại học"
                     menuItems={menuItems}
                 />
