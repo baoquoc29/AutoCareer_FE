@@ -18,6 +18,12 @@ import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager"
 import InstructionalEdit from "../Page/University/InstructionalManager/InstructionalEdit/InstructionalEdit";
 import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
 import ProfileUniversityEdit from "../Page/ProfileUser/ProfileUniversity/ProfileUniversityEdit";
+import {BusinessTemplate} from "../Template/BusinessTemplate/BusinessTemplate";
+import {Business} from "../Page/Business/Business";
+import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
+import {AdminTemplate} from "../Template/AdminTemplate/AdminTemplate";
+import {Admin} from "../Page/Admin/Admin";
+import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 
 export function AppRouter() {
     return (
@@ -31,7 +37,7 @@ export function AppRouter() {
                     <Route path={"/reset-password"} element={<PasswordReminder/>}/>
                     <Route path={"/lock-screen"} element={<LockScreen/>}/>
                 </Route>
-                <Route element={<PrivateRoute> <UniversityTemplate/> </PrivateRoute>}>
+                <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
                     <Route path={"/profile-user"} element={<ProfileUniversity/>}/>
                     <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
@@ -41,8 +47,16 @@ export function AppRouter() {
                     <Route path={"/section-manager"} element={<SectionManager/>}/>
                     <Route path={"/workshop-manager"} element={<WorkShopManager/>}/>
                 </Route>
+                <Route element={<PrivateRoute>{" "}<BusinessTemplate/>{" "}</PrivateRoute>}>
+                    <Route path={"/business"} element={<Business/>}/>
+                    <Route path={"/industry-manager"} element={<IndustryManager/>}/>
+                </Route>
                 <Route path={"*"} element={<PageError/>}/>
+                <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
+                    <Route path={"/admin"} element={<Admin/>}/>
+                    <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
+                </Route>
             </Routes>
         </>
-    )
+    );
 }
