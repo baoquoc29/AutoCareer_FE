@@ -1,7 +1,7 @@
 import './ProfileBusiness.css'
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {DOMAIN} from "../../../Utils/Setting/Config";
+import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import {get_all_industry} from "../../../Redux/actions/IndustryThunk";
 
 
@@ -30,7 +30,7 @@ const ProfileBusiness = () => {
                                                 <div className="row mb-4">
                                                     <div className="col-md-3 text-center">
                                                         <img
-                                                            src={`${DOMAIN}/api/v1/image/resource?imageId=${business["businessImageId"]}`}
+                                                            src={`${GET_IMAGE_URI}${business["businessImageId"]}`}
                                                             alt="Logo Doanh Nghiệp" className="img-fluid logo-image"/>
                                                     </div>
                                                     <div className="col-md-9">
