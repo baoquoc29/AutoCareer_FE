@@ -3,7 +3,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Input, Button, Form, notification, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    resetResponse,
     send_code_forgot,
     send_new_password,
 } from "../../../Redux/actions/UserThunk";
@@ -12,46 +11,47 @@ export const PasswordReminder = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
-    const [code, setCode] = useState(""); // State for storing entered code
-    const [timer, setTimer] = useState(60); // State for countdown timer
+    const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
+    const [code, setCode] = useState(""); // Store entered verification code
+    const [timer, setTimer] = useState(60); // Countdown timer state
     const [canResend, setCanResend] = useState(false); // State for controlling resend button
-    const response = useSelector((state) => state.UserReducer?.response);
+    const response = useSelector((state) => state.UserReducer?.response); // Get response from redux store
+
+    // Handle form submission for email
     const onFinish = (values) => {
         const { email } = values;
-        const requestBody = {
-            email:  email
-        };
-        dispatch(send_code_forgot(requestBody));
+        const requestBody = { email };
+        dispatch(send_code_forgot(requestBody)); // Dispatch the action to send code
     };
 
+    // Handle changes in the response from the backend
     useEffect(() => {
-        if (response && response.code === 200) {
-            notification.success({ message: 'Mã xác nhận đã được gửi thành công!' });
-            setModalVisible(true);
-            startTimer();
-        } else if (response && response.message) {
-            notification.error({ message: response?.message || 'Lỗi trong quá trình gửi mã xác nhận' });
+        if (response) {
+            if (response.code === 200) {
+                notification.success({ message: 'Mã xác nhận đã được gửi thành công!' });
+                setModalVisible(true);
+                startTimer(); // Start the timer when the code is sent successfully
+            } else if (response.message) {
+                notification.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
+            }
         }
-        dispatch(resetResponse());
     }, [response]);
-
 
     // Start countdown timer for verification code expiration
     const startTimer = () => {
         const interval = setInterval(() => {
             setTimer((prevTimer) => {
                 if (prevTimer <= 1) {
-                    setCanResend(true); // Enable resend after timer runs out
-                    clearInterval(interval);
+                    setCanResend(true); // Enable resend button after the timer runs out
+                    clearInterval(interval); // Clear the interval when the timer reaches 0
                     return prevTimer;
                 }
-                return prevTimer - 1;
+                return prevTimer - 1; // Decrease timer each second
             });
         }, 1000);
     };
 
-    // Handle code input change
+    // Handle changes in the verification code input
     const handleCodeChange = (e) => {
         setCode(e.target.value); // Update code state when the user types
     };
@@ -59,35 +59,30 @@ export const PasswordReminder = () => {
     // Handle code verification submission
     const handleSubmitCode = () => {
         if (code === response?.data?.verificationCode) {
-            notification.success({
-                message: "Mã xác minh hợp lệ!",
-                description: "Mã xác minh đã được xác nhận.",
-            });
-            const requestBody = {
-                email:  response?.data?.email,
-                forgotCode: code
-            };
-            dispatch(send_new_password(requestBody));
-            notification.success({ message: 'Mật mới dã được cấp trong email vui lòng đăng nhập để đổi mật khẩu!' });
-            navigate("/");
+            notification.success({ message: "Mã xác minh hợp lệ!", description: "Mã xác minh đã được xác nhận." });
+            const requestBody = { email: response?.data?.email, forgotCode: code };
+            dispatch(send_new_password(requestBody)); // Dispatch the action to set new password
+            notification.success({ message: 'Mật mới đã được cấp trong email. Vui lòng đăng nhập để đổi mật khẩu!' });
+            navigate("/"); // Redirect to the login page
         } else {
-            notification.error({
-                message: "Mã xác minh không hợp lệ!",
-                description: "Vui lòng nhập mã chính xác.",
-            });
+            notification.error({ message: "Mã xác minh không hợp lệ!", description: "Vui lòng nhập mã chính xác." });
         }
     };
 
+    // Handle resend verification code
     const handleResendCode = () => {
-        if (!canResend) {
-            return; // Chỉ cho phép gửi lại khi hết thời gian
-        }
-        setTimer(60); // Reset lại timer
-        setCanResend(false); // Disable nút gửi lại trong khi đang đếm ngược
-        form.submit();
-        
+        if (!canResend) return; // Only allow resend if the timer is finished
+        setTimer(60); // Reset timer
+        setCanResend(false); // Disable resend button while timer is counting down
+        form.submit(); // Submit the form to resend the code
     };
 
+    // Reset the modal and timer when the component mounts (or when user navigates back)
+    useEffect(() => {
+        setModalVisible(false);
+        setTimer(60);
+        setCanResend(false);
+    }, []); // This effect will run when the component is first mounted
 
     return (
         <div id="root" className="root front-container">
@@ -113,7 +108,7 @@ export const PasswordReminder = () => {
                                         <Input placeholder="Email" autoFocus />
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button  type="primary" htmlType="submit" block>
+                                        <Button type="primary" htmlType="submit" block>
                                             Đặt lại mật khẩu
                                         </Button>
                                     </Form.Item>

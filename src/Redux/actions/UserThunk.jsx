@@ -2,11 +2,15 @@ import {
     DISPLAY_LOADING,
     HIDE_LOADING,
     LOGIN_SUCCESS,
-    LOGOUT_SUCCESS, RESET_RESPONSE, SIGNUP_BUSINESS_SUCCESS,
-    SIGNUP_SUCCESS, SIGNUP_UNIVERSITY_SUCCESS,
+    LOGOUT_SUCCESS,
+    SEND_CODE_BUSINESS_SUCCESS,
+    SEND_CODE_UNIVERSITY_SUCCESS, SEND_NEW_PASSWORD,
+    SIGNUP_BUSINESS_SUCCESS,
+    SIGNUP_UNIVERSITY_SUCCESS,
     STATUS_CODE,
     TOKEN,
-    USER_LOGIN, VERIFY_CODE_FAIL, VERIFY_CODE_SUCCESS
+    USER_LOGIN,
+    VERIFY_CODE_SUCCESS
 } from "../../Utils/Setting/Config";
 import {userService} from "../../Service/UserService/UserService";
 
@@ -95,7 +99,7 @@ export const verify_account_business = (formData) => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_verify_code_business(formData);
             dispatch({
-                type: VERIFY_CODE_SUCCESS,
+                type: SEND_CODE_BUSINESS_SUCCESS,
                 payload: res,
             });
         } catch (e) {
@@ -105,9 +109,6 @@ export const verify_account_business = (formData) => {
         }
     };
 };
-export const resetResponse = () => ({
-    type: RESET_RESPONSE,
-});
 
 export const verify_account_university = (formData) => {
     return async (dispatch) => {
@@ -116,7 +117,7 @@ export const verify_account_university = (formData) => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_verify_code_university(formData);
             dispatch({
-                type: VERIFY_CODE_SUCCESS,
+                type: SEND_CODE_UNIVERSITY_SUCCESS,
                 payload: res,
             });
         } catch (e) {
@@ -133,7 +134,6 @@ export const send_code_forgot = (formData) => {
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_forgot_code(formData);
-
             dispatch({
                 type: VERIFY_CODE_SUCCESS,
                 payload: res,
@@ -153,7 +153,7 @@ export const send_new_password = (formData) => {
             const res = await userService.send_new_password(formData);
 
             dispatch({
-                type: VERIFY_CODE_SUCCESS,
+                type: SEND_NEW_PASSWORD,
                 payload: res,
             });
         } catch (e) {
