@@ -10,8 +10,8 @@ export function Header({toggleSidebar, link}) {
 
     return (
         <>
-            <header className="header">
-                <div className="header__inner">
+            <header className="header ">
+                <div className="header__inner ">
                     <div className="header__brand">
                         <div className="brand-wrap">
                             <NavLink to={link} className="brand-img stretched-link">
