@@ -1,11 +1,3 @@
-/* Tổng thể */
-body {
-    background-color: #f9f9f9; /* Màu nền sáng hơn */
-    font-family: 'Roboto', sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
 
 /* Card profile */
 .card-profile-university {
@@ -89,7 +81,7 @@ body {
     transform: scale(1.05); /* Khi hover, nút sẽ phóng to một chút */
 }
 
-/* Cải thiện layout của các phần */
+/* Cải thiện layout của các phần*/
 .container {
     max-width: 1200px;
     padding: 0 15px;
@@ -111,9 +103,9 @@ body {
     padding: 0 10px;
 }
 
-.content__header {
-    padding: 10px;
-    background: #fff;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 15px;
-}
+/*.content__header {*/
+/*    padding: 10px;*/
+/*    background: #fff;*/
+/*    border-bottom: 1px solid #e0e0e0;*/
+/*    margin-bottom: 15px;*/
+/*}*/

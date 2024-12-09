@@ -3,7 +3,6 @@ import {SignIn} from "../Page/Login/Signin/SignIn";
 import {AccountTypeSelection} from "../Page/Login/AccountTypeSelection/AccountTypeSelection";
 import {SignUpUniversity} from "../Page/Login/Signup/SignUpUniversity";
 import {PasswordReminder} from "../Page/Login/PasswordReminder/PasswordReminder";
-import {history} from "../App";
 import {SignUpBusiness} from "../Page/Login/Signup/SignUpBusiness";
 import {UserTemplate} from "../Template/UserTemplate/UserTemplate";
 import {University} from "../Page/University/University";
@@ -31,7 +30,7 @@ import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 export function AppRouter() {
     return (
         <>
-            <Routes history={history}>
+            <Routes>
                 <Route element={<UserTemplate/>}>
                     <Route path={"/"} element={<SignIn/>}/>
                     <Route path={"/account-type-selection"} element={<AccountTypeSelection/>}/>

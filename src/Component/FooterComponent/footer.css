@@ -1,0 +1,36 @@
+.footer-custom {
+    background-color: #f8f9fa; /* Màu nền của footer */
+    border-top: 1px solid #e9ecef; /* Đường viền trên của footer */
+    padding: 20px 0; /* Khoảng cách bên trong của footer */
+}
+
+.footer-custom .content__wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-custom .nav {
+    display: flex;
+    gap: 15px; /* Khoảng cách giữa các liên kết */
+}
+
+.footer-custom .nav-link {
+    color: #007bff; /* Màu của liên kết */
+    text-decoration: none; /* Bỏ gạch chân */
+    padding: 0 10px; /* Khoảng cách trong của liên kết */
+}
+
+.footer-custom .nav-link:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+
+.footer-custom .btn-link {
+    color: #007bff; /* Màu của liên kết trong phần copyright */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
+.footer-custom .btn-link:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}

@@ -4,7 +4,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {validateField} from "../../../Utils/Validation/MajorValidation";
 import {useEffect} from "react";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
-import './Major.css'
+import './Style/Major.css'
+
 
 const MajorForm = ({onSubmit, initialValues}) => {
     const sections = useSelector(state => state.SectionReducer.sections);
@@ -26,11 +27,13 @@ const MajorForm = ({onSubmit, initialValues}) => {
         onSubmit: async (values) => {
             try {
                 await onSubmit(values);
+
             } catch (err) {
                 console.error("Error submitting form:", err);
             }
         },
     });
+
     return (
         <>
             <Form layout="vertical" onFinish={formik.handleSubmit} requiredMark={true} name="trigger">
@@ -85,7 +88,7 @@ const MajorForm = ({onSubmit, initialValues}) => {
                                     autoSize={{minRows: 4}}/>
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">Thêm</Button>
+                    <Button  type="primary" htmlType="submit">Thêm</Button>
                 </Form.Item>
             </Form>
         </>

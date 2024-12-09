@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {delete_section, get_all_sections, update_section} from "../../../Redux/actions/SectionThunk";
-import {Button, Card, Input, Pagination} from 'antd';
+import {Button, Card, Input} from 'antd';
 import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
 import {SectionForm} from "./SectionForm";
 import SectionTable from "./SectionTable";
-import SectionDetailModal from "./SectionDetailModal";
-import SectionEditModal from "./SectionEditModal";
+import SectionDetailModal from "./Modal/SectionDetailModal";
+import SectionEditModal from "./Modal/SectionEditModal";
 import {toast} from "react-toastify";
 import * as XLSX from "xlsx";
-
+import './Style/Section.css'
 
 const SectionManager = () => {
     const dispatch = useDispatch();
@@ -65,7 +65,7 @@ const SectionManager = () => {
         if (sectionId) {
             dispatch(update_section(sectionId, values)) // Truyền ID và các giá trị cần cập nhật
                 .then(() => {
-                    console.log("Cập nhật section:", values);
+                    toast.success("Cập nhật khoa thành công")
                     setOpenEdit(false); // Đóng modal sau khi cập nhật thành công
                 })
                 .catch((error) => {
@@ -91,35 +91,28 @@ const SectionManager = () => {
     };
     return (
         <>
-            <section id="content" className="content">
-                <div className="content__header content__boxed rounded-0">
-                    <div className="content__wrap">
-                        <section>
-                            <div className="container mt-5">
-                                <div className="row">
-                                    <div className="col-md-4 mb-3 border-5">
-                                        <SectionForm universityId={universityId}/>
+            <section>
+                <div className="container mt-5">
+                    <div className="row ">
+                        <div className="section-form col-md-4 mb-3">
+                            <SectionForm universityId={universityId}/>
+                        </div>
+                        <div className="section-table col-md-8 mb-3">
+                            <Card title="Danh sách Khoa">
+                                <div className="table-responsive">
+                                    <div className="d-flex justify-content-between mb-3">
+                                        <Input placeholder="Search..." value={searchText}
+                                               onChange={handleSearch} prefix={<SearchOutlined/>}
+                                               style={{width: 200}}/>
+                                        <Button type="default" icon={<DownloadOutlined/>}
+                                                onClick={exportToExcelSection}>Tải xuống dạng excel</Button>
                                     </div>
-                                    <div className="col-md-8 mb-3">
-                                        <Card title="Danh sách Khoa">
-                                            <div className="table-responsive">
-                                                <div className="d-flex justify-content-between mb-3">
-                                                    <Input placeholder="Search..." value={searchText}
-                                                           onChange={handleSearch} prefix={<SearchOutlined/>}
-                                                           style={{width: 200}}/>
-                                                    <Button type="default" icon={<DownloadOutlined/>}
-                                                            onClick={exportToExcelSection}>Tải xuống dạng excel</Button>
-                                                </div>
-                                                <SectionTable
-                                                    sections={filteredData.length > 0 ? filteredData : sections}
-                                                    onDelete={handleDelete} onInfo={handleInfo} onEdit={handleEdit}/>
-                                            </div>
-
-                                        </Card>
-                                    </div>
+                                    <SectionTable
+                                        sections={filteredData.length > 0 ? filteredData : sections}
+                                        onDelete={handleDelete} onInfo={handleInfo} onEdit={handleEdit}/>
                                 </div>
-                            </div>
-                        </section>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </section>
