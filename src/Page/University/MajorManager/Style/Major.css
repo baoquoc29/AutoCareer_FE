@@ -1,0 +1,70 @@
+.modal-footer-right {
+    display: flex;
+    justify-content: flex-end;
+}
+/* Cải thiện màu sắc và bố cục */
+.modal-header {
+    background-color: #4CAF50; /* Màu nền xanh lá cây cho header */
+    color: white;
+    padding: 20px 24px;
+    border-radius: 8px 8px 0 0; /* Bo góc trên của header */
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.modal-content {
+    padding: 25px 30px;
+    background-color: #f9f9f9; /* Nền màu sáng */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.modal-footer-right {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 15px;
+}
+
+/* Cải thiện khoảng cách và chiều cao cho các dòng text */
+.modal-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    color: #333; /* Màu chữ tối */
+}
+
+.modal-content strong {
+    font-weight: 600;
+    color: #4CAF50; /* Màu sắc đặc biệt cho từ khóa */
+}
+
+
+/* Cải thiện hiệu ứng transition cho modal */
+.ant-modal {
+    transition: transform 0.3s ease-in-out;
+}
+
+.ant-modal-mask {
+    background-color: rgba(0, 0, 0, 0.5); /* Tối màu nền khi modal mở */
+}
+
+/* Cải thiện kích thước modal */
+.ant-modal-content {
+    width: 80%;
+    max-width: 700px; /* Chiều rộng tối đa */
+    margin: 0 auto;
+}
+
+/* Tạo hiệu ứng bóng đổ nhẹ cho các phần tử */
+.ant-modal-header {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Bóng đổ cho header */
+}
+
+.search-section > * {
+    margin-right: 10px; /* Thêm khoảng cách 10px giữa các phần tử */
+}
+
+.search-section > *:last-child {
+    margin-right: 0; /* Đảm bảo phần tử cuối cùng không có khoảng cách ở bên phải */
+}

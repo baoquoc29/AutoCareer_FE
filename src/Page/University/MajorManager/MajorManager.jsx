@@ -6,10 +6,11 @@ import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
 import {create_major, delete_major_id, get_all_majors, update_major_id} from "../../../Redux/actions/MajorThunk";
 import MajorTable from "./MajorTable";
 import MajorForm from "./MajorForm";
-import MajorDetailModal from "./MajorDetailModal";
+import MajorDetailModal from "./Modal/MajorDetailModal";
 import {toast} from "react-toastify";
-import MajorEditModal from "./MajorEditModal";
+import MajorEditModal from "./Modal/MajorEditModal";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
+import './Style/Major.css'
 
 
 const MajorManager = () => {
@@ -72,6 +73,7 @@ const MajorManager = () => {
         dispatch(create_major(values))
             .then(() => {
                 dispatch(get_all_majors());
+
             })
     }
     const handleDelete = (id) => {
@@ -126,59 +128,52 @@ const MajorManager = () => {
 
     return (
         <>
-            <section id="content" className="content">
-                <div className="content__header content__boxed rounded-0">
-                    <div className="content__wrap">
-                        <section>
-                            <div className="container mt-5">
-                                <div className="row">
-                                    <div className="col-lg-4 mb-3 border-5">
-                                        <Card title="Thông tin chuyên ngành">
-                                            <MajorForm onSubmit={handleSubmit}/>
-                                        </Card>
+            <section>
+                <div className="container mt-5">
+                    <div className="row">
+                        <div className="col-lg-4 mb-3 border-5">
+                            <Card title="Thông tin chuyên ngành">
+                                <MajorForm onSubmit={handleSubmit}/>
+                            </Card>
+                        </div>
+                        <div className="col-lg-8 mb-3">
+                            <Card title="Danh sách chuyên ngành">
+                                <div className="table-responsive">
+                                    <div className="d-flex mb-3 search-section">
+                                        <Select
+                                            style={{width: 375}}
+                                            showSearch
+                                            autoFocus={true}
+                                            placeholder="Tìm theo kiếm khoa"
+                                            optionFilterProp="label"
+                                            filterSort={(optionA, optionB) =>
+                                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                            }
+                                            options={sections.map(section => ({
+                                                value: section.id,
+                                                label: section.name
+                                            }))}
+                                            onChange={handleSectionChange}
+                                            value={selectedSection || undefined}
+                                        />
+                                        <Input placeholder="Tìm kiếm theo tên hoặc mã ngành "
+                                               value={searchText}
+                                               onChange={handleSearch} prefix={<SearchOutlined/>}/>
+                                        <Button type="default" icon={<DownloadOutlined/>}
+                                                onClick={exportToExcel}>Tải xuống dạng excel</Button>
                                     </div>
-                                    <div className="col-lg-8 mb-3">
-                                        <Card title="Danh sách chuyên ngành">
-                                            <div className="table-responsive">
-                                                <div className="d-flex mb-3">
-                                                    <Select
-                                                        style={{width: 375}}
-                                                        showSearch
-                                                        autoFocus={true}
-                                                        placeholder="Tìm theo kiếm khoa"
-                                                        optionFilterProp="label"
-                                                        filterSort={(optionA, optionB) =>
-                                                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                                                        }
-                                                        options={sections.map(section => ({
-                                                            value: section.id,
-                                                            label: section.name
-                                                        }))}
-                                                        onChange={handleSectionChange}
-                                                        value={selectedSection || undefined}
-                                                    />
-                                                    <Input placeholder="Tìm kiếm theo tên hoặc mã ngành "
-                                                           value={searchText}
-                                                           onChange={handleSearch} prefix={<SearchOutlined/>}/>
-                                                    <Button type="default" icon={<DownloadOutlined/>}
-                                                            onClick={exportToExcel}>Tải xuống dạng excel</Button>
-                                                </div>
-                                                <MajorTable data={filteredData.length > 0 ? filteredData : data}
-                                                            onInfo={handleInfo} onDelete={handleDelete}
-                                                            onEdit={handleEdit}/>
-                                            </div>
-                                        </Card>
-                                    </div>
+                                    <MajorTable data={filteredData.length > 0 ? filteredData : data}
+                                                onInfo={handleInfo} onDelete={handleDelete}
+                                                onEdit={handleEdit}/>
                                 </div>
-                            </div>
-                        </section>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </section>
             <MajorDetailModal open={open} onClose={() => setOpen(false)} major={selectedMajor}/>
             <MajorEditModal open={editOpen} onClose={() => setEditOpen(false)} major={selectedMajor}
                             onSubmit={handleEditSubmit}/>
-            />
         </>
     )
 }

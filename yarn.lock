@@ -3549,7 +3549,15 @@ ansi-styles@^6.1.0:
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-6.2.1.tgz"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
-antd@^5.22.0, antd@^5.3.0:
+antd-img-crop@^4.23.0:
+  version "4.23.0"
+  resolved "https://registry.npmjs.org/antd-img-crop/-/antd-img-crop-4.23.0.tgz"
+  integrity sha512-JtQoUmR3GqXoG+hsYXRxCBC60AgUKbbvArbnd8/5UmmuyVcQzBnumfoQTdC9wczWQuxRIpkPwsdOge6CCeepqg==
+  dependencies:
+    react-easy-crop "^5.0.8"
+    tslib "^2.6.3"
+
+antd@^5.22.0, antd@^5.3.0, antd@>=4.0.0:
   version "5.22.2"
   resolved "https://registry.npmjs.org/antd/-/antd-5.22.2.tgz"
   integrity sha512-vihhiJbm9VG3d6boUeD1q2MXMax+qBrXhgqCEC+45v8iGUF6m4Ct+lFiCW4oWaN3EABOsbVA6Svy3Rj/QkQFKw==
@@ -8049,6 +8057,11 @@ normalize-url@^6.0.1:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-6.1.0.tgz"
   integrity sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==
 
+normalize-wheel@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/normalize-wheel/-/normalize-wheel-1.0.1.tgz"
+  integrity sha512-1OnlAPZ3zgrk8B91HyRj+eVv+kS5u+Z0SCsak6Xil/kmgEia50ga7zfkumayonZrImffAxPU/5WcyGhzetHNPA==
+
 npm-run-path@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/npm-run-path/-/npm-run-path-4.0.1.tgz"
@@ -9568,13 +9581,21 @@ react-dev-utils@^12.0.1:
     strip-ansi "^6.0.1"
     text-table "^0.2.0"
 
-react-dom@*, "react-dom@^16 || ^17 || ^18", react-dom@^18.0.0, react-dom@^18.3.1, "react-dom@>= 16.8.0", react-dom@>=16.0.0, react-dom@>=16.11.0, react-dom@>=16.6.0, react-dom@>=16.8, react-dom@>=16.9.0, react-dom@>=18:
+react-dom@*, "react-dom@^16 || ^17 || ^18", react-dom@^18.0.0, react-dom@^18.3.1, "react-dom@>= 16.8.0", react-dom@>=16.0.0, react-dom@>=16.11.0, react-dom@>=16.4.0, react-dom@>=16.6.0, react-dom@>=16.8, react-dom@>=16.8.0, react-dom@>=16.9.0, react-dom@>=18:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
   integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
+
+react-easy-crop@^5.0.8:
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/react-easy-crop/-/react-easy-crop-5.2.0.tgz"
+  integrity sha512-gjb7jN+WnwfgpbNUI2jSwyoIxF1sJ0PVSNVgEysAgF1rj8AqR75fqmdvqZ6PFVgEX3rT1G4HJELesiQXr2ZvAg==
+  dependencies:
+    normalize-wheel "^1.0.1"
+    tslib "^2.0.1"
 
 react-error-overlay@^6.0.11:
   version "6.0.11"
@@ -9715,7 +9736,7 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@*, "react@^16 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0", react@^18.0, react@^18.0.0, react@^18.3.1, "react@>= 16", "react@>= 16.8.0", react@>=16.0.0, react@>=16.11.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=16.9.0, react@>=18:
+react@*, "react@^16 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0", react@^18.0, react@^18.0.0, react@^18.3.1, "react@>= 16", "react@>= 16.8.0", react@>=16.0.0, react@>=16.11.0, react@>=16.4.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=16.9.0, react@>=18:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
   integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==
@@ -10991,7 +11012,7 @@ tslib@^1.8.1:
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.0, tslib@^2.0.3, tslib@^2.4.0:
+tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.4.0, tslib@^2.6.3:
   version "2.8.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
