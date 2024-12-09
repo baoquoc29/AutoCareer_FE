@@ -9,19 +9,19 @@ dayjs.extend(customParseFormat);
 const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
     const columns = [
         {
-            title: "ID",
+            title: "STT",
             dataIndex: "id",
             key: "id",
             sorter: (a, b) => a.id - b.id, // Sắp xếp số
         },
         {
-            title: "Tiêu Đề",
+            title: "Tiêu đề",
             dataIndex: "title",
             key: "title",
             sorter: (a, b) => a.title.localeCompare(b.title), // Sắp xếp chuỗi
         },
         {
-            title: "Ngày Bắt Đầu",
+            title: "Ngày bắt đầu",
             dataIndex: "startDate",
             key: "startDate",
             sorter: (a, b) =>
@@ -33,7 +33,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
                     : "N/A",
         },
         {
-            title: "Ngày Kết Thúc",
+            title: "Ngày kết thúc",
             dataIndex: "endDate",
             key: "endDate",
             sorter: (a, b) =>
@@ -45,7 +45,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
                     : "N/A",
         },
         {
-            title: "Ngày Hết Hạn",
+            title: "Ngày hết hạn",
             dataIndex: "expireDate",
             key: "expireDate",
             sorter: (a, b) =>
@@ -64,7 +64,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
                 location && location.description ? location.description : "N/A",
         },
         {
-            title: "Trạng Thái",
+            title: "Trạng thái",
             dataIndex: "statusBrowse",
             key: "statusBrowse",
             sorter: (a, b) => a.statusBrowse.localeCompare(b.statusBrowse),
@@ -85,7 +85,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
             },
         },
         {
-            title: "Hành Động",
+            title: "Hành động",
             key: "action",
             render: (_, record) => (
                 <Space size="middle">
@@ -104,7 +104,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
                     <Tooltip title="Xóa">
                         <Button
                             icon={<DeleteOutlined />}
-                            onClick={() => onDelete(record.id)}
+                            onClick={() => onDelete(record.id,record.title)}
                         />
                     </Tooltip>
                 </Space>
@@ -114,6 +114,9 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
 
     return (
         <Table
+            locale={{
+                emptyText: "Không tìm thấy kết quả tương ứng."
+            }}
             columns={columns}
             dataSource={workshops}
             rowKey="id"
