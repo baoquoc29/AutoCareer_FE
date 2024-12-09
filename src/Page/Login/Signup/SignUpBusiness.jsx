@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, Upload, Modal, notification, Spin } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import {resetResponse, sign_up_business, verify_account_business} from "../../../Redux/actions/UserThunk";
+import {sign_up_business, verify_account_business} from "../../../Redux/actions/UserThunk";
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
 import {toast} from "react-toastify";
@@ -21,7 +21,7 @@ export function SignUpBusiness() {
 
     const [hasShownModal, setHasShownModal] = useState(false);
 
-    const response = useSelector((state) => state.UserReducer?.response);
+    const response = useSelector((state) => state.UserReducer?.responseBusiness);
 
     // Quản lý thời gian và khả năng gửi lại mã
     useEffect(() => {
@@ -52,7 +52,7 @@ export function SignUpBusiness() {
                 setIsLoading(false);
                 notification.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
             }
-            dispatch(resetResponse());
+
         }
     }, [response, hasShownModal]);
 

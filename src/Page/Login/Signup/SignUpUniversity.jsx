@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, Modal, notification, Spin } from 'antd';
 import {
-    resetResponse,
     sign_up_university,
     verify_account_university
 } from "../../../Redux/actions/UserThunk";
@@ -21,7 +20,8 @@ export function SignUpUniversity() {
 
     const [hasShownModal, setHasShownModal] = useState(false);
 
-    const response = useSelector((state) => state.UserReducer?.response);
+    const response = useSelector((state) => state.UserReducer?.responseUniversity);
+
 
     // Quản lý thời gian và khả năng gửi lại mã
     useEffect(() => {
@@ -52,7 +52,7 @@ export function SignUpUniversity() {
                 setIsLoading(false);
                 notification.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
             }
-            dispatch(resetResponse());
+
         }
     }, [response, hasShownModal]);
 
