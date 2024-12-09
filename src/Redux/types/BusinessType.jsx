@@ -1,0 +1,2 @@
+export const SET_BUSINESS = "SET_BUSINESS";
+export const UPDATE_BUSINESS = "UPDATE_BUSINESS";

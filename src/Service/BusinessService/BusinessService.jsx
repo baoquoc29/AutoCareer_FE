@@ -1,0 +1,18 @@
+import {baseService} from "../BaseService";
+
+
+export class BusinessService extends baseService {
+    // eslint-disable-next-line no-useless-constructor
+    constructor() {
+        super()
+    };
+
+    get_business_by_id = (id) => {
+        return this.get(`api/business/${id}`)
+    }
+    update_business_id = (id, formData) => {
+        return this.post(`api/business/${id}`, formData)
+    }
+}
+
+export const businessService = new BusinessService();

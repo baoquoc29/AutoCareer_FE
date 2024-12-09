@@ -1,8 +1,9 @@
-import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS} from "../types/SectionType";
+import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, UPDATE_SECTION_ID} from "../types/SectionType";
 
 
 const initialState = {
-    sections: []
+    sections: [],
+    sectionId: null
 }
 
 export const SectionReducer = (state = initialState, action) => {
@@ -16,6 +17,9 @@ export const SectionReducer = (state = initialState, action) => {
             return {
                 ...state
             }
+        case UPDATE_SECTION_ID:
+            state.sectionId = action.payload;
+            return {...state}
         case DELETE_SECTION:
             return {
                 ...state

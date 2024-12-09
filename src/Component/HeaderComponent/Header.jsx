@@ -1,7 +1,8 @@
 import React from 'react';
-import { useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import NotificationDropdown from "../NotificationDropdown/NotificationDropdown";
 import {UserDropdown} from "../UserDropdown/UserDropdown";
+import logo from './aotucareer-logo.svg'
 
 
 export function Header({toggleSidebar, link}) {
@@ -9,14 +10,13 @@ export function Header({toggleSidebar, link}) {
 
     return (
         <>
-            <header className="header">
-                <div className="header__inner">
+            <header className="header ">
+                <div className="header__inner ">
                     <div className="header__brand">
                         <div className="brand-wrap">
-                            {/*<NavLink to={link} className="brand-img stretched-link">*/}
-                            {/*    <img src={`${DOMAIN}/api/v1/image/resource?imageId=${university["logoImageId"]}`} alt="Nifty Logo" className="Career Bridge" width="16"*/}
-                            {/*         height="16"/>*/}
-                            {/*</NavLink>*/}
+                            <NavLink to={link} className="brand-img stretched-link">
+                                <img src={logo} alt="logo" className="logo" style={{width:"40px",height:"40px"}}/>
+                            </NavLink>
                             <div className="brand-title">Career Bridge</div>
                         </div>
                     </div>

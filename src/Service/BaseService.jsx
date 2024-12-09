@@ -15,7 +15,9 @@ export class baseService {
                 'Authorization': `Bearer ${token}`
             };
         }
-        return Axios(config).then(response => response.data).catch(error => { throw error });
+        return Axios(config).then(response => response.data).catch(error => {
+            throw error
+        });
     }
 
     post = (url, model) => {
@@ -31,7 +33,9 @@ export class baseService {
                 'Authorization': `Bearer ${token}`
             };
         }
-        return Axios(config).then(response => response.data).catch(error => { throw error });
+        return Axios(config).then(response => response.data).catch(error => {
+            throw error
+        });
     }
     postFormData = (url, model) => {
         const token = localStorage.getItem(TOKEN);
@@ -79,14 +83,16 @@ export class baseService {
         const config = {
             url: `${DOMAIN}/${url}`,
             method: 'GET',
-            headers:{
-                'Authorization':`Bearer ${token}`,
+            headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
             }
         };
-        return Axios(config).then(response => response.data).catch(error => { throw error });
+        return Axios(config).then(response => response.data).catch(error => {
+            throw error
+        });
     }
 
     delete = (url) => {
@@ -101,6 +107,8 @@ export class baseService {
                 'Authorization': `Bearer ${token}`
             };
         }
-        return Axios(config).then(response => response.data).catch(error => { throw error });
+        return Axios(config).then(response => response.data).catch(error => {
+            throw error
+        });
     }
 }
