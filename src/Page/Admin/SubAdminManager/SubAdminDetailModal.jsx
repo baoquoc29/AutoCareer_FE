@@ -1,5 +1,5 @@
 import {Button, Col, Modal, Row, Tag} from "antd";
-import {DOMAIN} from "../../../Utils/Setting/Config";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import React, { useState} from "react";
 import SubAdminUpdate from "./SubAdminUpdate";
 import {useSelector} from "react-redux";
@@ -25,7 +25,7 @@ const SubAdminDetailModal = ({open, onClose}) => {
             <Row gutter={[16, 16]}>
                 <Col span={6} style={{textAlign: "center"}}>
                     <img
-                        src={subAdmin?.subAdminImageId ? `${DOMAIN}/api/v1/image/resource?imageId=${subAdmin.subAdminImageId}` : "placeholder-avatar.jpg"}
+                        src={subAdmin?.subAdminImageId ? `${GET_IMAGE_URI}${subAdmin.subAdminImageId}` : "placeholder-avatar.jpg"}
                         alt="Avatar"
                         style={{
                             width: 100, height: 100, borderRadius: "50%", objectFit: "cover",
