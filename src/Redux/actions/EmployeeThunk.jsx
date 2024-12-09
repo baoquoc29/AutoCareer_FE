@@ -51,7 +51,7 @@ export const create_employee = (formData) => {
             const res = await employeeService.employee_create(formData);
 
             // Kiểm tra mã phản hồi từ server
-            if (res.data.code === STATUS_CODE.SUCCESS) {
+            if (res.code === STATUS_CODE.SUCCESS) {
                 // Dispatch action để cập nhật trạng thái Redux
                 dispatch({
                     type: CREATE_EMPLOYEE,

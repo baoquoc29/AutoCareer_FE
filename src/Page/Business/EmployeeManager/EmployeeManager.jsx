@@ -4,7 +4,6 @@ import "antd/dist/reset.css";
 import {PlusOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    create_employee,
     delete_employee_id,
     get_all_employees,
     get_employee_by_id
@@ -66,8 +65,8 @@ const EmployeeManager = () => {
 
     return (
         <div>
-            <section id="content" className="content">
-                <div className="content__header content__boxed rounded-0">
+            {/*<section id="content" className="content">*/}
+            {/*    <div className="content__header content__boxed rounded-0">*/}
                     <div className="content__wrap">
                         <section>
                             <div className="container mt-5">
@@ -94,8 +93,8 @@ const EmployeeManager = () => {
                             </div>
                         </section>
                     </div>
-                </div>
-            </section>
+              {/*</div>*/}
+            {/*</section>*/}
             <EmployeeDetail
                 open={open}
                 onClose={() => setOpen(false)}

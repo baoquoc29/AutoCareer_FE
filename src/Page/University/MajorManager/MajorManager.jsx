@@ -10,7 +10,7 @@ import MajorDetailModal from "./MajorDetailModal";
 import {toast} from "react-toastify";
 import MajorEditModal from "./MajorEditModal";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
-
+import './Major.css'
 
 const MajorManager = () => {
     const dispatch = useDispatch();
@@ -178,7 +178,6 @@ const MajorManager = () => {
             <MajorDetailModal open={open} onClose={() => setOpen(false)} major={selectedMajor}/>
             <MajorEditModal open={editOpen} onClose={() => setEditOpen(false)} major={selectedMajor}
                             onSubmit={handleEditSubmit}/>
-            />
         </>
     )
 }

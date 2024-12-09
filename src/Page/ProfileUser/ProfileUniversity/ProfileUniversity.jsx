@@ -5,7 +5,7 @@ import { get_all_sections } from "../../../Redux/actions/SectionThunk";
 import { get_all_majors } from "../../../Redux/actions/MajorThunk";
 import { get_university_id } from "../../../Redux/actions/UniversityThunk";
 import { useNavigate } from "react-router-dom";
-import './style/Profile.css';
+import './style/Profile.css'
 
 const ProfileUniversity = () => {
     const navigate = useNavigate();
