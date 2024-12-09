@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {GET_IMAGE_URL} from "../../../Utils/Setting/Config";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './style/ProfileEdit.css'
 
 import {update_university} from "../../../Redux/actions/UniversityThunk";
@@ -19,7 +19,7 @@ const ProfileUniversityEdit = () => {
         logoImageId: university?.logoImageId || '',
     });
 
-    const logoUrl = formValues.logoImageId ? `${GET_IMAGE_URL}${formValues.logoImageId}` : '';
+    const logoUrl = formValues.logoImageId ? `${GET_IMAGE_URI}${formValues.logoImageId}` : '';
 
     const handleInputChange = (event) => {
         const {name, value} = event.target;

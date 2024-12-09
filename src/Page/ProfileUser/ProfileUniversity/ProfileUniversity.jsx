@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_IMAGE_URL } from "../../../Utils/Setting/Config";
+import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
 import { get_all_sections } from "../../../Redux/actions/SectionThunk";
 import { get_all_majors } from "../../../Redux/actions/MajorThunk";
 import { get_university_id } from "../../../Redux/actions/UniversityThunk";
 import { useNavigate } from "react-router-dom";
-import './style/Profile.css';
+import './style/Profile.css'
 
 const ProfileUniversity = () => {
     const navigate = useNavigate();
@@ -54,7 +54,7 @@ const ProfileUniversity = () => {
                                 <div className="row mb-4">
                                     <div className="col-md-3 text-center">
                                         <img
-                                            src={`${GET_IMAGE_URL}${universityDetails.logoImageId}`}
+                                            src={`${GET_IMAGE_URI}${universityDetails.logoImageId}`}
                                             alt="Logo Trường"
                                             className="img-fluid"
                                         />

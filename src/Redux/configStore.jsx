@@ -8,6 +8,8 @@ import {UniversityReducer} from "./reducers/UniversityReducer";
 import { IndustryReducer } from "./reducers/IndustryReducer";
 import {WorkShopReducer} from "./reducers/WorkShopReducer";
 import {SubAdminReducer} from "./reducers/SubAdminReducer";
+import {EmployeeReducer} from "./reducers/EmployeeReducer";
+import {BusinessReducer} from "./reducers/BusinessReducer";
 
 
 const rootReducer = combineReducers({
@@ -18,7 +20,9 @@ const rootReducer = combineReducers({
     MajorReducer,
     IndustryReducer,
     SubAdminReducer,
-    UniversityReducer
+    EmployeeReducer,
+    UniversityReducer,
+    BusinessReducer,
 });
 
 const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
