@@ -1,7 +1,6 @@
 import {Button, Col, Form, Input, Modal, Row} from "antd";
 import { useFormik} from "formik";
-import {validateField} from "../../../Utils/Validation/MajorValidation";
-import './Major.css'
+import {validateField} from "../../../../Utils/Validation/MajorValidation";
 const MajorEditModal = ({open, onClose, major, onSubmit}) => {
 
     const initialValues = {

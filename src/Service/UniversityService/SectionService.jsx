@@ -10,8 +10,8 @@ export class SectionService extends baseService {
     create_section = (formData) => {
         return this.post('api/section/create', formData)
     }
-    update_section = (formData, id) => {
-        return this.post(`api/section/update/${id}`, formData)
+    update_section = (id,formData) => {
+            return this.post(`api/section/update/${id}`, formData)
     }
     delete_section = (id)=>{
         return this.delete(`api/section/delete/${id}`)

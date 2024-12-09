@@ -60,3 +60,11 @@
 .ant-modal-header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Bóng đổ cho header */
 }
+
+.search-section > * {
+    margin-right: 10px; /* Thêm khoảng cách 10px giữa các phần tử */
+}
+
+.search-section > *:last-child {
+    margin-right: 0; /* Đảm bảo phần tử cuối cùng không có khoảng cách ở bên phải */
+}
