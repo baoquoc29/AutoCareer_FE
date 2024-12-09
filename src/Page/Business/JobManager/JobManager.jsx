@@ -1,33 +1,28 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    get_all_job, get_job_detail,
-} from "../../../Redux/actions/JobThunk";
-import {Button, Card, Input, Pagination} from "antd";
+import {Button, Card, Input, Modal, Pagination} from "antd";
+import {DownloadOutlined, SearchOutlined,} from "@ant-design/icons";
 import JobTable from "./JobTable";
-
-import {
-    DownloadOutlined, SearchOutlined,
-} from "@ant-design/icons";
-import * as XLSX from "xlsx";
 import JobDetailModal from "./JobDetailModel";
-
+import * as XLSX from "xlsx";
+import {get_all_job_of_business_paging, get_job_detail} from "../../../Redux/actions/JobThunk";
+import {NavLink} from "react-router-dom";
 
 const JobManager = () => {
     const dispatch = useDispatch();
-    const jobTable = useSelector((state) => state.JobReducer.jobs); // Cho Table
+    const jobTable = useSelector((state) => state.JobReducer.jobs);
     const selectedJobDetail = useSelector((state) => state.JobReducer.selectedJobDetail);
-    const totalElements = useSelector((state) => state.JobReducer.totalElements); // Tổng số bản ghi
-    const currentPage = useSelector((state) => state.JobReducer.currentPage); // Trang hiện tại
+    const totalElements = useSelector((state) => state.JobReducer.totalElements);
+    const currentPage = useSelector((state) => state.JobReducer.currentPage);
     const pageSize = useSelector((state) => state.JobReducer.pageSize);
+
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [open, setOpen] = useState(false);
-    const [load, setLoad] = useState(false);
-
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(get_all_job(currentPage, pageSize));
+        dispatch(get_all_job_of_business_paging(currentPage, pageSize, ""));
     }, [dispatch, currentPage, pageSize]);
 
     useEffect(() => {
@@ -35,112 +30,104 @@ const JobManager = () => {
     }, [jobTable]);
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_job(page, pageSize)); // Gọi API với trang và kích thước mới
+        dispatch(get_all_job_of_business_paging(page, pageSize, searchText));
     };
 
-    // const handleDelete = (record) => {
-    //     dispatch(delete_industry_by_id(record.key));
-    // };
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchText(value); // Cập nhật giá trị ô tìm kiếm
+        dispatch(get_all_job_of_business_paging(1, pageSize, value)); // Gọi API với từ khóa
+    };
 
     const handleInfo = (record) => {
         dispatch(get_job_detail(record.id));
-        setOpen(true); // Mở modal
+        setOpen(true);
     };
-    const handleSearch = (e) => {
-        const value = e.target.value;
-        setSearchText(value);
-        const filtered = jobTable.filter((job) => job.name.toLowerCase().includes(value.toLowerCase()) || job.description.toLowerCase().includes(value.toLowerCase()));
-        setFilteredData(filtered);
-    };
-
-    const data = Array.isArray(filteredData) ? filteredData.map((job, index) => ({
-        id: job.jobId,
-        stt: (currentPage - 1) * pageSize + index + 1,
-        title: job.title,
-        expireDate: job.expireDate,
-        level: job.level,
-        salary: job.salary,
-        jobDescription: job.jobDescription,
-        requirement: job.requirement,
-        benefit: job.benefit,
-        workingTime: job.workingTime,
-        statusBrowse: job.statusBrowse,
-        status: job.status,
-    })) : [];
 
     const exportToExcel = () => {
         if (filteredData.length === 0) {
-            alert("No data to export!");
+            Modal.warning({
+                title: "Thông báo",
+                content: "Không có dữ liệu để xuất!",
+            });
             return;
         }
-
-        // Chuyển đổi dữ liệu thành định dạng Excel
-        const worksheet = XLSX.utils.json_to_sheet(
-            filteredData.map((industry) => ({
-                "Industry Name": industry.industryName,
-                "Industry Code": industry.industryCode,
-                "Status": industry.status,
-            }))
-        );
-
-        // Tạo workbook mới và thêm worksheet
+        const worksheet = XLSX.utils.json_to_sheet(filteredData.map((job) => ({
+            "Tên Công việc": job.title,
+            "Mức lương": job.salary,
+            "Thời gian làm việc": job.workingTime,
+            "Mô tả": job.jobDescription,
+        })));
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Industries");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Danh sách công việc");
+        XLSX.writeFile(workbook, "DanhSachCongViec.xlsx");
+    };
 
-        // Xuất file Excel
-        XLSX.writeFile(workbook, "Industries.xlsx");
-    }
-    return (<>
-        <section id="content" className="content">
-            <div className="content__header content__boxed rounded-0">
-                <div className="content__wrap">
-                    <section>
-                        <div className="container mt-5">
-                            <div className="row">
-                                {/*<div className="col-md-4 mb-3 border-5">*/}
-                                {/*    <IndustryForm selectData={industryOptions} load={setLoad}/>*/}
-                                {/*</div>*/}
+    const data = Array.isArray(filteredData)
+        ? filteredData.map((job, index) => ({
+            id: job.jobId,
+            stt: (currentPage - 1) * pageSize + index + 1,
+            title: job.title,
+            expireDate: job.expireDate,
+            level: job.level,
+            salary: job.salary,
+            jobDescription: job.jobDescription,
+            requirement: job.requirement,
+            benefit: job.benefit,
+            workingTime: job.workingTime,
+            statusBrowse: job.statusBrowse,
+            status: job.status,
+        }))
+        : [];
 
-                                <div className="col-md-12 mb-3">
-                                    <Card title="Danh sách Công việc">
-                                        <div className="table-responsive">
-                                            <div className="d-flex justify-content-between mb-3">
-                                                <Input
-                                                    placeholder="Search..."
-                                                    value={searchText}
-                                                    onChange={handleSearch}
-                                                    prefix={<SearchOutlined/>}
-                                                    style={{width: 200}}
-                                                />
-                                                <Button
-                                                    icon={<DownloadOutlined/>}
-                                                    onClick={exportToExcel}
-                                                >
-                                                    Xuất sang Excel
-                                                </Button>
-                                            </div>
-                                            <JobTable data={data} onInfo={handleInfo}/>
-                                        </div>
-                                        <Pagination
-                                            current={currentPage}
-                                            pageSize={pageSize}
-                                            total={totalElements}
-                                            onChange={handlePageChange}
-                                            className="text-center mt-5"
-                                        />
-                                    </Card>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+    return (
+        <section className="job-manager-container" style={{padding: "20px"}}>
+            <Card title="Danh sách Công việc">
+                <div className="mb-3 text-end">
+
                 </div>
-            </div>
+                <div className="table-responsive">
+                    <div className="d-flex justify-content-between mb-3">
+                        <Input
+                            placeholder="Search..."
+                            value={searchText}
+                            onChange={handleSearch}
+                            prefix={<SearchOutlined/>}
+                            style={{width: 200}}
+                        />
+                        <Button type="primary" onClick={() => setIsCreateOpen(true)}>
+                            <NavLink to={"/job-create"} style={{textDecoration: "none"}}>
+                                Tạo Công Việc
+                            </NavLink>
+                        </Button>
+                    </div>
+
+                    <JobTable data={data} onInfo={handleInfo}/>
+                </div>
+                <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={totalElements}
+                    onChange={handlePageChange}
+                    className="text-center mt-5"
+                />
+            </Card>
+
+            <Button
+                type="link"
+                icon={<DownloadOutlined/>}
+                onClick={exportToExcel}
+                style={{marginTop: "10px"}}
+            >
+                Xuất danh sách công việc
+            </Button>
+            <JobDetailModal
+                open={open}
+                onClose={() => setOpen(false)}
+                job={selectedJobDetail}
+            />
         </section>
-        <JobDetailModal
-            open={open}
-            onClose={() => setOpen(false)}
-            job={selectedJobDetail}
-        />
-    </>);
+    );
 };
+
 export default JobManager;

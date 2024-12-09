@@ -6,8 +6,8 @@ export class IndustryService extends baseService {
         super();
     }
 
-    get_industry_business = (page, size) => {
-        return this.get(`api/industry/get-all-industry-business?page=${page}&size=${size}`);
+    get_industry_business = (page, size, keyword = '') => {
+        return this.get(`api/industry/get-all-industry-business?page=${page}&size=${size}&keyword=${keyword}`);
     };
     get_industry_all = () => {
         return this.get("api/industry/get-all");
@@ -20,6 +20,9 @@ export class IndustryService extends baseService {
     };
     delete_industry = (id) => {
         return this.delete(`api/industry/delete?businessIndustryId=${id}`);
+    };
+    get_industry_all_no_pag = () => {
+        return this.get("api/industry/get-all-industry-business-no-pag");
     };
 }
 

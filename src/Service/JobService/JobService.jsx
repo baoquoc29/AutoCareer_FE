@@ -6,11 +6,17 @@ export class JobService extends baseService {
         super();
     }
 
-    get_all_job = (page, size) => {
-        return this.get(`api/job/get-all-job?page=${page}&size=${size}`);
+    get_all_job_of_business_paging = (page, size, keyword = '') => {
+        return this.get(`api/job/get-all-job-of-business-paging?page=${page}&size=${size}&keyword=${keyword}`);
     };
     get_job_by_id = (id) => {
         return this.get(`api/job/get-detail?id=${id}`);
+    };
+    create_job = (jobData) => {
+        return this.post("api/job/create-job", jobData);
+    };
+    update_job = (jobId, jobData) => {
+        return this.put(`api/job/update-job?jobId=${jobId}`, jobData);
     };
 }
 

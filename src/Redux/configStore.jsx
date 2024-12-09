@@ -4,9 +4,9 @@ import {UserReducer} from "./reducers/UserReducer";
 import {SectionReducer} from "./reducers/SectionReducer";
 import {LoadingReducer} from "./reducers/LoadingReducer";
 import {MajorReducer} from "./reducers/MajorReducer";
-import { IndustryReducer } from "./reducers/IndustryReducer";
+import {IndustryReducer} from "./reducers/IndustryReducer";
 import {SubAdminReducer} from "./reducers/SubAdminReducer";
-import { JobReducer } from "./reducers/JobReducer";
+import {JobReducer} from "./reducers/JobReducer";
 
 
 const rootReducer = combineReducers({

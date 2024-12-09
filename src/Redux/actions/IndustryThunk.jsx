@@ -1,12 +1,19 @@
 import {industryService} from "../../Service/IndustryService/IndustryService";
-import {GET_INDUSTRIES_DETAIL, CREATE_INDUSTRIES, SET_INDUSTRIES, SET_INDUSTRY_OPTIONS} from "../types/IndustryType";
+import {
+    GET_INDUSTRIES_DETAIL,
+    CREATE_INDUSTRIES,
+    SET_INDUSTRIES,
+    SET_INDUSTRIES_NO_PAG,
+    SET_INDUSTRIES_ALL,
+} from "../types/IndustryType";
 import {toast} from "react-toastify";
 
-export const get_all_industry_business = (page = 1, size = 5) => {
+export const get_all_industry_business = (page = 1, size = 5, keyword = '') => {
     return async (dispatch) => {
         try {
-            const res = await industryService.get_industry_business(page, size);
+            const res = await industryService.get_industry_business(page, size, keyword);
             const {content, totalElements, pageSize, currentPage} = res.data;
+
             if (Array.isArray(res.data.content)) {
                 dispatch({
                     type: SET_INDUSTRIES,
@@ -15,6 +22,7 @@ export const get_all_industry_business = (page = 1, size = 5) => {
                         totalElements, // Tổng số bản ghi
                         pageSize, // Số bản ghi mỗi trang
                         currentPage, // Trang hiện tại
+                        keyword,
                     },
                 });
             } else {
@@ -31,7 +39,21 @@ export const get_all_industry = () => {
         try {
             const res = await industryService.get_industry_all();
             dispatch({
-                type: SET_INDUSTRY_OPTIONS,
+                type: SET_INDUSTRIES_ALL,
+                payload: res.data,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};
+
+export const get_all_industry_no_pag = () => {
+    return async (dispatch) => {
+        try {
+            const res = await industryService.get_industry_all_no_pag();
+            dispatch({
+                type: SET_INDUSTRIES_NO_PAG,
                 payload: res.data,
             });
         } catch (error) {

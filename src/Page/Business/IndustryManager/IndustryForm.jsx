@@ -17,7 +17,6 @@ const IndustryForm = ({selectData, load}) => {
                 // Tìm ngành đã chọn dựa trên tên ngành
                 const selectedIndustry = selectData.find(industry => industry.name === values.name);
                 if (selectedIndustry) {
-                    console.log("vao ben trong")
                     await industryService.create_industry(selectedIndustry.id); // Sử dụng id ở đây
                     toast.success("Ngành nghề đã được thêm thành công!")
                     load(prev => !prev)
@@ -46,9 +45,8 @@ const IndustryForm = ({selectData, load}) => {
                     <Select
                         onChange={(value) => {
                             // Tìm industry tương ứng với name đã chọn và lấy id
-                            const selectedIndustry = selectData.find(industry => industry.name === value);
+                            selectData.find(industry => industry.name === value);
                             formik.setFieldValue("name", value);
-                            console.log("Selected Industry:", selectedIndustry);  // Debug log
                         }}
                         value={formik.values.name}
                         placeholder="Chọn ngành"
