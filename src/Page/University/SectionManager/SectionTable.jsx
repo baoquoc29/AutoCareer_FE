@@ -1,32 +1,44 @@
-import {DeleteOutlined, EditOutlined, InfoCircleOutlined,} from "@ant-design/icons";
-import {Button, Space, Table} from "antd";
+import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
+import {Button, Space, Table, Tooltip} from "antd";
+import {TablePaginationConfig} from "antd";
 
-const SectionTable = ({ sections,onDelete }) => {
+const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
     const columns = [
-        { title: 'STT', dataIndex: 'stt', key: 'stt', sorter: (a, b) => a.stt - b.stt },
-        { title: 'Tên khoa', dataIndex: 'name', key: 'name', sorter: (a, b) => a.name.localeCompare(b.name) },
-        {title: 'Thao tác', key: 'actions', render: (text, record) => (
-                <Space size="small">
-                    <Button type={"primary"} icon={<InfoCircleOutlined />} onClick={() => console.log('info:', record)}  />
-                    <Button style={{backgroundColor:"yellow"}} variant="outlined" icon={<EditOutlined />} onClick={() => console.log('edit:', record)}  />
-                    <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined />} onClick={() => {
-                        console.log('delete:', record); // Log kiểm tra record
-                        onDelete(record.key);
-                    }} />
+        {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center', sorter: (a, b) => a.stt - b.stt},
+        {title: 'Tên khoa', dataIndex: 'name', key: 'name', align: 'center', sorter: (a, b) => a.name.localeCompare(b.name)},
+        {title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
+                <Space size="middle" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Tooltip title="Xem chi tiết ">
+                        <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onInfo(record.id)}/>
+                    </Tooltip>
+                    <Tooltip title=" Chỉnh sửa ">
+                        <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
+                                onClick={() => onEdit(record.id)}/>
+                    </Tooltip>
+                    <Tooltip title="Xóa">
+                        <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>} onClick={() => {
+                            onDelete(record.id);
+                        }}/>
+                    </Tooltip>
                 </Space>
             ),
         },
     ];
     const data = sections.map((section, index) => ({
-        key: section.id,
+        id: section.id,
         stt: index + 1,
         name: section.name,
         status: section.status,
         description: section.description
     }));
+
+    const pagination: TablePaginationConfig = {
+        pageSize: 5,
+    }
     return (
         <>
-            <Table columns={columns} dataSource={data} pagination={false} />
+            <Table size='small' columns={columns} dataSource={data} pagination={pagination}
+                   rowKey={record => record.id}/>
         </>
     )
 }

@@ -14,8 +14,8 @@ export function SideBar({userName, userRole, profileImg, menuItems,caption }) {
     return (
         <>
             <nav id="mainnav-container" className="mainnav">
-                <div className="mainnav__inner" bis_skin_checked="1">
-                    <div className="mainnav__top-content scrollable-content pb-5" bis_skin_checked="1">
+                <div className="mainnav__inner " bis_skin_checked="1">
+                    <div className=" scrollable-content pb-5" bis_skin_checked="1">
                       <UserNav profileImg={profileImg} userName={userName} userRole={userRole}/>
                         <div className="mainnav__categoriy py-3" bis_skin_checked="1">
                             <h5 className="mainnav__caption mt-0 fw-bold">{caption}</h5>
