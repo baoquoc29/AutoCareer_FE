@@ -6,6 +6,7 @@ import AddWorkShop from "./AddWorkShop";
 import WorkShopDetails from "./WorkShopDetails";
 import {Button, Card, Input, Modal, Pagination} from "antd";
 import EditWorkShop from "./EditWorkShop";
+import {PlusOutlined} from "@ant-design/icons";
 
 
 const WorkShopManager = () => {
@@ -98,7 +99,7 @@ const WorkShopManager = () => {
     const totalItems = searchKeyword ? filteredWorkshops.length : totalRecords;
 
     return (
-        <Card title="Quản Lý Hội Thảo">
+        <Card title="Quản lý hội thảo">
             {viewMode === "details" && selectedWorkshop ? (
                 <WorkShopDetails workshop={selectedWorkshop} onBack={resetView} />
             ) : viewMode === "edit" && selectedWorkshop ? (
@@ -120,8 +121,8 @@ const WorkShopManager = () => {
                                         style={{ width: 200 }}
                                     />
                                 </div>
-                                <Button type="primary" onClick={() => setIsAdding(true)}>
-                                    Thêm Hội Thảo
+                                <Button  icon={<PlusOutlined/>}  type="primary" onClick={() => setIsAdding(true)}>
+                                    Thêm hội thảo
                                 </Button>
                             </div>
                             <WorkShopTable
@@ -142,7 +143,7 @@ const WorkShopManager = () => {
                                 />
                                 {/* Label showing total results at the bottom right */}
                                 {searchKeyword && (
-                                    <div style={{ marginLeft: 16 }}>
+                                    <div style={{ marginLeft: 16, marginTop: 12 }}>
                                         <p>
                                             Có {filteredWorkshops.length} kết quả được tìm thấy.
                                         </p>

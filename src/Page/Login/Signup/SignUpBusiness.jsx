@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import {resetResponse, sign_up_business, verify_account_business} from "../../../Redux/actions/UserThunk";
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
+import {toast} from "react-toastify";
 export function SignUpBusiness() {
     const [form] = Form.useForm();
     const [showModal, setShowModal] = useState(false);
@@ -151,9 +152,15 @@ export function SignUpBusiness() {
         }
     };
 
-    // Xử lý thay đổi file ảnh
-    const handleFileChange = ({ fileList: newFileList }) => {
+
+    const handleFileChange = ({fileList: newFileList}) => {
+        const isValidFile = newFileList.every(file => file.type === "image/jpeg" || file.type === "image/png");
+        if (!isValidFile) {
+            toast.error("Chỉ chấp nhận file định dạng JPG/PNG.");
+            return;
+        }
         setFileList(newFileList);
+
     };
 
     // Xem trước ảnh

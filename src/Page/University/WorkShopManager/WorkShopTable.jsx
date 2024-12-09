@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Space, Table, Tag, Tooltip } from "antd";
-import { InfoCircleOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {InfoCircleOutlined, EditOutlined, DeleteOutlined, EyeOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -88,26 +88,18 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
             title: "Hành động",
             key: "action",
             render: (_, record) => (
-                <Space size="middle">
-                    <Tooltip title="Xem Chi Tiết">
-                        <Button
-                            icon={<InfoCircleOutlined />}
-                            onClick={() => onView(record)}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Chỉnh Sửa">
-                        <Button
-                            icon={<EditOutlined />}
-                            onClick={() => onEdit(record)}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Xóa">
-                        <Button
-                            icon={<DeleteOutlined />}
-                            onClick={() => onDelete(record.id,record.title)}
-                        />
-                    </Tooltip>
-                </Space>
+        <Space size="middle" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Tooltip title="Xem chi tiết ">
+                <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onView(record)}/>
+            </Tooltip>
+            <Tooltip title=" Chỉnh sửa ">
+                <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
+                        onClick={() => onEdit(record)}/>
+            </Tooltip>
+            <Tooltip title="Xóa">
+                <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>}   onClick={() => onDelete(record.id,record.title)}/>
+            </Tooltip>
+        </Space>
             ),
         },
     ];
