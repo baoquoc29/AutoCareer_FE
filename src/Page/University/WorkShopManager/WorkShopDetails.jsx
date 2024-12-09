@@ -115,7 +115,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 {/* Tiêu đề */}
                 <div style={{ borderBottom: "1px solid #f0f0f0", paddingBottom: "10px" }}>
-                    <p style={{ color: "#000000" }}>Tiêu Đề:</p>
+                    <p style={{ color: "#000000" , fontWeight: "bold" }}>Tiêu Đề:</p>
                     <Text style={{ fontSize: "16px" }}>{title}</Text>
                 </div>
 
@@ -123,19 +123,19 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                 <Row gutter={16}>
                     <Col span={8}>
                         <div>
-                            <p>Ngày Bắt Đầu:</p>
+                            <p style={{font: 'black' , fontWeight: "bold"}}>Ngày bắt đầu:</p>
                             <Text>{startDate}</Text>
                         </div>
                     </Col>
                     <Col span={8}>
                         <div>
-                            <p>Ngày Kết Thúc:</p>
+                            <p style={{font: 'black' , fontWeight: "bold"}} >Ngày kết thúc:</p>
                             <Text>{endDate}</Text>
                         </div>
                     </Col>
                     <Col span={8}>
                         <div>
-                            <p>Ngày Hết Hạn:</p>
+                            <p style={{font: 'black' , fontWeight: "bold"}}>Ngày hết hạn:</p>
                             <Text>{expireDate}</Text>
                         </div>
                     </Col>
@@ -143,13 +143,13 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
 
                 {/* Địa chỉ */}
                 <div>
-                    <p>Địa chỉ:</p>
+                    <p style={{font: 'black' , fontWeight: "bold"}}>Địa chỉ:</p>
                     <Text>{fullAddress}</Text>
                 </div>
 
                 {/* Mô tả */}
                 <div>
-                    <p>Mô Tả:</p>
+                    <p style={{font: 'black' , fontWeight: "bold"}}>Mô tả:</p>
                     <div
                         dangerouslySetInnerHTML={{
                             __html: description || "<p>Không có mô tả</p>",
@@ -164,7 +164,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
 
                 {/* Nút xem ảnh */}
                 <div>
-                    <p>Ảnh:</p>
+                    <p style={{font: 'black' , fontWeight: "bold"}}>Ảnh:</p>
                     {imageWorkshop ? (
                         <Button onClick={showModal} type="primary">
                             Xem ảnh
@@ -175,7 +175,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                 </div>
 
                 {/* Nút quay lại */}
-                <div style={{ textAlign: "right" }}>
+                <div style={{font: 'black' , fontWeight: "bold",textAlign: "right"}}>
                     <Button onClick={onBack} style={{ backgroundColor: "#1890ff", color: "#fff" }}>
                         Quay lại
                     </Button>

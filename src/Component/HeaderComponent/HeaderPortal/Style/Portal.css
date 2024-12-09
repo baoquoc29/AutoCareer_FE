@@ -1,0 +1,91 @@
+.custom-header {
+    background: #ffffff;
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 20px; /* Cách lề trái và phải 20px */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Menu */
+.nav-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-menu .ant-menu-item {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.nav-menu .ant-menu-item a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+.nav-menu .ant-menu-item:hover a {
+    color: #007bff;
+}
+
+/* Buttons */
+.header__brand {
+    display: flex;
+    align-items: center;
+    margin-left: 5px; /* Đảm bảo logo cách lề trái 20px */
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa các nút là 10px */
+    margin-right: 20px; /* Đảm bảo nút cách lề phải 20px */
+}
+
+
+.header-buttons .btn-login {
+    border: 1px solid #d9d9d9;
+    background-color: white;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header-buttons .btn-login:hover {
+    background-color: #f5f5f5;
+}
+
+.header-buttons .btn-register {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header-buttons .btn-register:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.header-buttons .btn-employer {
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.header-buttons .btn-employer:hover {
+    color: #007bff;
+}

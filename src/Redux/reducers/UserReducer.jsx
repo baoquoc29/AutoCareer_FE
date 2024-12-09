@@ -1,4 +1,12 @@
-import { LOGIN_SUCCESS, LOGOUT_SUCCESS, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
+import {
+    LOGIN_SUCCESS,
+    LOGOUT_SUCCESS,
+    TOKEN,
+    USER_LOGIN,
+    VERIFY_CODE_SUCCESS,
+    VERIFY_CODE_FAIL,
+    RESET_RESPONSE
+} from "../../Utils/Setting/Config";
 import { jwtDecode } from 'jwt-decode';
 import {toast} from "react-toastify";
 
@@ -13,6 +21,9 @@ const initialState = {
     isAuthenticated: JSON.parse(localStorage.getItem(USER_LOGIN)),
     userData: JSON.parse(localStorage.getItem(USER_LOGIN)) || null,
     token: localStorage.getItem(TOKEN) || null,
+    verificationCode : null,
+    response: null,
+    error: null,
 }
 
 export const UserReducer = (state = initialState, action) => {
@@ -32,6 +43,24 @@ export const UserReducer = (state = initialState, action) => {
                 token: null,
                 error: null
             }
+        case RESET_RESPONSE:
+            return {
+                ...state,
+                response: null, // Reset về giá trị mặc định
+            };
+        case VERIFY_CODE_SUCCESS:
+            return {
+                ...state,
+                verificationCode: action.payload,
+                response: action.payload,
+                error: null,
+            };
+
+        case VERIFY_CODE_FAIL:
+            return {
+                ...state,
+                error: action.payload,
+            };
         default:
             // Kiểm tra xem token có hết hạn không mỗi lần state được cập nhật
             if (state.token && isTokenExpired(state.token)) {
