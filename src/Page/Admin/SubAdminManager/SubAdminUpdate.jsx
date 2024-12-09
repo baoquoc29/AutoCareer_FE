@@ -4,7 +4,7 @@ import {Modal, Form, Input, Upload, Button, Row, Col, Select} from "antd";
 import {get_all_sub_admin, get_detail_sub_admin, update_sub_admin} from "../../../Redux/actions/SubAdminThunk";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
-import {DOMAIN} from "../../../Utils/Setting/Config";
+import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './SubAdminUpdate.css';
 
 const SubAdminUpdate = ({open, onClose, subAdminData}) => {
@@ -56,7 +56,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
                 email: subAdminData.email || "",
                 phone: subAdminData.phone || "",
                 address: subAdminData.address || "",
-                subAdminImage: subAdminData.subAdminImage || null,
+                subAdminImage: null,
             });
         }
     }, [subAdminData]);
@@ -76,7 +76,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
                                 />
                             ) : subAdminData?.subAdminImageId ? (
                                 <img
-                                    src={`${DOMAIN}/api/v1/image/resource?imageId=${subAdminData.subAdminImageId}`}
+                                    src={`${GET_IMAGE_URI}${subAdminData.subAdminImageId}`}
                                     alt="Preview"
                                 />
                             ) : (

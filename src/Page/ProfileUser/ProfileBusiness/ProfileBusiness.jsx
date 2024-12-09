@@ -44,8 +44,8 @@ const ProfileBusiness = () => {
                                         />
                                     </div>
                                     <div className="col-md-9">
-                                        <h1>{business.name}</h1>
-                                        <p>{business.description}</p>
+                                        <h1>{business?.name}</h1>
+                                        <p>{business?.description}</p>
                                     </div>
                                 </div>
 
@@ -53,23 +53,23 @@ const ProfileBusiness = () => {
                                 <div className="row mb-3">
                                     <div className="col-md-6">
                                         <h1 className="header">Thông Tin Chung</h1>
-                                        <p><strong>Tên Doanh Nghiệp:</strong> {business.name}</p>
+                                        <p><strong>Tên Doanh Nghiệp:</strong> {business?.name}</p>
                                         <p><strong>Website:</strong> <a
                                             href={business["website"]}>{business["website"]}</a></p>
                                         <p><strong>Năm thành lập:</strong> {business["foundYear"]}</p>
                                         <p><strong>Mã số thuế:</strong> {business["taxCode"]}</p>
                                         <p><strong>Quy mô doanh nghiệp:</strong> {business["companySize"]}
                                         </p>
-                                        <p><strong>Địa Chỉ:</strong> {business.location.province.fullName},
-                                            {business.location.district.fullName},
-                                            {business.location.ward.fullName},
-                                            {business.location.description},
+                                        <p><strong>Địa Chỉ:</strong> {business?.location?.province.fullName},
+                                            {business?.location?.district.fullName},
+                                            {business?.location?.ward.fullName},
+                                            {business?.location?.description},
                                         </p>
                                     </div>
                                     <div className="col-md-6">
                                         <h1 className="header">Liên Hệ</h1>
-                                        <p><strong>Email:</strong> {business.email}</p>
-                                        <p><strong>Điện Thoại:</strong> {business.phone}</p>
+                                        <p><strong>Email:</strong> {business?.email}</p>
+                                        <p><strong>Điện Thoại:</strong> {business?.phone}</p>
                                     </div>
                                 </div>
 
