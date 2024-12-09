@@ -35,7 +35,8 @@ const IndustryForm = ({selectData, load}) => {
         },
     });
 
-    return (<Card title="Thêm ngành mới">
+    return (
+        <Card title="Thêm ngành mới">
             <form onSubmit={formik.handleSubmit}>
                 <Form.Item
                     label="Tên ngành"
@@ -52,11 +53,11 @@ const IndustryForm = ({selectData, load}) => {
                         placeholder="Chọn ngành"
                     >
                         {selectData.map((industry) => (<Select.Option key={industry.id} value={industry.name}>
-                                {industry.name}
-                            </Select.Option>))}
+                            {industry.name}
+                        </Select.Option>))}
                     </Select>
                 </Form.Item>
-                <Form.Item>
+                <Form.Item style={{ textAlign: "right" }}>
                     <Button type="primary" htmlType="submit">
                         Thêm
                     </Button>

@@ -57,7 +57,7 @@ export function AdminTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    // profileImg={`${DOMAIN}/api/v1/image/resource?imageId=${subAdmin.subAdminImageId}`}
+                    profileImg={`${DOMAIN}/api/v1/image/resource?imageId=${subAdmin.subAdminImageId}`}
                     caption="Quản lý hệ thống"
                     menuItems={menuItems}
                 />

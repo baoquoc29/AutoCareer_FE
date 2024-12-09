@@ -28,57 +28,6 @@ import {Admin} from "../Page/Admin/Admin";
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 
 export function AppRouter() {
-  return (
-    <>
-      <Routes history={history}>
-        <Route element={<UserTemplate />}>
-          <Route path={"/"} element={<SignIn />} />
-          <Route
-            path={"/account-type-selection"}
-            element={<AccountTypeSelection />}
-          />
-          <Route path={"/signup-university"} element={<SignUpUniversity />} />
-          <Route path={"/signup-business"} element={<SignUpBusiness />} />
-          <Route path={"/reset-password"} element={<PasswordReminder />} />
-          <Route path={"/lock-screen"} element={<LockScreen />} />
-        </Route>
-        <Route
-          element={
-            <PrivateRoute>
-              {" "}
-              <UniversityTemplate />{" "}
-            </PrivateRoute>
-          }
-        >
-          <Route path={"/university"} element={<University />} />
-          <Route path={"/profile-user"} element={<Profile />} />
-          <Route path={"/major-manager"} element={<MajorManager />} />
-          <Route
-            path={"/instructional-manager"}
-            element={<InstructionalManager />}
-          />
-          <Route path={"/instructional-edit"} element={<InstructionalEdit />} />
-          <Route path={"/section-manager"} element={<SectionManager />} />
-          <Route path={"/workshop-manager"} element={<WorkShopManager />} />
-        </Route>
-        <Route
-          element={
-            <PrivateRoute>
-              {" "}
-              <BusinessTemplate />{" "}
-            </PrivateRoute>
-          }
-        >
-          <Route path={"/business"} element={<Business />} />
-          <Route path={"/industry-manager"} element={<IndustryManager />} />
-          <Route path={"/job-manager"} element={<JobManager />} />
-          <Route path={"/job-create"} element={<JobCreate />} />
-          <Route path={"/job-update"} element={<JobUpdate />} />
-        </Route>
-        <Route path={"*"} element={<PageError />} />
-      </Routes>
-    </>
-  );
     return (
         <>
             <Routes>
@@ -103,6 +52,9 @@ export function AppRouter() {
                 <Route element={<PrivateRoute>{" "}<BusinessTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/business"} element={<Business/>}/>
                     <Route path={"/industry-manager"} element={<IndustryManager/>}/>
+                    <Route path={"/job-manager"} element={<JobManager />} />
+                    <Route path={"/job-create"} element={<JobCreate />} />
+                    <Route path={"/job-update"} element={<JobUpdate />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>

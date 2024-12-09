@@ -2,7 +2,7 @@ import {jobService} from "../../Service/JobService/JobService";
 import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB} from "../types/JobType";
 import {toast} from "react-toastify";
 
-export const get_all_job_of_business_paging = (page = 1, size = 3, keyword = '') => {
+export const get_all_job_of_business_paging = (page = 1, size = 5, keyword = '') => {
     return async (dispatch) => {
         try {
             const res = await jobService.get_all_job_of_business_paging(page, size, keyword);

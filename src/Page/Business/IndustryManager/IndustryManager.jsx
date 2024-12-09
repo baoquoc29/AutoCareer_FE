@@ -10,8 +10,9 @@ import {Button, Card, Input, Pagination} from "antd";
 import IndustryTable from "./IndustryTable";
 import IndustryForm from "./IndustryForm";
 import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
-import {DownloadOutlined, SearchOutlined,} from "@ant-design/icons";
+import {DownloadOutlined, FileExcelFilled, FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
+import logo from "../../../Component/HeaderComponent/aotucareer-logo.svg";
 
 
 const IndustryManager = () => {
@@ -78,9 +79,9 @@ const IndustryManager = () => {
         // Chuyển đổi dữ liệu thành định dạng Excel
         const worksheet = XLSX.utils.json_to_sheet(
             filteredData.map((industry) => ({
-                "Industry Name": industry.industryName,
-                "Industry Code": industry.industryCode,
-                "Status": industry.status,
+                "Tên ngành nghề": industry.industryName,
+                "Mã ngành nghề": industry.industryCode,
+                "Trạng thái": industry.status,
             }))
         );
 
@@ -95,10 +96,11 @@ const IndustryManager = () => {
         <section id="content" className="content">
             <div className="content__header content__boxed rounded-0">
                 <div className="content__wrap">
-                    <div className="container mt-5">
+                    <div className="mt-auto">
                         <div className="row">
                             <div className="col-md-4 mb-3 border-5">
                                 <IndustryForm selectData={industryOptions} load={setLoad}/>
+                                <img src={logo} alt="logo" className="logo" style={{width: "500px", height: "500px"}}/>
                             </div>
                             <div className="col-md-8 mb-3">
                                 <Card title="Danh sách ngành nghề">
@@ -112,20 +114,29 @@ const IndustryManager = () => {
                                                 style={{width: 200}}
                                             />
                                             <Button
-                                                icon={<DownloadOutlined/>}
+                                                icon={<FileExcelOutlined/>}
                                                 onClick={exportToExcel}
                                             >
-                                                Xuất sang Excel
+                                                Xuất Excel
                                             </Button>
                                         </div>
                                         <IndustryTable data={data} onInfo={handleInfo} onDelete={handleDelete}/>
+                                        <div className="mt-3">
+                                             <span style={{
+                                                 float: "right",
+                                                 fontSize: "14px",
+                                                 color: "#555",
+                                             }}>
+                                                Có <span style={{fontWeight: "bold"}}>{totalElements}</span> kết quả được tìm thấy
+                                             </span>
+                                        </div>
                                     </div>
                                     <Pagination
                                         current={currentPage}
                                         pageSize={pageSize}
                                         total={totalElements}
                                         onChange={handlePageChange}
-                                        className="text-center mt-5"
+                                        className="text-center mt-3"
                                     />
                                 </Card>
                             </div>

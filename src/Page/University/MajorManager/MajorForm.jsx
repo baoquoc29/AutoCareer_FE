@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {validateField} from "../../../Utils/Validation/MajorValidation";
 import {useEffect} from "react";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
+import './Style/Major.css'
 
 
 const MajorForm = ({onSubmit, initialValues}) => {

@@ -1,5 +1,5 @@
 import {Button, Modal, Space, Table} from "antd";
-import {DeleteOutlined, EditOutlined, InfoCircleOutlined, ReloadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined, InfoCircleOutlined, ReloadOutlined} from "@ant-design/icons";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 
@@ -20,24 +20,27 @@ const JobTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
     };
 
     const columns = [
-        {title: 'STT', dataIndex: 'stt', key: 'stt', sorter: (a, b) => a.stt - b.stt},
-        {title: 'Tiêu đề', dataIndex: 'title', key: 'title', sorter: (a, b) => a.title.localeCompare(b.title)},
+        {title: 'STT', dataIndex: 'stt', align: 'center' , key: 'stt', sorter: (a, b) => a.stt - b.stt},
+        {title: 'Tiêu đề', dataIndex: 'title', align: 'center', key: 'title', sorter: (a, b) => a.title.localeCompare(b.title)},
         {
             title: 'Ngày hết hạn',
             dataIndex: 'expireDate',
             key: 'expireDate',
+            align: 'center',
             sorter: (a, b) => a.expireDate.localeCompare(b.expireDate)
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
+            align: 'center',
             sorter: (a, b) => a.status.localeCompare(b.status),
             render: (text) => (text === 'ACTIVE' ? 'Hoạt động' : 'Tạm ngưng')
         },
         {
             title: 'Trạng thái duyệt',
             dataIndex: 'statusBrowse',
+            align: 'center',
             key: 'statusBrowse',
             sorter: (a, b) => a.status.localeCompare(b.statusBrowse),
             render: (text) => {
@@ -54,13 +57,13 @@ const JobTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
             }
         },
         {
-            title: 'Thao tác', key: 'actions', render: (text, record) => (
+            title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="middle">
-                    <Button icon={<InfoCircleOutlined/>} onClick={() => onInfo(record)}
+                    <Button type={"primary"}  icon={<EyeOutlined/>} onClick={() => onInfo(record)}
                             disabled={record.status !== 'ACTIVE'}/>
-                    <Button color="primary" icon={<EditOutlined/>} onClick={() => onEdit(record.id)}/>
+                    <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>} onClick={() => onEdit(record.id)}/>
                     {record.status === 'ACTIVE' ? (
-                        <Button danger={true} icon={<DeleteOutlined/>} onClick={() => confirmDelete(record)}/>
+                        <Button variant={"solid"} danger={true} color={"danger"} icon={<DeleteOutlined/>} onClick={() => confirmDelete(record)}/>
 
                     ) : (
                         <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>

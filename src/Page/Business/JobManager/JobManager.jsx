@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, Input, Modal, Pagination} from "antd";
-import {DownloadOutlined, SearchOutlined,} from "@ant-design/icons";
+import {DownloadOutlined, FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
 import JobTable from "./JobTable";
 import JobDetailModal from "./JobDetailModel";
 import * as XLSX from "xlsx";
@@ -80,54 +80,69 @@ const JobManager = () => {
         }))
         : [];
 
-    return (
-        <section className="job-manager-container" style={{padding: "20px"}}>
-            <Card title="Danh sách Công việc">
-                <div className="mb-3 text-end">
+    return (<>
+        <section id="content" className="content">
+            <div className="content__header content__boxed rounded-0">
+                <div className="content__wrap">
+                    <div className="mt-auto">
+                        <div className="row">
+                            <div className="col-md-12 mb-3">
+                                <Card title="Danh sách Công việc">
+                                    <div className="table-responsive">
+                                        <div className="d-flex justify-content-between mb-3">
+                                            <Input
+                                                placeholder="Search..."
+                                                value={searchText}
+                                                onChange={handleSearch}
+                                                prefix={<SearchOutlined/>}
+                                                style={{width: 200}}
+                                            />
+                                            <div style={{display: "flex", gap: "10px"}}>
+                                                <Button type="primary" onClick={() => setIsCreateOpen(true)}>
+                                                    <NavLink to={"/job-create"} style={{textDecoration: "none"}}>
+                                                        Thêm công việc
+                                                    </NavLink>
+                                                </Button>
+                                                <Button
+                                                    icon={<FileExcelOutlined/>}
+                                                    onClick={exportToExcel}
+                                                >
+                                                    Xuất Excel
+                                                </Button>
+                                            </div>
+                                        </div>
 
-                </div>
-                <div className="table-responsive">
-                    <div className="d-flex justify-content-between mb-3">
-                        <Input
-                            placeholder="Search..."
-                            value={searchText}
-                            onChange={handleSearch}
-                            prefix={<SearchOutlined/>}
-                            style={{width: 200}}
-                        />
-                        <Button type="primary" onClick={() => setIsCreateOpen(true)}>
-                            <NavLink to={"/job-create"} style={{textDecoration: "none"}}>
-                                Tạo Công Việc
-                            </NavLink>
-                        </Button>
+                                        <JobTable data={data} onInfo={handleInfo}/>
+                                        <div className="mt-3">
+                                             <span style={{
+                                                 float: "right",
+                                                 fontSize: "14px",
+                                                 color: "#555",
+                                             }}>
+                                                Có <span style={{fontWeight: "bold"}}>{totalElements}</span> kết quả được tìm thấy
+                                             </span>
+                                        </div>
+                                    </div>
+                                    <Pagination
+                                        current={currentPage}
+                                        pageSize={pageSize}
+                                        total={totalElements}
+                                        onChange={handlePageChange}
+                                        className="text-center mt-3"
+                                    />
+                                </Card>
+                            </div>
+                        </div>
                     </div>
-
-                    <JobTable data={data} onInfo={handleInfo}/>
                 </div>
-                <Pagination
-                    current={currentPage}
-                    pageSize={pageSize}
-                    total={totalElements}
-                    onChange={handlePageChange}
-                    className="text-center mt-5"
-                />
-            </Card>
-
-            <Button
-                type="link"
-                icon={<DownloadOutlined/>}
-                onClick={exportToExcel}
-                style={{marginTop: "10px"}}
-            >
-                Xuất danh sách công việc
-            </Button>
-            <JobDetailModal
-                open={open}
-                onClose={() => setOpen(false)}
-                job={selectedJobDetail}
-            />
+            </div>
         </section>
-    );
+        <JobDetailModal
+            open={open}
+            onClose={() => setOpen(false)}
+            job={selectedJobDetail}
+        />
+    </>);
 };
 
 export default JobManager;

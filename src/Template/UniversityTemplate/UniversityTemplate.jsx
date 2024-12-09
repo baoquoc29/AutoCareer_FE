@@ -3,7 +3,7 @@ import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {GET_IMAGE_URL} from "../../Utils/Setting/Config";
+import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_university_id} from "../../Redux/actions/UniversityThunk";
 import {Footer} from "../../Component/FooterComponent/Footer";
 
@@ -64,7 +64,7 @@ export function UniversityTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    profileImg={`${GET_IMAGE_URL}${uni.logoImageId}`}
+                    profileImg={`${GET_IMAGE_URI}${uni.logoImageId}`}
                     caption="Quản lý trường đại học"
                     menuItems={menuItems}
                 />
