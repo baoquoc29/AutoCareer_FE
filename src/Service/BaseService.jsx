@@ -1,5 +1,6 @@
 import {DOMAIN, TOKEN} from "../Utils/Setting/Config";
 import Axios from "axios";
+import axios from "axios";
 
 export class baseService {
     put = (url, model) => {
@@ -37,7 +38,41 @@ export class baseService {
             throw error
         });
     }
-    postFormData = (url, model) => {
+     postResponse = async (url, model) => {
+        const token = localStorage.getItem(TOKEN);
+        const config = {
+            url: `${DOMAIN}/${url}`,
+            method: 'POST',
+            data: model,
+        };
+
+        // Chỉ thêm Authorization nếu đã có token và url không bao gồm "login"
+        if (token && !url.includes("login")) {
+            config.headers = {
+                'Authorization': `Bearer ${token}`
+            };
+        }
+
+        try {
+            const response = await axios(config); // Sử dụng await để đợi kết quả trả về
+            return response.data; // Trả về dữ liệu nếu thành công
+        } catch (error) {
+            if (error.response) {
+                return {
+                    code: error.response.data.code,
+                    message: error.response.data.message || "Đã xảy ra lỗi.",
+                };
+            } else {
+                // Lỗi mạng hoặc lỗi khác
+                return {
+                    code: 500,
+                    message: "Không thể kết nối tới máy chủ.",
+                };
+            }
+        }
+    }
+
+    postFormData = async (url, model) => {
         const token = localStorage.getItem(TOKEN);
         const config = {
             url: `${DOMAIN}/${url}`,
@@ -55,8 +90,25 @@ export class baseService {
                 'Authorization': `Bearer ${token}`,
             };
         }
-        return Axios(config).then(response => response.data).catch(error => { throw error });
-    }
+        try {
+            const response = await axios(config);
+            return response.data; // Trả về dữ liệu nếu thành công
+        } catch (error) {
+            if (error.response) {
+                return {
+                    code: error.response.data.code,
+                    message: error.response.data.message || "Đã xảy ra lỗi.",
+                };
+            } else {
+                // Lỗi mạng hoặc lỗi khác
+                return {
+                    code: 500,
+                    message: "Không thể kết nối tới máy chủ.",
+                };
+            }
+        }
+    };
+
     putFormData = (url, model) => {
         const token = localStorage.getItem(TOKEN);
         const config = {

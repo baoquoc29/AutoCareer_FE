@@ -1,11 +1,12 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {delete_work_shop, get_all_workshop_by_university,} from "../../../Redux/actions/WorkShopThunk";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { delete_work_shop, get_all_workshop_by_university } from "../../../Redux/actions/WorkShopThunk";
 import WorkShopTable from "./WorkShopTable";
 import AddWorkShop from "./AddWorkShop";
 import WorkShopDetails from "./WorkShopDetails";
 import {Button, Card, Input, Modal, Pagination} from "antd";
 import EditWorkShop from "./EditWorkShop";
+import {PlusOutlined} from "@ant-design/icons";
 
 
 const WorkShopManager = () => {
@@ -20,7 +21,6 @@ const WorkShopManager = () => {
     const [size, setSize] = useState(10);
 
     const userInfo = JSON.parse(localStorage.getItem("USER_LOGIN")) || {};
-
     const idUniversity = userInfo.university?.id || null;
 
     // Fetch workshops when dependencies change
@@ -35,12 +35,12 @@ const WorkShopManager = () => {
             }
         };
         fetchWorkshops();
-    }, [dispatch, idUniversity, page, size]); // Add page and size to the dependency array
+    }, [dispatch, idUniversity, page, size]);
 
-    // Filter workshops by search keyword and status
+    // Filter workshops by search keyword
     const filteredWorkshops = useMemo(() => {
         return workshops.filter((workshop) => {
-            return workshop.title.toLowerCase().includes(searchKeyword.toLowerCase()) ;
+            return workshop.title.toLowerCase().includes(searchKeyword.toLowerCase());
         });
     }, [workshops, searchKeyword]);
 
@@ -58,11 +58,11 @@ const WorkShopManager = () => {
         setSearchKeyword(e.target.value);
         setPage(1); // Reset to page 1 when searching
     };
-
-    const handleDelete = async (id) => {
+    const handleDelete = async (id,title) => {
         Modal.confirm({
+
             title: "Xác nhận xóa",
-            content: "Bạn có chắc chắn muốn xóa hội thảo này?",
+            content: "Bạn có chắc chắn muốn xóa " + title +  "?",
             okText: "Xóa",
             cancelText: "Hủy",
             centered: true,
@@ -95,8 +95,11 @@ const WorkShopManager = () => {
         }
     };
 
+    // Calculate the total records based on whether a search term is applied
+    const totalItems = searchKeyword ? filteredWorkshops.length : totalRecords;
+
     return (
-        <Card title="Quản Lý Hội Thảo">
+        <Card title="Quản lý hội thảo">
             {viewMode === "details" && selectedWorkshop ? (
                 <WorkShopDetails workshop={selectedWorkshop} onBack={resetView} />
             ) : viewMode === "edit" && selectedWorkshop ? (
@@ -117,13 +120,11 @@ const WorkShopManager = () => {
                                         onChange={handleSearch}
                                         style={{ width: 200 }}
                                     />
-
                                 </div>
-                                <Button type="primary" onClick={() => setIsAdding(true)}>
-                                    Thêm Hội Thảo
+                                <Button  icon={<PlusOutlined/>}  type="primary" onClick={() => setIsAdding(true)}>
+                                    Thêm hội thảo
                                 </Button>
                             </div>
-
                             <WorkShopTable
                                 workshops={filteredWorkshops}
                                 onEdit={handleViewEdit}
@@ -131,16 +132,24 @@ const WorkShopManager = () => {
                                 onView={handleViewDetails}
                             />
 
-                            <Pagination
-                                current={page}
-                                pageSize={size}
-                                total={searchKeyword  ? filteredWorkshops.length : totalRecords} // Adjust total records based on filter
-                                onChange={handlePageChange}  // Handle page change
-                                showSizeChanger
-                                pageSizeOptions={['10', '20', '30']}  // Size options
-                                style={{ marginTop: 16, textAlign: "center" }}
-                            />
-
+                            {/* Container for pagination and results label */}
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
+                                {/* Pagination */}
+                                <Pagination
+                                    current={page}
+                                    pageSize={size}
+                                    total={totalItems} // Adjust total records based on search or not
+                                    onChange={handlePageChange}
+                                />
+                                {/* Label showing total results at the bottom right */}
+                                {searchKeyword && (
+                                    <div style={{ marginLeft: 16, marginTop: 12 }}>
+                                        <p>
+                                            Có {filteredWorkshops.length} kết quả được tìm thấy.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
                         </>
                     ) : (
                         <AddWorkShop
