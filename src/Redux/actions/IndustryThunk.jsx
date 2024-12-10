@@ -15,16 +15,32 @@ export const get_all_industry_business = (page = 1, size = 5, keyword = '') => {
             const {content, totalElements, pageSize, currentPage} = res.data;
 
             if (Array.isArray(res.data.content)) {
-                dispatch({
-                    type: SET_INDUSTRIES,
-                    payload: {
-                        content, // Dữ liệu ngành nghề
-                        totalElements, // Tổng số bản ghi
-                        pageSize, // Số bản ghi mỗi trang
-                        currentPage, // Trang hiện tại
-                        keyword,
-                    },
-                });
+                if (content.length === 0) {
+                    // Không có dữ liệu
+                    dispatch({
+                        type: SET_INDUSTRIES,
+                        payload: {
+                            content: [],       // Danh sách ngành nghề rỗng
+                            totalElements: 0,  // Tổng số bản ghi là 0
+                            pageSize: size,    // Giữ nguyên số bản ghi mỗi trang
+                            currentPage: page, // Giữ nguyên trang hiện tại
+                            keyword,
+                        },
+                    });
+                    console.warn("Không có dữ liệu ngành nghề nào được tìm thấy.");
+                } else {
+                    // Có dữ liệu
+                    dispatch({
+                        type: SET_INDUSTRIES,
+                        payload: {
+                            content,       // Dữ liệu ngành nghề
+                            totalElements, // Tổng số bản ghi
+                            pageSize,      // Số bản ghi mỗi trang
+                            currentPage,   // Trang hiện tại
+                            keyword,
+                        },
+                    });
+                }
             } else {
                 console.error("API returned data that is not an array:", res.data);
             }
@@ -91,14 +107,15 @@ export const get_industry_detail = (id) => {
     };
 };
 
-export const delete_industry_by_id = (id) => {
+export const delete_industry_by_id = (businessIndustryId) => {
     return async (dispatch) => {
         try {
-            await industryService.delete_industry(id);
-            // Tùy chọn: Dispatch để cập nhật lại danh sách sau khi xóa
-            dispatch(get_all_industry_business());
+            await industryService.delete_industries(businessIndustryId);
+            dispatch(get_all_industry_business()); // Refresh the list after deletion
         } catch (error) {
             console.error("Error deleting industry:", error);
+            toast.error("Failed to delete industry");
         }
     };
 };
+

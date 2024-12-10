@@ -19,6 +19,16 @@ const JobTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
         });
     };
 
+    const formatDate = (dateString) => {
+        if (!dateString) return "Không xác định";
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        }).format(date);
+    };
+
     const columns = [
         {title: 'STT', dataIndex: 'stt', align: 'center' , key: 'stt', sorter: (a, b) => a.stt - b.stt},
         {title: 'Tiêu đề', dataIndex: 'title', align: 'center', key: 'title', sorter: (a, b) => a.title.localeCompare(b.title)},
@@ -27,7 +37,9 @@ const JobTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
             dataIndex: 'expireDate',
             key: 'expireDate',
             align: 'center',
-            sorter: (a, b) => a.expireDate.localeCompare(b.expireDate)
+            sorter: (a, b) => a.expireDate.localeCompare(b.expireDate),
+            render: (text) => formatDate(text), // Sử dụng hàm formatDate
+
         },
         {
             title: 'Trạng thái',
@@ -74,7 +86,12 @@ const JobTable = ({data, onInfo, onEdit, onDelete, onRestore}) => {
     ];
     return (
         <>
-            <Table columns={columns} dataSource={data} pagination={false}/>
+            <Table columns={columns}
+                   dataSource={data}
+                   pagination={false}
+                   locale={{
+                       emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
+                   }}/>
         </>
     )
 }

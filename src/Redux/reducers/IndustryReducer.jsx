@@ -3,13 +3,15 @@ import {
     CREATE_INDUSTRIES,
     SET_INDUSTRIES,
     SET_INDUSTRY_OPTIONS,
-    SET_INDUSTRIES_NO_PAG, SET_INDUSTRIES_ALL
+    SET_INDUSTRIES_NO_PAG,
+    SET_INDUSTRIES_ALL,
 } from "../types/IndustryType";
 
 const initialState = {
     industries: [],
-    industriesNoPag: [],
     industryOptions: [], // Dữ liệu cho Select
+    industriesNoPag: [],
+
 };
 
 export const IndustryReducer = (state = initialState, action) => {
@@ -51,3 +53,4 @@ export const IndustryReducer = (state = initialState, action) => {
             return {...state};
     }
 };
+

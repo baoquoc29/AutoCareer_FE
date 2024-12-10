@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, Input, Modal, Pagination} from "antd";
-import {DownloadOutlined, FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
+import {FileExcelOutlined, PlusOutlined, SearchOutlined,} from "@ant-design/icons";
 import JobTable from "./JobTable";
 import JobDetailModal from "./JobDetailModel";
 import * as XLSX from "xlsx";
 import {get_all_job_of_business_paging, get_job_detail} from "../../../Redux/actions/JobThunk";
 import {NavLink} from "react-router-dom";
+import ResultsSummary from "../../../Component/Paging/ResultsSummary"; // Import component mới
 
 const JobManager = () => {
     const dispatch = useDispatch();
@@ -63,6 +64,7 @@ const JobManager = () => {
         XLSX.writeFile(workbook, "DanhSachCongViec.xlsx");
     };
 
+
     const data = Array.isArray(filteredData)
         ? filteredData.map((job, index) => ({
             id: job.jobId,
@@ -87,7 +89,7 @@ const JobManager = () => {
                     <div className="mt-auto">
                         <div className="row">
                             <div className="col-md-12 mb-3">
-                                <Card title="Danh sách Công việc">
+                                <Card title="Danh sách công việc">
                                     <div className="table-responsive">
                                         <div className="d-flex justify-content-between mb-3">
                                             <Input
@@ -98,7 +100,7 @@ const JobManager = () => {
                                                 style={{width: 200}}
                                             />
                                             <div style={{display: "flex", gap: "10px"}}>
-                                                <Button type="primary" onClick={() => setIsCreateOpen(true)}>
+                                                <Button type="primary" icon={<PlusOutlined/>} onClick={() => setIsCreateOpen(true)}>
                                                     <NavLink to={"/job-create"} style={{textDecoration: "none"}}>
                                                         Thêm công việc
                                                     </NavLink>
@@ -113,15 +115,9 @@ const JobManager = () => {
                                         </div>
 
                                         <JobTable data={data} onInfo={handleInfo}/>
-                                        <div className="mt-3">
-                                             <span style={{
-                                                 float: "right",
-                                                 fontSize: "14px",
-                                                 color: "#555",
-                                             }}>
-                                                Có <span style={{fontWeight: "bold"}}>{totalElements}</span> kết quả được tìm thấy
-                                             </span>
-                                        </div>
+                                        <ResultsSummary
+                                            totalElements={totalElements}
+                                        />
                                     </div>
                                     <Pagination
                                         current={currentPage}

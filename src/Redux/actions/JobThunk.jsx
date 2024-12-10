@@ -50,6 +50,7 @@ export const create_job = (jobData) => {
                 type: CREATE_JOB,
                 payload: res.data,
             });
+            console.log(res.data)
             toast.success("Công việc đã được tạo thành công!");
         } catch (error) {
             console.error("Error creating job:", error);

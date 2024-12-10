@@ -10,9 +10,12 @@ import {Button, Card, Input, Pagination} from "antd";
 import IndustryTable from "./IndustryTable";
 import IndustryForm from "./IndustryForm";
 import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
-import {DownloadOutlined, FileExcelFilled, FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
+import {FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import logo from "../../../Component/HeaderComponent/aotucareer-logo.svg";
+import ResultsSummary from "../../../Component/Paging/ResultsSummary";
+import {toast} from "react-toastify";
+import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton"; // Import component mới
 
 
 const IndustryManager = () => {
@@ -28,6 +31,8 @@ const IndustryManager = () => {
     const [filteredData, setFilteredData] = useState([]);
     const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các bản ghi đã chọn
+
 
     useEffect(() => {
         dispatch(get_all_industry_business(currentPage, pageSize, keyword));
@@ -46,9 +51,26 @@ const IndustryManager = () => {
         dispatch(delete_industry_by_id(record.key));
     };
 
+    const handleDeleteMultiple = async (records) => {
+        if (records.length === 0) {
+            alert("Chưa chọn bản ghi để xóa!");
+            return;
+        }
+        const idsToDelete = records.map(record => record.key).filter(id => id !== undefined);
+
+        // Sử dụng Promise.all để xóa song song
+        try {
+            await Promise.all(idsToDelete.map(id => dispatch(delete_industry_by_id(id))));
+            setSelectedRows([]);
+        } catch (error) {
+            console.error("Lỗi khi xóa các bản ghi:", error);
+            toast.error("Xảy ra lỗi khi xóa một số bản ghi!");
+        }
+    };
+
     const handleInfo = (record) => {
-        dispatch(get_industry_detail(record.id)); // Set only the id of the selected industry
-        setOpen(true) // Fetch the industry details
+        dispatch(get_industry_detail(record.id)); // id của industry
+        setOpen(true) // Mở modal industry detail
     };
 
     const handleSearch = (e) => {
@@ -57,6 +79,9 @@ const IndustryManager = () => {
         dispatch(get_all_industry_business(1, pageSize, value)); // Gọi API với từ khóa
     };
 
+    const handleSelectChange = (selectedRowKeys, selectedRows) => {
+        setSelectedRows(selectedRows); // Cập nhật danh sách bản ghi đã chọn
+    };
     const data = Array.isArray(filteredData) ? filteredData.map((industry, index) => ({
         key: industry.id,
         id: industry.industryId,
@@ -100,8 +125,12 @@ const IndustryManager = () => {
                         <div className="row">
                             <div className="col-md-4 mb-3 border-5">
                                 <IndustryForm selectData={industryOptions} load={setLoad}/>
-                                <img src={logo} alt="logo" className="logo" style={{width: "500px", height: "500px"}}/>
-                            </div>
+                                <img
+                                    src={logo}
+                                    alt="Ngành nghề"
+                                    className="logo"
+                                    style={{maxWidth: "80%", height: "auto", display: "block", margin: "0 auto"}}
+                                /></div>
                             <div className="col-md-8 mb-3">
                                 <Card title="Danh sách ngành nghề">
                                     <div className="table-responsive">
@@ -113,23 +142,29 @@ const IndustryManager = () => {
                                                 prefix={<SearchOutlined/>}
                                                 style={{width: 200}}
                                             />
-                                            <Button
-                                                icon={<FileExcelOutlined/>}
-                                                onClick={exportToExcel}
-                                            >
-                                                Xuất Excel
-                                            </Button>
+                                            <div style={{display: "flex", gap: "10px"}}>
+                                                <DeleteSelectedButton
+                                                    selectedRows={selectedRows}
+                                                    onDeleteMultiple={handleDeleteMultiple}
+                                                />
+                                                <Button
+                                                    icon={<FileExcelOutlined/>}
+                                                    onClick={exportToExcel}
+                                                >
+                                                    Xuất Excel
+                                                </Button>
+                                            </div>
                                         </div>
-                                        <IndustryTable data={data} onInfo={handleInfo} onDelete={handleDelete}/>
-                                        <div className="mt-3">
-                                             <span style={{
-                                                 float: "right",
-                                                 fontSize: "14px",
-                                                 color: "#555",
-                                             }}>
-                                                Có <span style={{fontWeight: "bold"}}>{totalElements}</span> kết quả được tìm thấy
-                                             </span>
-                                        </div>
+                                        <IndustryTable
+                                            data={data}
+                                            onInfo={handleInfo}
+                                            onDelete={handleDelete}
+                                            onDeleteMultiple={handleDeleteMultiple} // Thêm xử lý xóa nhiều
+                                            selectedRows={selectedRows}
+                                            onSelectChange={handleSelectChange}/>
+                                        <ResultsSummary
+                                            totalElements={totalElements}
+                                        />
                                     </div>
                                     <Pagination
                                         current={currentPage}
