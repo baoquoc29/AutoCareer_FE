@@ -10,12 +10,12 @@ const ProfileBusiness = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // const industry = useSelector(state => state.IndustryReducer.industries);
-    // useEffect(() => {
-    //     dispatch(get_industry_business())
-    // }, [dispatch])
-    //
-    // console.log("industry ----------",industry)
+    const industry = useSelector(state => state.IndustryReducer.industries);
+    useEffect(() => {
+        dispatch(get_all_industry())
+    }, [dispatch])
+
+    console.log("industry ----------",industry)
 
     const handleEditClick = () => {
         if (business?.id) {
@@ -77,10 +77,10 @@ const ProfileBusiness = () => {
                                 <div className="row mb-3">
                                     <h2 className="header">Chuyên ngành kinh doanh</h2>
                                     <div className="d-flex flex-wrap">
-                                        {/*{industry.map((item, index) => (*/}
-                                        {/*    <span className="badge badge-pill badge-blue mt-2 mx-2"*/}
-                                        {/*          key={index}>{item.name}</span>*/}
-                                        {/*))}*/}
+                                        {industry.map((item, index) => (
+                                            <span className="badge badge-pill badge-blue mt-2 mx-2"
+                                                  key={index}>{item.name}</span>
+                                        ))}
                                     </div>
                                 </div>
 

@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 import { get_university_id } from "../../Redux/actions/UniversityThunk";
 import { get_business_by_id } from "../../Redux/actions/BusinessThunk";
+import {get_employee_by_id} from "../../Redux/actions/EmployeeThunk";
 
 export const UserDropdown = ({ navigate }) => {
     const user = useSelector(state => state.UserReducer.userData);
@@ -15,7 +16,9 @@ export const UserDropdown = ({ navigate }) => {
             return { id: user.university.id, type: 'UNIVERSITY' };
         } else if (user.business) {
             return { id: user.business.id, type: 'BUSINESS' };
-        } else {
+        } else if(user.employee){
+            return { id: user.employee.id, type: 'EMPLOYEE' };
+        }else {
             return { id: user.admin.id, type: 'ADMIN' };
         }
     };
@@ -30,6 +33,12 @@ export const UserDropdown = ({ navigate }) => {
         if (userType === 'UNIVERSITY') {
             dispatch(get_university_id(userId));
         }
+        if (userType === 'EMPLOYEE') {
+            dispatch(get_employee_by_id(userId));
+        }
+        if (userType === 'ADMIN') {
+            // dispatch(get_(userId));
+        }
         // Add actions for ADMIN or additional types as needed
     }, [dispatch, userId, userType]);
 
@@ -40,6 +49,9 @@ export const UserDropdown = ({ navigate }) => {
             case 'BUSINESS':
                 // Replace with correct path to business info in your store
                 return state.BusinessReducer.business;
+            case 'EMPLOYEE':
+                // Replace with correct path to business info in your store
+                return state.EmployeeReducer.employee;
             case 'ADMIN':
                 // Replace with correct path to admin info in your store if needed
                 return state.AdminReducer.admin;
@@ -51,6 +63,8 @@ export const UserDropdown = ({ navigate }) => {
     // Function for user role checks
     const isUniversityUser = user && user.role.name === 'UNIVERSITY';
     const isBusinessUser = user && user.role.name === 'BUSINESS';
+    // const isEmployee = user && user.role.name === 'EMPLOYEE';
+
 
     const handleLogout = async () => {
         const token = localStorage.getItem(TOKEN);
@@ -83,16 +97,39 @@ export const UserDropdown = ({ navigate }) => {
                         <div className="flex-shrink-0">
                             <img
                                 className="img-sm rounded-circle"
-                                src={`${GET_IMAGE_URI}${
+                                src={
                                     user
                                         ? (userType === 'UNIVERSITY'
-                                            ? user.university.logoImageId
+                                            ? (user.university.logoImageId
+                                                ? `${GET_IMAGE_URI}${user.university.logoImageId}`
+                                                : '/path-to-default-image.jpg') // Hình ảnh mặc định
                                             : userType === 'BUSINESS'
-                                                ? user.business.businessImageId
+                                                ? (user.business.businessImageId
+                                                    ? `${GET_IMAGE_URI}${user.business.businessImageId}`
+                                                    : '/path-to-default-image.jpg')
                                                 : userType === 'ADMIN'
-                                                    ? user.admin.adminImageId // Use the appropriate property for admin image
-                                                    : '')
-                                        : ''}`}
+                                                    ? (user.admin.adminImageId
+                                                        ? `${GET_IMAGE_URI}${user.admin.adminImageId}`
+                                                        : '/path-to-default-image.jpg')
+                                                    : userType === 'EMPLOYEE'
+                                                        ? (user.employee.employeeImageId
+                                                            ? `${GET_IMAGE_URI}${user.employee.employeeImageId}`
+                                                            : '/path-to-default-image.jpg')
+                                                        : '/path-to-default-image.jpg')
+                                        : '/path-to-default-image.jpg'
+                                }
+                                // src={`${GET_IMAGE_URI}${
+                                //     user
+                                //         ? (userType === 'UNIVERSITY'
+                                //             ? user.university.logoImageId
+                                //             : userType === 'BUSINESS'
+                                //                 ? user.business.businessImageId
+                                //                 : userType === 'ADMIN'
+                                //                     ? user.admin.adminImageId
+                                //                     :userType=== 'EMPLOYEE'
+                                //                         ?user.employees.employeeImageId// Use the appropriate property for admin image
+                                //                     : '')
+                                //         : ''}`}
                                 alt="UserNav Picture"
                                 loading="lazy"
                             />

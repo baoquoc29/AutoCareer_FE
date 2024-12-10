@@ -1,8 +1,8 @@
-import React, {useState} from "react";
-import {create_employee} from "../../../Redux/actions/EmployeeThunk";
-import {useDispatch} from "react-redux";
-import {useNavigate} from 'react-router-dom';
-import {toast} from "react-toastify";
+import React, { useState } from "react";
+import { create_employee } from "../../../Redux/actions/EmployeeThunk";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EmployeeCreate = () => {
     const navigate = useNavigate();
@@ -10,19 +10,42 @@ const EmployeeCreate = () => {
     const [imagePreview, setImagePreview] = useState(null);
 
     const [formData, setFormData] = useState({
-        email: '',
-        name: '',
-        phone: '',
-        gender: '',
-        dateOfBirth: '',
-        address: '',
-        employeeImage: '',
+        email: "",
+        name: "",
+        phone: "",
+        gender: "",
+        dateOfBirth: "",
+        address: "",
+        employeeImage: "",
     });
+
+    const [errors, setErrors] = useState({});
+
+    const validateField = (field, value) => {
+        switch (field) {
+            case "email":
+                if (!value) return "Email là bắt buộc.";
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) return "Email không hợp lệ.";
+                break;
+            case "name":
+                if (!value) return "Tên là bắt buộc.";
+                break;
+            case "phone":
+                if (!value) return "Số điện thoại là bắt buộc.";
+                const phoneRegex = /^[0-9]{10,11}$/;
+                if (!phoneRegex.test(value)) return "Số điện thoại không hợp lệ.";
+                break;
+            default:
+                break;
+        }
+        return null;
+    };
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setFormData({...formData, employeeImage: file});
+            setFormData({ ...formData, employeeImage: file });
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
@@ -32,62 +55,56 @@ const EmployeeCreate = () => {
     };
 
     const handleInputChange = (event) => {
-        const {id, value} = event.target;
+        const { id, value } = event.target;
         setFormData((prevData) => ({
             ...prevData,
             [id]: value,
+        }));
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [id]: validateField(id, value),
         }));
     };
 
     const handleSave = (event) => {
         event.preventDefault(); // Ngăn tải lại trang
 
-        // Kiểm tra xem các trường bắt buộc đã được điền đầy đủ chưa
-        if (!formData.email || !formData.name || !formData.phone) {
-            toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
+        // Kiểm tra lỗi cho tất cả các trường
+        const newErrors = {};
+        Object.keys(formData).forEach((field) => {
+            const error = validateField(field, formData[field]);
+            if (error) newErrors[field] = error;
+        });
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
 
-
-        // Gửi dữ liệu lên api
-        // dispatch(create_employee(formData))
-        //     .then(() => {
-        //          navigate('/employee-manager'); // Điều hướng về EmployeeManager
-        //
-        //     })
-        //     .catch((error) => {
-        //         console.error("Lỗi khi thêm nhân viên:", error);
-        //         if(error?.response?.data?.message ==="Email đã tồn tại")
-        //         toast.error(error.response.data.message);
-        //     });
         dispatch(create_employee(formData))
             .then((success) => {
                 if (success) {
-                    navigate('/employee-manager'); // Điều hướng về EmployeeManager
+                    navigate("/employee-manager"); // Điều hướng về EmployeeManager
                 }
             })
             .catch((error) => {
                 console.error("Lỗi khi thêm nhân viên:", error);
-                // Do not navigate, the form stays on the create employee screen
                 toast.error("Có lỗi xảy ra khi thêm nhân viên. Vui lòng thử lại.");
             });
     };
 
     const handleCancel = () => {
-        // Reset trạng thái form và xóa ảnh preview
         setFormData({
-            email: '',
-            name: '',
-            phone: '',
-            gender: '',
-            dateOfBirth: '',
-            address: '',
+            email: "",
+            name: "",
+            phone: "",
+            gender: "",
+            dateOfBirth: "",
+            address: "",
             employeeImage: null,
         });
         setImagePreview(null);
-
-        // Điều hướng về trang danh sách nhân viên
-        navigate('/employee-manager');
+        navigate("/employee-manager");
     };
 
     return (
@@ -105,19 +122,30 @@ const EmployeeCreate = () => {
                                                 <div className="col-md-6">
                                                     <h4>Tài khoản</h4>
                                                     <div className="mb-3">
-                                                        <label htmlFor="email" className="form-label">Gmail</label>
+                                                        <label htmlFor="email" className="form-label">
+                                                            Gmail
+                                                        </label>
                                                         <input
                                                             id="email"
                                                             type="email"
-                                                            className="form-control"
+                                                            className={`form-control ${
+                                                                errors.email ? "is-invalid" : ""
+                                                            }`}
                                                             placeholder="Email"
                                                             onChange={handleInputChange}
                                                         />
+                                                        {errors.email && (
+                                                            <div className="invalid-feedback">{errors.email}</div>
+                                                        )}
                                                     </div>
                                                     <h4>Hình ảnh</h4>
                                                     <div className="mb-3 text-center">
-                                                        <label htmlFor="employeeImage" className="form-label">Ảnh đại
-                                                            diện</label>
+                                                        <label
+                                                            htmlFor="employeeImage"
+                                                            className="form-label"
+                                                        >
+                                                            Ảnh đại diện
+                                                        </label>
                                                         <div className="mb-3">
                                                             <input
                                                                 type="file"
@@ -143,30 +171,45 @@ const EmployeeCreate = () => {
                                                 <div className="col-md-6">
                                                     <h4>Thông tin cá nhân</h4>
                                                     <div className="mb-3">
-                                                        <label htmlFor="name" className="form-label">Họ và tên</label>
+                                                        <label htmlFor="name" className="form-label">
+                                                            Họ và tên
+                                                        </label>
                                                         <input
                                                             id="name"
                                                             type="text"
-                                                            className="form-control"
+                                                            className={`form-control ${
+                                                                errors.name ? "is-invalid" : ""
+                                                            }`}
                                                             placeholder="Họ và tên"
                                                             value={formData.name}
                                                             onChange={handleInputChange}
                                                         />
+                                                        {errors.name && (
+                                                            <div className="invalid-feedback">{errors.name}</div>
+                                                        )}
                                                     </div>
                                                     <div className="mb-3">
-                                                        <label htmlFor="phone" className="form-label">Số điện
-                                                            thoại</label>
+                                                        <label htmlFor="phone" className="form-label">
+                                                            Số điện thoại
+                                                        </label>
                                                         <input
                                                             id="phone"
                                                             type="text"
-                                                            className="form-control"
+                                                            className={`form-control ${
+                                                                errors.phone ? "is-invalid" : ""
+                                                            }`}
                                                             placeholder="Số điện thoại"
                                                             value={formData.phone}
                                                             onChange={handleInputChange}
                                                         />
+                                                        {errors.phone && (
+                                                            <div className="invalid-feedback">{errors.phone}</div>
+                                                        )}
                                                     </div>
                                                     <div className="mb-3">
-                                                        <label htmlFor="gender" className="form-label">Giới tính</label>
+                                                        <label htmlFor="gender" className="form-label">
+                                                            Giới tính
+                                                        </label>
                                                         <select
                                                             id="gender"
                                                             className="form-control"
@@ -180,8 +223,9 @@ const EmployeeCreate = () => {
                                                         </select>
                                                     </div>
                                                     <div className="mb-3">
-                                                        <label htmlFor="dateOfBirth" className="form-label">Ngày
-                                                            sinh</label>
+                                                        <label htmlFor="dateOfBirth" className="form-label">
+                                                            Ngày sinh
+                                                        </label>
                                                         <input
                                                             id="dateOfBirth"
                                                             type="date"
@@ -191,7 +235,9 @@ const EmployeeCreate = () => {
                                                         />
                                                     </div>
                                                     <div className="mb-3">
-                                                        <label htmlFor="address" className="form-label">Địa chỉ</label>
+                                                        <label htmlFor="address" className="form-label">
+                                                            Địa chỉ
+                                                        </label>
                                                         <input
                                                             id="address"
                                                             type="text"
@@ -223,8 +269,7 @@ const EmployeeCreate = () => {
                     </section>
                 </div>
             </div>
-
         </>
     );
-}
+};
 export default EmployeeCreate;

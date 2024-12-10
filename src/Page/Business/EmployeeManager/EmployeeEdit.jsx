@@ -1,10 +1,13 @@
-import React, {useState} from "react";
-import {create_employee, get_all_employees} from "../../../Redux/actions/EmployeeThunk";
+import React, {useEffect, useState} from "react";
+import { update_employee} from "../../../Redux/actions/EmployeeThunk";
 import {useDispatch} from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {toast} from "react-toastify";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
-const EmployeeUpdate = () => {
+const EmployeeEdit = () => {
+    const location = useLocation();
+    const { employee } = location.state;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(null);
@@ -16,8 +19,27 @@ const EmployeeUpdate = () => {
         gender: '',
         dateOfBirth: '',
         address: '',
-        employeeImage: '',
+        employeeImage: null,
     });
+
+    useEffect(() => {
+        if (employee) {
+            setFormData({
+                email: employee.email || '',
+                name: employee.name || '',
+                phone: employee.phone || '',
+                gender: employee.gender || '',
+                dateOfBirth: employee.dateOfBirth || '',
+                address: employee.address || '',
+                employeeImage: null,
+            });
+            if (employee.employeeImageId) {
+                // Khi có ID ảnh, tạo đường dẫn ảnh từ GET_IMAGE_URI
+                setImagePreview(`${GET_IMAGE_URI}${employee.employeeImageId}`);
+            }
+        }
+    }, [employee]);
+
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -49,18 +71,7 @@ const EmployeeUpdate = () => {
         }
 
 
-        // Gửi dữ liệu lên api
-        // dispatch(create_employee(formData))
-        //     .then(() => {
-        //          navigate('/employee-manager'); // Điều hướng về EmployeeManager
-        //
-        //     })
-        //     .catch((error) => {
-        //         console.error("Lỗi khi thêm nhân viên:", error);
-        //         if(error?.response?.data?.message ==="Email đã tồn tại")
-        //         toast.error(error.response.data.message);
-        //     });
-        dispatch(create_employee(formData))
+        dispatch(update_employee(employee.id, formData))
             .then((success) => {
                 if (success) {
                     navigate('/employee-manager'); // Điều hướng về EmployeeManager
@@ -89,7 +100,6 @@ const EmployeeUpdate = () => {
         // Điều hướng về trang danh sách nhân viên
         navigate('/employee-manager');
     };
-
     return (
         <>
             <section id="content" className="content">
@@ -101,7 +111,7 @@ const EmployeeUpdate = () => {
                                     <div className="row">
                                         <div className="card h-100">
                                             <div className="card-body">
-                                                <h1 className="card-title">Thêm mới nhân viên</h1>
+                                                <h1 className="card-title">Chỉnh sửa nhân viên</h1>
                                                 <form className="row g-3" onSubmit={handleSave}>
                                                     <div className="col-md-6">
                                                         <h4>Tài khoản</h4>
@@ -112,7 +122,8 @@ const EmployeeUpdate = () => {
                                                                 type="email"
                                                                 className="form-control"
                                                                 placeholder="Email"
-                                                                onChange={handleInputChange}
+                                                                disabled={true}
+                                                                value={formData.email}
                                                             />
                                                         </div>
                                                         <h4>Hình ảnh</h4>
@@ -126,7 +137,7 @@ const EmployeeUpdate = () => {
                                                                     onChange={handleImageChange}
                                                                 />
                                                             </div>
-                                                            {imagePreview && (
+                                                            {imagePreview ? (
                                                                 <img
                                                                     src={imagePreview}
                                                                     alt="Ảnh đại diện"
@@ -137,7 +148,31 @@ const EmployeeUpdate = () => {
                                                                         objectFit: "cover",
                                                                     }}
                                                                 />
+                                                            ) : (
+                                                                <div
+                                                                    className="img-thumbnail rounded-circle d-flex justify-content-center align-items-center "
+                                                                    style={{
+                                                                        width: "200px",
+                                                                        height: "200px",
+                                                                        backgroundColor: "#f0f0f0",
+                                                                        color: "#aaa",
+                                                                    }}
+                                                                >
+                                                                    <span>Không có ảnh</span>
+                                                                </div>
                                                             )}
+                                                            {/*{imagePreview && (*/}
+                                                            {/*    <img*/}
+                                                            {/*        src={formData.image}*/}
+                                                            {/*        alt="Ảnh đại diện"*/}
+                                                            {/*        className="img-thumbnail rounded-circle"*/}
+                                                            {/*        style={{*/}
+                                                            {/*            width: "200px",*/}
+                                                            {/*            height: "200px",*/}
+                                                            {/*            objectFit: "cover",*/}
+                                                            {/*        }}*/}
+                                                            {/*    />*/}
+                                                            {/*)}*/}
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
@@ -225,4 +260,4 @@ const EmployeeUpdate = () => {
         </>
     );
 }
-export default EmployeeCreate;
+export default EmployeeEdit;

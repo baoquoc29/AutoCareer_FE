@@ -40,7 +40,7 @@ const SubAdminDetailModal = ({open, onClose}) => {
                             </p>
                             <p>
                                 <strong>Giới
-                                    tính:</strong> {subAdmin?.gender === "female" ? "Nữ" : subAdmin?.gender === "male" ? "Nam" : "Không xác định"}
+                                    tính: </strong> {subAdmin?.gender === "female" ? "Nữ" : subAdmin?.gender === "male" ? "Nam" : "Không xác định"}
                             </p>
                             <p>
                                 <strong>Email:</strong> {subAdmin?.email}

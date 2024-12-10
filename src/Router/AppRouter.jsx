@@ -26,6 +26,7 @@ import {Admin} from "../Page/Admin/Admin";
 import EmployeeCreate from "../Page/Business/EmployeeManager/EmployeeCreate";
 import ProfileBusiness from "../Page/ProfileUser/ProfileBusiness/ProfileBusiness";
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
+import EmployeeEdit from "../Page/Business/EmployeeManager/EmployeeEdit";
 
 export function AppRouter() {
     return (
@@ -54,6 +55,7 @@ export function AppRouter() {
                     <Route path={"/industry-manager"} element={<IndustryManager/>}/>
                     <Route path={"/employee-manager"} element={<EmployeeManager />} />
                     <Route path={"/employee-create"} element={<EmployeeCreate />} />
+                    <Route path={"/employee-edit"} element={<EmployeeEdit />} />
                     <Route path={"/profile-business"} element={<ProfileBusiness />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>

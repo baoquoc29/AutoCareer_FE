@@ -7,8 +7,9 @@ export const HIDE_LOADING = 'HIDE_LOADING';
 
 // export const DOMAIN = 'http://192.168.0.152:8081/auto-career'
 export const DOMAIN = 'http://localhost:8081/auto-career'
-// export const GET_IMAGE_URI = `${DOMAIN}/api/v1/image/resource?imageId=`
-export const GET_IMAGE_URI = `http://192.168.0.152:8081/auto-career/api/v1/image/resource?imageId=`
+export const GET_IMAGE_URI = `${DOMAIN}/api/v1/image/resource?imageId=`
+// export const GET_IMAGE_URI = `http://192.168.0.152:8081/auto-career/api/v1/image/resource?imageId=`
+
 
 export const TOKEN = 'accessToken'
 
