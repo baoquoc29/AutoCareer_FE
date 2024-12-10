@@ -12,7 +12,6 @@ import IndustryForm from "./IndustryForm";
 import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
 import {FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
-import logo from "../../../Component/HeaderComponent/aotucareer-logo.svg";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 import {toast} from "react-toastify";
 import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton"; // Import component mới
@@ -126,7 +125,7 @@ const IndustryManager = () => {
                             <div className="col-md-4 mb-3 border-5">
                                 <IndustryForm selectData={industryOptions} load={setLoad}/>
                                 <img
-                                    src={logo}
+                                    src={"aotucareer-logo.svg"}
                                     alt="Ngành nghề"
                                     className="logo"
                                     style={{maxWidth: "80%", height: "auto", display: "block", margin: "0 auto"}}
