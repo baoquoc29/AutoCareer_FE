@@ -1,7 +1,8 @@
 import React from 'react';
 import {NavLink, useNavigate} from "react-router-dom";
-import NotificationDropdown from "../NotificationDropdown/NotificationDropdown";
-import {UserDropdown} from "../UserDropdown/UserDropdown";
+import NotificationDropdown from "../../NotificationDropdown/NotificationDropdown";
+import {UserDropdown} from "../../UserDropdown/UserDropdown";
+
 
 export function Header({toggleSidebar, link}) {
     const navigate = useNavigate();

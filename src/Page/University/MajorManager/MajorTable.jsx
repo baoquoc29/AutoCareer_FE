@@ -1,5 +1,6 @@
-import {Button, Space, Table, TablePaginationConfig, Tooltip} from "antd";
-import {DeleteOutlined, EditOutlined, EyeOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {Button, Modal, Space, Table, TablePaginationConfig, Tooltip} from "antd";
+import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
+import {toast} from "react-toastify";
 
 const MajorTable = ({data, onInfo, onEdit, onDelete}) => {
 
@@ -19,7 +20,7 @@ const MajorTable = ({data, onInfo, onEdit, onDelete}) => {
                    </Tooltip>
                    <Tooltip title="Xóa">
                        <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>}
-                               onClick={() => onDelete(record.id)}/>
+                               onClick={() => confirmDelete(record)}/>
                    </Tooltip>
                 </Space>
             ),
@@ -27,7 +28,21 @@ const MajorTable = ({data, onInfo, onEdit, onDelete}) => {
     ];
 
     const pagination: TablePaginationConfig = {
-        pageSize: 5,
+        pageSize: 8,
+    };
+    const confirmDelete = (record) => {
+        Modal.confirm({
+            title: 'Xác nhận xóa',
+            content: `Bạn có chắc chắn muốn xóa chuyên ngành "${record.name}" ?`,
+            okText: 'Xóa',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                // Gọi API xóa
+                onDelete(record.id);
+                toast.success(`Xóa chuyên ngành "${record.name}" thành công`);
+            },
+        });
     };
     return (
         <>

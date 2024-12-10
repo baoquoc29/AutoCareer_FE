@@ -1,5 +1,5 @@
 import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
-import {Button, Space, Table, Tooltip} from "antd";
+import {Button, Modal, Space, Table, Tooltip} from "antd";
 import {TablePaginationConfig} from "antd";
 
 const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
@@ -17,7 +17,7 @@ const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
                     </Tooltip>
                     <Tooltip title="Xóa">
                         <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>} onClick={() => {
-                            onDelete(record.id);
+                            confirmDelete(record);
                         }}/>
                     </Tooltip>
                 </Space>
@@ -31,9 +31,21 @@ const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
         status: section.status,
         description: section.description
     }));
-
+    const confirmDelete = (record) => {
+        Modal.confirm({
+            title: 'Xác nhận xóa',
+            content: `Bạn có chắc chắn muốn xóa khoa "${record.name}" ?`,
+            okText: 'Xóa',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                // Gọi API xóa
+                onDelete(record.id);
+            },
+        });
+    };
     const pagination: TablePaginationConfig = {
-        pageSize: 5,
+        pageSize: 7,
     }
     return (
         <>

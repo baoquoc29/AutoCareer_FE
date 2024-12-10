@@ -53,7 +53,6 @@ export const delete_major_id = (id) => {
         try {
             const res = await majorService.delete_major(id);
             if(res.code === STATUS_CODE.SUCCESS){
-                toast.success("Xóa khoa thành công")
                 dispatch({
                     type: DELETE_MAJOR_ID,
                     payload: res.data
