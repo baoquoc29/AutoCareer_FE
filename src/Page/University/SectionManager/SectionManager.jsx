@@ -2,14 +2,14 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {delete_section, get_all_sections, update_section} from "../../../Redux/actions/SectionThunk";
 import {Button, Card, Input} from 'antd';
-import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
+import { FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
 import {SectionForm} from "./SectionForm";
 import SectionTable from "./SectionTable";
 import SectionDetailModal from "./Modal/SectionDetailModal";
 import SectionEditModal from "./Modal/SectionEditModal";
 import {toast} from "react-toastify";
-import * as XLSX from "xlsx";
 import './Style/Section.css'
+import {CSVLink} from "react-csv";
 
 const SectionManager = () => {
     const dispatch = useDispatch();
@@ -25,7 +25,6 @@ const SectionManager = () => {
     useEffect(() => {
         dispatch(get_all_sections());
     }, [dispatch]);
-
     useEffect(() => {
         if (userData && userData["university"]) {
             setUniversityId(userData["university"].id);
@@ -58,7 +57,7 @@ const SectionManager = () => {
             section.name.toLowerCase().includes(value.toLowerCase()) // Chỉ lọc theo name
         );
         // Nếu không tìm thấy kết quả, hiển thị tất cả các section
-        setFilteredData(filtered);
+        setFilteredData(filtered.length > 0 ? filtered : []);
     };
     const handleSubmitEdit = (values) => {
         const sectionId = selectedSection?.id; // Lấy ID của section cần cập nhật
@@ -74,25 +73,24 @@ const SectionManager = () => {
         } else {
             console.error("Không tìm thấy ID của section.");
         }
-    };
-    const exportToExcelSection = () => {
-        if (filteredData && filteredData.length > 0) {
-            // Chuyển dữ liệu thành bảng tính Excel
-            const worksheet = XLSX.utils.json_to_sheet(filteredData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Khoa');
-
-            // Xuất file Excel
-            XLSX.writeFile(workbook, 'Chuyên Ngành.xlsx');
+    }
+    const exportToExcel = () => {
+        const dataToExport = filteredData.length > 0 ? filteredData : sections;
+        if (dataToExport && dataToExport.length > 0) {
+            toast.success('Tải xuống thành công');
         } else {
-            // Nếu không có dữ liệu, hiển thị thông báo lỗi
-            toast.error("Không có dữ liệu để xuất");
+            toast.error('Không có dữ liệu để xuất');
         }
     };
+    const csvHeaders = [
+        { label: "STT", key: "index" },
+        { label: "Tên khoa", key: "name" },
+        { label: "Mô tả", key: "description" }
+    ];
     return (
         <>
             <section>
-                <div className="container mt-5">
+                <div className="m-5 mt-5">
                     <div className="row ">
                         <div className="section-form col-md-4 mb-3">
                             <SectionForm universityId={universityId}/>
@@ -104,8 +102,16 @@ const SectionManager = () => {
                                         <Input placeholder="Search..." value={searchText}
                                                onChange={handleSearch} prefix={<SearchOutlined/>}
                                                style={{width: 200}}/>
-                                        <Button type="default" icon={<DownloadOutlined/>}
-                                                onClick={exportToExcelSection}>Tải xuống dạng excel</Button>
+                                        <Button type="default" icon={<FileExcelOutlined/>} style={{backgroundColor: '#107C41', color: '#FFFFFF'}} onClick={exportToExcel}>
+                                            <CSVLink
+                                                data={filteredData.length > 0 ? filteredData : sections}
+                                                headers={csvHeaders}
+                                                filename={"DanhSachKhoa.csv"}
+                                                style={{color: 'inherit', textDecoration: 'none'}}
+                                            >
+                                                Export excel
+                                            </CSVLink>
+                                        </Button>
                                     </div>
                                     <SectionTable
                                         sections={filteredData.length > 0 ? filteredData : sections}
