@@ -3,7 +3,7 @@ import React from 'react';
 import './AccountTypeSelection.css'
 export function AccountTypeSelection() {
     return (
-        <>
+
             <div className="root account-type-selection-root front-container" >
                 <section className="content">
                     <div
@@ -23,6 +23,6 @@ export function AccountTypeSelection() {
                     </div>
                 </section>
             </div>
-        </>
+
     )
 }

@@ -9,7 +9,7 @@ import {
     PlusOutlined
 } from "@ant-design/icons";
 import {toast} from "react-toastify";
-import {DOMAIN} from "../../../Utils/Setting/Config";
+import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import SubAdminDetailModal from "./SubAdminDetailModal";
 import SubAdminCreateForm from "./SubAdminCreateForm";
 import SubAdminUpdate from "./SubAdminUpdate";
@@ -119,39 +119,10 @@ const SubAdminManager = () => {
                         }}
                         onClick={() => setIsCreateModalOpen(true)}
                     >
-                        Add new user
+                        Thêm quản trị viên
                     </Button>
 
-                    <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
-                        <span style={{fontSize: "14px"}}>Sort by:</span>
-                        <Select
-                            defaultValue="date-created"
-                            style={{width: 180}}
-                            options={[
-                                {value: "date-created", label: "Date Created"},
-                                {value: "alphabetically", label: "Alphabetically"},
-                            ]}
-                        />
-                        <Button
-                            type="default"
-                            style={{
-                                backgroundColor: "#fff",
-                                border: "1px solid #d9d9d9",
-                                height: "36px",
-                            }}
-                        >
-                            Filter
-                        </Button>
-                        <Button
-                            style={{
-                                backgroundColor: "#fff",
-                                border: "1px solid #d9d9d9",
-                                height: "36px",
-                            }}
-                        >
-                            <i className="demo-pli-gear fs-5"></i>
-                        </Button>
-                    </div>
+
                 </div>
             </div>
 
@@ -178,7 +149,7 @@ const SubAdminManager = () => {
                                     >
                                         <img
                                             src={subAdmin.subAdminImageId
-                                                ? `${DOMAIN}/api/v1/image/resource?imageId=${subAdmin.subAdminImageId}`
+                                                ? `${GET_IMAGE_URI}${subAdmin.subAdminImageId}`
                                                 : "placeholder-avatar.jpg"}
                                             alt="Avatar"
                                             style={{

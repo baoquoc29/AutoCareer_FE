@@ -25,6 +25,7 @@ const rootReducer = combineReducers({
     EmployeeReducer,
     UniversityReducer,
     BusinessReducer,
+
 });
 
 const store = legacy_createStore(rootReducer, applyMiddleware(thunk));
