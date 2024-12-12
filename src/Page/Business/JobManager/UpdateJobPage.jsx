@@ -1,131 +1,220 @@
-import React, {useEffect} from "react";
-import {Button, Col, DatePicker, Form, Input, InputNumber, message, Row, Select} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {get_job_detail, update_job} from "../../../Redux/actions/JobThunk";
 import {get_all_industry_no_pag} from "../../../Redux/actions/IndustryThunk";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import dayjs from 'dayjs';
+import utc from 'dayjs-plugin-utc';
+
 const JobUpdatePage = () => {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const industryOptions = useSelector((state) => state.IndustryReducer.industriesNoPag);
-    const jobDetail = useSelector((state) => state.JobReducer.selectedJobDetail);
+    const jobData = useSelector((state) => state.JobReducer.selectedJobDetail); // assuming job data is stored here
     const navigate = useNavigate();
-    const jobId = sessionStorage.getItem('jobId');
+    const location = useLocation();
+    const { jobId } = location.state || {}; // Lấy jobId từ state
+    const [date, setDate] = useState(null);
 
-    // Fetch the job details when the page is loaded
+    dayjs.extend(utc);
+
+    // Load job data and industries
     useEffect(() => {
-        if (jobId) {
-            dispatch(get_job_detail(jobId));
-        }
-        dispatch(get_all_industry_no_pag());  // Fetch industries without pagination
+        dispatch(get_all_industry_no_pag());
+        dispatch(get_job_detail(jobId)); // Action to fetch job details
     }, [dispatch, jobId]);
 
-    // Populate the form with job data when available
     useEffect(() => {
-        if (jobDetail) {
+        if (jobData) {
             form.setFieldsValue({
-                title: jobDetail.title,
-                expireDate: jobDetail.expireDate,
-                level: jobDetail.level,
-                salary: jobDetail.salary,
-                industriesID: jobDetail.industriesID,
-                jobDescription: jobDetail.jobDescription,
-                requirement: jobDetail.requirement,
-                benefit: jobDetail.benefit,
-                workingTime: jobDetail.workingTime,
+                title: jobData.title,
+                expireDate: jobData.expireDate ? dayjs.utc(jobData.expireDate) : null, // Ensure UTC handling
+                level: jobData.level,
+                salary: jobData.salary,
+                industriesID: jobData.industry.id,
+                jobDescription: jobData.jobDescription,
+                requirement: jobData.requirement,
+                benefit: jobData.benefit,
+                workingTime: jobData.workingTime,
             });
         }
-    }, [form, jobDetail]);
+    }, [jobData, form]);
 
+
+    // Handle form submission
     const handleSubmit = (values) => {
-        // Convert DatePicker value to string format
         const formattedValues = {
             ...values,
-            expireDate: values.expireDate.format("YYYY-MM-DD"),
         };
-        dispatch(update_job(formattedValues));
-        message.success("Cập nhật công việc thành công!");
-        navigate("/job-manager");
+        dispatch(update_job(jobId, formattedValues)); // Dispatch update action
+        navigate("/job-manager"); // Navigate back to job manager
+    };
+
+    const handleDateChange = (value) => {
+        // Now you can use utc() method
+        const formattedDate
+            = value ? dayjs(value).utc().startOf('day').format('YYYY-MM-DD') : null;
+        setDate(formattedDate);
     };
 
     return (
-        <div className="job-update-page" style={{ padding: "20px" }}>
-            <h2>Cập nhật công việc</h2>
-            <Form form={form} onFinish={handleSubmit} layout="vertical">
-                <Form.Item label="Tiêu đề" name="title" rules={[{ required: true }]}>
-                    <Input placeholder="Nhập tiêu đề công việc" />
-                </Form.Item>
+        <section id="content" className="content">
+            <div className="content__header content__boxed rounded-0">
+                <div className="content__wrap">
+                    <div className="mt-auto">
+                        <div className="row">
+                            <div className="col-md-12 mb-3">
+                                <div className="job-update-page" style={{
+                                    padding: "20px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    minHeight: "100vh",
+                                    backgroundColor: "#f0f2f5"
+                                }}>
+                                    <Card
+                                        title={<span style={{fontSize: "24px", fontWeight: "bold"}}>Chỉnh sửa công việc</span>}
+                                        style={{
+                                            width: "100%",
+                                            maxWidth: "900px",
+                                            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <Form form={form} onFinish={handleSubmit} layout="vertical">
+                                            <Form.Item
+                                                label="Tiêu đề"
+                                                name="title"
+                                                rules={[{ required: true, message: "Vui lòng nhập tiêu đề công việc" }]}
+                                            >
+                                                <Input placeholder="Nhập tiêu đề công việc" />
+                                            </Form.Item>
 
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Ngày hết hạn"
-                            name="expireDate"
-                            rules={[{ required: true, message: "Vui lòng chọn ngày hết hạn" }]}>
-                            <DatePicker
-                                placeholder="Chọn ngày hết hạn"
-                                format="YYYY-MM-DD"
-                                style={{ width: "100%" }}
-                                value={dayjs()}
-                            />
-                        </Form.Item>
-                    </Col>
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Ngày hết hạn"
+                                                        name="expireDate"
+                                                        rules={[{
+                                                            required: true,
+                                                            message: "Vui lòng chọn ngày hết hạn" }]}
+                                                    >
+                                                        <DatePicker
+                                                            placeholder="Chọn ngày hết hạn"
+                                                            format="DD-MM-YYYY" // Hiển thị theo định dạng dd-mm-yyyy
+                                                            style={{ width: "100%" }}
+                                                            disabledDate={(current) => current && current.isBefore(dayjs().startOf('day'), 'day')}
+                                                            value={date ? dayjs(date) : null} // Đảm bảo giá trị hiển thị đúng
+                                                            onChange={handleDateChange}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
 
-                    <Col span={12}>
-                        <Form.Item label="Cấp bậc" name="level" rules={[{ required: true }]}>
-                            <Select placeholder="Chọn cấp bậc">
-                                <Select.Option value="Intern">Intern</Select.Option>
-                                <Select.Option value="Fresher">Fresher</Select.Option>
-                                <Select.Option value="Junior">Junior</Select.Option>
-                                <Select.Option value="Senior">Senior</Select.Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Cấp bậc"
+                                                        name="level"
+                                                        rules={[{ required: true, message: "Vui lòng chọn cấp bậc" }]}
+                                                    >
+                                                        <Select placeholder="Chọn cấp bậc">
+                                                            <Select.Option value="Không yêu cầu kinh nghiệm">Không yêu cầu kinh nghiệm</Select.Option>
+                                                            <Select.Option value="Intern">Thực tập sinh</Select.Option>
+                                                            <Select.Option value="Fresher">1 năm kinh nghiệm</Select.Option>
+                                                            <Select.Option value="Junior">2 năm kinh nghiệm</Select.Option>
+                                                            <Select.Option value="Senior">3 năm kinh nghiệm</Select.Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
 
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item label="Mức lương" name="salary" rules={[{ required: true }]}>
-                            <InputNumber placeholder="Nhập mức lương" style={{ width: "100%" }} />
-                        </Form.Item>
-                    </Col>
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Mức lương"
+                                                        name="salary"
+                                                        rules={[{ required: true, message: "Vui lòng nhập mức lương" }]}
+                                                    >
+                                                        <InputNumber
+                                                            placeholder="Nhập mức lương (VND)"
+                                                            style={{ width: "100%" }}
+                                                            formatter={(value) =>
+                                                                value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND" : ""
+                                                            }
+                                                            parser={(value) => (value ? value.replace(/[VND,\s.]/g, "") : "")}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
 
-                    <Col span={12}>
-                        <Form.Item
-                            label="Ngành nghề"
-                            name="industriesID"
-                            rules={[{ required: true, message: "Vui lòng chọn ngành nghề" }]}>
-                            <Select placeholder="Chọn ngành nghề" style={{ width: "100%" }}>
-                                {industryOptions.map((industry) => (
-                                    <Select.Option key={industry.id} value={industry.id}>
-                                        {industry.industryName}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Ngành nghề"
+                                                        name="industriesID"
+                                                        rules={[{ required: true, message: "Vui lòng chọn ngành nghề" }]}
+                                                    >
+                                                        <Select placeholder="Chọn ngành nghề" style={{ width: "100%" }}>
+                                                            {industryOptions.map((industry) => (
+                                                                <Select.Option key={industry.industryId} value={industry.industryId}>
+                                                                    {industry.industryName}
+                                                                </Select.Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
 
-                <Form.Item label="Mô tả công việc" name="jobDescription" rules={[{ required: true }]}>
-                    <Input.TextArea rows={4} placeholder="Mô tả công việc" />
-                </Form.Item>
-                <Form.Item label="Yêu cầu" name="requirement" rules={[{ required: true }]}>
-                    <Input.TextArea rows={4} placeholder="Yêu cầu công việc" />
-                </Form.Item>
-                <Form.Item label="Phúc lợi" name="benefit">
-                    <Input.TextArea rows={2} placeholder="Phúc lợi" />
-                </Form.Item>
+                                            <Form.Item
+                                                label="Mô tả công việc"
+                                                name="jobDescription"
+                                                rules={[{ required: true, message: "Vui lòng nhập mô tả công việc" }]}
+                                            >
+                                                <Input.TextArea rows={4} placeholder="Mô tả công việc" />
+                                            </Form.Item>
 
-                <Form.Item label="Thời gian làm việc" name="workingTime" rules={[{ required: true }]}>
-                    <Input placeholder="9:00-17:00" />
-                </Form.Item>
+                                            <Form.Item
+                                                label="Yêu cầu"
+                                                name="requirement"
+                                                rules={[{ required: true, message: "Vui lòng nhập yêu cầu công việc" }]}
+                                            >
+                                                <Input.TextArea rows={4} placeholder="Yêu cầu công việc" />
+                                            </Form.Item>
 
-                <Button type="primary" htmlType="submit">
-                    Cập nhật công việc
-                </Button>
-            </Form>
-        </div>
+                                            <Form.Item
+                                                label="Phúc lợi"
+                                                name="benefit"
+                                            >
+                                                <Input.TextArea rows={4} placeholder="Phúc lợi" />
+                                            </Form.Item>
+
+                                            <Form.Item
+                                                label="Thời gian làm việc"
+                                                name="workingTime"
+                                                rules={[{ required: true, message: "Vui lòng nhập thời gian làm việc" }]}
+                                            >
+                                                <Input placeholder="9:00-17:00" />
+                                            </Form.Item>
+
+                                            <Row justify="space-between">
+                                                <Col>
+                                                    <Button type="default" danger onClick={() => navigate("/job-manager")}>
+                                                        Quay lại
+                                                    </Button>
+                                                </Col>
+                                                <Col>
+                                                    <Button type="primary" htmlType="submit">
+                                                        Cập nhật công việc
+                                                    </Button>
+                                                </Col>
+                                            </Row>
+                                        </Form>
+                                    </Card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 

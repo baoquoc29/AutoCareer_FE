@@ -13,6 +13,7 @@ import {
     VERIFY_CODE_SUCCESS
 } from "../../Utils/Setting/Config";
 import {userService} from "../../Service/UserService/UserService";
+import {toast} from "react-toastify";
 
 
 
@@ -36,7 +37,7 @@ export const loginUser = (username, password) => async (dispatch) => {
             console.log("Login failed, no token returned");
         }
     } catch (error) {
-        console.log("Error during login:", error.response.data.message);
+        toast.error(error.response.data.message)
     }
 };
 export const logoutUser = (token) => async (dispatch) => {

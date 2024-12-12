@@ -1,4 +1,4 @@
-import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB} from "../types/JobType";
+import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB, INACTIVE_JOB} from "../types/JobType";
 
 const initialState = {
     jobs: [],
@@ -29,6 +29,13 @@ export const JobReducer = (state = initialState, action) => {
                 ...state,
                 jobs: state.jobs.map((job) =>
                     job.jobId === action.payload.jobId ? action.payload : job
+                ),
+            };
+        case INACTIVE_JOB:
+            return {
+                ...state,
+                jobs: state.jobs.map((job) =>
+                    job.jobId === action.payload.jobId ? {...job, status: 'INACTIVE'} : job
                 ),
             };
         default:

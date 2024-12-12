@@ -4,7 +4,6 @@ import {logoutUser} from "../../Redux/actions/UserThunk";
 import {Button} from "antd";
 import {NavLink} from "react-router-dom";
 
-
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
     // Kiểm tra loại người dùng
@@ -12,6 +11,7 @@ export const UserDropdown = ({navigate}) => {
     const isBusinessUser = user && user.role.name === 'BUSINESS';
     const isAdminUser = user && user.role.name === 'ADMIN';
     const isSubAdminUser = user && user.role.name === 'SUB_ADMIN';
+    const isEmployeeUser = user && user.role.name === 'EMPLOYEE';
 
     const dispatch = useDispatch();
     const userId = user ? user.id : null;
@@ -50,6 +50,7 @@ export const UserDropdown = ({navigate}) => {
         if (isUniversityUser) return '/profile-university';
         if (isBusinessUser) return '/profile-business';
         if (isSubAdminUser) return '/admin-dashboard';
+        if (isEmployeeUser) return '/business';
         return null;
     };
 
@@ -93,9 +94,6 @@ export const UserDropdown = ({navigate}) => {
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}
-                            <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
-                                <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
-                            </NavLink>
                             <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
                                 <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
                             </NavLink>

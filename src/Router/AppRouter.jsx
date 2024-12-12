@@ -24,6 +24,7 @@ import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
 import JobManager from "../Page/Business/JobManager/JobManager";
 import JobCreate from "../Page/Business/JobManager/JobCreatePage";
 import JobUpdate from "../Page/Business/JobManager/UpdateJobPage";
+import JobDetail from "../Page/Business/JobManager/JobDetailPage";
 import {AdminTemplate} from "../Template/AdminTemplate/AdminTemplate";
 import {Admin} from "../Page/Admin/Admin";
 import EmployeeCreate from "../Page/Business/EmployeeManager/EmployeeCreate";
@@ -48,8 +49,8 @@ export function AppRouter() {
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
-                    <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
                     <Route path={"/profile-university"} element={<ProfileUniversity/>}/>
+                    <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
                     <Route path={"/major-manager"} element={<MajorManager/>}/>
                     <Route path={"/instructional-manager"} element={<InstructionalManager/>}/>
                     <Route path={"/instructional-edit"} element={<InstructionalEdit/>}/>
@@ -67,6 +68,7 @@ export function AppRouter() {
                     <Route path={"/job-manager"} element={<JobManager />} />
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
+                    <Route path={"/job-detail"} element={<JobDetail />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
