@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import * as XLSX from 'xlsx';
 import {Button, Card, Input, Select} from "antd";
-import {DownloadOutlined, SearchOutlined} from "@ant-design/icons";
+import {FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
 import {create_major, delete_major_id, get_all_majors, update_major_id} from "../../../Redux/actions/MajorThunk";
 import MajorTable from "./MajorTable";
 import MajorForm from "./MajorForm";
@@ -11,12 +10,12 @@ import {toast} from "react-toastify";
 import MajorEditModal from "./Modal/MajorEditModal";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
 import './Style/Major.css'
+import {CSVLink} from "react-csv";
 
 
 const MajorManager = () => {
     const dispatch = useDispatch();
     const {majors} = useSelector((state) => state.MajorReducer);// Lấy danh sách chuyên ngành từ Redux
-
     const [searchText, setSearchText] = useState('');// Lưu trữ từ khóa tìm kiếm
     const [filteredData, setFilteredData] = useState([]);// Lưu trữ danh sách chuyên ngành đã lọc
     const [open, setOpen] = useState(false);// Trạng thái mở modal chi tiết
@@ -51,18 +50,21 @@ const MajorManager = () => {
             (sectionId ? major.sectionId === sectionId : true)
         );
 
-        // Cập nhật lại số thứ tự (stt) sau khi lọc
-        const updatedFilteredData = filtered.map((major, index) => ({
-            id: major.id,
-            stt: index + 1,  // Cập nhật lại stt trong filteredData
-            name: major.name,
-            code: major.code,
-            numberStudent: major.numberStudent,
-            status: major.status,
-            description: major.description,
-        }));
-
-        setFilteredData(updatedFilteredData);
+        if (filtered.length === 0) {
+            setFilteredData([]);
+        } else {
+            // Cập nhật lại số thứ tự (stt) sau khi lọc
+            const updatedFilteredData = filtered.map((major, index) => ({
+                id: major.id,
+                stt: index + 1,  // Cập nhật lại stt trong filteredData
+                name: major.name,
+                code: major.code,
+                numberStudent: major.numberStudent,
+                status: major.status,
+                description: major.description,
+            }));
+            setFilteredData(updatedFilteredData);
+        }
     };
     const handleInfo = (id) => {
         const major = majors.find((m) => m.id === id);
@@ -73,20 +75,17 @@ const MajorManager = () => {
         dispatch(create_major(values))
             .then(() => {
                 dispatch(get_all_majors());
-
             })
     }
     const handleDelete = (id) => {
         dispatch(delete_major_id(id))
             .then(() => {
-                toast.success("Xóa chuyên ngành thành công")
                 dispatch(get_all_majors())
             })
             .catch((error) => {
                 toast.success(error.messages)
             })
     }
-
     const handleEdit = (id) => {
         const major = majors.find((m) => m.id === id);
         setSelectedMajor(major);
@@ -95,7 +94,6 @@ const MajorManager = () => {
     const handleEditSubmit = (values) => {
         dispatch(update_major_id(selectedMajor.id, values))
             .then(() => {
-                toast.success("Chỉnh sửa chuyên ngành thành công");
                 dispatch(get_all_majors());
             })
             .catch((error) => {
@@ -103,19 +101,21 @@ const MajorManager = () => {
             });
     };
     const exportToExcel = () => {
-        if (filteredData && filteredData.length > 0) {
-            // Chuyển dữ liệu thành bảng tính Excel
-            const worksheet = XLSX.utils.json_to_sheet(filteredData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Chuyên ngành');
-
-            // Xuất file Excel
-            XLSX.writeFile(workbook, 'Chuyên Ngành.xlsx');
+        const dataToExport = filteredData.length > 0 ? filteredData : data;
+        if (dataToExport && dataToExport.length > 0) {
+            toast.success('Tải xuống thành công');
         } else {
-            // Nếu không có dữ liệu, hiển thị thông báo lỗi
-            toast.error("Không có dữ liệu để xuất");
+            toast.error('Không có dữ liệu để xuất');
         }
     };
+    const headers = [
+        {label: 'STT', key: 'stt'},
+        {label: 'Tên chuyên ngành', key: 'name'},
+        {label: 'Mã chuyên ngành', key: 'code'},
+        {label: 'Số lượng sinh viên', key: 'numberStudent'},
+        {label: 'Mô tả', key: 'description'},
+    ];
+
     const data = majors.map((major, index) => ({
         id: major.id,
         stt: index + 1,
@@ -129,7 +129,7 @@ const MajorManager = () => {
     return (
         <>
             <section>
-                <div className="container mt-5">
+                <div className="m-5 mt-5">
                     <div className="row">
                         <div className="col-lg-4 mb-3 border-5">
                             <Card title="Thông tin chuyên ngành">
@@ -159,8 +159,17 @@ const MajorManager = () => {
                                         <Input placeholder="Tìm kiếm theo tên hoặc mã ngành "
                                                value={searchText}
                                                onChange={handleSearch} prefix={<SearchOutlined/>}/>
-                                        <Button type="default" icon={<DownloadOutlined/>}
-                                                onClick={exportToExcel}>Tải xuống dạng excel</Button>
+                                        <Button type="default" icon={<FileExcelOutlined/>} onClick={exportToExcel}
+                                                style={{backgroundColor: '#107C41', color: '#FFFFFF'}}>
+                                            <CSVLink
+                                                data={filteredData.length > 0 ? filteredData : data}
+                                                headers={headers}
+                                                filename={'DanhSachChuyenNganh.csv'}
+                                                style={{color: 'inherit', textDecoration: 'none'}}
+                                            >
+                                                Export excel
+                                            </CSVLink>
+                                        </Button>
                                     </div>
                                     <MajorTable data={filteredData.length > 0 ? filteredData : data}
                                                 onInfo={handleInfo} onDelete={handleDelete}

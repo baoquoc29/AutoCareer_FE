@@ -11,7 +11,7 @@ const HeaderPortal = () => {
                 <div className="header-brand-portal">
                     <div className="brand-wrap-portal">
                         <NavLink to="/" className="brand-img-portal stretched-link">
-                            <img src={"aotucareer-logo.svg"} alt="logo" className="logo-portal" style={{ width: "40px", height: "40px" }} />
+                            <img src="aotucareer-logo.svg" alt="logo" className="logo-portal" style={{ width: "40px", height: "40px" }} />
                         </NavLink>
                         <div className="brand-title-portal">Career Bridge</div>
                     </div>

@@ -44,7 +44,7 @@ export function AppRouter() {
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
-                    <Route path={"/profile-user"} element={<ProfileUniversity/>}/>
+                    <Route path={"/profile-university"} element={<ProfileUniversity/>}/>
                     <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
                     <Route path={"/major-manager"} element={<MajorManager/>}/>
                     <Route path={"/instructional-manager"} element={<InstructionalManager/>}/>
