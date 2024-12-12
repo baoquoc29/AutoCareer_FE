@@ -66,20 +66,25 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             render: (status) => {
                 // Gán màu dựa trên trạng thái
                 let color = "";
+                let statusText = "";
+
                 switch (status.toLowerCase()) {
                     case "active":
                         color = "green";
+                        statusText = "Hoạt động"; // Hiển thị "Hoạt động"
                         break;
                     case "inactive":
                         color = "volcano";
+                        statusText = "Không hoạt động"; // Hiển thị "Không hoạt động"
                         break;
                     default:
                         color = "geekblue"; // Mặc định cho các trạng thái khác
+                        statusText = status;
                 }
 
                 return (
                     <Tag color={color} key={status}>
-                        {status.toUpperCase()} {/* Viết hoa trạng thái */}
+                        {statusText} {/* Hiển thị trạng thái với chữ được thay đổi */}
                     </Tag>
                 );
             },

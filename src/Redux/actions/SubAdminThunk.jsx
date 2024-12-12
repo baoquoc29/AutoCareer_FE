@@ -16,6 +16,7 @@ export const create_sub_admin = (formData) => {
             const res = await subAdminService.create(formData);
             console.log(res)
             if (res === STATUS_CODE.SUCCESS) {
+                toast.success("Thêm thành công")
                 dispatch({
                     type: CREATE_SUB_ADMIN,
                     payload: res.data
@@ -31,12 +32,13 @@ export const update_sub_admin = (formData) => {
         try {
             const res = await subAdminService.update_sub_admin(formData);
             console.log(res.data)
+            toast.success("Sửa thành công")
             dispatch({
                 type: UPDATE_SUB_ADMIN,
                 payload: res.data
             })
         } catch (error) {
-            toast.error(error.data.message)
+            toast.error(error.response.data.message)
         }
     }
 }
@@ -45,12 +47,13 @@ export const delete_sub_admin = (id) => {
         try {
             const res = await subAdminService.delete_sub_admin(id);
             console.log(res.data)
+            toast.success("Xóa thành công")
             dispatch({
                 type: DELETE_SUB_ADMIN,
                 payload: res.data
             })
         } catch (error) {
-            toast.error(error.data.message)
+            toast.error(error.response.data.message)
         }
     }
 }
@@ -65,6 +68,7 @@ export const get_detail_sub_admin = (id) => {
             })
         } catch (error) {
             console.log(error);
+            toast.error(error.response.data.message)
         }
     }
 }
@@ -79,6 +83,7 @@ export const get_all_sub_admin = () => {
             })
         } catch (error) {
             console.log(error);
+            toast.error(error.response.data.message)
         }
     }
 }
@@ -92,6 +97,7 @@ export const get_all_paging_sub_admin = (page, pageSize) => {
             })
         } catch (error) {
             console.log(error);
+            toast.error(error.response.data.message)
         }
     }
 }

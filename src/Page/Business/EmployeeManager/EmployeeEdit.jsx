@@ -11,6 +11,8 @@ const EmployeeEdit = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(null);
+    const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
+    const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
 
     const [formData, setFormData] = useState({
         email: '',
@@ -128,7 +130,8 @@ const EmployeeEdit = () => {
                                                         </div>
                                                         <h4>Hình ảnh</h4>
                                                         <div className="mb-3 text-center">
-                                                            <label htmlFor="employeeImage" className="form-label">Ảnh đại diện</label>
+                                                            <label htmlFor="employeeImage" className="form-label">Ảnh
+                                                                đại diện</label>
                                                             <div className="mb-3">
                                                                 <input
                                                                     type="file"
@@ -161,24 +164,13 @@ const EmployeeEdit = () => {
                                                                     <span>Không có ảnh</span>
                                                                 </div>
                                                             )}
-                                                            {/*{imagePreview && (*/}
-                                                            {/*    <img*/}
-                                                            {/*        src={formData.image}*/}
-                                                            {/*        alt="Ảnh đại diện"*/}
-                                                            {/*        className="img-thumbnail rounded-circle"*/}
-                                                            {/*        style={{*/}
-                                                            {/*            width: "200px",*/}
-                                                            {/*            height: "200px",*/}
-                                                            {/*            objectFit: "cover",*/}
-                                                            {/*        }}*/}
-                                                            {/*    />*/}
-                                                            {/*)}*/}
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
                                                         <h4>Thông tin cá nhân</h4>
                                                         <div className="mb-3">
-                                                            <label htmlFor="name" className="form-label">Họ và tên</label>
+                                                            <label htmlFor="name" className="form-label">Họ và
+                                                                tên</label>
                                                             <input
                                                                 id="name"
                                                                 type="text"
@@ -189,7 +181,8 @@ const EmployeeEdit = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="phone" className="form-label">Số điện thoại</label>
+                                                            <label htmlFor="phone" className="form-label">Số điện
+                                                                thoại</label>
                                                             <input
                                                                 id="phone"
                                                                 type="text"
@@ -200,7 +193,8 @@ const EmployeeEdit = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="gender" className="form-label">Giới tính</label>
+                                                            <label htmlFor="gender" className="form-label">Giới
+                                                                tính</label>
                                                             <select
                                                                 id="gender"
                                                                 className="form-control"
@@ -214,7 +208,8 @@ const EmployeeEdit = () => {
                                                             </select>
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="dateOfBirth" className="form-label">Ngày sinh</label>
+                                                            <label htmlFor="dateOfBirth" className="form-label">Ngày
+                                                                sinh</label>
                                                             <input
                                                                 id="dateOfBirth"
                                                                 type="date"
@@ -224,7 +219,8 @@ const EmployeeEdit = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="address" className="form-label">Địa chỉ</label>
+                                                            <label htmlFor="address" className="form-label">Địa
+                                                                chỉ</label>
                                                             <input
                                                                 id="address"
                                                                 type="text"
@@ -238,12 +234,46 @@ const EmployeeEdit = () => {
                                                     <div className="col-12 text-center">
                                                         <button
                                                             type="button"
-                                                            className="btn btn-warning mt-3 mx-3"
+                                                            className="btn btn-outline-danger mt-3 mx-3"
                                                             onClick={handleCancel}
+                                                            style={{
+                                                                borderColor: dangerColor,
+                                                                color: dangerColor,
+                                                                transition: 'background-color 0.3s ease, color 0.3s ease'
+                                                            }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.backgroundColor = dangerColor;
+                                                                e.target.style.color = 'white';
+                                                                e.target.style.transform = 'scale(1.05)';
+
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.backgroundColor = '';
+                                                                e.target.style.color = dangerColor;
+                                                                e.target.style.transform = 'scale(1)';
+
+                                                            }}
                                                         >
                                                             Hủy bỏ
                                                         </button>
-                                                        <button type="submit" className="btn btn-primary mt-3 mx-3">
+                                                        <button
+                                                            type="submit"
+                                                            className="btn btn-outline-primary mt-3 mx-3"
+                                                            style={{
+                                                                borderColor: primaryColor,
+                                                                backgroundColor: primaryColor,
+                                                                color: 'white',
+                                                                transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
+                                                            }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.backgroundColor = primaryColor;
+                                                                e.target.style.color = 'white';
+                                                                e.target.style.transform = 'scale(1.05)';
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.transform = 'scale(1)';
+                                                            }}
+                                                        >
                                                             Lưu lại
                                                         </button>
                                                     </div>

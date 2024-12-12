@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { create_employee } from "../../../Redux/actions/EmployeeThunk";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import React, {useState} from "react";
+import {create_employee} from "../../../Redux/actions/EmployeeThunk";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const EmployeeCreate = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(null);
+    const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
+    const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
 
     const [formData, setFormData] = useState({
         email: "",
@@ -45,7 +47,7 @@ const EmployeeCreate = () => {
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setFormData({ ...formData, employeeImage: file });
+            setFormData({...formData, employeeImage: file});
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
@@ -55,7 +57,7 @@ const EmployeeCreate = () => {
     };
 
     const handleInputChange = (event) => {
-        const { id, value } = event.target;
+        const {id, value} = event.target;
         setFormData((prevData) => ({
             ...prevData,
             [id]: value,
@@ -109,166 +111,202 @@ const EmployeeCreate = () => {
 
     return (
         <>
-            <div className="content__header content__boxed rounded-0">
-                <div className="content__wrap">
-                    <section>
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <h1 className="card-title">Thêm mới nhân viên</h1>
-                                            <form className="row g-3" onSubmit={handleSave}>
-                                                <div className="col-md-6">
-                                                    <h4>Tài khoản</h4>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="email" className="form-label">
-                                                            Gmail
-                                                        </label>
-                                                        <input
-                                                            id="email"
-                                                            type="email"
-                                                            className={`form-control ${
-                                                                errors.email ? "is-invalid" : ""
-                                                            }`}
-                                                            placeholder="Email"
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {errors.email && (
-                                                            <div className="invalid-feedback">{errors.email}</div>
-                                                        )}
-                                                    </div>
-                                                    <h4>Hình ảnh</h4>
-                                                    <div className="mb-3 text-center">
-                                                        <label
-                                                            htmlFor="employeeImage"
-                                                            className="form-label"
-                                                        >
-                                                            Ảnh đại diện
-                                                        </label>
+            <section id="content" className="content">
+                <div className="content__header content__boxed rounded-0">
+                    <div className="content__wrap">
+                        <section>
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="row">
+                                        <div className="card h-100">
+                                            <div className="card-body">
+                                                <h1 className="card-title">Thêm mới nhân viên</h1>
+                                                <form className="row g-3" onSubmit={handleSave}>
+                                                    <div className="col-md-6">
+                                                        <h4>Tài khoản</h4>
                                                         <div className="mb-3">
+                                                            <label htmlFor="email" className="form-label">
+                                                                Gmail
+                                                            </label>
                                                             <input
-                                                                type="file"
+                                                                id="email"
+                                                                type="email"
+                                                                className={`form-control ${
+                                                                    errors.email ? "is-invalid" : ""
+                                                                }`}
+                                                                placeholder="Email"
+                                                                onChange={handleInputChange}
+                                                            />
+                                                            {errors.email && (
+                                                                <div className="invalid-feedback">{errors.email}</div>
+                                                            )}
+                                                        </div>
+                                                        <h4>Hình ảnh</h4>
+                                                        <div className="mb-3 text-center">
+                                                            <label
+                                                                htmlFor="employeeImage"
+                                                                className="form-label"
+                                                            >
+                                                                Ảnh đại diện
+                                                            </label>
+                                                            <div className="mb-3">
+                                                                <input
+                                                                    type="file"
+                                                                    className="form-control"
+                                                                    id="employeeImage"
+                                                                    onChange={handleImageChange}
+                                                                />
+                                                            </div>
+                                                            {imagePreview && (
+                                                                <img
+                                                                    src={imagePreview}
+                                                                    alt="Ảnh đại diện"
+                                                                    className="img-thumbnail rounded-circle"
+                                                                    style={{
+                                                                        width: "200px",
+                                                                        height: "200px",
+                                                                        objectFit: "cover",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <h4>Thông tin cá nhân</h4>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="name" className="form-label">
+                                                                Họ và tên
+                                                            </label>
+                                                            <input
+                                                                id="name"
+                                                                type="text"
+                                                                className={`form-control ${
+                                                                    errors.name ? "is-invalid" : ""
+                                                                }`}
+                                                                placeholder="Họ và tên"
+                                                                value={formData.name}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                            {errors.name && (
+                                                                <div className="invalid-feedback">{errors.name}</div>
+                                                            )}
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="phone" className="form-label">
+                                                                Số điện thoại
+                                                            </label>
+                                                            <input
+                                                                id="phone"
+                                                                type="text"
+                                                                className={`form-control ${
+                                                                    errors.phone ? "is-invalid" : ""
+                                                                }`}
+                                                                placeholder="Số điện thoại"
+                                                                value={formData.phone}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                            {errors.phone && (
+                                                                <div className="invalid-feedback">{errors.phone}</div>
+                                                            )}
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="gender" className="form-label">
+                                                                Giới tính
+                                                            </label>
+                                                            <select
+                                                                id="gender"
                                                                 className="form-control"
-                                                                id="employeeImage"
-                                                                onChange={handleImageChange}
+                                                                value={formData.gender}
+                                                                onChange={handleInputChange}
+                                                            >
+                                                                <option value="">Chọn giới tính</option>
+                                                                <option value="Nam">Nam</option>
+                                                                <option value="Nữ">Nữ</option>
+                                                                <option value="Khác">Khác</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="dateOfBirth" className="form-label">
+                                                                Ngày sinh
+                                                            </label>
+                                                            <input
+                                                                id="dateOfBirth"
+                                                                type="date"
+                                                                className="form-control"
+                                                                value={formData.dateOfBirth}
+                                                                onChange={handleInputChange}
                                                             />
                                                         </div>
-                                                        {imagePreview && (
-                                                            <img
-                                                                src={imagePreview}
-                                                                alt="Ảnh đại diện"
-                                                                className="img-thumbnail rounded-circle"
-                                                                style={{
-                                                                    width: "200px",
-                                                                    height: "200px",
-                                                                    objectFit: "cover",
-                                                                }}
+                                                        <div className="mb-3">
+                                                            <label htmlFor="address" className="form-label">
+                                                                Địa chỉ
+                                                            </label>
+                                                            <input
+                                                                id="address"
+                                                                type="text"
+                                                                className="form-control"
+                                                                placeholder="Địa chỉ"
+                                                                value={formData.address}
+                                                                onChange={handleInputChange}
                                                             />
-                                                        )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <h4>Thông tin cá nhân</h4>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="name" className="form-label">
-                                                            Họ và tên
-                                                        </label>
-                                                        <input
-                                                            id="name"
-                                                            type="text"
-                                                            className={`form-control ${
-                                                                errors.name ? "is-invalid" : ""
-                                                            }`}
-                                                            placeholder="Họ và tên"
-                                                            value={formData.name}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {errors.name && (
-                                                            <div className="invalid-feedback">{errors.name}</div>
-                                                        )}
-                                                    </div>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="phone" className="form-label">
-                                                            Số điện thoại
-                                                        </label>
-                                                        <input
-                                                            id="phone"
-                                                            type="text"
-                                                            className={`form-control ${
-                                                                errors.phone ? "is-invalid" : ""
-                                                            }`}
-                                                            placeholder="Số điện thoại"
-                                                            value={formData.phone}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                        {errors.phone && (
-                                                            <div className="invalid-feedback">{errors.phone}</div>
-                                                        )}
-                                                    </div>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="gender" className="form-label">
-                                                            Giới tính
-                                                        </label>
-                                                        <select
-                                                            id="gender"
-                                                            className="form-control"
-                                                            value={formData.gender}
-                                                            onChange={handleInputChange}
+                                                    <div className="col-12 text-center">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-outline-danger mt-3 mx-3"
+                                                            onClick={handleCancel}
+                                                            style={{
+                                                                borderColor: dangerColor,
+                                                                color: dangerColor,
+                                                                transition: 'background-color 0.3s ease, color 0.3s ease'
+                                                            }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.backgroundColor = dangerColor;
+                                                                e.target.style.color = 'white';
+                                                                e.target.style.transform = 'scale(1.05)';
+
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.backgroundColor = '';
+                                                                e.target.style.color = dangerColor;
+                                                                e.target.style.transform = 'scale(1)';
+
+                                                            }}
                                                         >
-                                                            <option value="">Chọn giới tính</option>
-                                                            <option value="Nam">Nam</option>
-                                                            <option value="Nữ">Nữ</option>
-                                                            <option value="Khác">Khác</option>
-                                                        </select>
+                                                            Hủy bỏ
+                                                        </button>
+                                                        <button
+                                                            type="submit"
+                                                            className="btn btn-outline-primary mt-3 mx-3"
+                                                            style={{
+                                                                borderColor: primaryColor,
+                                                                backgroundColor: primaryColor,
+                                                                color: 'white',
+                                                                transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
+                                                            }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.backgroundColor = primaryColor;
+                                                                e.target.style.color = 'white';
+                                                                e.target.style.transform = 'scale(1.05)';
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.transform = 'scale(1)';
+                                                            }}
+                                                        >
+                                                            Lưu lại
+                                                        </button>
                                                     </div>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="dateOfBirth" className="form-label">
-                                                            Ngày sinh
-                                                        </label>
-                                                        <input
-                                                            id="dateOfBirth"
-                                                            type="date"
-                                                            className="form-control"
-                                                            value={formData.dateOfBirth}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                    </div>
-                                                    <div className="mb-3">
-                                                        <label htmlFor="address" className="form-label">
-                                                            Địa chỉ
-                                                        </label>
-                                                        <input
-                                                            id="address"
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Địa chỉ"
-                                                            value={formData.address}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 text-center">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-warning mt-3 mx-3"
-                                                        onClick={handleCancel}
-                                                    >
-                                                        Hủy bỏ
-                                                    </button>
-                                                    <button type="submit" className="btn btn-primary mt-3 mx-3">
-                                                        Lưu lại
-                                                    </button>
-                                                </div>
-                                            </form>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
+                    </div>
                 </div>
-            </div>
+            </section>
         </>
     );
 };

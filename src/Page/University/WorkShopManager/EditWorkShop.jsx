@@ -268,7 +268,10 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                     toast.error("Cập nhật hội thảo thất bại!");
                     console.error(error); // Log the error for debugging
                 });
-        });
+        })
+            .catch((errorInfo) => {
+                console.log('Validate Failed:', errorInfo);  // Xem lỗi nếu có
+            });
     };
 
 
@@ -276,25 +279,27 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
 
     return (
         <Container>
-            <Title>Chỉnh Sửa Hội Thảo</Title>
+            <Title>Chỉnh sửa hội thảo</Title>
             <Form form={form} layout="vertical">
-                <FormItem label="Tiêu Đề" name="title">
-                    <Input />
+                <FormItem    rules={[{required: true, message: 'Vui lòng nhập tiêu đề'}]} label="Tiêu đề" name="title">
+                    <Input
+                    rules
+                    />
                 </FormItem>
 
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem label="Ngày Bắt Đầu" name="startDate">
+                        <FormItem label="Ngày bắt đầu" name="startDate"   rules={[{required: true, message: 'Vui lòng chọn ngày bắt đầu'}]}>
                             <DatePicker     format="YYYY-MM-DD HH:mm"  style={{ width: "100%" }} placeholder="Chọn ngày bắt đầu" showTime disabledDate={disablePastDates} onChange={handleStartDateChange} />
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Ngày Kết Thúc" name="endDate">
+                        <FormItem label="Ngày kết thúc" name="endDate"       rules={[{required: true, message: 'Vui lòng chọn ngày kết thúc'}]}>
                             <DatePicker    format="YYYY-MM-DD HH:mm"   style={{ width: "100%" }} placeholder="Chọn ngày kết thúc" showTime disabledDate={disablePastDates} onChange={handleEndDateChange} />
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Ngày Hết Hạn" name="expirationDate">
+                        <FormItem label="Ngày hết hạn" name="expirationDate"   rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}>
                             <DatePicker   style={{ width: "100%" }} placeholder="Chọn ngày hết hạn" disabledDate={disableExpirationDate} />
                         </FormItem>
                     </Col>
@@ -302,8 +307,13 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
 
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem label="Tỉnh/Thành phố" name="province">
-                            <Select onChange={handleProvinceChange} value={selectedProvince}>
+                        <FormItem
+                            rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố'}]}
+                            label="Tỉnh/Thành phố" name="province">
+                            <Select
+                                onChange={handleProvinceChange}
+                                value={selectedProvince}
+                            >
                                 {provinces.map(province => (
                                     <Option key={province.id} value={province.id}>
                                         {province.name}
@@ -313,7 +323,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Quận/Huyện" name="district">
+                        <FormItem   rules={[{required: true, message: 'Vui lòng chọn quận/huyện'}]} label="Quận/Huyện" name="district">
                             <Select onChange={handleDistrictChange} value={selectedDistrict}>
                                 {districts.map(district => (
                                     <Option key={district.id} value={district.id}>
@@ -324,7 +334,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Phường/Xã" name="ward">
+                        <FormItem  rules={[{required: true, message: 'Vui lòng chọn phường/xã'}]} label="Phường/Xã" name="ward">
                             <Select>
                                 {wards.map(ward => (
                                     <Option key={ward.id} value={ward.id}>

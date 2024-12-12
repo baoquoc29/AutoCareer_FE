@@ -18,8 +18,8 @@ const Container = styled.div`
     border-radius: 8px;
     padding: 24px;
     background-color: #ffffff;
-    width: 100%; 
-    height: auto; 
+    width: 100%;
+    height: auto;
 `;
 
 const StyledQuill = styled(ReactQuill)`
@@ -27,10 +27,10 @@ const StyledQuill = styled(ReactQuill)`
         min-height: 200px;
         line-height: 1.6;
         white-space: normal;
-        word-wrap: break-word; 
-        overflow-wrap: break-word; 
+        word-wrap: break-word;
+        overflow-wrap: break-word;
         width: 100%;
-        word-break: break-word; 
+        word-break: break-word;
     }
 `;
 
@@ -79,7 +79,7 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     const [isStartDateSelected, setIsStartDateSelected] = useState(false);
     const [isEndDateSelected, setIsEndDateSelected] = useState(false);
     const dispatch = useDispatch();
-    const { provinces, districts, wards } = useSelector(state => state.WorkShopReducer);
+    const {provinces, districts, wards} = useSelector(state => state.WorkShopReducer);
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
 
@@ -111,23 +111,22 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     `;
 
 
-
     const handleStartDateChange = (value) => {
         setIsStartDateSelected(!!value);
-        form.setFieldsValue({ endDate: null, expirationDate: null });
+        form.setFieldsValue({endDate: null, expirationDate: null});
         setIsEndDateSelected(false);
     };
 
     const handleEndDateChange = (value) => {
         setIsEndDateSelected(!!value);
-        form.setFieldsValue({ expirationDate: null });
+        form.setFieldsValue({expirationDate: null});
     };
 
     const handleProvinceChange = (value) => {
         const provinceId = value;
         setSelectedProvince(provinceId);  // Set the selected province
         dispatch(get_all_district(provinceId));
-        form.setFieldsValue({ district: null, ward: null });
+        form.setFieldsValue({district: null, ward: null});
         setSelectedDistrict(null);  // Reset district and ward when province changes
     };
 
@@ -135,10 +134,10 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
         const districtId = value;
         setSelectedDistrict(districtId);  // Set the selected district
         dispatch(get_all_ward(districtId));
-        form.setFieldsValue({ ward: null });
+        form.setFieldsValue({ward: null});
     };
 
-    const handleFileChange = ({ fileList: newFileList }) => {
+    const handleFileChange = ({fileList: newFileList}) => {
         const isValidFile = newFileList.every(file => file.type === "image/jpeg" || file.type === "image/png");
         if (!isValidFile) {
             toast.error("Chỉ chấp nhận file định dạng JPG/PNG.");
@@ -154,11 +153,18 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     const handleEditorChange = (value) => {
         setDescription(value);
     };
+    const handleError = (error) => {
+        if (error instanceof Error) {
+            console.error(error.message);
+        } else {
+            console.error(JSON.stringify(error));
+        }
+    };
 
 
     const handleOk = () => {
         form.validateFields().then((values) => {
-            const { startDate, endDate, province, ward, district, detailAddress, expirationDate, title } = values;
+            const {startDate, endDate, province, ward, district, detailAddress, expirationDate, title} = values;
 
             // Kiểm tra thủ công các trường required
             if (!title) {
@@ -194,11 +200,11 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                 toast.error("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!");
                 return;
             }
-            if(dayjs(startDate).isAfter(endDate)) {
+            if (dayjs(startDate).isAfter(endDate)) {
                 toast.error("Ngày kết thúc không được bé hơn ngày bắt đầu!");
                 return;
             }
-            if(dayjs(expirationDate).isAfter(endDate) || dayjs(expirationDate).isBefore(startDate)) {
+            if (dayjs(expirationDate).isAfter(endDate) || dayjs(expirationDate).isBefore(startDate)) {
                 toast.error("Ngày hết hạn không hợp lệ!");
             }
 
@@ -234,35 +240,39 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                     onFinish();
 
                 });
-        });
+        })
+            .catch((errorInfo) => {
+                console.log('Validate Failed:', errorInfo);  // Xem lỗi nếu có
+            });
+
     };
 
     if (!visible) return null;
 
     return (
         <Container>
-            <Title>Thêm Hội Thảo</Title>
+            <Title>Thêm hội thảo</Title>
             <Form form={form} layout="vertical">
                 <FormItem
-                    label="Tiêu Đề"
+                    rules={[{required: true, message: 'Vui lòng nhập tiêu đề'}]}
+                    label="Tiêu đề"
                     name="title"
-
                 >
-                    <Input />
+                    <Input/>
                 </FormItem>
 
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem
-                            label="Ngày Bắt Đầu"
+                            rules={[{required: true, message: 'Vui lòng chọn ngày bắt đầu'}]}
+                            label="Ngày bắt đầu"
                             name="startDate"
-
                         >
                             <DatePicker
                                 placeholder="Chọn ngày bắt đầu"
                                 showTime
                                 disabledDate={disablePastDates}
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 format="YYYY-MM-DD HH:mm"
                                 onChange={handleStartDateChange}
                             />
@@ -271,16 +281,16 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
 
                     <Col span={8}>
                         <FormItem
-                            label="Ngày Kết Thúc"
+                            rules={[{required: true, message: 'Vui lòng chọn ngày kết thúc'}]}
+                            label="Ngày kết thúc"
                             name="endDate"
-
                         >
                             <DatePicker
                                 placeholder="Chọn ngày kết thúc"
                                 showTime
                                 disabled={!isStartDateSelected}
                                 disabledDate={disablePastDates}
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 format="YYYY-MM-DD HH:mm"
                                 onChange={handleEndDateChange}
                             />
@@ -289,15 +299,15 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
 
                     <Col span={8}>
                         <FormItem
-                            label="Ngày Hết Hạn"
+                            rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}
+                            label="Ngày hết hạn"
                             name="expirationDate"
-
                         >
                             <DatePicker placeholder="Chọn ngày hết hạn"
-                                disabled={!isEndDateSelected}
-                                disabledDate={disableExpirationDate}
-                                style={{ width: "100%" }}
-                                format="YYYY-MM-DD"
+                                        disabled={!isEndDateSelected}
+                                        disabledDate={disableExpirationDate}
+                                        style={{width: "100%"}}
+                                        format="YYYY-MM-DD"
                             />
                         </FormItem>
                     </Col>
@@ -306,9 +316,9 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem
+                            rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố'}]}
                             label="Tỉnh/Thành phố"
                             name="province"
-
                         >
                             <Select onChange={handleProvinceChange} placeholder="Chọn tỉnh">
                                 {provinces.map(province => (
@@ -320,11 +330,12 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
 
                     <Col span={8}>
                         <FormItem
+                            rules={[{required: true, message: 'Vui lòng chọn quận/huyện'}]}
                             label="Quận/Huyện"
                             name="district"
-
                         >
-                            <Select onChange={handleDistrictChange} disabled={!selectedProvince} placeholder="Chọn quận">
+                            <Select onChange={handleDistrictChange} disabled={!selectedProvince}
+                                    placeholder="Chọn quận">
                                 {districts.map(district => (
                                     <Option key={district.id} value={district.id}>{district.name}</Option>
                                 ))}
@@ -334,9 +345,9 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
 
                     <Col span={8}>
                         <FormItem
+                            rules={[{required: true, message: 'Vui lòng chọn phường/xã'}]}
                             label="Phường/Xã"
                             name="ward"
-
                         >
                             <Select disabled={!selectedDistrict} placeholder="Chọn phường">
                                 {wards.map(ward => (
@@ -348,17 +359,16 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                 </Row>
 
                 <FormItem label="Địa chỉ chi tiết" name="detailAddress">
-                    <Input.TextArea />
+                    <Input.TextArea/>
                 </FormItem>
+
                 <FormItem label="Mô tả">
-                        <StyledQuill
-                            editor={ClassicEditor}
-                            data={description}
-                            onChange={handleEditorChange}
-                ></StyledQuill>
+                    <StyledQuill
+                        editor={ClassicEditor}
+                        data={description}
+                        onChange={handleEditorChange}
+                    />
                 </FormItem>
-
-
 
                 <FormItem label="Ảnh" name="image">
                     {/* Hiển thị phần Upload.Dragger chỉ khi không có ảnh */}
@@ -373,7 +383,7 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                             showUploadList={false} // Ẩn phần upload list trong Dragger
                         >
                             <div className="ant-upload-drag-icon">
-                                <UploadOutlined />
+                                <UploadOutlined/>
                             </div>
                             <p className="ant-upload-text">Kéo và thả hình ảnh vào đây</p>
                         </Upload.Dragger>
@@ -399,10 +409,9 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                         onCancel={() => setPreviewVisible(false)}
                         width={800}
                     >
-                        <img alt="preview" style={{ width: '100%' }} src={previewImage} />
+                        <img alt="preview" style={{width: '100%'}} src={previewImage}/>
                     </Modal>
                 </FormItem>
-
 
                 <ButtonGroup>
                     <Button onClick={onCancel}>Hủy</Button>
@@ -411,8 +420,8 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
             </Form>
         </Container>
     );
-};
 
+}
 AddWorkShop.propTypes = {
     visible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired,

@@ -5,11 +5,13 @@ import {SectionReducer} from "./reducers/SectionReducer";
 import {LoadingReducer} from "./reducers/LoadingReducer";
 import {MajorReducer} from "./reducers/MajorReducer";
 import {UniversityReducer} from "./reducers/UniversityReducer";
-import { IndustryReducer } from "./reducers/IndustryReducer";
 import {WorkShopReducer} from "./reducers/WorkShopReducer";
+import {IndustryReducer} from "./reducers/IndustryReducer";
 import {SubAdminReducer} from "./reducers/SubAdminReducer";
 import {EmployeeReducer} from "./reducers/EmployeeReducer";
 import {BusinessReducer} from "./reducers/BusinessReducer";
+import {JobReducer} from "./reducers/JobReducer";
+import {LocationReducer} from "./reducers/LocationReducer";
 
 
 const rootReducer = combineReducers({
@@ -19,10 +21,13 @@ const rootReducer = combineReducers({
     WorkShopReducer,
     MajorReducer,
     IndustryReducer,
+    JobReducer,
     SubAdminReducer,
     EmployeeReducer,
     UniversityReducer,
     BusinessReducer,
+    LocationReducer,
+
 });
 
 const store = legacy_createStore(rootReducer, applyMiddleware(thunk));

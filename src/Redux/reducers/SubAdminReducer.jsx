@@ -11,7 +11,8 @@ import {
 const initialState = {
     subAdmins: [],
     subAdminId: {},
-    subAdmin: {}
+    subAdmin: {},
+    admin:{}
 }
 
 export const SubAdminReducer = (state = initialState, action) => {

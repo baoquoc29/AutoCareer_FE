@@ -16,17 +16,22 @@ import SectionManager from "../Page/University/SectionManager/SectionManager";
 import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager";
 import InstructionalEdit from "../Page/University/InstructionalManager/InstructionalEdit/InstructionalEdit";
 import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
-import { BusinessTemplate } from "../Template/BusinessTemplate/BusinessTemplate";
-import { Business } from "../Page/Business/Business";
-import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
 import ProfileUniversityEdit from "../Page/ProfileUser/ProfileUniversity/ProfileUniversityEdit";
+import {BusinessTemplate} from "../Template/BusinessTemplate/BusinessTemplate";
+import {Business} from "../Page/Business/Business";
+import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
 import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
+import JobManager from "../Page/Business/JobManager/JobManager";
+import JobCreate from "../Page/Business/JobManager/JobCreatePage";
+import JobUpdate from "../Page/Business/JobManager/UpdateJobPage";
 import {AdminTemplate} from "../Template/AdminTemplate/AdminTemplate";
 import {Admin} from "../Page/Admin/Admin";
 import EmployeeCreate from "../Page/Business/EmployeeManager/EmployeeCreate";
 import ProfileBusiness from "../Page/ProfileUser/ProfileBusiness/ProfileBusiness";
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 import EmployeeEdit from "../Page/Business/EmployeeManager/EmployeeEdit";
+import HomeScreen from "../Page/Portal/HomeScreen";
+import ProfileBusinessEdit from "../Page/ProfileUser/ProfileBusiness/ProfileBusinessEdit";
 
 export function AppRouter() {
     return (
@@ -39,6 +44,7 @@ export function AppRouter() {
                     <Route path={"/signup-business"} element={<SignUpBusiness/>}/>
                     <Route path={"/reset-password"} element={<PasswordReminder/>}/>
                     <Route path={"/lock-screen"} element={<LockScreen/>}/>
+                    <Route path={"/home-screen"} element={<HomeScreen/>}/>
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
@@ -57,6 +63,10 @@ export function AppRouter() {
                     <Route path={"/employee-create"} element={<EmployeeCreate />} />
                     <Route path={"/employee-edit"} element={<EmployeeEdit />} />
                     <Route path={"/profile-business"} element={<ProfileBusiness />} />
+                    <Route path={"/profile-business-edit"} element={<ProfileBusinessEdit />} />
+                    <Route path={"/job-manager"} element={<JobManager />} />
+                    <Route path={"/job-create"} element={<JobCreate />} />
+                    <Route path={"/job-update"} element={<JobUpdate />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>

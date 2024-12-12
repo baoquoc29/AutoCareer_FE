@@ -20,7 +20,6 @@ export const get_employee_by_id = (employeeId) => {
     return async (dispatch)=> {
         try {
             const res = await employeeService.get_employee_by_id(employeeId);
-            console.log(res.data)
             dispatch({
                 type: SET_EMPLOYEE_ID,
                 payload: res.data

@@ -4,6 +4,7 @@ import {Button, Col, Form, Input, Modal, Row, Select, Upload} from "antd";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {create_sub_admin, get_all_sub_admin} from "../../../Redux/actions/SubAdminThunk";
+import {STATUS_CODE} from "../../../Utils/Setting/Config";
 
 const SubAdminCreateForm = ({open, onClose}) => {
     const dispatch = useDispatch();
@@ -38,11 +39,8 @@ const SubAdminCreateForm = ({open, onClose}) => {
         // Gửi dữ liệu tới API
         dispatch(create_sub_admin(formData))
             .then((response) => {
-                if (response.success) {
-                    toast.success("Thêm thành công")
-                    dispatch(get_all_sub_admin())
-                    handleClose();
-                }
+                dispatch(get_all_sub_admin())
+                handleClose();
             })
             .catch((error) => {
                 toast.error(error.messages)

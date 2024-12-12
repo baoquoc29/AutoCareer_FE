@@ -107,81 +107,79 @@ const EmployeeManager = () => {
     })):[];
     console.log(data)
     return (
-        <div>
+        <>
             <section id="content" className="content">
-            {/*    <div className="content__header content__boxed rounded-0">*/}
+                <div className="content__header content__boxed rounded-0">
                     <div className="content__wrap">
-                        <section>
-                            <div className="mt-3">
-                                <div className="row">
-                                    <div className="col-12 mb-3">
-                                        <Card title="Danh sách nhân viên">
-                                            <div className="table-responsive">
-                                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                                    {/* Thanh tìm kiếm */}
-                                                    <Input
-                                                        placeholder="Tìm kiếm nhân viên..."
-                                                        value={searchText}
-                                                        onChange={handleSearch}
-                                                        prefix={<SearchOutlined/>}
-                                                        style={{width: 400}}
-                                                    />
-
-                                                    {/* Nút hành động */}
-                                                    <div className="d-flex">
-                                                        <Button type="primary" icon={<PlusOutlined/>}
-                                                                style={{marginRight: 10}}>
-                                                            <NavLink
-                                                                to="/employee-create"
-                                                                style={{textDecoration: 'none', color: 'inherit'}}
-                                                            >
-                                                                Thêm mới
-                                                            </NavLink>
-                                                        </Button>
-                                                        <Button
-                                                            type="default"
-                                                            icon={<DownloadOutlined/>}
-                                                            /*onClick={exportToExcelSection}*/
-                                                            style={{
-                                                                backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
-                                                                borderColor: '#1d8f29',      // Màu viền
-                                                                color: 'white',              // Màu chữ
-                                                            }}
-                                                        >
-                                                            Xuất Excel
-                                                        </Button>
-                                                    </div>
-                                                </div>
-
-
-                                                <EmployeeTable
-                                                    data={data}
-                                                    onInfo={handleInfo}
-                                                    onDetle={confirmDelete}
-                                                    onEdit={handleEdit}
+                        <div className="mt-auto">
+                            <div className="row">
+                                <div className="col-md-12 mb-3">
+                                    <Card title="Danh sách nhân viên">
+                                        <div className="table-responsive">
+                                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                                {/* Thanh tìm kiếm */}
+                                                <Input
+                                                    placeholder="Tìm kiếm nhân viên..."
+                                                    value={searchText}
+                                                    onChange={handleSearch}
+                                                    prefix={<SearchOutlined/>}
+                                                    style={{width: 400}}
                                                 />
+
+                                                {/* Nút hành động */}
+                                                <div className="d-flex">
+                                                    <Button type="primary" icon={<PlusOutlined/>}
+                                                            style={{marginRight: 10}}>
+                                                        <NavLink
+                                                            to="/employee-create"
+                                                            style={{textDecoration: 'none', color: 'inherit'}}
+                                                        >
+                                                            Thêm mới
+                                                        </NavLink>
+                                                    </Button>
+                                                    <Button
+                                                        type="default"
+                                                        icon={<DownloadOutlined/>}
+                                                        /*onClick={exportToExcelSection}*/
+                                                        style={{
+                                                            backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
+                                                            borderColor: '#1d8f29',      // Màu viền
+                                                            color: 'white',              // Màu chữ
+                                                        }}
+                                                    >
+                                                        Xuất Excel
+                                                    </Button>
+                                                </div>
                                             </div>
-                                            <Pagination
-                                                current={currentPage}
-                                                pageSize={pageSize}
-                                                total={totalElements}
-                                                onChange={handlePageChange}
-                                                className="text-center mt-3"
+
+
+                                            <EmployeeTable
+                                                data={data}
+                                                onInfo={handleInfo}
+                                                onDetle={confirmDelete}
+                                                onEdit={handleEdit}
                                             />
-                                        </Card>
-                                    </div>
+                                        </div>
+                                        <Pagination
+                                            current={currentPage}
+                                            pageSize={pageSize}
+                                            total={totalElements}
+                                            onChange={handlePageChange}
+                                            className="text-center mt-3"
+                                        />
+                                    </Card>
                                 </div>
                             </div>
-                        </section>
+                        </div>
                     </div>
-            {/*</div>*/}
+                </div>
             </section>
             <EmployeeDetail
                 open={open}
                 onClose={() => setOpen(false)}
                 employee={selectedEmployee}
             />
-        </div>
+    </>
     );
 }
 export default EmployeeManager;
