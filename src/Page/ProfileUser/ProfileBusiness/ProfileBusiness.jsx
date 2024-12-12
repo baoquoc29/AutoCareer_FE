@@ -1,115 +1,197 @@
-import './ProfileBusiness.css'
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
-import {get_all_industry} from "../../../Redux/actions/IndustryThunk";
-import {useNavigate} from "react-router-dom";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
+import { get_all_industry_no_pag } from "../../../Redux/actions/IndustryThunk";
+import { useNavigate } from "react-router-dom";
+import { get_business_by_id } from "../../../Redux/actions/BusinessThunk";
+import { Button, Card, Col, Divider, Row, Space, Typography } from "antd";
+import {
+    MailOutlined,
+    PhoneOutlined,
+    LinkOutlined,
+    CalendarOutlined,
+    HomeOutlined,
+    NumberOutlined,
+    EnvironmentOutlined
+} from "@ant-design/icons";
+
+const { Text, Title } = Typography;
 
 
 const ProfileBusiness = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const industry = useSelector(state => state.IndustryReducer.industriesNoPag);
+    const business = useSelector(state => state.UserReducer.userData?.business);
+    const businessDetail = useSelector(state => state.BusinessReducer.business);
 
-    // const industry = useSelector(state => state.IndustryReducer.industries);
-    // useEffect(() => {
-    //     dispatch(get_industry_business())
-    // }, [dispatch])
-    //
-    // console.log("industry ----------",industry)
+    useEffect(() => {
+        if (business?.id) {
+            dispatch(get_all_industry_no_pag());
+            dispatch(get_business_by_id(business.id));
+        }
+    }, [dispatch, business]);
+
 
     const handleEditClick = () => {
         if (business?.id) {
-            navigate(`/profile-business-edit`);
+            navigate(`/profile-business-edit`, { state: { businessId: business.id } });
         }
     };
 
-    const business = useSelector(state => state.UserReducer.userData ? state.UserReducer.userData["business"] : undefined);
-    console.log(business)
-    if (!business) {
-        return <p>Loading...</p>;
+    if (!business || !businessDetail) {
+        return (
+            <section id="content" className="content">
+                <div className="content__header content__boxed rounded-0">
+                    <div className="content__wrap">
+                        <div style={{ padding: "20px", maxWidth: "2000px", margin: "0 auto" }}>
+                            <div>Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
     }
     return (
-
         <section id="content" className="content">
             <div className="content__header content__boxed rounded-0">
                 <div className="content__wrap">
-                    <div>
-                        <div className="container">
-                            <div className="card card-profile-university p-4">
-                                <div className="row mb-4">
-                                    <div className="col-md-3 text-center">
+                    <div style={{ padding: "20px", maxWidth: "2000px", margin: "0 auto" }}>
+                        <Row gutter={[16, 16]}>
+                            <Col span={24} md={16}>
+                                <Card bordered={false}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
                                         <img
-                                            src={`${GET_IMAGE_URI}${business["businessImageId"]}`}
-                                            alt="Logo Doanh Nghiệp" className="img-fluid logo-image"
+                                            src={`${GET_IMAGE_URI}${businessDetail["businessImageId"]}`}
+                                            alt="Logo Doanh Nghiệp"
+                                            style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "20px", borderRadius: "8px" }}
                                         />
+                                        <Title level={2} style={{ margin: 0 }}>{businessDetail.name}</Title>
                                     </div>
-                                    <div className="col-md-9">
-                                        <h1>{business?.name}</h1>
-                                        <p>{business?.description}</p>
-                                    </div>
-                                </div>
+                                    <Text>{businessDetail.description}</Text>
+                                    <Divider orientation="left" style={{ fontSize: "18px", color: "#096dd9" }}>Thông tin chung</Divider>
+                                    <Space direction="vertical" size={4} style={{ width: "100%" }}>
+                                        <Row gutter={[16, 16]}>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{ color: "#096dd9" }}>
+                                                        <HomeOutlined style={{ marginRight: "8px" }} />
+                                                        Tên doanh nghiệp:
+                                                    </Text>
+                                                    <Text>{businessDetail.name}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{ color: "#096dd9" }}>
+                                                        <LinkOutlined style={{ marginRight: "8px" }} />
+                                                        Website:
+                                                    </Text>
+                                                    <Text>
+                                                        <a href={businessDetail["website"]} target="_blank" rel="noopener noreferrer">
+                                                            {businessDetail["website"]}
+                                                        </a>
+                                                    </Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{ color: "#096dd9" }}>
+                                                        <CalendarOutlined style={{ marginRight: "8px" }} />
+                                                        Năm thành lập:
+                                                    </Text>
+                                                    <Text>{businessDetail["foundYear"]}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{ color: "#096dd9" }}>
+                                                        <NumberOutlined style={{ marginRight: "8px" }} />
+                                                        Mã số thuế:
+                                                    </Text>
+                                                    <Text>{businessDetail["taxCode"]}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{ color: "#096dd9" }}>
+                                                        <NumberOutlined style={{ marginRight: "8px" }} />
+                                                        Quy mô doanh nghiệp:
+                                                    </Text>
+                                                    <Text>{businessDetail["companySize"]}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{ color: "#096dd9" }}>
+                                                        <EnvironmentOutlined style={{ marginRight: "8px" }} />
+                                                        Địa chỉ:
+                                                    </Text>
+                                                    <Text>
+                                                        {businessDetail.location?.province.fullName},
+                                                        {businessDetail.location?.district.fullName},
+                                                        {businessDetail.location?.ward.fullName},
+                                                        {businessDetail.location?.description}
+                                                    </Text>
+                                                </Space>
+                                            </Col>
+                                        </Row>
+                                    </Space>
+                                    <Divider />
+                                    <Row justify="end">
+                                        <Button type="primary" onClick={handleEditClick}>Chỉnh sửa</Button>
+                                    </Row>
+                                </Card>
+                            </Col>
+                            <Col span={24} md={8}>
+                                <Row gutter={[16,16]}>
+                                    <Col span={24}>
+                                        <Card bordered={false}>
+                                            <Divider orientation="left" style={{ fontSize: "18px", color: "#096dd9" }}>Liên hệ</Divider>
+                                            <Space direction="vertical" size={4} style={{ width: "100%" }}>
+                                                <Row gutter={[16, 16]}>
+                                                    <Col span={24}>
+                                                        <Space direction="vertical" size={4}>
+                                                            <Text strong style={{ color: "#096dd9" }}>
+                                                                <MailOutlined style={{ marginRight: "8px" }} />
+                                                                Email:
+                                                            </Text>
+                                                            <Text>{businessDetail?.email}</Text>
+                                                        </Space>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Space direction="vertical" size={4}>
+                                                            <Text strong style={{ color: "#096dd9" }}>
+                                                                <PhoneOutlined style={{ marginRight: "8px" }} />
+                                                                Điện thoại:
+                                                            </Text>
+                                                            <Text>{businessDetail?.phone}</Text>
+                                                        </Space>
+                                                    </Col>
+                                                </Row>
+                                            </Space>
+                                        </Card>
+                                    </Col>
+                                    <Col span={24}>
+                                        <Card bordered={false}>
+                                            <Divider orientation="left" style={{ fontSize: "18px", color: "#096dd9" }}>Chuyên ngành kinh doanh</Divider>
+                                            <div className="d-flex flex-wrap">
+                                                {industry.map((item, index) => (
+                                                    <span className="badge badge-pill badge-blue mt-2 mx-2"
+                                                          key={index}>{item.industryName}</span>
+                                                ))}
+                                            </div>
+                                        </Card>
+                                    </Col>
+                                </Row>
 
-                                {/* Thông tin chung */}
-                                <div className="row mb-3">
-                                    <div className="col-md-6">
-                                        <h1 className="header">Thông Tin Chung</h1>
-                                        <p><strong>Tên Doanh Nghiệp:</strong> {business?.name}</p>
-                                        <p><strong>Website:</strong> <a
-                                            href={business["website"]}>{business["website"]}</a></p>
-                                        <p><strong>Năm thành lập:</strong> {business["foundYear"]}</p>
-                                        <p><strong>Mã số thuế:</strong> {business["taxCode"]}</p>
-                                        <p><strong>Quy mô doanh nghiệp:</strong> {business["companySize"]}
-                                        </p>
-                                        <p><strong>Địa Chỉ:</strong> {business?.location?.province.fullName},
-                                            {business?.location?.district.fullName},
-                                            {business?.location?.ward.fullName},
-                                            {business?.location?.description},
-                                        </p>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <h1 className="header">Liên Hệ</h1>
-                                        <p><strong>Email:</strong> {business?.email}</p>
-                                        <p><strong>Điện Thoại:</strong> {business?.phone}</p>
-                                    </div>
-                                </div>
-
-                                {/* Khoa giảng dạy */}
-                                <div className="row mb-3">
-                                    <h2 className="header">Chuyên ngành kinh doanh</h2>
-                                    <div className="d-flex flex-wrap">
-                                        {/*{industry.map((item, index) => (*/}
-                                        {/*    <span className="badge badge-pill badge-blue mt-2 mx-2"*/}
-                                        {/*          key={index}>{item.name}</span>*/}
-                                        {/*))}*/}
-                                    </div>
-                                </div>
-
-                                {/*/!* Ngành học *!/*/}
-                                {/*<div className="row mb-4">*/}
-                                {/*    <h2 className="header">Ngành Học</h2>*/}
-                                {/*    <div className="d-flex flex-wrap">*/}
-                                {/*        {majors.map((item, index) => (*/}
-                                {/*            <span className="badge badge-pill badge-blue-dark mt-3 mx-2"*/}
-                                {/*                  key={index}>{item.name}</span>*/}
-                                {/*        ))}*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-
-                                {/* Nút chỉnh sửa */}
-                                <div className="text-center">
-                                    <button
-                                        onClick={handleEditClick}
-                                        className="btn btn-warning btn-profile-university-custom"
-                                    >
-                                        Chỉnh Sửa
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
+
 export default ProfileBusiness;

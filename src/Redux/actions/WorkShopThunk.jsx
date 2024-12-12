@@ -152,7 +152,6 @@ export const get_all_provinces = () => {
         try {
             const res = await workShopService.get_all_provinces();
             if (res?.data) {
-               console.log(res?.data);
                 dispatch({
                     type: GET_ALL_LOCATION,  // Action type to store the provinces
                     payload: res.data,
