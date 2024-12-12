@@ -3,10 +3,6 @@ import {GET_IMAGE_URI, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
 import {logoutUser} from "../../Redux/actions/UserThunk";
 import {Button} from "antd";
 import {NavLink} from "react-router-dom";
-import {useEffect} from "react";
-import {get_university_id} from "../../Redux/actions/UniversityThunk";
-import {get_business_by_id} from "../../Redux/actions/BusinessThunk";
-import {get_detail_sub_admin} from "../../Redux/actions/SubAdminThunk";
 
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
@@ -15,6 +11,7 @@ export const UserDropdown = ({navigate}) => {
     const isBusinessUser = user && user.role.name === 'BUSINESS';
     const isAdminUser = user && user.role.name === 'ADMIN';
     const isSubAdminUser = user && user.role.name === 'SUB_ADMIN';
+    const isEmployeeUser = user && user.role.name === 'EMPLOYEE';
 
     const dispatch = useDispatch();
     const userId = user ? user.id : null;
@@ -53,6 +50,7 @@ export const UserDropdown = ({navigate}) => {
         if (isUniversityUser) return '/profile-university';
         if (isBusinessUser) return '/profile-business';
         if (isSubAdminUser) return '/admin-dashboard';
+        if (isEmployeeUser) return '/business';
         return null;
     };
 
@@ -96,9 +94,6 @@ export const UserDropdown = ({navigate}) => {
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}
-                            <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
-                                <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
-                            </NavLink>
                             <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
                                 <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
                             </NavLink>

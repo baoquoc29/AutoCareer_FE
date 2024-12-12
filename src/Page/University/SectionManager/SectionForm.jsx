@@ -1,8 +1,9 @@
 import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
-import * as Yup from "yup";
 import {create_section} from "../../../Redux/actions/SectionThunk";
 import {Button, Card, Form, Input} from "antd";
+import SectionValidation from "../../../Utils/Validation/University/SectionValidation";
+import {PlusOutlined} from "@ant-design/icons";
 
 export const SectionForm = ({ universityId }) => {
     const dispatch = useDispatch();
@@ -15,12 +16,7 @@ export const SectionForm = ({ universityId }) => {
             status: "ACTIVE"
         },
         enableReinitialize: true,
-        validationSchema: Yup.object({
-            name: Yup.string()
-                .required('Tên khoa là bắt buộc')
-                .min(3, 'Tên khoa phải có ít nhất 3 ký tự'),
-            description: Yup.string().required('Mô tả là bắt buộc'),
-        }),
+        validationSchema: SectionValidation,
         onSubmit: (values) => {
             console.log('Form submitted with values:', values);
             dispatch(create_section(values));
@@ -36,11 +32,6 @@ export const SectionForm = ({ universityId }) => {
                         name="Tên khoa"
                         validateTrigger="onBlur"
                         required={true}
-                        rules={[
-                            { required: true, message: "Tên khoa không được bỏ trống" },
-                            { min: 10, message: "Tên khoa phải có ít nhất 10 ký tự" },
-                            { max: 100, message: "Tên khoa tối đa 100 ký tự" }
-                        ]}
                         help={formik.errors.name && formik.touched.name ? formik.errors.name : null}
                         validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}
                     >
@@ -50,7 +41,6 @@ export const SectionForm = ({ universityId }) => {
                             name="name"
                         />
                     </Form.Item>
-
                     <Form.Item label="Mô tả" name="description">
                         <Input.TextArea
                             onChange={formik.handleChange}
@@ -59,8 +49,10 @@ export const SectionForm = ({ universityId }) => {
                             autoSize={{ minRows: 8 }}
                         />
                     </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">Thêm</Button>
+                    <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <Button type="primary" htmlType="submit" icon={<PlusOutlined/>}>
+                            Thêm
+                        </Button>
                     </Form.Item>
                 </Form>
             </Card>
