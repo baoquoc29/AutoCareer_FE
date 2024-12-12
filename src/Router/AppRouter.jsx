@@ -23,6 +23,7 @@ import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
 import JobManager from "../Page/Business/JobManager/JobManager";
 import JobCreate from "../Page/Business/JobManager/JobCreatePage";
 import JobUpdate from "../Page/Business/JobManager/UpdateJobPage";
+import JobDetail from "../Page/Business/JobManager/JobDetailPage";
 import {AdminTemplate} from "../Template/AdminTemplate/AdminTemplate";
 import {Admin} from "../Page/Admin/Admin";
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
@@ -57,6 +58,7 @@ export function AppRouter() {
                     <Route path={"/job-manager"} element={<JobManager />} />
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
+                    <Route path={"/job-detail"} element={<JobDetail />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>

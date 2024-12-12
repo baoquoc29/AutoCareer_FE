@@ -8,7 +8,7 @@ import {
 } from "../types/IndustryType";
 import {toast} from "react-toastify";
 
-export const get_all_industry_business = (page = 1, size = 5, keyword = '') => {
+export const get_all_industry_business = (page = 1, size = 7, keyword = '') => {
     return async (dispatch) => {
         try {
             const res = await industryService.get_industry_business(page, size, keyword);
@@ -42,10 +42,9 @@ export const get_all_industry_business = (page = 1, size = 5, keyword = '') => {
                     });
                 }
             } else {
-                console.error("API returned data that is not an array:", res.data);
             }
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         }
     };
 };
@@ -59,7 +58,7 @@ export const get_all_industry = () => {
                 payload: res.data,
             });
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         }
     };
 };
@@ -73,7 +72,7 @@ export const get_all_industry_no_pag = () => {
                 payload: res.data,
             });
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         }
     };
 };
@@ -87,7 +86,7 @@ export const create_industry_id = (id) => {
                 payload: res.data
             })
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         }
     }
 }
@@ -102,7 +101,7 @@ export const get_industry_detail = (id) => {
             });
         } catch (error) {
             console.log(error);
-            toast.error("Không thể lấy thông tin chi tiết ngành nghề!");
+            toast.error(error.response.data.message);
         }
     };
 };
@@ -110,11 +109,12 @@ export const get_industry_detail = (id) => {
 export const delete_industry_by_id = (businessIndustryId) => {
     return async (dispatch) => {
         try {
-            await industryService.delete_industries(businessIndustryId);
-            dispatch(get_all_industry_business()); // Refresh the list after deletion
+            const res = await industryService.delete_industries(businessIndustryId);
+            toast.success(res.data);
+            dispatch(get_all_industry_business());// Refresh the list after deletion
         } catch (error) {
             console.error("Error deleting industry:", error);
-            toast.error("Failed to delete industry");
+            toast.error(error.response.data.message);
         }
     };
 };

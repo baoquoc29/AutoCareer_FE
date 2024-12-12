@@ -3,24 +3,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, Input, Modal, Pagination} from "antd";
 import {FileExcelOutlined, PlusOutlined, SearchOutlined,} from "@ant-design/icons";
 import JobTable from "./JobTable";
-import JobDetailModal from "./JobDetailModel";
 import * as XLSX from "xlsx";
-import {get_all_job_of_business_paging, get_job_detail} from "../../../Redux/actions/JobThunk";
+import {get_all_job_of_business_paging, get_job_detail, inactive_job} from "../../../Redux/actions/JobThunk";
 import {NavLink} from "react-router-dom";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary"; // Import component mới
 
 const JobManager = () => {
     const dispatch = useDispatch();
     const jobTable = useSelector((state) => state.JobReducer.jobs);
-    const selectedJobDetail = useSelector((state) => state.JobReducer.selectedJobDetail);
     const totalElements = useSelector((state) => state.JobReducer.totalElements);
     const currentPage = useSelector((state) => state.JobReducer.currentPage);
     const pageSize = useSelector((state) => state.JobReducer.pageSize);
-
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     useEffect(() => {
         dispatch(get_all_job_of_business_paging(currentPage, pageSize, ""));
@@ -42,7 +37,6 @@ const JobManager = () => {
 
     const handleInfo = (record) => {
         dispatch(get_job_detail(record.id));
-        setOpen(true);
     };
 
     const exportToExcel = () => {
@@ -79,6 +73,7 @@ const JobManager = () => {
             workingTime: job.workingTime,
             statusBrowse: job.statusBrowse,
             status: job.status,
+            createBy: job.createBy
         }))
         : [];
 
@@ -93,14 +88,14 @@ const JobManager = () => {
                                     <div className="table-responsive">
                                         <div className="d-flex justify-content-between mb-3">
                                             <Input
-                                                placeholder="Search..."
+                                                placeholder="Tìm kiếm..."
                                                 value={searchText}
                                                 onChange={handleSearch}
                                                 prefix={<SearchOutlined/>}
                                                 style={{width: 200}}
                                             />
                                             <div style={{display: "flex", gap: "10px"}}>
-                                                <Button type="primary" icon={<PlusOutlined/>} onClick={() => setIsCreateOpen(true)}>
+                                                <Button type="primary" icon={<PlusOutlined/>}>
                                                     <NavLink to={"/job-create"} style={{textDecoration: "none"}}>
                                                         Thêm công việc
                                                     </NavLink>
@@ -114,7 +109,11 @@ const JobManager = () => {
                                             </div>
                                         </div>
 
-                                        <JobTable data={data} onInfo={handleInfo}/>
+                                        <JobTable
+                                            data={data}
+                                            onInfo={handleInfo}
+                                            onDelete={(jobId) => dispatch(inactive_job(jobId))} // Gọi action
+                                        />
                                         <ResultsSummary
                                             totalElements={totalElements}
                                         />
@@ -133,11 +132,6 @@ const JobManager = () => {
                 </div>
             </div>
         </section>
-        <JobDetailModal
-            open={open}
-            onClose={() => setOpen(false)}
-            job={selectedJobDetail}
-        />
     </>);
 };
 

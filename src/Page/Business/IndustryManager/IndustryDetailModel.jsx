@@ -1,6 +1,5 @@
 import React from "react";
-import { Modal, Divider, Typography, Row, Col } from "antd";
-import { CheckCircleOutlined, PauseCircleOutlined } from "@ant-design/icons";
+import {Col, Divider, Modal, Row, Typography} from "antd";
 
 const { Title, Text } = Typography;
 
@@ -50,13 +49,12 @@ const IndustryDetailModal = ({ open, onClose, industry }) => {
                     </Col>
                     <Col span={24}>
                         <Text strong>Trạng thái: </Text>
-                        <Text style={{ color: industry.status === "ACTIVE" ? "green" : "orange" }}>
-                            {industry.status === "ACTIVE" ? (
-                                <CheckCircleOutlined style={{ marginRight: 2 }} />
-                            ) : (
-                                <PauseCircleOutlined style={{ marginRight: 2 }} />
-                            )}
-                            {industry.status === "ACTIVE" ? "Hoạt động" : "Tạm ngưng"}
+                        <Text style={{color: industry.status === "ACTIVE" ? "green" : "orange"}}>
+                            {industry.status === "ACTIVE"
+                                ? "Hoạt động"
+                                : industry.status === "INACTIVE"
+                                    ? "Tạm ngưng"
+                                    : "Bị từ chối"}
                         </Text>
                     </Col>
                 </Row>

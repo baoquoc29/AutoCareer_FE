@@ -18,6 +18,12 @@ export class JobService extends baseService {
     update_job = (jobId, jobData) => {
         return this.put(`api/job/update-job?jobId=${jobId}`, jobData);
     };
+    inactive_job = (jobId) => {
+        return this.put(`api/job/inactive-job?jobId=${jobId}`);
+    };
+    check_delete_permission = (id) => {
+        return this.get(`api/job/check-inactive-permission?jobId=${id}`);
+    };
 }
 
 export const jobService = new JobService();
