@@ -12,11 +12,9 @@ import IndustryForm from "./IndustryForm";
 import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
 import {FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
-import logo from "../../../Component/HeaderComponent/aotucareer-logo.svg";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 import {toast} from "react-toastify";
 import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton"; // Import component mới
-
 
 const IndustryManager = () => {
     const dispatch = useDispatch();
@@ -25,14 +23,13 @@ const IndustryManager = () => {
     const industryOptions = useSelector((state) => state.IndustryReducer.industriesNoPag); // Cho Select
     const totalElements = useSelector((state) => state.IndustryReducer.totalElements); // Tổng số bản ghi
     const currentPage = useSelector((state) => state.IndustryReducer.currentPage); // Trang hiện tại
-    const pageSize = useSelector((state) => state.IndustryReducer.pageSize);
-    const keyword = useSelector((state) => state.IndustryReducer.keyword);
+    const pageSize = useSelector((state) => state.IndustryReducer.pageSize); // Số bản ghi 1 trang
+    const keyword = useSelector((state) => state.IndustryReducer.keyword); // Từ khóa tìm kiếm
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các bản ghi đã chọn
-
 
     useEffect(() => {
         dispatch(get_all_industry_business(currentPage, pageSize, keyword));
@@ -126,7 +123,7 @@ const IndustryManager = () => {
                             <div className="col-md-4 mb-3 border-5">
                                 <IndustryForm selectData={industryOptions} load={setLoad}/>
                                 <img
-                                    src={logo}
+                                    src={"aotucareer-logo.svg"}
                                     alt="Ngành nghề"
                                     className="logo"
                                     style={{maxWidth: "80%", height: "auto", display: "block", margin: "0 auto"}}
@@ -136,7 +133,7 @@ const IndustryManager = () => {
                                     <div className="table-responsive">
                                         <div className="d-flex justify-content-between mb-3">
                                             <Input
-                                                placeholder="Search..."
+                                                placeholder="Tìm kiếm..."
                                                 value={searchText}
                                                 onChange={handleSearch}
                                                 prefix={<SearchOutlined/>}
