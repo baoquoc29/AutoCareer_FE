@@ -45,8 +45,25 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
             dataIndex: 'title',
             align: 'center',
             key: 'title',
-            sorter: (a, b) => a.title.localeCompare(b.title)
+            sorter: (a, b) => a.title.localeCompare(b.title),
+            render: (text) => {
+                const maxLength = 45; // Giới hạn số ký tự trước khi thêm ">>>"
+
+                // Kiểm tra và xử lý chuỗi nếu dài hơn maxLength
+                const displayText = text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+                return (
+                    <div style={{
+                        whiteSpace: 'nowrap', // Không xuống dòng
+                        overflow: 'hidden',  // Ẩn phần văn bản tràn
+                        textOverflow: 'ellipsis', // Hiển thị dấu "..."
+                    }}>
+                        {displayText}
+                    </div>
+                );
+            },
         },
+
         {
             title: 'Ngày hết hạn',
             dataIndex: 'expireDate',
@@ -123,7 +140,10 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
             title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="middle">
                     <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => handleInfo(record.id)}
-                            disabled={record.status !== 'ACTIVE'}/>
+                            // disabled={record.status !== 'ACTIVE'}
+                    />
+
+
                     <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
                             onClick={() => handleEdit(record.id)}
                             disabled={username !== record.createBy}/>

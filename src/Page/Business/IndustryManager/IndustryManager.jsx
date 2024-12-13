@@ -14,7 +14,7 @@ import {FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 import {toast} from "react-toastify";
-import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton"; // Import component mới
+import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton";
 
 const IndustryManager = () => {
     const dispatch = useDispatch();
@@ -163,13 +163,18 @@ const IndustryManager = () => {
                                             totalElements={totalElements}
                                         />
                                     </div>
-                                    <Pagination
-                                        current={currentPage}
-                                        pageSize={pageSize}
-                                        total={totalElements}
-                                        onChange={handlePageChange}
-                                        className="text-center mt-3"
-                                    />
+                                    <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
+                                        <Pagination
+                                            current={currentPage}
+                                            pageSize={pageSize}
+                                            defaultPageSize={7}
+                                            defaultCurrent={1}
+                                            total={totalElements}
+                                            onChange={handlePageChange}
+                                            pageSizeOptions={[7, 10, 20, 50, 100]}
+                                            showSizeChanger={true}
+                                        />
+                                    </div>
                                 </Card>
                             </div>
                         </div>

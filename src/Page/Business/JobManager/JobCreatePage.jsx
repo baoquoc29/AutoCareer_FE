@@ -6,6 +6,8 @@ import {get_all_industry_no_pag} from "../../../Redux/actions/IndustryThunk";
 import {useNavigate} from "react-router-dom";
 import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const JobCreatePage = () => {
     const dispatch = useDispatch();
@@ -13,6 +15,9 @@ const JobCreatePage = () => {
     const industryOptions = useSelector((state) => state.IndustryReducer.industriesNoPag);
     const navigate = useNavigate();
     const [date, setDate] = useState(null);
+    const [jobDescription, setJobDescription] = useState("");
+    const [requirement, setRequirement] = useState("");
+    const [benefit, setBenefit] = useState("");
     dayjs.extend(utc);
 
     useEffect(() => {
@@ -28,7 +33,10 @@ const JobCreatePage = () => {
     const handleSubmit = (values) => {
         const formattedValues = {
             ...values,
-            expireDate: date, // Đảm bảo ngày hết hạn lấy từ state
+            expireDate: date,
+            jobDescription,
+            requirement,
+            benefit,// Đảm bảo ngày hết hạn lấy từ state
         };
         dispatch(create_job(formattedValues));
         navigate("/job-manager");
@@ -82,7 +90,7 @@ const JobCreatePage = () => {
                                                         <DatePicker
                                                             placeholder="Chọn ngày hết hạn"
                                                             format="DD-MM-YYYY" // Hiển thị theo định dạng dd-mm-yyyy
-                                                            style={{ width: "100%" }}
+                                                            style={{width: "100%"}}
                                                             disabledDate={(current) => current && current.isBefore(dayjs().startOf('day'), 'day')}
                                                             value={date ? dayjs(date) : null} // Đảm bảo giá trị hiển thị đúng
                                                             onChange={handleDateChange}
@@ -99,7 +107,8 @@ const JobCreatePage = () => {
                                                         <Select placeholder="Chọn cấp bậc">
                                                             <Select.Option value="Không yêu cầu kinh nghiệm">Không yêu
                                                                 cầu kinh nghiệm</Select.Option>
-                                                            <Select.Option value="Thực tập sinh">Thực tập sinh</Select.Option>
+                                                            <Select.Option value="Thực tập sinh">Thực tập
+                                                                sinh</Select.Option>
                                                             <Select.Option value="1 năm kinh
                                                                 nghiệm">1 năm kinh
                                                                 nghiệm</Select.Option>
@@ -123,7 +132,7 @@ const JobCreatePage = () => {
                                                     >
                                                         <InputNumber
                                                             placeholder="Nhập mức lương (VND)"
-                                                            style={{ width: "100%" }}
+                                                            style={{width: "100%"}}
                                                             formatter={(value) =>
                                                                 value
                                                                     ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND"
@@ -159,7 +168,12 @@ const JobCreatePage = () => {
                                                 name="jobDescription"
                                                 rules={[{required: true, message: "Vui lòng nhập mô tả công việc"}]}
                                             >
-                                                <Input.TextArea rows={4} placeholder="Mô tả công việc"/>
+                                                <ReactQuill
+                                                    theme="snow"
+                                                    value={jobDescription}
+                                                    onChange={setJobDescription}
+                                                    placeholder="Mô tả công việc"
+                                                />
                                             </Form.Item>
 
                                             <Form.Item
@@ -167,14 +181,24 @@ const JobCreatePage = () => {
                                                 name="requirement"
                                                 rules={[{required: true, message: "Vui lòng nhập yêu cầu công việc"}]}
                                             >
-                                                <Input.TextArea rows={4} placeholder="Yêu cầu công việc"/>
+                                                <ReactQuill
+                                                    theme="snow"
+                                                    value={requirement}
+                                                    onChange={setRequirement}
+                                                    placeholder="Yêu cầu công việc"
+                                                />
                                             </Form.Item>
 
                                             <Form.Item
                                                 label="Phúc lợi"
                                                 name="benefit"
                                             >
-                                                <Input.TextArea rows={4} placeholder="Phúc lợi"/>
+                                                <ReactQuill
+                                                    theme="snow"
+                                                    value={benefit}
+                                                    onChange={setBenefit}
+                                                    placeholder="Phúc lợi"
+                                                />
                                             </Form.Item>
 
                                             <Form.Item
