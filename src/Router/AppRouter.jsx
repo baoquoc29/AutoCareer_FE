@@ -33,6 +33,7 @@ import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 import EmployeeEdit from "../Page/Business/EmployeeManager/EmployeeEdit";
 import HomeScreen from "../Page/Portal/HomeScreen";
 import ProfileBusinessEdit from "../Page/ProfileUser/ProfileBusiness/ProfileBusinessEdit";
+import UniversityDetailPortal from "../Page/Portal/University/UniversityDetailPortal";
 
 export function AppRouter() {
     return (
@@ -69,12 +70,15 @@ export function AppRouter() {
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
+                    <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
+
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/admin"} element={<Admin/>}/>
                     <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
                 </Route>
+
             </Routes>
         </>
     );
