@@ -50,8 +50,9 @@ export const create_job = (jobData) => {
                 type: CREATE_JOB,
                 payload: res.data,
             });
-            dispatch(get_all_job_of_business_paging());
             toast.success("Công việc đã được tạo thành công!");
+            dispatch(get_all_job_of_business_paging());
+
         } catch (error) {
             console.error("Error creating job:", error);
             toast.error(error.response.data.message);

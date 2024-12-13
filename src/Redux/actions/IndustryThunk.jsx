@@ -77,20 +77,6 @@ export const get_all_industry_no_pag = () => {
     };
 };
 
-export const create_industry_id = (id) => {
-    return async (dispatch) => {
-        try {
-            const res = await industryService.create_industry(id);
-            dispatch({
-                type: CREATE_INDUSTRIES,
-                payload: res.data
-            })
-        } catch (error) {
-            console.log(error.response.data.message);
-        }
-    }
-}
-
 export const get_industry_detail = (id) => {
     return async (dispatch) => {
         try {
@@ -109,8 +95,7 @@ export const get_industry_detail = (id) => {
 export const delete_industry_by_id = (businessIndustryId) => {
     return async (dispatch) => {
         try {
-            const res = await industryService.delete_industries(businessIndustryId);
-            toast.success(res.data);
+            await industryService.delete_industries(businessIndustryId);
             dispatch(get_all_industry_business());// Refresh the list after deletion
         } catch (error) {
             console.error("Error deleting industry:", error);

@@ -118,13 +118,18 @@ const JobManager = () => {
                                             totalElements={totalElements}
                                         />
                                     </div>
-                                    <Pagination
-                                        current={currentPage}
-                                        pageSize={pageSize}
-                                        total={totalElements}
-                                        onChange={handlePageChange}
-                                        className="text-center mt-3"
-                                    />
+                                    <div style={{display: "flex",justifyContent:"center", marginTop: "10px"}}>
+                                        <Pagination
+                                            current={currentPage}
+                                            pageSize={pageSize}
+                                            defaultPageSize={7}
+                                            defaultCurrent={1}
+                                            total={totalElements}
+                                            onChange={handlePageChange}
+                                            pageSizeOptions={[7, 10, 20, 50, 100]}
+                                            showSizeChanger={true}
+                                        />
+                                    </div>
                                 </Card>
                             </div>
                         </div>
