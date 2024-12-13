@@ -10,7 +10,11 @@ export const EmployeeReducer = (state = initialState, action) => {
         case SET_EMPLOYEE:
             return {
                 ...state,
-                employees: action.payload,
+                employees: action.payload.content,
+                totalElements: action.payload.totalElements,
+                pageSize: action.payload.pageSize,
+                currentPage: action.payload.currentPage,
+                keyword: action.payload.keyword,
             };
         case SET_EMPLOYEE_ID:
             return {
