@@ -28,6 +28,7 @@ import {AdminTemplate} from "../Template/AdminTemplate/AdminTemplate";
 import {Admin} from "../Page/Admin/Admin";
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 import HomeScreen from "../Page/Portal/HomeScreen";
+import BusinessPortalDetail from "../Page/Portal/BusinessDetailPage";
 
 export function AppRouter() {
     return (
@@ -59,6 +60,7 @@ export function AppRouter() {
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
+                    <Route path={"/business-portal-detail"} element={<BusinessPortalDetail />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
