@@ -63,7 +63,7 @@ const MajorEditModal = ({open, onClose, major, onSubmit}) => {
                 </Row>
                 <Form.Item label="Mô tả">
                     <Input.TextArea name="description" value={formik.values.description}
-                                    onChange={formik.handleChange}/>
+                                    onChange={formik.handleChange} rows={6}/>
                 </Form.Item>
                 <div className="modal-footer-right">
                     <Button onClick={onClose} style={{marginRight: '10px'}}>Đóng</Button>

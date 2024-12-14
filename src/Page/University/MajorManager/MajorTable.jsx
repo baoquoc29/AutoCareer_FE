@@ -1,13 +1,11 @@
-import {Button, Modal, Space, Table, TablePaginationConfig, Tooltip} from "antd";
+import {Button, Modal, Space, Table, Tooltip} from "antd";
 import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import {toast} from "react-toastify";
-
 const MajorTable = ({data, onInfo, onEdit, onDelete}) => {
-
     const columns = [
         {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center', sorter: (a, b) => a.stt - b.stt},
-        {title: 'Tên ngành', dataIndex: 'name', key: 'name', align: 'center', sorter: (a, b) => a.name.localeCompare(b.name)},
-        {title: 'Mã ngành', dataIndex: 'code', key: 'code', align: 'center', sorter: (a, b) => a.code.localeCompare(b.code)},
+        {title: 'Tên ngành', dataIndex: 'name', key: 'name', align: 'center'},
+        {title: 'Mã ngành', dataIndex: 'code', key: 'code', align: 'center'},
         {title: 'Số lượng sinh viên', dataIndex: 'numberStudent', key: 'numberStudent', align: 'center',},
         {title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="small" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
@@ -26,10 +24,6 @@ const MajorTable = ({data, onInfo, onEdit, onDelete}) => {
             ),
         },
     ];
-
-    const pagination: TablePaginationConfig = {
-        pageSize: 8,
-    };
     const confirmDelete = (record) => {
         Modal.confirm({
             title: 'Xác nhận xóa',
@@ -46,8 +40,9 @@ const MajorTable = ({data, onInfo, onEdit, onDelete}) => {
     };
     return (
         <>
-            <Table size="small" columns={columns} dataSource={data} pagination={pagination}
-                   rowKey={record => record.id}/>
+            <Table locale={{emptyText: 'Không tìm thấy kết quả tương ứng.'}} size="small" columns={columns}
+                   dataSource={data} pagination={false}
+                   rowKey="id"/>
         </>
     )
 }

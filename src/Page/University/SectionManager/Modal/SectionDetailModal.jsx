@@ -5,7 +5,7 @@ const SectionDetailModal = ({open, onClose, section}) => {
     return (
         <>
             <Modal open={open} onCancel={onClose} footer={null}>
-                <h2>Chi tiết khoa</h2>
+                <h2 style={{textAlign:'center'}}>Chi tiết khoa</h2>
                 <p><strong>Tên khoa:</strong> {section.name}</p>
                 <p><strong>Mô tả:</strong> {section.description}</p>
                 <div className="modal-footer-right">
