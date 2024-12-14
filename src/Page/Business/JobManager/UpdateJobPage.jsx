@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {get_job_detail, update_job} from "../../../Redux/actions/JobThunk";
 import {get_all_industry_no_pag} from "../../../Redux/actions/IndustryThunk";
 import {useLocation, useNavigate} from "react-router-dom";
 import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const JobUpdatePage = () => {
     const dispatch = useDispatch();
@@ -16,6 +18,9 @@ const JobUpdatePage = () => {
     const location = useLocation();
     const { jobId } = location.state || {}; // Lấy jobId từ state
     const [date, setDate] = useState(null);
+    const [jobDescription, setJobDescription] = useState("");
+    const [requirement, setRequirement] = useState("");
+    const [benefit, setBenefit] = useState("");
 
     dayjs.extend(utc);
 
@@ -44,11 +49,20 @@ const JobUpdatePage = () => {
 
     // Handle form submission
     const handleSubmit = (values) => {
-        const formattedValues = {
-            ...values,
-        };
-        dispatch(update_job(jobId, formattedValues)); // Dispatch update action
-        navigate("/job-manager"); // Navigate back to job manager
+        Modal.confirm({
+            title: 'Bạn có chắc chắn muốn cập nhật công việc này?',
+            content: 'Các thay đổi sẽ được lưu lại.',
+            okText: 'Có',
+            cancelText: 'Không',
+            onOk: () => {
+                const formattedValues = { ...values };
+                dispatch(update_job(jobId, formattedValues)); // Dispatch update action
+                navigate("/job-manager"); // Navigate back to job manager
+            },
+            onCancel: () => {
+                // Do nothing if canceled
+            },
+        });
     };
 
     const handleDateChange = (value) => {
@@ -119,10 +133,10 @@ const JobUpdatePage = () => {
                                                     >
                                                         <Select placeholder="Chọn cấp bậc">
                                                             <Select.Option value="Không yêu cầu kinh nghiệm">Không yêu cầu kinh nghiệm</Select.Option>
-                                                            <Select.Option value="Intern">Thực tập sinh</Select.Option>
-                                                            <Select.Option value="Fresher">1 năm kinh nghiệm</Select.Option>
-                                                            <Select.Option value="Junior">2 năm kinh nghiệm</Select.Option>
-                                                            <Select.Option value="Senior">3 năm kinh nghiệm</Select.Option>
+                                                            <Select.Option value="Thực tập sinh">Thực tập sinh</Select.Option>
+                                                            <Select.Option value="1 năm kinh nghiệm">1 năm kinh nghiệm</Select.Option>
+                                                            <Select.Option value="2 năm kinh nghiệm">2 năm kinh nghiệm</Select.Option>
+                                                            <Select.Option value="3 năm kinh nghiệm">3 năm kinh nghiệm</Select.Option>
                                                         </Select>
                                                     </Form.Item>
                                                 </Col>
@@ -168,7 +182,12 @@ const JobUpdatePage = () => {
                                                 name="jobDescription"
                                                 rules={[{ required: true, message: "Vui lòng nhập mô tả công việc" }]}
                                             >
-                                                <Input.TextArea rows={4} placeholder="Mô tả công việc" />
+                                                <ReactQuill
+                                                    theme="snow"
+                                                    value={jobDescription}
+                                                    onChange={setJobDescription}
+                                                    placeholder="Mô tả công việc"
+                                                />
                                             </Form.Item>
 
                                             <Form.Item
@@ -176,14 +195,24 @@ const JobUpdatePage = () => {
                                                 name="requirement"
                                                 rules={[{ required: true, message: "Vui lòng nhập yêu cầu công việc" }]}
                                             >
-                                                <Input.TextArea rows={4} placeholder="Yêu cầu công việc" />
+                                                <ReactQuill
+                                                    theme="snow"
+                                                    value={requirement}
+                                                    onChange={setRequirement}
+                                                    placeholder="Yêu cầu công việc"
+                                                />
                                             </Form.Item>
 
                                             <Form.Item
                                                 label="Phúc lợi"
                                                 name="benefit"
                                             >
-                                                <Input.TextArea rows={4} placeholder="Phúc lợi" />
+                                                <ReactQuill
+                                                    theme="snow"
+                                                    value={benefit}
+                                                    onChange={setBenefit}
+                                                    placeholder="Phúc lợi"
+                                                />
                                             </Form.Item>
 
                                             <Form.Item
@@ -196,7 +225,7 @@ const JobUpdatePage = () => {
 
                                             <Row justify="space-between">
                                                 <Col>
-                                                    <Button type="default" danger onClick={() => navigate("/job-manager")}>
+                                                    <Button type="default" danger onClick={() => navigate(-1)}>
                                                         Quay lại
                                                     </Button>
                                                 </Col>

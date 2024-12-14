@@ -307,8 +307,13 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
 
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem     rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố'}]} label="Tỉnh/Thành phố" name="province">
-                            <Select onChange={handleProvinceChange} value={selectedProvince}>
+                        <FormItem
+                            rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố'}]}
+                            label="Tỉnh/Thành phố" name="province">
+                            <Select
+                                onChange={handleProvinceChange}
+                                value={selectedProvince}
+                            >
                                 {provinces.map(province => (
                                     <Option key={province.id} value={province.id}>
                                         {province.name}
@@ -318,7 +323,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem                             rules={[{required: true, message: 'Vui lòng chọn quận/huyện'}]} label="Quận/Huyện" name="district">
+                        <FormItem   rules={[{required: true, message: 'Vui lòng chọn quận/huyện'}]} label="Quận/Huyện" name="district">
                             <Select onChange={handleDistrictChange} value={selectedDistrict}>
                                 {districts.map(district => (
                                     <Option key={district.id} value={district.id}>

@@ -1,13 +1,18 @@
-import React, {useState} from "react";
-import {create_employee, get_all_employees} from "../../../Redux/actions/EmployeeThunk";
+import React, {useEffect, useState} from "react";
+import { update_employee} from "../../../Redux/actions/EmployeeThunk";
 import {useDispatch} from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {toast} from "react-toastify";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
-const EmployeeUpdate = () => {
+const EmployeeEdit = () => {
+    const location = useLocation();
+    const { employee } = location.state;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(null);
+    const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
+    const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
 
     const [formData, setFormData] = useState({
         email: '',
@@ -16,8 +21,27 @@ const EmployeeUpdate = () => {
         gender: '',
         dateOfBirth: '',
         address: '',
-        employeeImage: '',
+        employeeImage: null,
     });
+
+    useEffect(() => {
+        if (employee) {
+            setFormData({
+                email: employee.email || '',
+                name: employee.name || '',
+                phone: employee.phone || '',
+                gender: employee.gender || '',
+                dateOfBirth: employee.dateOfBirth || '',
+                address: employee.address || '',
+                employeeImage: null,
+            });
+            if (employee.employeeImageId) {
+                // Khi có ID ảnh, tạo đường dẫn ảnh từ GET_IMAGE_URI
+                setImagePreview(`${GET_IMAGE_URI}${employee.employeeImageId}`);
+            }
+        }
+    }, [employee]);
+
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -49,18 +73,7 @@ const EmployeeUpdate = () => {
         }
 
 
-        // Gửi dữ liệu lên api
-        // dispatch(create_employee(formData))
-        //     .then(() => {
-        //          navigate('/employee-manager'); // Điều hướng về EmployeeManager
-        //
-        //     })
-        //     .catch((error) => {
-        //         console.error("Lỗi khi thêm nhân viên:", error);
-        //         if(error?.response?.data?.message ==="Email đã tồn tại")
-        //         toast.error(error.response.data.message);
-        //     });
-        dispatch(create_employee(formData))
+        dispatch(update_employee(employee.id, formData))
             .then((success) => {
                 if (success) {
                     navigate('/employee-manager'); // Điều hướng về EmployeeManager
@@ -89,7 +102,6 @@ const EmployeeUpdate = () => {
         // Điều hướng về trang danh sách nhân viên
         navigate('/employee-manager');
     };
-
     return (
         <>
             <section id="content" className="content">
@@ -101,7 +113,7 @@ const EmployeeUpdate = () => {
                                     <div className="row">
                                         <div className="card h-100">
                                             <div className="card-body">
-                                                <h1 className="card-title">Thêm mới nhân viên</h1>
+                                                <h1 className="card-title">Chỉnh sửa nhân viên</h1>
                                                 <form className="row g-3" onSubmit={handleSave}>
                                                     <div className="col-md-6">
                                                         <h4>Tài khoản</h4>
@@ -112,12 +124,14 @@ const EmployeeUpdate = () => {
                                                                 type="email"
                                                                 className="form-control"
                                                                 placeholder="Email"
-                                                                onChange={handleInputChange}
+                                                                disabled={true}
+                                                                value={formData.email}
                                                             />
                                                         </div>
                                                         <h4>Hình ảnh</h4>
                                                         <div className="mb-3 text-center">
-                                                            <label htmlFor="employeeImage" className="form-label">Ảnh đại diện</label>
+                                                            <label htmlFor="employeeImage" className="form-label">Ảnh
+                                                                đại diện</label>
                                                             <div className="mb-3">
                                                                 <input
                                                                     type="file"
@@ -126,7 +140,7 @@ const EmployeeUpdate = () => {
                                                                     onChange={handleImageChange}
                                                                 />
                                                             </div>
-                                                            {imagePreview && (
+                                                            {imagePreview ? (
                                                                 <img
                                                                     src={imagePreview}
                                                                     alt="Ảnh đại diện"
@@ -137,13 +151,26 @@ const EmployeeUpdate = () => {
                                                                         objectFit: "cover",
                                                                     }}
                                                                 />
+                                                            ) : (
+                                                                <div
+                                                                    className="img-thumbnail rounded-circle d-flex justify-content-center align-items-center "
+                                                                    style={{
+                                                                        width: "200px",
+                                                                        height: "200px",
+                                                                        backgroundColor: "#f0f0f0",
+                                                                        color: "#aaa",
+                                                                    }}
+                                                                >
+                                                                    <span>Không có ảnh</span>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
                                                         <h4>Thông tin cá nhân</h4>
                                                         <div className="mb-3">
-                                                            <label htmlFor="name" className="form-label">Họ và tên</label>
+                                                            <label htmlFor="name" className="form-label">Họ và
+                                                                tên</label>
                                                             <input
                                                                 id="name"
                                                                 type="text"
@@ -154,7 +181,8 @@ const EmployeeUpdate = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="phone" className="form-label">Số điện thoại</label>
+                                                            <label htmlFor="phone" className="form-label">Số điện
+                                                                thoại</label>
                                                             <input
                                                                 id="phone"
                                                                 type="text"
@@ -165,7 +193,8 @@ const EmployeeUpdate = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="gender" className="form-label">Giới tính</label>
+                                                            <label htmlFor="gender" className="form-label">Giới
+                                                                tính</label>
                                                             <select
                                                                 id="gender"
                                                                 className="form-control"
@@ -179,7 +208,8 @@ const EmployeeUpdate = () => {
                                                             </select>
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="dateOfBirth" className="form-label">Ngày sinh</label>
+                                                            <label htmlFor="dateOfBirth" className="form-label">Ngày
+                                                                sinh</label>
                                                             <input
                                                                 id="dateOfBirth"
                                                                 type="date"
@@ -189,7 +219,8 @@ const EmployeeUpdate = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="address" className="form-label">Địa chỉ</label>
+                                                            <label htmlFor="address" className="form-label">Địa
+                                                                chỉ</label>
                                                             <input
                                                                 id="address"
                                                                 type="text"
@@ -203,12 +234,46 @@ const EmployeeUpdate = () => {
                                                     <div className="col-12 text-center">
                                                         <button
                                                             type="button"
-                                                            className="btn btn-warning mt-3 mx-3"
+                                                            className="btn btn-outline-danger mt-3 mx-3"
                                                             onClick={handleCancel}
+                                                            style={{
+                                                                borderColor: dangerColor,
+                                                                color: dangerColor,
+                                                                transition: 'background-color 0.3s ease, color 0.3s ease'
+                                                            }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.backgroundColor = dangerColor;
+                                                                e.target.style.color = 'white';
+                                                                e.target.style.transform = 'scale(1.05)';
+
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.backgroundColor = '';
+                                                                e.target.style.color = dangerColor;
+                                                                e.target.style.transform = 'scale(1)';
+
+                                                            }}
                                                         >
                                                             Hủy bỏ
                                                         </button>
-                                                        <button type="submit" className="btn btn-primary mt-3 mx-3">
+                                                        <button
+                                                            type="submit"
+                                                            className="btn btn-outline-primary mt-3 mx-3"
+                                                            style={{
+                                                                borderColor: primaryColor,
+                                                                backgroundColor: primaryColor,
+                                                                color: 'white',
+                                                                transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
+                                                            }}
+                                                            onMouseOver={(e) => {
+                                                                e.target.style.backgroundColor = primaryColor;
+                                                                e.target.style.color = 'white';
+                                                                e.target.style.transform = 'scale(1.05)';
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.target.style.transform = 'scale(1)';
+                                                            }}
+                                                        >
                                                             Lưu lại
                                                         </button>
                                                     </div>
@@ -225,4 +290,4 @@ const EmployeeUpdate = () => {
         </>
     );
 }
-export default EmployeeCreate;
+export default EmployeeEdit;

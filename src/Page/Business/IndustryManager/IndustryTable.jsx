@@ -1,5 +1,6 @@
 import {Button, Modal, Space, Table} from "antd";
 import {DeleteOutlined, EyeOutlined, ReloadOutlined} from "@ant-design/icons";
+import {toast} from "react-toastify";
 
 const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelectChange}) => {
 
@@ -12,6 +13,7 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
             cancelText: 'Hủy',
             onOk() {
                 onDelete(record);
+                toast.success("Xóa ngành nghề thành công")
             },
         });
     };

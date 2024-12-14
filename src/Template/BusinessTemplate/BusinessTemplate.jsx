@@ -7,6 +7,7 @@ import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {Footer} from "../../Component/FooterComponent/Footer";
 
 export function BusinessTemplate() {
+    const business = useSelector(state => state.UserReducer.userData?.business);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {userData} = useSelector((state) => state.UserReducer);
     const toggleSidebar = () => {
@@ -28,9 +29,7 @@ export function BusinessTemplate() {
                     link: "/job-manager",
                     icon: "",
                 },
-                {label: "Danh sách khoa", link: "/section-manager", icon: ""},
                 {label: "Danh sách nhân viên", link: "/employee-manager", icon: ""},
-                {label: "Danh sách ngành ", link: "/major-manager", icon: ""},
             ],
         },
         {
@@ -67,7 +66,7 @@ export function BusinessTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    // profileImg={`${GET_IMAGE_URI}${userData.business.businessImageId}`}
+                    profileImg={business?.businessImageId ? `${GET_IMAGE_URI}${userData.business.businessImageId}` : "placeholder-avatar.jpg"}
                     caption="Quản lý doanh nghiệp"
                     menuItems={menuItems}
                 />

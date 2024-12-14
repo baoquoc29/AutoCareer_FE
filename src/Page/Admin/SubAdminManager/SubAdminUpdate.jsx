@@ -25,6 +25,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
         },
     });
     const handleSubmit = async (values) => {
+        console.log(values);
         const formData = new FormData();
         formData.append("id", subAdminData.id);
         if (values.name) formData.append("name", values.name);
@@ -34,6 +35,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
         if (values.subAdminImage && values.subAdminImage instanceof File) {
             formData.append("subAdminImage", values.subAdminImage);
         }
+        console.log(formData.values);
 
         dispatch(update_sub_admin(formData))
             .then(() => {
