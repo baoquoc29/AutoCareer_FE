@@ -101,8 +101,8 @@ const MajorForm = ({onSubmit, initialValues}) => {
                 <Form.Item label="Mô tả" name="description"
                            validateStatus={formik.errors.description && formik.touched.description ? 'error' : ''}
                            help={formik.errors.description && formik.touched.description ? formik.errors.description : ''}>
-                    <Input.TextArea onChange={formik.handleChange} value={formik.values.description} name="description"
-                                    autoSize={{minRows: 4}}/>
+                    <Input.TextArea  onChange={formik.handleChange} value={formik.values.description} name="description"
+                                     rows={6}/>
                 </Form.Item>
                 <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>
                     <Button type="primary" htmlType="submit" icon={<PlusOutlined/>}>
