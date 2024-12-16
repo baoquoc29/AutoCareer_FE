@@ -49,7 +49,7 @@ export const delete_instructional = (selectedIds) => {
     }
 }
 export const stop_instructional = (id) => {
-    return async (dispatch) => {
+    return async () => {
         try {
             const res = await instructionalService.set_stop_instructional_by_id(id);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -62,7 +62,7 @@ export const stop_instructional = (id) => {
     }
 }
 export const refund_instructional = (id) => {
-    return async (dispatch) => {
+    return async () => {
         try {
             const res = await instructionalService.set_start_instructional_by_id(id);
             if (res.code === STATUS_CODE.SUCCESS) {

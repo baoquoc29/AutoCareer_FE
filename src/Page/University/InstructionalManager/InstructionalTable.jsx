@@ -1,6 +1,8 @@
-import {Button, Modal, Space, Table, Tag, Tooltip} from "antd";
+import {Button, Modal, Space, Table, Tooltip} from "antd";
 import {EditOutlined, EyeOutlined, ReloadOutlined, StopOutlined} from "@ant-design/icons";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {statusRender} from "../../../Component/RenderFunctions/RenderFunctions";
+
 
 const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRowKeys, setSelectedRowKeys, currentPage,pageSize }) => {
     const showConfirm = (title, content, onConfirm) => {
@@ -43,29 +45,7 @@ const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRow
             dataIndex: 'status',
             key: 'status',
             align: 'center',
-            render: (status) => {
-                // Gán màu dựa trên trạng thái
-                let color = "";
-                let displayStatus = "";
-                switch (status.toLowerCase()) {
-                    case "active":
-                        color = "green";
-                        displayStatus = "Hoạt động"; // ACTIVE -> Hoạt động
-                        break;
-                    case "inactive":
-                        color = "volcano";
-                        displayStatus = "Không hoạt động"; // INACTIVE -> Không hoạt động
-                        break;
-                    default:
-                        color = "geekblue"; // Mặc định cho các trạng thái khác
-                        displayStatus = status.toUpperCase(); // Hiển thị trạng thái mặc định
-                }
-                return (
-                    <Tag color={color} key={status}>
-                        {displayStatus} {/* Hiển thị trạng thái đã chuyển */}
-                    </Tag>
-                );
-            }
+            render: statusRender,
         },
         {
             title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => {

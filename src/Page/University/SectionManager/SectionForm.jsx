@@ -56,6 +56,7 @@ export const SectionForm = ({universityId}) => {
                             onChange={formik.handleChange}
                             value={formik.values.description}
                             name="description"
+
                         />
                     </Form.Item>
                     <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>

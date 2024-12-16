@@ -1,8 +1,6 @@
 import {Button, Col, Form, Input, Modal, Row} from "antd";
 import {useFormik} from "formik";
-import {toast} from "react-toastify";
 import MajorValidation from "../../../../Utils/Validation/University/MajorValidation";
-
 
 
 const MajorEditModal = ({open, onClose, major, onSubmit}) => {
@@ -14,7 +12,6 @@ const MajorEditModal = ({open, onClose, major, onSubmit}) => {
         description: major?.description || ''
     };
     const formik = useFormik({
-
         initialValues: initialValues,
         enableReinitialize: true,
         validationSchema: MajorValidation(false),
@@ -25,19 +22,27 @@ const MajorEditModal = ({open, onClose, major, onSubmit}) => {
                 okText: 'Xác nhận',
                 okType: 'primary',
                 cancelText: 'Hủy',
-                onOk() {
+                onOk: async () => {
+                    try {
+                        await onSubmit(values);
+                        onClose();
+                    } catch (error) {
+                        console.error("er:", error);
+                    }
                     // Khi nhấn Xác nhận, thực hiện gửi dữ liệu đi
-                    onSubmit(values);
-                    onClose(); // Đóng modal sau khi submit
-                    toast.success(`Chỉnh sửa chuyên ngành thành công`);
-                },
+                }
             });
         }
     });
+    const handleClose = () => {
+        formik.resetForm(); // Reset form về trạng thái ban đầu
+        onClose(); // Đóng modal
+    };
 
     return (
-        <Modal open={open} onCancel={onClose} footer={null}>
-            <h2>Chỉnh sửa chuyên ngành</h2>
+        <Modal open={open} onCancel={handleClose} footer={null}>
+            <h2 style={{textAlign: 'center'}}>Chỉnh sửa chuyên ngành</h2>
+
             <Form onFinish={formik.handleSubmit} layout="vertical">
                 <Form.Item label="Tên chuyên ngành" required={true}
                            validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}
@@ -61,12 +66,14 @@ const MajorEditModal = ({open, onClose, major, onSubmit}) => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả">
-                    <Input.TextArea name="description" value={formik.values.description}
-                                    onChange={formik.handleChange} rows={6}/>
+                <Form.Item label="Mô tả"
+                           help={formik.errors.description && formik.touched.description ? formik.errors.description : null}
+                           validateStatus={formik.errors.description && formik.touched.description ? 'error' : ''}>
+                    <Input.TextArea name="description" value={formik.values.description} onChange={formik.handleChange}
+                                    rows={6}/>
                 </Form.Item>
                 <div className="modal-footer-right">
-                    <Button onClick={onClose} style={{marginRight: '10px'}}>Đóng</Button>
+                    <Button onClick={handleClose} style={{marginRight: '10px'}}>Đóng</Button>
                     <Button type="primary" htmlType="submit">Lưu</Button>
                 </div>
             </Form>
