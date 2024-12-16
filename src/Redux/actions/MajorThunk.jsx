@@ -97,9 +97,9 @@ export const refund_major = (id) => {
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Cập nhật trạng thái thành công")
             }
-            console.log(res.data)
         } catch (error) {
-            console.log(error);
+            toast.error(error.response.data.message)
+            console.log(error)
         }
     }
 }

@@ -17,7 +17,7 @@ import {toast} from "react-toastify";
 import './Style/Section.css'
 import {CSVLink} from "react-csv";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
-import {Option} from "antd/es/mentions";
+
 
 
 const SectionManager = () => {
@@ -48,6 +48,16 @@ const SectionManager = () => {
             setUniversityId(userData["university"].id);
         }
     }, [userData]);
+    useEffect(() => {
+        const filtered = sections.filter((section) => {
+            const matchesStatus = selectedStatus ? section.status.toLowerCase().trim() === selectedStatus.toLowerCase().trim() : true;
+            const matchesSearch = section.name.toLowerCase().includes(searchText.toLowerCase());
+            return matchesStatus && matchesSearch;
+        });
+        setFilteredData(filtered);
+        setCurrentPage(1); // Reset lại trang khi thay đổi tìm kiếm hoặc trạng thái
+    }, [sections, searchText, selectedStatus]);
+
     const handleDelete = async () => {
         if (selectedRowKeys.length === 0) {
             return; // Nếu không có gì được chọn thì không làm gì
@@ -86,14 +96,20 @@ const SectionManager = () => {
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value);
-        // Lọc các section theo name
-        const filtered = sections.filter((section) =>
-            section.name.toLowerCase().includes(value.toLowerCase()) // Chỉ lọc theo name
-        );
+
+        // Lọc các section theo name và status
+        const filtered = sections.filter((section) => {
+            const matchesSearch = section.name.toLowerCase().includes(value.toLowerCase()); // Lọc theo name
+            const matchesStatus = selectedStatus ? section.status.toLowerCase().trim() === selectedStatus.toLowerCase().trim() : true; // Lọc theo status nếu có
+
+            return matchesSearch && matchesStatus; // Phải thỏa mãn cả 2 điều kiện
+        });
+
         // Nếu không tìm thấy kết quả, hiển thị mảng rỗng
         setFilteredData(filtered);
-        setCurrentPage(1);
+        setCurrentPage(1); // Reset lại trang khi thay đổi tìm kiếm hoặc trạng thái
     };
+
     const handleStatusChange = (value) => {
         setSelectedStatus(value);
         let filtered = sections;
@@ -206,7 +222,7 @@ const SectionManager = () => {
                                         onRefund={handleRefundSection}
                                         selectedRowKeys={selectedRowKeys}
                                         setSelectedRowKeys={setSelectedRowKeys}/>
-                                    <ResultSummary totalElements={filteredData.length}/>
+                                    <ResultSummary totalElements={filteredData.length} />
                                     <div
                                         style={{
                                             display: "flex",
