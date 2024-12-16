@@ -1,6 +1,27 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {listen_for_notifications} from "../../Redux/actions/NotificationThunk";
+import {notification} from "antd";
 
 const NotificationDropdown = () => {
+    const notifications = useSelector(state => state.NotificationReducer.notifications);
+    const noti = useSelector(state => state.NotificationReducer.notification);
+    const [newNotification, setNewNotification] = useState(null);
+    const [unReadNotification, setUnReadNotification] = useState([]);
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        dispatch(listen_for_notifications())
+    },[dispatch])
+    useEffect(()=>{
+        setNewNotification(noti);
+        notification.open({
+            message: '',
+            description: notification.messager,
+            key: noti.id,
+        });
+
+        setUnReadNotification(notifications);
+    },[noti, notifications])
     return (
         <>
             <div className="dropdown">

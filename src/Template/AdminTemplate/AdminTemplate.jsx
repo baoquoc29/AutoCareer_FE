@@ -22,9 +22,9 @@ export function AdminTemplate() {
                 label: 'Tài khoản quản trị viên',
                 link: '/sub-admin-manager',
                 icon: ''
-            }, {label: 'Tài khoản doanh nghiệp', link: '/section-manager', icon: ''}, {
+            }, {label: 'Tài khoản doanh nghiệp', link: '/business-manager', icon: ''}, {
                 label: 'Tài khoản trường học',
-                link: '/major-manager',
+                link: '/university-manager',
                 icon: ''
             },]
         },

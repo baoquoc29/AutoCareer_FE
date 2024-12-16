@@ -9,7 +9,7 @@ import {
     PlusOutlined
 } from "@ant-design/icons";
 import {toast} from "react-toastify";
-import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import SubAdminDetailModal from "./SubAdminDetailModal";
 import SubAdminCreateForm from "./SubAdminCreateForm";
 import SubAdminUpdate from "./SubAdminUpdate";
@@ -156,7 +156,7 @@ const SubAdminManager = () => {
                                                 width: "80px",
                                                 height: "80px",
                                                 borderRadius: "50%",
-                                                border: "2px solid #f0f2f5",
+                                                order: "2px solid #f0f2f5",
                                                 objectFit: "cover",
                                             }}
                                         />

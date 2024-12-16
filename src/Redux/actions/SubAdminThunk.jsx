@@ -15,7 +15,7 @@ export const create_sub_admin = (formData) => {
         try {
             const res = await subAdminService.create(formData);
             console.log(res)
-            if (res === STATUS_CODE.SUCCESS) {
+            if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Thêm thành công")
                 dispatch({
                     type: CREATE_SUB_ADMIN,
