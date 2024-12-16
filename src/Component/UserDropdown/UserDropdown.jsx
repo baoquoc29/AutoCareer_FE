@@ -1,56 +1,21 @@
-import { useDispatch, useSelector } from "react-redux";
-import { GET_IMAGE_URI, TOKEN, USER_LOGIN } from "../../Utils/Setting/Config";
-import { logoutUser } from "../../Redux/actions/UserThunk";
-import { Button } from "antd";
-import { NavLink } from "react-router-dom";
-import { useEffect } from "react";
-import { get_university_id } from "../../Redux/actions/UniversityThunk";
-import { get_business_by_id } from "../../Redux/actions/BusinessThunk";
+import {useDispatch, useSelector} from "react-redux";
+import {GET_IMAGE_URI, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
+import {logoutUser} from "../../Redux/actions/UserThunk";
+import {Button} from "antd";
+import {NavLink} from "react-router-dom";
 
-export const UserDropdown = ({ navigate }) => {
+export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
-
-    const getUserDetails = () => {
-        if (user.university) {
-            return { id: user.university.id, type: 'UNIVERSITY' };
-        } else if (user.business) {
-            return { id: user.business.id, type: 'BUSINESS' };
-        } else {
-            return { id: user.admin.id, type: 'ADMIN' };
-        }
-    };
-
-    const { id: userId, type: userType } = getUserDetails();
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (userType === 'BUSINESS') {
-            dispatch(get_business_by_id(userId));
-        }
-        if (userType === 'UNIVERSITY') {
-            dispatch(get_university_id(userId));
-        }
-        // Add actions for ADMIN or additional types as needed
-    }, [dispatch, userId, userType]);
-
-    const userInfo = useSelector(state => {
-        switch (userType) {
-            case 'UNIVERSITY':
-                return state.UniversityReducer.university;
-            case 'BUSINESS':
-                // Replace with correct path to business info in your store
-                return state.BusinessReducer.business;
-            case 'ADMIN':
-                // Replace with correct path to admin info in your store if needed
-                return state.AdminReducer.admin;
-            default:
-                return null;
-        }
-    });
-
-    // Function for user role checks
+    // Kiểm tra loại người dùng
     const isUniversityUser = user && user.role.name === 'UNIVERSITY';
     const isBusinessUser = user && user.role.name === 'BUSINESS';
+    const isAdminUser = user && user.role.name === 'ADMIN';
+    const isSubAdminUser = user && user.role.name === 'SUB_ADMIN';
+    const isEmployeeUser = user && user.role.name === 'EMPLOYEE';
+
+    const dispatch = useDispatch();
+    const userId = user ? user.id : null;
+    const userType = user ? user.role.name : null;
 
     const handleLogout = async () => {
         const token = localStorage.getItem(TOKEN);
@@ -64,6 +29,29 @@ export const UserDropdown = ({ navigate }) => {
         } else {
             console.log('No token found');
         }
+    };
+    const getUserImage = () => {
+        if (!user) return "aotucareer-logo.svg";
+
+        switch (userType) {
+            case 'UNIVERSITY':
+                return `${GET_IMAGE_URI}${user.university.logoImageId}`;
+            case 'BUSINESS':
+                return `${GET_IMAGE_URI}${user.business.businessImageId}`;
+            case 'SUB_ADMIN':
+                return `${GET_IMAGE_URI}${user.subAdmin.subAdminImageId}`;
+            case 'EMPLOYEE':
+                return `${GET_IMAGE_URI}${user.employee.employeeImageId}`;
+            default:
+                return "aotucareer-logo.svg"; // Fallback ảnh mặc định
+        }
+    };
+    const getUserProfileLink = () => {
+        if (isUniversityUser) return '/profile-university';
+        if (isBusinessUser) return '/profile-business';
+        if (isSubAdminUser) return '/admin-dashboard';
+        if (isEmployeeUser) return '/business';
+        return null;
     };
 
     return (
@@ -83,18 +71,13 @@ export const UserDropdown = ({ navigate }) => {
                         <div className="flex-shrink-0">
                             <img
                                 className="img-sm rounded-circle"
-                                src={`${GET_IMAGE_URI}${
-                                    user
-                                        ? (userType === 'UNIVERSITY'
-                                            ? user.university.logoImageId
-                                            : userType === 'BUSINESS'
-                                                ? user.business.businessImageId
-                                                : userType === 'ADMIN'
-                                                    ? user.admin.adminImageId // Use the appropriate property for admin image
-                                                    : '')
-                                        : ''}`}
+                                src={getUserImage()}
                                 alt="UserNav Picture"
                                 loading="lazy"
+                                onError={(e) => {
+                                    e.target.onerror = null; // Ngăn lặp vô hạn
+                                    e.target.src = "aotucareer-logo.svg"; // Fallback nếu ảnh không tồn tại
+                                }}
                             />
                         </div>
                         <div className="flex-grow-1 ms-3">
@@ -106,13 +89,8 @@ export const UserDropdown = ({ navigate }) => {
                     </div>
                     <div>
                         <div className="list-group list-group-borderless h-100 py-3">
-                            {isUniversityUser && (
-                                <NavLink to={'/profile-university'} className="list-group-item list-group-item-action">
-                                    <i className="demo-pli-male fs-5 me-2"></i> Thông tin
-                                </NavLink>
-                            )}
-                            {isBusinessUser && (
-                                <NavLink to={'/profile-business'} className="list-group-item list-group-item-action">
+                            {getUserProfileLink() && (
+                                <NavLink to={getUserProfileLink()} className="list-group-item list-group-item-action">
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}

@@ -1,10 +1,11 @@
 import {useFormik} from "formik";
 import {Button, Col, Form, Input, Row, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {validateField} from "../../../Utils/Validation/MajorValidation";
 import {useEffect} from "react";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
 import './Style/Major.css'
+import {PlusOutlined} from "@ant-design/icons";
+import MajorValidation from "../../../Utils/Validation/University/MajorValidation";
 
 
 const MajorForm = ({onSubmit, initialValues}) => {
@@ -15,6 +16,7 @@ const MajorForm = ({onSubmit, initialValues}) => {
             dispatch(get_all_sections());
         }
     }, [dispatch, sections.length]);
+
     const formik = useFormik({
         initialValues: {
             sectionId: initialValues?.sectionId || '',
@@ -24,10 +26,19 @@ const MajorForm = ({onSubmit, initialValues}) => {
             description: initialValues?.description || '',
         },
         enableReinitialize: true,
-        onSubmit: async (values) => {
+        validationSchema: MajorValidation(true),
+        onSubmit: async (values,{resetForm}) => {
             try {
                 await onSubmit(values);
-
+                resetForm({
+                    values: {
+                        sectionId: '',
+                        name: '',
+                        code: '',
+                        numberStudent: '',
+                        description: '',
+                    },
+                });
             } catch (err) {
                 console.error("Error submitting form:", err);
             }
@@ -37,7 +48,9 @@ const MajorForm = ({onSubmit, initialValues}) => {
     return (
         <>
             <Form layout="vertical" onFinish={formik.handleSubmit} requiredMark={true} name="trigger">
-                <Form.Item label="Tên khoa" required={true} rules={validateField("section")}>
+                <Form.Item label="Tên khoa" required={true}
+                           validateStatus={formik.errors.sectionId && formik.touched.sectionId ? 'error' : ''}
+                           help={formik.errors.sectionId && formik.touched.sectionId ? formik.errors.sectionId : ''}>
                     <Select style={{width: 340}}
                             showSearch
                             autoFocus={true}
@@ -51,12 +64,12 @@ const MajorForm = ({onSubmit, initialValues}) => {
                             value={formik.values.sectionId || undefined}
                     />
                 </Form.Item>
-
                 <Form.Item
                     label="Tên chuyên ngành"
                     name="name"
                     required={true}
-                    rules={validateField("name")}
+                    validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}
+                    help={formik.errors.name && formik.touched.name ? formik.errors.name : ''}
                 >
                     <Input onChange={formik.handleChange} value={formik.values.name} name="name"/>
                 </Form.Item>
@@ -66,7 +79,8 @@ const MajorForm = ({onSubmit, initialValues}) => {
                             label="Mã chuyên ngành"
                             name="code"
                             required={true}
-                            rules={validateField("code")}
+                            validateStatus={formik.errors.code && formik.touched.code ? 'error' : ''}
+                            help={formik.errors.code && formik.touched.code ? formik.errors.code : ''}
                         >
                             <Input onChange={formik.handleChange} value={formik.values.code} name="code"/>
                         </Form.Item>
@@ -76,19 +90,24 @@ const MajorForm = ({onSubmit, initialValues}) => {
                             label="Số lượng sinh viên"
                             name="numberStudent"
                             required={true}
-                            rules={validateField("numberStudent")}
+                            validateStatus={formik.errors.numberStudent && formik.touched.numberStudent ? 'error' : ''}
+                            help={formik.errors.numberStudent && formik.touched.numberStudent ? formik.errors.numberStudent : ''}
                         >
                             <Input type="number" onChange={formik.handleChange} value={formik.values.numberStudent}
                                    name="numberStudent"/>
                         </Form.Item>
                     </Col>
                 </Row>
-                <Form.Item label="Mô tả" name="description">
-                    <Input.TextArea onChange={formik.handleChange} value={formik.values.description} name="description"
-                                    autoSize={{minRows: 4}}/>
+                <Form.Item label="Mô tả" name="description"
+                           validateStatus={formik.errors.description && formik.touched.description ? 'error' : ''}
+                           help={formik.errors.description && formik.touched.description ? formik.errors.description : ''}>
+                    <Input.TextArea  onChange={formik.handleChange} value={formik.values.description} name="description"
+                                     rows={6}/>
                 </Form.Item>
-                <Form.Item>
-                    <Button  type="primary" htmlType="submit">Thêm</Button>
+                <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <Button type="primary" htmlType="submit" icon={<PlusOutlined/>}>
+                        Thêm
+                    </Button>
                 </Form.Item>
             </Form>
         </>

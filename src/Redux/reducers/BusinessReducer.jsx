@@ -9,12 +9,12 @@ export const BusinessReducer = (state = initialState, action) => {
         case SET_BUSINESS:
             return {
                 ...state,
-                business: action.payload[0] // Lưu dữ liệu vào `business` trong state
+                business: action.payload // Lưu dữ liệu vào `business` trong state
             };
         case UPDATE_BUSINESS:
             return {
                 ...state,
-                business: action.payload // Cập nhật state với payload từ action
+                businessUpdate: action.payload // Cập nhật state với payload từ action
             };
         default:
             return {...state}

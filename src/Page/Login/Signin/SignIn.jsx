@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
 import './SignIn.css'
 import {NavLink, useNavigate} from "react-router-dom";
-import FormInput from "../../../Component/FormInputComponent/FormInputComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser} from "../../../Redux/actions/UserThunk";
 import {useFormik} from "formik";
 import {USER_LOGIN} from "../../../Utils/Setting/Config";
+import SigninValidation from "../../../Utils/Validation/User/SigninValidation";
+import {Form, Input} from "antd";
 
 
 export const SignIn = () => {
@@ -17,6 +18,7 @@ export const SignIn = () => {
             username: "",
             password: ""
         },
+        validationSchema: SigninValidation,
         onSubmit: (values) => {
             dispatch(loginUser(values.username, values.password));
         }
@@ -59,36 +61,32 @@ export const SignIn = () => {
                                         <h1 className="h3">Đăng nhập</h1>
                                         <p>Đăng nhập vào tài khoản của bạn</p>
                                     </div>
-                                    <form className="mt-4" onSubmit={formik.handleSubmit}>
-                                        <div className="mb-3">
-                                            <FormInput
-                                                label="Email"
-                                                type="email"
-                                                name="username"
-                                                value={formik.values.username}
-                                                onChange={formik.handleChange}
-                                                placeholder="Nhập email"
-
-                                            />
-                                        </div>
-                                        <FormInput
-                                            label="Mật khẩu"
-                                            type="password"
-                                            name="password"
-                                            value={formik.values.password}
-                                            onChange={formik.handleChange}
-                                            placeholder="Nhập mật khẩu"
-
-                                        />
-                                        <div className="form-check">
-                                            <input id="_dm-loginCheck" className="form-check-input" type="checkbox"/>
-                                            <label htmlFor="_dm-loginCheck" className="form-check-label">Ghi nhớ đăng
-                                                nhập</label>
-                                        </div>
-                                        <div className="d-grid mt-5">
-                                            <button className="btn btn-primary btn-lg" type="submit">Đăng nhập</button>
-                                        </div>
-                                    </form>
+                                    <Form layout='vertical' onFinish={formik.handleSubmit} requiredMark={true}>
+                                        <Form.Item
+                                            hasFeedback
+                                            label="Email" name="username"
+                                            validateTrigger="onBlur"
+                                            help={formik.errors.username && formik.touched.username ? formik.errors.username : null}
+                                            validateStatus={formik.errors.username && formik.touched.username ? 'error' : ''}>
+                                            <Input value={formik.values.username}
+                                                   onChange={formik.handleChange}/>
+                                        </Form.Item>
+                                        <Form.Item
+                                            hasFeedback
+                                            label="Password" name="password"
+                                            validateTrigger="onBlur"
+                                            help={formik.errors.password && formik.touched.password ? formik.errors.password : null}
+                                            validateStatus={formik.errors.password && formik.touched.password ? 'error' : ''}>
+                                            <Input.Password value={formik.values.password}
+                                                            onChange={formik.handleChange}/>
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <div className="d-grid mt-1">
+                                                <button className="btn btn-primary btn-lg" type="submit">Đăng nhập
+                                                </button>
+                                            </div>
+                                        </Form.Item>
+                                    </Form>
                                     <div className="d-flex justify-content-between gap-md-5 mt-4">
                                         <NavLink to={"/reset-password"} className="btn-link text-decoration-none">Quên
                                             mật khẩu ?</NavLink>

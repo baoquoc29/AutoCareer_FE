@@ -199,4 +199,21 @@ export class baseService {
             throw error
         });
     }
+    deleteData = (url,model) => {
+        const token = localStorage.getItem(TOKEN);
+        const config = {
+            url: `${DOMAIN}/${url}`,
+            method: 'DELETE',
+            data: model,
+        };
+        // Chỉ thêm Authorization nếu đã có token và url không bao gồm "login"
+        if (token && !url.includes("login")) {
+            config.headers = {
+                'Authorization': `Bearer ${token}`
+            };
+        }
+        return Axios(config).then(response => response.data).catch(error => {
+            throw error
+        });
+    }
 }

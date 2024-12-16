@@ -1,0 +1,94 @@
+import {jobService} from "../../Service/JobService/JobService";
+import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB, INACTIVE_JOB} from "../types/JobType";
+import {toast} from "react-toastify";
+
+export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '') => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.get_all_job_of_business_paging(page, size, keyword);
+            const {content, totalElements, pageSize, currentPage} = res.data;
+            if (Array.isArray(res.data.content)) {
+                dispatch({
+                    type: SET_JOBS,
+                    payload: {
+                        content, // Dữ liệu công việc
+                        totalElements, // Tổng số bản ghi
+                        pageSize, // Số bản ghi mỗi trang
+                        currentPage,
+                        keyword,// Trang hiện tại
+                    },
+                });
+            } else {
+                console.error("API returned data that is not an array");
+            }
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
+    };
+};
+
+export const get_job_detail = (id) => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.get_job_by_id(id);
+            dispatch({
+                type: GET_JOB_DETAIL,
+                payload: res.data, // Dữ liệu chi tiết ngành nghề
+            });
+        } catch (error) {
+            console.error("Failed to fetch job details:", error);
+            toast.error(error.response.data.message);
+        }
+    };
+};
+
+export const create_job = (jobData) => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.create_job(jobData);
+            dispatch({
+                type: CREATE_JOB,
+                payload: res.data,
+            });
+            toast.success("Công việc đã được tạo thành công!");
+            dispatch(get_all_job_of_business_paging());
+
+        } catch (error) {
+            console.error("Error creating job:", error);
+            toast.error(error.response.data.message);
+        }
+    };
+};
+
+export const update_job = (jobId, jobData) => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.update_job(jobId, jobData);
+            dispatch({
+                type: UPDATE_JOB, // Action cụ thể để cập nhật job trong store
+                payload: res.data,
+            });
+            dispatch(get_all_job_of_business_paging());
+            toast.success("Cập nhật công việc thành công!");
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    };
+};
+
+export const inactive_job = (jobId) => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.inactive_job(jobId);
+            dispatch({
+                type: INACTIVE_JOB,
+                payload: res.data, // Chỉ cần gửi jobId để cập nhật trạng thái
+            });
+            toast.success(res.data);
+            dispatch(get_all_job_of_business_paging());
+        } catch (error) {
+            console.error("Error inactivating job:", error);
+            toast.error(error.response.data.message);
+        }
+    };
+};
