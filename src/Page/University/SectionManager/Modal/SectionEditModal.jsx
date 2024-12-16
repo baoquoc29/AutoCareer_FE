@@ -46,8 +46,7 @@ const SectionEditModal = ({open, onClose, section, onSubmit, universityId}) => {
             <Modal open={open} onCancel={handleCancel} footer={null}>
                 <h2 style={{textAlign: 'center'}}>Chỉnh sửa khoa</h2>
                 <Form onFinish={formik.handleSubmit} layout={"vertical"}>
-                    <Form.Item label="Tên khoa" required
-                               help={formik.errors.name && formik.touched.name ? formik.errors.name : null}
+                    <Form.Item required={true} label="Tên khoa" help={formik.errors.name && formik.touched.name ? formik.errors.name : null}
                                validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}>
                         <Input name="name" value={formik.values.name} onChange={formik.handleChange}/>
                     </Form.Item>
