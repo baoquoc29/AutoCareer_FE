@@ -15,11 +15,17 @@ export class MajorService extends baseService {
     create_major = (formData) => {
         return this.post(`api/major/create`, formData)
     }
-    delete_major = (id) => {
-        return this.delete(`api/major/delete/${id}`)
+    delete_major = (ids) => {
+        return this.deleteData(`api/major/delete`,ids)
     }
     update_major = (id,formData) => {
         return this.post(`api/major/update/${id}`, formData)
+    }
+    set_stop_major_by_id = (id)=>{
+        return this.post(`api/major/inactive/${id}`)
+    }
+    set_start_major_by_id = (id)=>{
+        return this.post(`api/major/active/${id}`)
     }
 }
 

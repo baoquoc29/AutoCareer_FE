@@ -35,6 +35,7 @@ import HomeScreen from "../Page/Portal/HomeScreen";
 import WorkShopDetails from "../Page/University/WorkShopManager/WorkShopDetails";
 import WorkshopDetailsScreen from "../Page/Portal/WorkshopDetailsScreen";
 import ProfileBusinessEdit from "../Page/ProfileUser/ProfileBusiness/ProfileBusinessEdit";
+import BusinessDetailPage from "../Page/Portal/BusinessDetailPage";
 
 export function AppRouter() {
     return (
@@ -72,7 +73,7 @@ export function AppRouter() {
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
-                    <Route path={"/business-portal-detail"} element={<BusinessPortalDetail />} />
+                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
