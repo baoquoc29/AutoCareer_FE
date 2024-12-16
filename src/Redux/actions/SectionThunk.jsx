@@ -53,8 +53,8 @@ export const update_section = (id, formData) => {
     return async (dispatch) => {
         try {
             const res = await sectionService.update_section(id, formData);
-            console.log('data',res.data)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Cập nhật thành công")
                 dispatch({
                     type: UPDATE_SECTION_ID,
                     payload: res.data
@@ -62,7 +62,8 @@ export const update_section = (id, formData) => {
                 dispatch(get_all_sections());
             }
         } catch (error) {
-            toast.error(error)
+            toast.error(error.response.data.message)
+            throw error;
         }
     }
 }

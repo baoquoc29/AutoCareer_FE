@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Card, Input, Select} from "antd";
+import {Button, Card, Input, Pagination, Select} from "antd";
 import {FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
 import {create_major, delete_major_id, get_all_majors, update_major_id} from "../../../Redux/actions/MajorThunk";
 import MajorTable from "./MajorTable";
@@ -11,61 +11,37 @@ import MajorEditModal from "./Modal/MajorEditModal";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
 import './Style/Major.css'
 import {CSVLink} from "react-csv";
+import ResultSummary from "../../../Component/Paging/ResultsSummary";
 
 
 const MajorManager = () => {
     const dispatch = useDispatch();
     const {majors} = useSelector((state) => state.MajorReducer);// Lấy danh sách chuyên ngành từ Redux
-    const [searchText, setSearchText] = useState('');// Lưu trữ từ khóa tìm kiếm
-    const [filteredData, setFilteredData] = useState([]);// Lưu trữ danh sách chuyên ngành đã lọc
+    const [searchKeyword, setSearchKeyword] = useState(''); // Từ khóa tìm kiếm
     const [open, setOpen] = useState(false);// Trạng thái mở modal chi tiết
     const [editOpen, setEditOpen] = useState(false);// Trạng thái mở modal chỉnh sửa
     const [selectedMajor, setSelectedMajor] = useState(null);// Lưu trữ chuyên ngành đang được chọn
     const [selectedSection, setSelectedSection] = useState('');// Lưu trữ khoa đang được chọn
     const sections = useSelector(state => state.SectionReducer.sections);
-    useEffect(() => {
-        dispatch(get_all_majors());
-    }, [dispatch]);
+    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const [pageSize] = useState(7); // Kích thước trang
+
     useEffect(() => {
         if (sections.length === 0) {
             dispatch(get_all_sections());
         }
     }, [dispatch, sections.length]);
-    // Hàm xử lý tìm kiếm chuyên ngành theo tên hoặc mã
-    const handleSearch = (e) => {
-        const value = e.target.value;
-        setSearchText(value);
-        filterData(value, selectedSection);
-    };
-    // Hàm xử lý thay đổi khoa được chọn
+    useEffect(() => {
+        dispatch(get_all_majors());
+    }, [dispatch])
+
     const handleSectionChange = (value) => {
         setSelectedSection(value);
-        filterData(searchText, value);
     };
-    // Hàm lọc dữ liệu chuyên ngành theo từ khóa và khoa
-    const filterData = (text, sectionId) => {
-        const filtered = majors.filter((major) =>
-            (major.name.toLowerCase().includes(text.toLowerCase()) ||
-                major.code.toLowerCase().includes(text.toLowerCase())) &&
-            (sectionId ? major.sectionId === sectionId : true)
-        );
+    const handleSearchChange = (e) => {
+        setSearchKeyword(e.target.value);
+    };
 
-        if (filtered.length === 0) {
-            setFilteredData([]);
-        } else {
-            // Cập nhật lại số thứ tự (stt) sau khi lọc
-            const updatedFilteredData = filtered.map((major, index) => ({
-                id: major.id,
-                stt: index + 1,  // Cập nhật lại stt trong filteredData
-                name: major.name,
-                code: major.code,
-                numberStudent: major.numberStudent,
-                status: major.status,
-                description: major.description,
-            }));
-            setFilteredData(updatedFilteredData);
-        }
-    };
     const handleInfo = (id) => {
         const major = majors.find((m) => m.id === id);
         setSelectedMajor(major);
@@ -100,14 +76,14 @@ const MajorManager = () => {
                 toast.error(error.messages);
             });
     };
-    const exportToExcel = () => {
-        const dataToExport = filteredData.length > 0 ? filteredData : data;
-        if (dataToExport && dataToExport.length > 0) {
-            toast.success('Tải xuống thành công');
-        } else {
-            toast.error('Không có dữ liệu để xuất');
-        }
-    };
+    // const exportToExcel = () => {
+    //     if (dataToExport && dataToExport.length > 0) {
+    //         toast.success('Tải xuống thành công');
+    //     } else {
+    //         toast.error('Không có dữ liệu để xuất');
+    //     }
+    // };
+
     const headers = [
         {label: 'STT', key: 'stt'},
         {label: 'Tên chuyên ngành', key: 'name'},
@@ -115,6 +91,7 @@ const MajorManager = () => {
         {label: 'Số lượng sinh viên', key: 'numberStudent'},
         {label: 'Mô tả', key: 'description'},
     ];
+
 
     const data = majors.map((major, index) => ({
         id: major.id,
@@ -125,6 +102,24 @@ const MajorManager = () => {
         status: major.status,
         description: major.description,
     }));
+    const filteredData = data.filter((major) =>
+        major.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+        major.code.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+// Calculate start and end index for pagination
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    // Get paginated data
+    const paginatedData = filteredData.slice(startIndex, endIndex);
+    const exportToExcel = () => {
+        const dataToExport = filteredData.length > 0 ? filteredData : sections;
+        if (dataToExport && dataToExport.length > 0) {
+            toast.success('Tải xuống thành công');
+        } else {
+            toast.error('Không có dữ liệu để xuất');
+        }
+    };
 
     return (
         <>
@@ -157,12 +152,12 @@ const MajorManager = () => {
                                             value={selectedSection || undefined}
                                         />
                                         <Input placeholder="Tìm kiếm theo tên hoặc mã ngành "
-                                               value={searchText}
-                                               onChange={handleSearch} prefix={<SearchOutlined/>}/>
+                                               value={searchKeyword}
+                                               onChange={handleSearchChange}  prefix={<SearchOutlined/>}/>
                                         <Button type="default" icon={<FileExcelOutlined/>} onClick={exportToExcel}
                                                 style={{backgroundColor: '#107C41', color: '#FFFFFF'}}>
                                             <CSVLink
-                                                data={filteredData.length > 0 ? filteredData : data}
+                                                data={filteredData}
                                                 headers={headers}
                                                 filename={'DanhSachChuyenNganh.csv'}
                                                 style={{color: 'inherit', textDecoration: 'none'}}
@@ -171,9 +166,25 @@ const MajorManager = () => {
                                             </CSVLink>
                                         </Button>
                                     </div>
-                                    <MajorTable data={filteredData.length > 0 ? filteredData : data}
-                                                onInfo={handleInfo} onDelete={handleDelete}
+                                    <MajorTable data={paginatedData} onInfo={handleInfo} onDelete={handleDelete}
                                                 onEdit={handleEdit}/>
+                                    <ResultSummary totalElements={majors.length}/>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            marginTop: "50px",
+                                            overflow: "hidden",
+                                        }}
+                                    >
+                                        <Pagination
+                                            current={currentPage}
+                                            pageSize={pageSize}
+                                            total={majors.length}
+                                            onChange={(page) => setCurrentPage(page)}
+                                            showSizeChanger={false}
+                                        />
+                                    </div>
                                 </div>
                             </Card>
                         </div>

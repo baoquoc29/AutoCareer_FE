@@ -1,11 +1,9 @@
 import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import {Button, Modal, Space, Table, Tooltip} from "antd";
-import {TablePaginationConfig} from "antd";
-
-const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
+const SectionTable = ({sections, onDelete, onInfo, onEdit,currentPage, pageSize}) => {
     const columns = [
         {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center', sorter: (a, b) => a.stt - b.stt},
-        {title: 'Tên khoa', dataIndex: 'name', key: 'name', align: 'center', sorter: (a, b) => a.name.localeCompare(b.name)},
+        {title: 'Tên khoa', dataIndex: 'name', key: 'name', align: 'center'},
         {title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="middle" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Tooltip title="Xem chi tiết ">
@@ -26,7 +24,7 @@ const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
     ];
     const data = sections.map((section, index) => ({
         id: section.id,
-        stt: index + 1,
+        stt:  (currentPage - 1) * pageSize + index + 1,
         name: section.name,
         status: section.status,
         description: section.description
@@ -44,12 +42,10 @@ const SectionTable = ({sections, onDelete, onInfo, onEdit}) => {
             },
         });
     };
-    const pagination: TablePaginationConfig = {
-        pageSize: 7,
-    }
+
     return (
         <>
-            <Table size='small' columns={columns} dataSource={data} pagination={pagination}
+            <Table locale={{emptyText: "Không tìm thấy kết quả tương ứng."}} size='small' columns={columns} dataSource={data} pagination={false}
                    rowKey={record => record.id}/>
         </>
     )

@@ -11,6 +11,7 @@ import {SubAdminReducer} from "./reducers/SubAdminReducer";
 import {EmployeeReducer} from "./reducers/EmployeeReducer";
 import {BusinessReducer} from "./reducers/BusinessReducer";
 import {JobReducer} from "./reducers/JobReducer";
+import {InstructionalReducer} from "./reducers/InstructionalReducer";
 import {LocationReducer} from "./reducers/LocationReducer";
 import {AdminBusinessReducer} from "./reducers/AdminBusinessReducer";
 import {AdminUniversityReducer} from "./reducers/AdminUniversityReducer";
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     UniversityReducer,
     BusinessReducer,
     LocationReducer,
+    InstructionalReducer,
     AdminBusinessReducer,
     AdminUniversityReducer,
     AdminJobReducer,
