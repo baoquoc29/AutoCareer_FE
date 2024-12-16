@@ -2,7 +2,9 @@ import React from 'react';
 import { Layout, Menu, Button } from 'antd';
 import logo from '../aotucareer-logo.svg';
 import { NavLink } from 'react-router-dom';
+import { Link } from 'react-scroll'; // Import Link from react-scroll
 import './Style/Portal.css';
+
 const { Header: AntHeader } = Layout;
 
 const HeaderPortal = () => {
@@ -10,25 +12,47 @@ const HeaderPortal = () => {
         <AntHeader className="custom-header-portal">
             <div className="header-container-portal">
                 <div className="header-brand-portal">
-                    <div className="brand-wrap-portal">
-                        <NavLink to="/" className="brand-img-portal stretched-link">
-                            <img src={logo} alt="logo" className="logo-portal" style={{ width: "40px", height: "40px" }} />
-                        </NavLink>
-                        <div className="brand-title-portal">Career Bridge</div>
-                    </div>
+                    <NavLink to="/home-screen" className="brand-wrap-portal">
+                        <img src={logo} alt="logo" className="logo-portal" />
+                        <span className="brand-title-portal">Career Bridge</span>
+                    </NavLink>
                 </div>
 
-                <Menu
-                    theme="light"
-                    mode="horizontal"
-                    defaultSelectedKeys={['1']}
-                    className="nav-menu-portal"
-                >
-                    <Menu.Item key="1"><NavLink to="/">Việc làm</NavLink></Menu.Item>
-                    <Menu.Item key="2"><NavLink to="/tools">Hội thảo</NavLink></Menu.Item>
-                    <Menu.Item key="3"><NavLink to="/career-guide">Cẩm nang nghề nghiệp</NavLink></Menu.Item>
-                </Menu>
+                <div className="nav-menu-wrapper">
+                    <Menu
+                        theme="light"
+                        mode="horizontal"
+                        defaultSelectedKeys={['1']}
+                        className="nav-menu-portal"
+                    >
+                        <Menu.Item key="1">
+                            <Link to="job-section" smooth={true} duration={500}>
+                                Việc làm
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                            <Link to="workshop-section" smooth={true} duration={500}>
+                                Hội thảo
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="3">
+                            <Link to="university-section" smooth={true} duration={500}>
+                                Trường học
+                            </Link>
+                        </Menu.Item>
+                        {/* Use Link component for scroll-to functionality */}
+                        <Menu.Item key="4">
+                            <Link to="business-section" smooth={true} duration={500}>
+                                Công ty
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="5">
+                            <Link to="industry-section" smooth={true} duration={500}>Lĩnh vực</Link>
+                        </Menu.Item>
+                    </Menu>
+                </div>
 
+                {/* Buttons */}
                 <div className="header-buttons-portal">
                     <Button type="default" className="btn-login-portal">Đăng nhập</Button>
                     <Button type="primary" className="btn-register-portal">Đăng ký</Button>

@@ -27,6 +27,8 @@ import EmployeeCreate from "../Page/Business/EmployeeManager/EmployeeCreate";
 import ProfileBusiness from "../Page/ProfileUser/ProfileBusiness/ProfileBusiness";
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 import HomeScreen from "../Page/Portal/HomeScreen";
+import WorkShopDetails from "../Page/University/WorkShopManager/WorkShopDetails";
+import WorkshopDetailsScreen from "../Page/Portal/WorkshopDetailsScreen";
 
 export function AppRouter() {
     return (
@@ -40,6 +42,7 @@ export function AppRouter() {
                     <Route path={"/reset-password"} element={<PasswordReminder/>}/>
                     <Route path={"/lock-screen"} element={<LockScreen/>}/>
                     <Route path={"/home-screen"} element={<HomeScreen/>}/>
+                    <Route path={"/test"} element={<WorkshopDetailsScreen/>}/>
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>

@@ -1,0 +1,100 @@
+.job-categories-container {
+    padding: 30px;
+    margin: 109px;
+}
+
+.title-pagination-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.job-count-text {
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.job-category-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    border-radius: 8px;
+    background: #f3f5f7;
+    height: 200px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.jobs-count {
+    color: #1890ff;
+    font-size: 14px;
+}
+
+.ant-pagination {
+    display: flex;
+    justify-content: flex-end;
+}
+/* Custom arrows */
+.prev-arrow, .next-arrow {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    padding: 8px;
+    cursor: pointer;
+
+}
+
+.prev-arrow {
+    left: 10px;
+
+}
+
+.next-arrow {
+    right: 10px;
+}
+
+/* Dot indicators styling */
+.ant-carousel .slick-dots li.slick-active button {
+    background: #1890ff;
+}
+
+.ant-carousel .slick-dots li button {
+    background: #bbb;
+    margin-top: 30px;
+}
+.arrow-left,
+.arrow-right {
+    font-size: 30px; /* Tăng kích thước icon */
+    font-weight: bold;
+    color: #3E7494; /* Màu sắc dễ nhìn */
+    cursor: pointer;
+}
+
+.arrow-left:hover,
+.arrow-right:hover {
+    color: #40a9ff; /* Màu sắc khi hover */
+}

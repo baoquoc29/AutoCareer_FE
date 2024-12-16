@@ -10,12 +10,14 @@ import {WorkShopReducer} from "./reducers/WorkShopReducer";
 import {SubAdminReducer} from "./reducers/SubAdminReducer";
 import {EmployeeReducer} from "./reducers/EmployeeReducer";
 import {BusinessReducer} from "./reducers/BusinessReducer";
+import {PortalReducer} from "./reducers/PortalReducer";
 
 
 const rootReducer = combineReducers({
     UserReducer,
     SectionReducer,
     LoadingReducer,
+    PortalReducer,
     WorkShopReducer,
     MajorReducer,
     IndustryReducer,

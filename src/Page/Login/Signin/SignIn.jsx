@@ -21,6 +21,7 @@ export const SignIn = () => {
             dispatch(loginUser(values.username, values.password));
         }
     })
+
     useEffect(() => {
         if (isAuthenticated) {
             const userDetails = JSON.parse(localStorage.getItem(USER_LOGIN));
