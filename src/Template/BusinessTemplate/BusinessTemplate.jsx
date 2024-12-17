@@ -1,15 +1,23 @@
 import {Header} from "../../Component/HeaderComponent/HeaderCRM/Header";
 import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
-import React, {useState} from "react";
-import {useSelector} from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {Footer} from "../../Component/FooterComponent/Footer";
+import {get_business_by_id} from "../../Redux/actions/BusinessThunk";
 
 export function BusinessTemplate() {
-    const business = useSelector(state => state.UserReducer.userData?.business);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const user=useSelector(state => state.UserReducer.userData);
+    const businessId= user.business.id;
+    const bus=useSelector(state => state.BusinessReducer.business);
+    const dispatch=useDispatch();
+    useEffect(() => {
+        dispatch(get_business_by_id(businessId));
+    }, [dispatch]);
+
     const {userData} = useSelector((state) => state.UserReducer);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleSidebar = () => {
         setIsMenuOpen(!isMenuOpen); // Đảo ngược trạng thái sidebar khi nhấn vào nút
     };
@@ -66,7 +74,7 @@ export function BusinessTemplate() {
                 <SideBar
                     userName={userData.username}
                     userRole={userData.role.name}
-                    profileImg={business?.businessImageId ? `${GET_IMAGE_URI}${userData.business.businessImageId}` : "placeholder-avatar.jpg"}
+                    profileImg={bus?.businessImageId ? `${GET_IMAGE_URI}${bus.businessImageId}` : "placeholder-avatar.jpg"}
                     caption="Quản lý doanh nghiệp"
                     menuItems={menuItems}
                 />

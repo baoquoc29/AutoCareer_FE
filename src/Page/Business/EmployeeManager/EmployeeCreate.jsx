@@ -18,7 +18,7 @@ const EmployeeCreate = () => {
         gender: "",
         dateOfBirth: "",
         address: "",
-        employeeImage: "",
+        employeeImage: null,
     });
 
     const [errors, setErrors] = useState({});
@@ -55,6 +55,7 @@ const EmployeeCreate = () => {
             reader.readAsDataURL(file);
         }
     };
+
 
     const handleInputChange = (event) => {
         const {id, value} = event.target;

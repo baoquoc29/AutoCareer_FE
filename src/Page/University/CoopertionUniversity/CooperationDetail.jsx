@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
 import { get_all_industry_no_pag } from "../../../Redux/actions/IndustryThunk";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { get_business_by_id } from "../../../Redux/actions/BusinessThunk";
 import { Button, Card, Col, Divider, Row, Space, Typography } from "antd";
 import {
@@ -18,28 +18,37 @@ import {
 const { Text, Title } = Typography;
 
 
-const ProfileBusiness = () => {
+const CooperationDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const { cooperation } = location.state;
     const industry = useSelector(state => state.IndustryReducer.industriesNoPag);
-    const business = useSelector(state => state.UserReducer.userData?.business);
     const businessDetail = useSelector(state => state.BusinessReducer.business);
 
     useEffect(() => {
-        if (business?.id) {
+        if (cooperation.business?.id) {
             dispatch(get_all_industry_no_pag());
-            dispatch(get_business_by_id(business.id));
+            dispatch(get_business_by_id(cooperation.business?.id));
         }
-    }, [dispatch, business]);
+    }, [dispatch, cooperation]);
 
 
     const handleEditClick = () => {
-        if (business?.id) {
-            navigate(`/profile-business-edit`, { state: { businessId: business.id }});
+        if (cooperation.business?.id) {
+            navigate(`/profile-business-edit`, { state: { businessId: cooperation.business?.id }});
         }
     };
 
-    if (!business || !businessDetail) {
+    const handleRejectClick= ()=>{
+
+    }
+
+    const handleApproveClick=()=>{
+
+    }
+
+    if (!businessDetail) {
         return (
             <section id="content" className="content">
                 <div className="content__header content__boxed rounded-0">
@@ -62,7 +71,11 @@ const ProfileBusiness = () => {
                                 <Card bordered={false}>
                                     <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
                                         <img
-                                            src={`${GET_IMAGE_URI}${businessDetail["businessImageId"]}`}
+                                            src={
+                                                businessDetail?.businessImageId
+                                                    ?`${GET_IMAGE_URI}${businessDetail["businessImageId"]}`
+                                                    : "placeholder-avatar.jpg"
+                                            }
                                             alt="Logo Doanh Nghiệp"
                                             style={{ maxWidth: "100px", maxHeight: "100px", marginRight: "20px", borderRadius: "8px" }}
                                         />
@@ -138,8 +151,45 @@ const ProfileBusiness = () => {
                                         </Row>
                                     </Space>
                                     <Divider />
-                                    <Row justify="end">
-                                        <Button type="primary" onClick={handleEditClick}>Chỉnh sửa</Button>
+                                    <Row justify="space-between" style={{ marginTop: "20px" }}>
+                                        <Button
+                                            type="default"
+                                            onClick={() => navigate(-1)} // Quay lại trang trước
+                                            style={{
+                                                backgroundColor: "#f0f0f0",  // Màu nền nhẹ
+                                                borderColor: "#d9d9d9",
+                                                color: "#595959",
+                                                marginRight: "10px",  // Thêm khoảng cách giữa 2 nút
+                                            }}
+                                        >
+                                            Quay lại
+                                        </Button>
+                                        <div>
+                                            <Button
+                                                type="primary"
+                                                onClick={handleRejectClick}
+                                                style={{
+                                                    backgroundColor: "#ff4d4f",  // Màu đỏ
+                                                    borderColor: "#ff4d4f",
+                                                    color: "white",
+                                                    marginRight: "10px",  // Thêm khoảng cách giữa 2 nút
+                                                }}
+                                            >
+                                                Từ chối
+                                            </Button>
+                                            <Button
+                                                type="primary"
+                                                onClick={handleApproveClick}
+                                                style={{
+                                                    backgroundColor: 'rgb(31 211 72)',  // Màu xanh lá
+                                                    borderColor: 'rgb(31 211 72)',
+                                                    color: "white",
+                                                }}
+                                            >
+                                                Chấp nhận
+                                            </Button>
+                                        </div>
+
                                     </Row>
                                 </Card>
                             </Col>
@@ -194,4 +244,4 @@ const ProfileBusiness = () => {
     );
 };
 
-export default ProfileBusiness;
+export default CooperationDetail;

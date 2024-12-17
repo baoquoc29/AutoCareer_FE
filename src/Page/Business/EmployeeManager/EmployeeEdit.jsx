@@ -65,18 +65,17 @@ const EmployeeEdit = () => {
 
     const handleSave = (event) => {
         event.preventDefault(); // Ngăn tải lại trang
-
+        console.log(formData);
         // Kiểm tra xem các trường bắt buộc đã được điền đầy đủ chưa
         if (!formData.email || !formData.name || !formData.phone) {
             toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
             return;
         }
 
-
         dispatch(update_employee(employee.id, formData))
             .then((success) => {
                 if (success) {
-                    navigate('/employee-manager'); // Điều hướng về EmployeeManager
+                     navigate(-1); // Điều hướng về EmployeeManager
                 }
             })
             .catch((error) => {

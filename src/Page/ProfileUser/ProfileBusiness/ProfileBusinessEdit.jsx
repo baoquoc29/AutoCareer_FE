@@ -21,7 +21,6 @@ const ProfileBusinessEdit = () => {
     const location = useLocation(); // Sử dụng useLocation để lấy state
     const { businessId } = location.state || {}; // Lấy id từ state được truyền vào
     const {provinces, districts, wards} = useSelector(state => state.LocationReducer);
-
     useEffect(() => {
         if (businessId) {
             dispatch(get_business_by_id(businessId)); // Gọi API với id
@@ -43,9 +42,9 @@ const ProfileBusinessEdit = () => {
                 businessImage: null,
                 licenseImage: null,
                 descriptionLocation: business.location?.description || '',
-                province: business.location?.province?.id,
-                district: business.location?.district?.id,
-                ward: business.location?.ward?.id,
+                provinceId: business.location?.province?.id,
+                districtId: business.location?.district?.id,
+                wardId: business.location?.ward?.id,
 
             })
             setSelectedProvince(business.location?.province?.id);
@@ -65,6 +64,7 @@ const ProfileBusinessEdit = () => {
                 setLicenseImagePreview(`${GET_IMAGE_URI}${business.licenseImageId}`);
             }
         }
+
     }, [business, form, dispatch])
 
     const handleProvinceChange = (provinceId) => {
@@ -125,6 +125,8 @@ const ProfileBusinessEdit = () => {
         console.log('FormData:', formData);
         dispatch(update_business(business.id, formData)); // Dispatch action update
         navigate("/profile-business"); // Chuyển hướng
+
+        console.log(formData)
     };
 
     const handleCancel = () => {
@@ -224,16 +226,16 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Số lượng nhân viên"
                                                             name="companySize"
-                                                            rules={[{
-                                                                required: true,
-                                                                message: "Vui lòng nhập số lượng nhân viên"
-                                                            }, {
-                                                                type: 'number',
-                                                                message: "Vui lòng nhập một số hợp lệ"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    pattern: /^[0-9]*$/,  // Kiểm tra là số
+                                                                    message: "Số lượng nhân viên phải là một số"
+                                                                }
+                                                            ]}
                                                         >
-                                                            <InputNumber min={1} style={{width: '100%'}}/>
+                                                            <Input />
                                                         </Form.Item>
+
 
                                                         <Form.Item
                                                             label="Website"
@@ -285,7 +287,7 @@ const ProfileBusinessEdit = () => {
 
                                                         <Form.Item
                                                             label="Tỉnh/Thành phố"
-                                                            name="province"
+                                                            name="provinceId"
                                                             rules={[{
                                                                 required: true, message: "Vui lòng chọn tỉnh/thành phố"
                                                             }]}
@@ -304,7 +306,7 @@ const ProfileBusinessEdit = () => {
 
                                                         <Form.Item
                                                             label="Huyện"
-                                                            name="district"
+                                                            name="districtId"
                                                             rules={[{
                                                                 required: true, message: "Vui lòng chọn huyện"
                                                             }]}
@@ -323,7 +325,7 @@ const ProfileBusinessEdit = () => {
                                                         </Form.Item>
                                                         <Form.Item
                                                             label="Xã/Phường"
-                                                            name="ward"
+                                                            name="wardId"
                                                             rules={[{
                                                                 required: true, message: "Vui lòng chọn xã/phường"
                                                             }]}
