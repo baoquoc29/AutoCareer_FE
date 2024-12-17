@@ -14,6 +14,7 @@ import {PortalReducer} from "./reducers/PortalReducer";
 import {JobReducer} from "./reducers/JobReducer";
 import {InstructionalReducer} from "./reducers/InstructionalReducer";
 import {LocationReducer} from "./reducers/LocationReducer";
+import {CooperationReducer} from "./reducers/CooperationReducer";
 
 
 const rootReducer = combineReducers({
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     BusinessReducer,
     LocationReducer,
     InstructionalReducer,
+    CooperationReducer,
 
 });
 

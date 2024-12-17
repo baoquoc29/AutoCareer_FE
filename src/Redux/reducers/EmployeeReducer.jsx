@@ -24,6 +24,7 @@ export const EmployeeReducer = (state = initialState, action) => {
         case CREATE_EMPLOYEE:
             return {
                 ...state,
+
             };
         case UPDATE_EMPLOYEE:
             return {

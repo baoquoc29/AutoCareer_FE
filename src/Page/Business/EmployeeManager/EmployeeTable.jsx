@@ -26,7 +26,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             align: 'center',
             render: (employeeImageId) => (
                 <img
-                    src={`${GET_IMAGE_URI}${employeeImageId}`}
+                    src={employeeImageId ? `${GET_IMAGE_URI}${employeeImageId}` : 'placeholder-avatar.jpg'}
                     alt="Ảnh đại diện"
                     className="img-fluid logo-image"
                     style={{
@@ -40,7 +40,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             ),
         },
         {
-            title: "Họ Và Tên",
+            title: "Họ và tên",
             dataIndex: "name",
             key: "name",
             align: 'center',

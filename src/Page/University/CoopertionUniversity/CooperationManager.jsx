@@ -3,105 +3,109 @@ import {Button, Card, Input, Modal, Pagination} from "antd";
 import "antd/dist/reset.css";
 import {DownloadOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    delete_employee_id,
-    get_all_employees_of_business_page,
-    get_employee_by_id
-} from "../../../Redux/actions/EmployeeThunk";
-import EmployeeTable from "./EmployeeTable";
-import EmployeeDetail from "./EmployeeDetail";
+
 import {toast} from "react-toastify";
 import {NavLink, useNavigate} from "react-router-dom";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import * as XLSX from "xlsx";
+import {get_all_cooperation_of_university_page} from "../../../Redux/actions/CooperationThunk";
+import CooperationTable from "./CooperationTable";
+import RejectModal from "../../Modal/RejectModal";
 
-const EmployeeManager = () => {
+const CooperationManager = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {employees} = useSelector(state => state.EmployeeReducer);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const currentPage = useSelector((state) => state.EmployeeReducer.currentPage);
-    const pageSize = useSelector((state) => state.EmployeeReducer.pageSize);
-    const keyword = useSelector((state) => state.EmployeeReducer.keyword);
-    const totalElements = useSelector((state) => state.EmployeeReducer.totalElements);
+    const list_cooperation = useSelector(state => state.CooperationReducer.cooperation);
+    const [selectedCooperation, setSelectedCooperation] = useState(null);
+    const currentPage = useSelector((state) => state.CooperationReducer.currentPage);
+    const pageSize = useSelector((state) => state.CooperationReducer.pageSize);
+    const keyword = useSelector((state) => state.CooperationReducer.keyword);
+    const totalElements = useSelector((state) => state.CooperationReducer.totalElements);
     const [searchText, setSearchText] = useState("");
-    const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
+    const [openRejectModal, setOpenRejectModal] = useState(false);
 
     useEffect(() => {
-        dispatch(get_all_employees_of_business_page(currentPage, pageSize, keyword));
+        dispatch(get_all_cooperation_of_university_page(currentPage, pageSize, keyword));
     }, [dispatch, currentPage, pageSize, load]);
 
-    // useEffect(() => {
-    //     if (selectedEmployee) {
-    //         dispatch(get_employee_by_id(selectedEmployee.id));
-    //     }
-    // }, [dispatch]);
-
-    //xem chi tiet nhan vien
-    const handleInfo = (record) => {
-        setSelectedEmployee(record);
-        setOpen(true);
-    };
-
-    //chinh sua nhan vien
-    const handleEdit = (id) => {
-        const employee = employees.find(e => e.id === id); // Tìm nhân viên theo ID
-        setSelectedEmployee(employee); // Đặt nhân viên được chọn (nếu cần dùng trong component này)
-        navigate(`/employee-edit`, {state: {employee}}); // Điều hướng với đối tượng employee
+    //chinh xem chi tiết doanh nghiệp
+    const handleInfo = (id) => {
+        const cooperation = list_cooperation.find(c => c.id === id);
+        setSelectedCooperation(cooperation);
+        navigate(`/cooperation-detail`, {state: {cooperation}}); // Điều hướng với đối tượng cooperation
     };
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_employees_of_business_page(page, pageSize, searchText)); // Gọi API với trang và kích thước mới
+        dispatch(get_all_cooperation_of_university_page(page, pageSize, searchText)); // Gọi API với trang và kích thước mới
     };
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
-        dispatch(get_all_employees_of_business_page(1, pageSize, value)); // Gọi API với từ khóa
+        dispatch(get_all_cooperation_of_university_page(1, pageSize, value)); // Gọi API với từ khóa
     };
+    //Chap thuan hop tac
+    const handleRejectClick= (message)=>{
+        const data =  ({"id": selectedCooperation.id, "message": message})
+        console.log(data);
+        // call api rejected
+    }
 
-    const confirmDelete = (record) => {
+    //Tu choi hop tac
+    const handleApproveClick= (cooperation)=>{
+
+    }
+    //Xac nhan hop tac
+    const confirmApprove = (cooperation) => {
         Modal.confirm({
-            title: "Xác nhận xóa",
-            content: "Bạn có chắc muốn xóa nhân viên này",
+            title: "Xác nhận hợp tác",
+            content: `Bạn có chắc muốn hợp tác với doanh nghiệp ${cooperation.business?.name}?`, // Thêm tên doanh nghiệp vào content
             okText: "Xác nhận",
             okType: "danger",
             cancelText: "Hủy",
             onOk() {
-                handleDelete(record);
+                handleApproveClick(cooperation);
+            },
+        });
+    };
+
+    //Xac nhan tu choi
+    const clickButtonReject = (cooperation) => {
+        setOpenRejectModal(true);
+        setSelectedCooperation(cooperation)
+    };
+
+    const reject = (message) => {
+        console.log(message);
+        Modal.confirm({
+            title: "Xác nhận hợp tác",
+            content: `Bạn có chắc muốn hợp tác với doanh nghiệp ${selectedCooperation.business?.name}?`, // Thêm tên doanh nghiệp vào content
+            okText: "Xác nhận",
+            okType: "danger",
+            cancelText: "Hủy",
+            onOk() {
+                handleRejectClick(message);
             },
         });
     }
 
-    //xoa nhan vien
-    const handleDelete = (employeeId) => {
-
-        dispatch(delete_employee_id(employeeId))
-            .then(() => {
-                toast.success("Xóa nhân viên thành công")
-                dispatch(get_all_employees_of_business_page())
-            })
-            .catch((error) => {
-                toast.success(error.messages)
-            })
-    }
 
     const exportToExcel = () => {
-        if (employees.length === 0) {
+        if (list_cooperation.length === 0) {
             alert("No data to export!");
             return;
         }
 
         // Chuyển đổi dữ liệu thành định dạng Excel
         const worksheet = XLSX.utils.json_to_sheet(
-            employees.map((employee) => ({
-                "Mã nhân viên": employee.employeeCode,
-                "Họ và tên": employee.name,
-                "Email": employee.email,
-                "Số điện thoại": employee.phone,
-                "Giới tính": employee.gender,
-                "Địa chỉ": employee.address,
+            list_cooperation.map((cooperation) => ({
+                "Tên doanh nghiệp": cooperation.business?.name,
+                "Website": cooperation.business?.website,
+                "Ngày gửi": cooperation.createdAt,
+                "Trạng thái": cooperation.statusConnected,
+                "Email": cooperation.business?.email,
+                "Số điện thoại": cooperation.business?.phone,
             }))
         );
 
@@ -113,20 +117,16 @@ const EmployeeManager = () => {
         XLSX.writeFile(workbook, "Employees.xlsx");
     }
 
-    // const data = employees.map((employee, index) => ({
-    const data = Array.isArray(employees) ? employees.map((employee, index) => ({
-        id: employee.id,
+    const data = Array.isArray(list_cooperation) ? list_cooperation.map((cooperation, index) => ({
+        id: cooperation.id,
+        idBusiness: cooperation.business?.id,
+        business: cooperation.business,
         stt: (currentPage - 1) * pageSize + index + 1,
-        employeeCode: employee.employeeCode,
-        employeeImageId: employee.employeeImageId,
-        name: employee.name,
-        email: employee.email,
-        status: employee.status,
-        gender: employee.gender,
-        phone: employee.phone,
-        dateOfBirth: employee.dateOfBirth,
-        address: employee.address,
-        createdAt: employee.createdAt,
+        businessImageId: cooperation.business?.businessImageId,
+        nameBusiness: cooperation.business?.name,
+        website: cooperation.business?.website,
+        createdAt: cooperation.createdAt,
+        statusConnected: cooperation.statusConnected,
     })) : [];
     return (
         <>
@@ -136,12 +136,12 @@ const EmployeeManager = () => {
                         <div className="mt-auto">
                             <div className="row">
                                 <div className="col-md-12 mb-3">
-                                    <Card title="Danh sách nhân viên">
+                                    <Card title="Danh sách hợp tác">
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between align-items-center mb-3">
                                                 {/* Thanh tìm kiếm */}
                                                 <Input
-                                                    placeholder="Tìm kiếm nhân viên..."
+                                                    placeholder="Tìm kiếm hợp tác..."
                                                     value={searchText}
                                                     onChange={handleSearch}
                                                     prefix={<SearchOutlined/>}
@@ -150,15 +150,6 @@ const EmployeeManager = () => {
 
                                                 {/* Nút hành động */}
                                                 <div className="d-flex">
-                                                    <Button type="primary" icon={<PlusOutlined/>}
-                                                            style={{marginRight: 10}}>
-                                                        <NavLink
-                                                            to="/employee-create"
-                                                            style={{textDecoration: 'none', color: 'inherit'}}
-                                                        >
-                                                            Thêm mới
-                                                        </NavLink>
-                                                    </Button>
                                                     <Button
                                                         type="default"
                                                         icon={<DownloadOutlined/>}
@@ -174,12 +165,11 @@ const EmployeeManager = () => {
                                                 </div>
                                             </div>
 
-
-                                            <EmployeeTable
+                                            <CooperationTable
                                                 data={data}
                                                 onInfo={handleInfo}
-                                                onDetle={confirmDelete}
-                                                onEdit={handleEdit}
+                                                onApprove={confirmApprove}
+                                                onReject={clickButtonReject}
                                             />
                                             <ResultSummary totalElements={totalElements}/>
                                         </div>
@@ -202,12 +192,12 @@ const EmployeeManager = () => {
                     </div>
                 </div>
             </section>
-            <EmployeeDetail
-                open={open}
-                onClose={() => setOpen(false)}
-                employee={selectedEmployee}
-            />
+            <RejectModal
+                open={openRejectModal}
+                onClose={() => setOpenRejectModal(false)}
+                handleReject={reject}
+            ></RejectModal>
         </>
     );
 }
-export default EmployeeManager;
+export default CooperationManager;

@@ -1,5 +1,4 @@
 import {baseService} from "../BaseService";
-import {get_all_employees_of_business_page} from "../../Redux/actions/EmployeeThunk";
 
 export class EmployeeService extends baseService {
     constructor() {
@@ -9,7 +8,7 @@ export class EmployeeService extends baseService {
     get_all_employee_by_id_business = () =>{
       return this.get('api/employees/get-all');
     };
-    get_all_employees_of_business_page = (page, size, keyword) =>{
+    get_all_employees_of_business = (page, size, keyword='') =>{
         return this.get(`api/employees/get-all-employee-of-business?page=${page}&size=${size}&keyword=${keyword}`);
     };
     employee_create = (formData) => {
