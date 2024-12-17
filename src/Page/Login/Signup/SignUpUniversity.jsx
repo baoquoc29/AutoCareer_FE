@@ -32,10 +32,10 @@ export function SignUpUniversity() {
 
     useEffect(() => {
         if (responseSignUpUniversity?.code === 200) {
-            toast.success({ message: 'Đăng ký tài khoản của bạn sẽ được xem xét!' });
+            toast.success('Đăng ký tài khoản của bạn sẽ được xem xét!' );
             navigate("/");
         } else if (responseSignUpUniversity?.message) {
-            toast.error({ message: responseSignUpUniversity.message || 'Mã xác minh không chính xác!' });
+            toast.error (responseSignUpUniversity.message || 'Mã xác minh không chính xác!' );
         }
     }, [responseSignUpUniversity, navigate]);
 
@@ -54,7 +54,7 @@ export function SignUpUniversity() {
     useEffect(() => {
         if (response) {
             if (response.code === 200) {
-                toast.success({ message: 'Mã xác nhận đã được gửi thành công!' });
+                toast.success('Mã xác nhận đã được gửi thành công!' );
                 setTimeout(() => {
                     setIsLoading(false);
                     if (!hasShownModal) {
@@ -66,7 +66,7 @@ export function SignUpUniversity() {
                 setTimer(60); // Reset bộ đếm về 60 giây
             } else if (response.message) {
                 setIsLoading(false);
-                toast.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
+                toast.error(response.message || 'Lỗi trong quá trình gửi mã xác nhận' );
             }
 
         }
@@ -79,13 +79,13 @@ export function SignUpUniversity() {
 
         const { universityName, numberPhone, password, confirmPassword,email } = values;
         if (password !== confirmPassword) {
-            toast.error({ message: 'Mật khẩu và xác nhận mật khẩu không khớp.' });
+            toast.error('Mật khẩu và xác nhận mật khẩu không khớp.' );
             return;
         }
 
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
         if (!passwordRegex.test(password)) {
-            toast.error({ message: 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.' });
+            toast.error('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.');
             return;
         }
 
@@ -113,7 +113,7 @@ export function SignUpUniversity() {
     // Xác nhận mã
     const handleVerifyCodeSubmit = async () => {
         if (!code) {
-            notification.error({ message: 'Vui lòng nhập mã xác nhận.' });
+            notification.error( 'Vui lòng nhập mã xác nhận.' );
             return;
         }
 
