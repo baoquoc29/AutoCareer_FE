@@ -10,7 +10,7 @@ export const MajorReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_MAJOR:
             state.majors = action.payload;
-            return {...state,};
+            return {...state};
         case SET_MAJOR_ID:
             state.majorId = action.payload;
             return {...state,};

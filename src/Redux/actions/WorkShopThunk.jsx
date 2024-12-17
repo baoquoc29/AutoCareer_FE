@@ -8,6 +8,7 @@ import {
     SET_WORK_SHOP,
     UPDATE_WORK_SHOP,
 } from "../types/WorkShopType";
+import {CLEAR_RESPONSE} from "../../Utils/Setting/Config";
 
 // Action to fetch all workshops for a specific university
 export const get_all_workshop_by_university = (idUniversity,page,size) => {
@@ -36,7 +37,7 @@ export const create_work_shop = (formData) => {
 
             dispatch({
                 type: CREATE_WORK_SHOP,
-                payload: res.data,
+                payload: res,
             });
         } catch (error) {
             // Kiểm tra và in lỗi chi tiết
@@ -69,20 +70,10 @@ export const update_work_shop = (id, formData) => {
 
             dispatch({
                 type: UPDATE_WORK_SHOP,
-                payload: res.data,
+                payload: res,
             });
         } catch (error) {
-            // Kiểm tra và in lỗi chi tiết
-            if (error.response) {
-                // Lỗi từ server trả về (ví dụ: 400 hoặc 500)
-                console.error("Error response:", JSON.stringify(error.response, null, 2));
-            } else if (error.request) {
-                // Lỗi khi không nhận được phản hồi từ server
-                console.error("Error request:", error.request);
-            } else {
-                // Các lỗi khác (ví dụ: lỗi cấu hình hoặc lỗi trong mã)
-                console.error("Error message:", error.message);
-            }
+            console.log(error);
         }
     };
 };
@@ -195,4 +186,7 @@ export const get_all_ward = (districtId) => {
             console.error("Error fetching wards:", error);
         }
     };
+};
+export const clearResponseWorkshop = () => {
+    return { type: CLEAR_RESPONSE };
 };

@@ -14,7 +14,7 @@ const SectionEditModal = ({open, onClose, section, onSubmit, universityId}) => {
 
         initialValues: initialValues,
         enableReinitialize: true,
-        validationSchema:SectionValidation,
+        validationSchema: SectionValidation,
         onSubmit: (values) => {
             Modal.confirm({
                 title: 'Xác nhận chỉnh sửa',
@@ -22,29 +22,42 @@ const SectionEditModal = ({open, onClose, section, onSubmit, universityId}) => {
                 okText: 'Xác nhận',
                 okType: 'primary',
                 cancelText: 'Hủy',
-                onOk() {
-                    // Khi nhấn Xác nhận, thực hiện gửi dữ liệu đi
-                    onSubmit(values);
-                    onClose(); // Đóng modal sau khi submit
+                onOk: async () => {
+                    try {
+                        // Khi nhấn Xác nhận, thực hiện gửi dữ liệu đi
+                        await onSubmit(values); // Chờ xử lý cập nhật section
+                        onClose(); // Đóng modal chỉnh sửa sau khi submit thành công
+                    } catch (error) {
+                        // Nếu có lỗi, chỉ đóng modal confirm
+                        console.error("Lỗi khi cập nhật khoa:", error);
+                        // Không đóng modal chỉnh sửa ở đây, chỉ đóng modal confirm
+                    }
                 },
             });
 
         }
     });
+    const handleCancel = () => {
+        formik.resetForm(); // Reset form về trạng thái ban đầu
+        onClose(); // Đóng modal
+    };
     return (
         <>
-            <Modal open={open} onCancel={onClose} footer={null}>
-                <h2>Chỉnh sửa khoa</h2>
+            <Modal open={open} onCancel={handleCancel} footer={null}>
+                <h2 style={{textAlign: 'center'}}>Chỉnh sửa khoa</h2>
                 <Form onFinish={formik.handleSubmit} layout={"vertical"}>
-                    <Form.Item label="Tên khoa">
+                    <Form.Item required={true} label="Tên khoa" help={formik.errors.name && formik.touched.name ? formik.errors.name : null}
+                               validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}>
                         <Input name="name" value={formik.values.name} onChange={formik.handleChange}/>
                     </Form.Item>
-                    <Form.Item label="Mô tả">
-                        <Input.TextArea name="description" autoSize={{minRows: 7}} value={formik.values.description}
+                    <Form.Item label="Mô tả"
+                               help={formik.errors.description && formik.touched.description ? formik.errors.description : null}
+                               validateStatus={formik.errors.description && formik.touched.description ? 'error' : ''}>
+                        <Input.TextArea name="description" rows={6} value={formik.values.description}
                                         onChange={formik.handleChange}/>
                     </Form.Item>
                     <div className="modal-footer-right">
-                        <Button onClick={onClose} style={{marginRight: '10px'}}>Đóng</Button>
+                        <Button onClick={handleCancel} style={{marginRight: '10px'}}>Đóng</Button>
                         <Button type="primary" htmlType="submit">Lưu</Button>
                     </div>
                 </Form>

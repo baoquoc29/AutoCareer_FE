@@ -16,7 +16,7 @@ export class WorkShopService extends baseService {
         return this.postFormData(`api/work-shop`, formData);
     };
     update_work_shop = (id, formData) => {
-        return this.putFormData(`api/work-shop/id/${id}`, formData); // Assuming correct URL
+        return this.putResponse(`api/work-shop/id/${id}`, formData); // Assuming correct URL
     };
     delete_work_shop = (id) => {
         return this.delete(`api/work-shop/id/${id}`);

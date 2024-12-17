@@ -1,5 +1,5 @@
 import {sectionService} from "../../Service/UniversityService/SectionService";
-import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, UPDATE_SECTION, UPDATE_SECTION_ID} from "../types/SectionType";
+import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, UPDATE_SECTION_ID} from "../types/SectionType";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
@@ -33,28 +33,25 @@ export const create_section = (formData) => {
         }
     }
 }
-export const delete_section = (id) => {
-    return async (dispatch) => {
+export const delete_section = (selectedIds) => {
+    return async () => {
         try {
-            const res = await sectionService.delete_section(id);
+            const res = await sectionService.delete_section(selectedIds);
             console.log(res.data)
             if (res.code === STATUS_CODE.SUCCESS) {
-                dispatch({
-                    type: DELETE_SECTION,
-                    payload: res.data
-                })
+                toast.success("Xóa khoa thành công")
             }
         } catch (error) {
             toast.error(error.response.data.message)
-        }
+    }
     }
 }
 export const update_section = (id, formData) => {
     return async (dispatch) => {
         try {
             const res = await sectionService.update_section(id, formData);
-            console.log('data',res.data)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Cập nhật thành công")
                 dispatch({
                     type: UPDATE_SECTION_ID,
                     payload: res.data
@@ -62,7 +59,33 @@ export const update_section = (id, formData) => {
                 dispatch(get_all_sections());
             }
         } catch (error) {
-            toast.error(error)
+            toast.error(error.response.data.message)
+            throw error;
+        }
+    }
+}
+export const stop_section = (id) => {
+    return async () => {
+        try {
+            const res = await sectionService.set_stop_section_by_id(id);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Cập nhật trạng thái thành công")
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+export const refund_section = (id) => {
+    return async () => {
+        try {
+            const res = await sectionService.set_start_section_by_id(id);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Cập nhật trạng thái thành công")
+            }
+            console.log(res.data)
+        } catch (error) {
+            console.log(error);
         }
     }
 }

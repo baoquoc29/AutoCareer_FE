@@ -1,0 +1,141 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+}
+
+.app-container-workshop-details {
+    margin-right: 109px;
+    margin-left: 109px;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #f9f9f9; /* Background color for the entire page */
+}
+
+.content-wrapper-workshop-details {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Allow content to wrap in smaller screens */
+}
+
+.main-content-workshop-details {
+    flex: 2;
+}
+
+.sidebar-info-workshop-details {
+    margin-left: 32px;
+    flex: 1;
+}
+
+
+.view-details-container {
+    position: absolute;
+    top: 10px;  /* Adjust as needed */
+    right: 10px;  /* Adjust as needed */
+}
+
+.view-details-button {
+    background-color: #3E7494;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.image-section-workshop-details {
+    text-align: start;
+    margin-bottom: 16px;
+}
+
+.workshop-image {
+    width: 100px; /* Điều chỉnh kích thước */
+    height: 100px;
+    border-radius: 50%; /* Hình tròn */
+    object-fit: cover;
+}
+
+.view-details-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.view-details-button .arrow-icon {
+    margin-left: 5px; /* Add space between the text and the arrow */
+}
+
+.card-workshop-details {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+
+}
+.university-logo {
+    border-radius: 8px;
+}
+
+.university-name {
+    margin: 0;
+    margin-left: 10px;
+}
+
+.info-item-workshop-details {
+    margin-top: 20px;
+}
+
+.title-section-workshop-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.details-section-workshop-details {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+}
+
+.details-item-workshop-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.upcoming-icon {
+    color: #28a745;
+}
+
+.register-btn-workshop-details {
+    font-weight: bold;
+    position: absolute;
+    top: 20px;  /* Adjust as necessary */
+    right: 20px;  /* Adjust as necessary */
+    margin-top: 30px;
+    background:  #3E7494;
+}
+
+
+.agenda-workshop-details {
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.university-text {
+    font-style: italic;
+    color: #888;
+    margin-top: 8px;
+}
+
+.info-item-workshop-details {
+    margin-bottom: 10px;
+}
+
+

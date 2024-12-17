@@ -8,6 +8,7 @@ import {
     UPDATE_WORK_SHOP,
     GET_ALL_COMPANY_PENDING, GET_ALL_COMPANY_ACCEPT
 } from "../types/WorkShopType";
+import {CLEAR_RESPONSE} from "../../Utils/Setting/Config";
 
 const initialState = {
     workshops: [],
@@ -17,6 +18,7 @@ const initialState = {
     totalRecords: 0,
     pendingCompany: [],
     acceptCompany: [],
+    responseWorkShop: null,
 };
 
 
@@ -32,15 +34,25 @@ export const WorkShopReducer = (state = initialState, action) => {
         case CREATE_WORK_SHOP:
             return {
                 ...state,
-                workshops: [...state.workshops, action.payload], // Add new workshop to the list
+                responseWorkShop: action.payload,
+                workshops: [...state.workshops, action.payload],
             };
         case UPDATE_WORK_SHOP:
-            return {
-                ...state,
-                workshops: state.workshops.map(workshop =>
-                    workshop.id === action.payload.id ? action.payload : workshop // Replace updated workshop
-                ),
-            };
+            if (action.payload && action.payload.code === 200) {
+                return {
+                    ...state,
+                    responseWorkShop: action.payload,
+                    workshops: state.workshops.map(workshop =>
+                        workshop.id === action.payload.data.id ? action.payload.data : workshop
+                    ),
+                };
+            } else {
+                return {
+                    ...state,
+                    responseWorkShop: action.payload, // Lưu response để kiểm tra lỗi nếu cần
+                };
+            }
+
         case GET_ALL_COMPANY_PENDING:
             return {
                 ...state,
@@ -56,7 +68,11 @@ export const WorkShopReducer = (state = initialState, action) => {
                 ...state,
                 provinces: action.payload,
             };
-
+        case CLEAR_RESPONSE:
+            return {
+                ...state,
+                responseWorkShop: null,
+            }
 
         case GET_ALL_DISTRICT_BY_ID:
             return {
