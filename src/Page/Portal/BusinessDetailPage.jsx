@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select} from "antd";
 import {useNavigate} from "react-router-dom";
-import DisplayRichText from "../../../../src/Component/TextEditDisplay/DisplayRichText";
+import DisplayRichText from "../../../src/Component/TextEditDisplay/DisplayRichText";
 import {PlusOutlined} from "@ant-design/icons";
 
 const {Text, Title} = Typography;
 
-const UniversityDetailPortal = () => {
+const BusinessDetailPage = () => {
 
     const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const UniversityDetailPortal = () => {
             <section id="content" className="content">
                 <div className="content__header content__boxed rounded-0">
                     <div className="content__wrap">
-                        <div style={{padding: "20px", maxWidth: "4000px", margin: "0 auto"}}>
+                        <div style={{padding: "20px", maxWidth: "2000px", margin: "0 auto"}}>
                             <div>Không tìm thấy thông tin doanh nghiệp.</div>
                         </div>
                     </div>
@@ -315,4 +315,4 @@ const UniversityDetailPortal = () => {
     );
 };
 
-export default UniversityDetailPortal;
+export default BusinessDetailPage;

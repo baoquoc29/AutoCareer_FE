@@ -224,16 +224,16 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Số lượng nhân viên"
                                                             name="companySize"
-                                                            rules={[{
-                                                                required: true,
-                                                                message: "Vui lòng nhập số lượng nhân viên"
-                                                            }, {
-                                                                type: 'number',
-                                                                message: "Vui lòng nhập một số hợp lệ"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    pattern: /^[0-9]*$/,  // Kiểm tra là số
+                                                                    message: "Số lượng nhân viên phải là một số"
+                                                                }
+                                                            ]}
                                                         >
-                                                            <InputNumber min={1} style={{width: '100%'}}/>
+                                                            <Input />
                                                         </Form.Item>
+
 
                                                         <Form.Item
                                                             label="Website"
