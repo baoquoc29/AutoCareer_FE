@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Upload, Button, Select, DatePicker, Row, Col, Modal } from "antd";
+import {Form, Input, Upload, Button, Select, DatePicker, Row, Col, Modal, notification} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch, useSelector } from "react-redux";
-import { create_work_shop, get_all_ward, get_all_provinces, get_all_district } from "../../../Redux/actions/WorkShopThunk";
+import {
+    create_work_shop,
+    get_all_ward,
+    get_all_provinces,
+    get_all_district,
+    clearResponseWorkshop
+} from "../../../Redux/actions/WorkShopThunk";
 import PropTypes from 'prop-types';
 import { toast } from "react-toastify";
 import styled from 'styled-components';
@@ -82,6 +88,7 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     const {provinces, districts, wards} = useSelector(state => state.WorkShopReducer);
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+    const responseWorkShop = useSelector(state => state.WorkShopReducer.responseWorkShop);
 
     const handlePreview = (file) => {
         if (!file.url && !file.preview) {
@@ -90,7 +97,23 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
         setPreviewImage(file.preview);
         setPreviewVisible(true);
     };
-
+    useEffect(() => {
+        form.resetFields();
+        return () => {
+            dispatch(clearResponseWorkshop());
+        };
+    }, [dispatch]);
+    useEffect(() => {
+        if (responseWorkShop?.code === 200) {
+            toast.success("Hội thảo đã được thêm thành công!");
+            form.resetFields();
+            setFileList([]);
+            setDescription("");
+            onFinish();
+        } else if (responseWorkShop?.message) {
+            notification.error({ message: responseWorkShop.message || 'Lỗi không xác định!' });
+        }
+    }, [responseWorkShop]);
     useEffect(() => {
         dispatch(get_all_provinces());
     }, [dispatch]);
@@ -231,15 +254,7 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
             formData.append("imageWorkshop", fileList[0].originFileObj);
 
             // Gửi request
-            dispatch(create_work_shop(formData))
-                .then(() => {
-                    toast.success("Hội thảo đã được thêm thành công!");
-                    form.resetFields();
-                    setFileList([]);
-                    setDescription("");
-                    onFinish();
-
-                });
+            dispatch(create_work_shop(formData));
         })
             .catch((errorInfo) => {
                 console.log('Validate Failed:', errorInfo);  // Xem lỗi nếu có

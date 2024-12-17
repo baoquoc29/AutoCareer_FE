@@ -6,13 +6,13 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
-const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
+const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
     const columns = [
         {
             title: "STT",
-            dataIndex: "id",
-            key: "id",
-            sorter: (a, b) => a.id - b.id, // Sắp xếp số
+            key: "stt",
+            render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
+            sorter: (a, b) => a.id - b.id,
         },
         {
             title: "Tiêu đề",
