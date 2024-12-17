@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout, Menu, Button } from 'antd';
-import logo from '../aotucareer-logo.svg';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-scroll'; // Import Link from react-scroll
 import './Style/Portal.css';
@@ -13,7 +12,7 @@ const HeaderPortal = () => {
             <div className="header-container-portal">
                 <div className="header-brand-portal">
                     <NavLink to="/home-screen" className="brand-wrap-portal">
-                        <img src={logo} alt="logo" className="logo-portal" />
+                        <img src={"aotucarerr-logo.svg"} alt="logo" className="logo-portal" />
                         <span className="brand-title-portal">Career Bridge</span>
                     </NavLink>
                 </div>

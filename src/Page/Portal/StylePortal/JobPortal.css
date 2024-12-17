@@ -4,19 +4,19 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .job-portal-container {
     margin-left: 109px;
     margin-right: 109px;
-    min-height: calc(90vh); /* Đảm bảo chiều cao tối thiểu là 100% trừ phần header hoặc padding */
+    min-height: calc(80vh);
+    padding: 30px;
     display: flex;
     flex-direction: column;
     background-color: #f9f9f9;
-    padding-bottom: 20px; /* Khoảng cách giữa nội dung và phân trang */
 }
 
 .grid {
     flex: 1; /* Để phần danh sách card chiếm khoảng trống giữa */
-
 }
 
 .job-portal-pagination {
@@ -37,7 +37,6 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng */
     padding: 16px; /* Khoảng cách bên trong */
     transition: box-shadow 0.3s ease; /* Hiệu ứng hover */
-
 }
 
 .job-portal-card:hover {
@@ -101,13 +100,15 @@ body {
     overflow: hidden; /* Cắt nội dung tràn */
     text-overflow: ellipsis; /* Hiển thị "..." nếu quá dài */
 }
-.title-job-portal{
+
+.title-job-portal {
     font-size: 24px;
     margin-top: 20px;
     margin-bottom: 20px;
     font-weight: bold;
     color: #3E7494;
 }
+
 .search-bar {
     background-color: #ffffff;
     border: 1px solid #e3e3e3;
@@ -127,9 +128,7 @@ body {
     align-items: center;
     justify-content: flex-start; /* Căn nội dung về phía đầu */
     gap: 8px;
-    width: 40%;
-    min-width: 250px; /* Đặt chiều rộng tối thiểu để tránh bị co */
-    max-width: 100%; /* Đảm bảo không vượt quá không gian khả dụng */
+    min-width: 250px;
     flex-wrap: nowrap; /* Không cho phép các phần tử xuống dòng */
     overflow: hidden; /* Cắt nội dung thừa nếu quá dài */
 }
@@ -150,7 +149,6 @@ body {
     font-size: 14px;
     color: #8c8c8c;
     font-weight: 500;
-
 }
 
 .dropdown-container {
@@ -179,18 +177,20 @@ body {
     align-items: center;
     justify-content: space-between; /* Đặt "lọc theo" và thanh cuộn cách nhau đều */
     gap: 16px;
-    padding: 8px 0;
     width: 100%;
+    padding: 8px 0;
 }
 
 .location-scroll-container {
     display: flex;
     align-items: center;
-    gap: 12px; /* Khoảng cách giữa nút cuộn và danh sách địa điểm */
+    gap: 12px;
+    scroll-behavior: smooth;
     flex-grow: 1;
-    overflow-x: auto; /* Thanh cuộn ngang tự động nếu cần */
-    white-space: nowrap; /* Ngăn nội dung xuống dòng */
-    width: 200%;
+    overflow-x: auto; /* Horizontal scroll if content overflows */
+    white-space: nowrap; /* Prevent content from wrapping */
+    max-width: 1000px; /* Đảm bảo không vượt quá chiều rộng của .job-portal-container */
+    padding-right: 60px; /* Đảm bảo không bị chồng lên nút cuộn */
 }
 
 .scroll-btn {
@@ -207,7 +207,7 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
+    z-index: 1; /* Ensure it's above the list */
 }
 
 .scroll-btn:hover {
@@ -218,13 +218,16 @@ body {
 .location-list {
     display: flex;
     gap: 10px;
-    scrollbar-width: none; /* bỏ gạch */
     overflow-x: auto;
-    -ms-overflow-style: none; /* Ẩn thanh cuộn (IE, Edge) */
+    white-space: nowrap;
+    max-width: 100%; /* Giới hạn chiều rộng của danh sách không vượt qua container */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    width: fit-content; /* Chiều rộng tự động thay đổi theo nội dung */
 }
 
 .location-list::-webkit-scrollbar {
-    display: none; /* Ẩn thanh cuộn (Chrome, Safari) */
+    display: none; /* Ẩn thanh cuộn trên các trình duyệt Webkit */
 }
 
 .location-item {
@@ -242,7 +245,4 @@ body {
 .location-item:hover {
     background-color: #3E7494;
     color: #fff;
-    scrollbar-width: none; /* bỏ gạch */
-    overflow-x: auto;
-    -ms-overflow-style: none; /* Ẩn thanh cuộn (IE, Edge) */
 }

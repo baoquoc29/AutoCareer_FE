@@ -168,20 +168,29 @@ export class baseService {
 
     get = (url) => {
         const token = localStorage.getItem(TOKEN);
+
         const config = {
             url: `${DOMAIN}/${url}`,
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
             }
         };
-        return Axios(config).then(response => response.data).catch(error => {
-            throw error
-        });
+
+        // Nếu có token, thêm Authorization vào headers
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        return Axios(config)
+            .then(response => response.data)
+            .catch(error => {
+                throw error;
+            });
     }
+
 
     delete = (url) => {
         const token = localStorage.getItem(TOKEN);

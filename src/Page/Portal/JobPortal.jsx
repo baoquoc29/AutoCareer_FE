@@ -1,22 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, Row, Col, Dropdown, Menu, Pagination } from "antd";
+import { Card, Row, Col, Dropdown, Menu, Pagination, Spin } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-
-import { get_all_industry } from "../../Redux/actions/IndustryThunk"; // Thêm import cho action
+import { get_all_industry } from "../../Redux/actions/IndustryThunk";
+import {
+    get_all_job,
+    get_all_job_by_industry,
+    get_all_job_by_province,
+    get_all_job_by_region
+} from "../../Redux/actions/PortalThunk"; // Import get_all_job for initial API call
 import "../Portal/StylePortal/JobPortal.css";
-
-const jobs = [
-    { title: "Nhân Viên Kinh Doanh Tại Hồ Chí Minh", company: "Công Ty TNHH Giải Pháp Kết Nối", salary: "10 - 15 triệu", location: "Hồ Chí Minh, Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Nhân Viên Tài Chính Doanh Nghiệp", company: "Công Ty Cổ Phần Tổng RCC", salary: "Trên 14 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Leader Content Marketing", company: "Công Ty Công Nghệ Giáo Dục Moon.vn", salary: "13 - 22 triệu", location: "Hà Nam & 4 nơi khác", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Trưởng Phòng Kinh Doanh Chuỗi", company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", salary: "25 - 40 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Trưởng Phòng Kinh Doanh Chuỗi", company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", salary: "25 - 40 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Trưởng Phòng Kinh Doanh Chuỗi", company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", salary: "25 - 40 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Trưởng Phòng Kinh Doanh Chuỗi", company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", salary: "25 - 40 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Trưởng Phòng Kinh Doanh Chuỗi", company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", salary: "25 - 40 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-    { title: "Trưởng Phòng Kinh Doanh Chuỗi", company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", salary: "25 - 40 triệu", location: "Hà Nội", imageUrl: "https://via.placeholder.com/90" },
-];
+import {DOMAIN} from "../../Utils/Setting/Config";
 
 const defaultLocations = [
     { id: 0, name: "Tất cả" },
@@ -34,37 +28,79 @@ const experience = [
     "Tất cả", "1-2 năm", "3-5 năm", "Trên 5 năm"
 ];
 
-
 const JobPortal = () => {
-    const industries = useSelector((state) => state.IndustryReducer.industries);
+    const jobs = useSelector((state) => state.PortalReducer.jobList || []);
+    const industries = useSelector((state) => state.IndustryReducer.industriesNoPag);
+    const totalElements = useSelector((state) => state.PortalReducer.totalElements );
     const [filter, setFilter] = useState("location");
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredOptions, setFilteredOptions] = useState(defaultLocations.map(loc => loc.name));
-    const pageSize = 9;
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(9);
     const locationListRef = useRef(null);
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (filter === "industry" ) {
-            dispatch(get_all_industry());
-        }
-    }, [dispatch, filter, industries]);
 
     useEffect(() => {
-        if (filter === "location") {
-            setFilteredOptions(defaultLocations.map(loc => loc.name));
-        } else if (filter === "salary") {
-            setFilteredOptions(salary);
-        } else if (filter === "experience") {
-            setFilteredOptions(experience);
-        } else if (filter === "industry" && industries.length > 0) {
-            setFilteredOptions(industries.map((industry) => industry.name)); // Dữ liệu ngành nghề từ API
+        dispatch(get_all_job(page-1, size)); // Fetch all jobs initially
+        dispatch(get_all_industry()); // Fetch industries
+        console.log("Jobs:", jobs);
+
+    }, [dispatch]);
+
+    // Update filtered options based on selected filter
+    useEffect(() => {
+        switch (filter) {
+            case "location":
+                setFilteredOptions(defaultLocations.map(loc => ({ id: loc.id, name: loc.name })));
+                break;
+            case "salary":
+                setFilteredOptions(salary.map((name, index) => ({ id: index, name })));
+                break;
+            case "experience":
+                setFilteredOptions(experience.map((name, index) => ({ id: index, name })));
+                break;
+            case "industry":
+                if (industries.length > 0) {
+                    setFilteredOptions(industries.map((industry) => ({ id: industry.id, name: industry.name })));
+                }
+                break;
+            default:
+                setFilteredOptions([]);
+                break;
         }
     }, [filter, industries]);
 
+    const onHandleChangeIndustry = (industryId) => {
+        setSelectedOption(industryId);
+        if (filter === "industry") {
+            setLoading(true);
+            dispatch(get_all_job_by_industry(page-1, size, industryId)).finally(() => setLoading(false));  // Call the API with the selected industry
+        }
+    };
+    const onHandLeChangeProvince = (provinceId) => {
+        setSelectedOption(provinceId);
+        if (filter === "location") {
+            setLoading(true);
+            if (provinceId === 3 || provinceId === 7) {
+                dispatch(get_all_job_by_region(page-1, size, provinceId)).finally(() => setLoading(false));
+            } else if (provinceId === 0) {
+                console.log(totalElements);
+                dispatch(get_all_job(page-1, size)).finally(() => setLoading(false));
+            } else {
+                dispatch(get_all_job_by_province(page-1, size, provinceId)).finally(() => setLoading(false));
+            }
+        }
+    };
+
+
     const handleMenuClick = (e) => {
         setFilter(e.key);
+        setSelectedOption(null);  // Reset selection when filter changes
     };
 
     const handlePageChange = (page) => {
@@ -73,19 +109,40 @@ const JobPortal = () => {
 
     const scrollLeft = () => {
         if (locationListRef.current) {
-            locationListRef.current.scrollBy({ left: -100, behavior: "smooth" });
+            smoothScroll(locationListRef.current, -500); // Scroll left by 500 pixels
         }
     };
 
     const scrollRight = () => {
         if (locationListRef.current) {
-            locationListRef.current.scrollBy({ left: 100, behavior: "smooth" });
+            smoothScroll(locationListRef.current, 500); // Scroll right by 500 pixels
         }
     };
 
+    const smoothScroll = (element, distance) => {
+        const start = element.scrollLeft;
+        const change = distance;
+        const duration = 500;
+        let startTime = null;
+
+        const animateScroll = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            element.scrollLeft = start + change * progress;
+
+            if (elapsed < duration) {
+                requestAnimationFrame(animateScroll);
+            }
+        };
+
+        requestAnimationFrame(animateScroll);
+    };
+
     const paginatedJobs = jobs.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
+        (currentPage - 1) * size,
+        currentPage * size
     );
 
     const generateMenu = (handleMenuClick) => (
@@ -115,9 +172,9 @@ const JobPortal = () => {
                         <span className="filter-label">Lọc theo:</span>
                         <Dropdown overlay={generateMenu(handleMenuClick)} trigger={["click"]}>
                             <div className="dropdown-container">
-                <span className="selected-filter">
-                  {filter === "location" ? "Địa điểm" : filter === "salary" ? "Mức lương" : filter === "experience" ? "Kinh nghiệm" : filter === "industry" ? "Ngành nghề" : "Vị trí"}
-                </span>
+                                <span className="selected-filter">
+                                    {filter === "location" ? "Địa điểm" : filter === "salary" ? "Mức lương" : filter === "experience" ? "Kinh nghiệm" : filter === "industry" ? "Ngành nghề" : "Vị trí"}
+                                </span>
                                 <DownOutlined className="dropdown-icon" />
                             </div>
                         </Dropdown>
@@ -126,9 +183,22 @@ const JobPortal = () => {
                     <div className="location-scroll-container">
                         <button className="scroll-btn" onClick={scrollLeft}>{"<"}</button>
                         <div className="location-list" ref={locationListRef}>
-                            {filteredOptions.map((option, index) => (
-                                <div key={index} className="location-item">
-                                    {option}
+                            {filteredOptions.map((option) => (
+                                <div
+                                    key={option.id}
+                                    className={`location-item ${selectedOption === option.id ? "active" : ""}`}
+                                    onClick={() => {
+                                         switch (filter) {
+                                             case "location":
+                                                 onHandLeChangeProvince(option.id);
+                                                 break;
+                                             case "industry":
+                                                 onHandleChangeIndustry(option.id);  // Trigger industry filter API call
+                                                 break;
+                                         }
+                                    }}
+                                >
+                                    {option.name}
                                 </div>
                             ))}
                         </div>
@@ -137,33 +207,42 @@ const JobPortal = () => {
                 </div>
             </Card>
 
-            <Row gutter={[16, 2]} className="grid">
-                {paginatedJobs.map((job, index) => (
-                    <Col xs={24} sm={12} md={8} key={index}>
-                        <div className="job-portal-card">
-                            <div className="job-portal-card-image">
-                                <img src={job.imageUrl} alt={job.title} />
-                            </div>
-                            <div className="job-portal-card-content">
-                                <h3 className="job-portal-card-title">{job.title}</h3>
-                                <p className="job-portal-card-company">{job.company}</p>
-                                <div className="job-portal-card-location-salary">
-                                    <span className="job-portal-card-tag">{job.salary}</span>
-                                    <span className="job-portal-card-tag">{job.location}</span>
+            {loading ? (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
+                    <Spin size="large" />
+                </div>
+            ) : (
+                <>
+                    <Row gutter={[16, 16]} className="grid">
+                        {paginatedJobs.map((job, index) => (
+                            <Col xs={24} sm={12} md={8} key={index}>
+                                <div className="job-portal-card">
+                                    <div className="job-portal-card-image">
+                                        <img src={`${DOMAIN}/api/v1/image/resource?imageId=${job.imageBusinessId}`}/>
+                                    </div>
+                                    <div className="job-portal-card-content">
+                                        <h3 className="job-portal-card-title">{job.title}</h3>
+                                        <p className="job-portal-card-company">{job.businessName}</p>
+                                        <div className="job-portal-card-location-salary">
+                                            <span className="job-portal-card-tag">{job.salary}</span>
+                                            <span className="job-portal-card-tag">{job.province}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </Col>
-                ))}
-            </Row>
-            <Pagination
-                style={{ marginTop: "30px", display: "flex", justifyContent: "center" }}
-                className="job-portal-pagination"
-                current={currentPage}
-                pageSize={pageSize}
-                total={jobs.length}
-                onChange={handlePageChange}
-            />
+                            </Col>
+                        ))}
+                    </Row>
+
+                    <Pagination
+                        style={{ marginTop: "30px", display: "flex", justifyContent: "center" }}
+                        className="job-portal-pagination"
+                        current={currentPage}
+                        pageSize={size}
+                        total={totalElements}
+                        onChange={handlePageChange}
+                    />
+                </>
+            )}
         </div>
     );
 };
