@@ -6,22 +6,22 @@ export class PortalService extends baseService {
         super();
     }
     get_job_all = (page, size) => {
-        return this.get(`api/job/job-all?page=${page}&size=${size}`);
+        return this.getResponse(`api/job/job-all?page=${page}&size=${size}`);
     };
     get_job_by_district = (page, size,districtId) => {
-        return this.get(`api/job/district/${districtId}?page=${page}&size=${size}`);
+        return this.getResponse(`api/job/district/${districtId}?page=${page}&size=${size}`);
     }
     get_job_by_region = (page, size,regionId) => {
-        return this.get(`api/job/district/${regionId}?page=${page}&size=${size}`);
+        return this.getResponse(`api/job/district/${regionId}?page=${page}&size=${size}`);
     }
     get_job_by_province = (page, size,provinceId) => {
-        return this.get(`api/job/district/${provinceId}?page=${page}&size=${size}`);
+        return this.getResponse(`api/job/province/${provinceId}?page=${page}&size=${size}`);
     }
     get_job_by_industry = (page, size,industryId) => {
-        return this.get(`api/job/industry/${industryId}?page=${page}&size=${size}`);
+        return this.getResponse(`api/job/industry/${industryId}?page=${page}&size=${size}`);
     }
     get_job_by_salary = (page, size,minSalary,maxSalary) => {
-        return this.get(`api/job/salary?page=${page}&size=${size}&minSalary=${minSalary}&maxSalary=${maxSalary}`);
+        return this.getResponse(`api/job/salary?page=${page}&size=${size}&minSalary=${minSalary}&maxSalary=${maxSalary}`);
     }
 
 

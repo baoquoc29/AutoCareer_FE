@@ -1,1 +1,2 @@
 export const GET_ALL_JOB_LIST = "GET_JOB_LIST";
+export const CLEAR_JOBS_LIST = "CLEAR_JOBS_LIST";

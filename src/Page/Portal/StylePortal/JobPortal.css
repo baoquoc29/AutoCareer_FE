@@ -8,7 +8,7 @@ body {
 .job-portal-container {
     margin-left: 109px;
     margin-right: 109px;
-    min-height: calc(80vh);
+    min-height: calc(100vh);
     padding: 30px;
     display: flex;
     flex-direction: column;
@@ -71,6 +71,12 @@ body {
     overflow: hidden; /* Cắt nội dung tràn */
     text-overflow: ellipsis; /* Hiển thị "..." nếu quá dài */
 }
+.no-jobs-message {
+    margin-top: 200px;
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
 
 .job-portal-card-company {
     font-size: 12px;
@@ -113,11 +119,11 @@ body {
     background-color: #ffffff;
     border: 1px solid #e3e3e3;
     border-radius: 8px;
-    padding: 10px 15px;
+
     display: flex;
     align-items: center;
     justify-content: space-between; /* Đảm bảo nội dung căn giữa đều */
-    width: 270px;
+    width: 260px;
     height: 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     flex-shrink: 0; /* Không cho phép co lại */
@@ -128,6 +134,7 @@ body {
     align-items: center;
     justify-content: flex-start; /* Căn nội dung về phía đầu */
     gap: 8px;
+
     min-width: 250px;
     flex-wrap: nowrap; /* Không cho phép các phần tử xuống dòng */
     overflow: hidden; /* Cắt nội dung thừa nếu quá dài */
@@ -196,7 +203,7 @@ body {
 .scroll-btn {
     background-color: #fff;
     border: 1px solid #d9d9d9;
-    border-radius: 50%;
+    border-radius: 100%;
     width: 45px;
     height: 32px;
     display: flex;
@@ -245,4 +252,9 @@ body {
 .location-item:hover {
     background-color: #3E7494;
     color: #fff;
+}
+.location-item.active {
+    background-color: #3E7494;
+    color: white;
+    font-weight: bold;
 }
