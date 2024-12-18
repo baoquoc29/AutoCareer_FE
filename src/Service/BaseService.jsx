@@ -165,6 +165,43 @@ export class baseService {
             }
         }
     }
+     getResponse = async (url) => {
+        const token = localStorage.getItem(TOKEN);
+
+        const config = {
+            url: `${DOMAIN}/${url}`,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+            }
+        };
+
+        // Nếu có token, thêm Authorization vào headers
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        try {
+            const response = await axios(config);
+            console.log(response.data)
+            return response.data; // Trả về data từ response
+        } catch (error) {
+            if (error.response) {
+                return {
+                    code: error.response.data.code,
+                    message: error.response.data.message || "Đã xảy ra lỗi.",
+                };
+            } else {
+                return {
+                    code: 500,
+                    message: "Không thể kết nối tới máy chủ.",
+                };
+            }
+        }
+    }
+
 
     get = (url) => {
         const token = localStorage.getItem(TOKEN);

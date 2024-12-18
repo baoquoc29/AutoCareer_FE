@@ -55,7 +55,7 @@ export function SignUpBusiness() {
                 setTimer(60); // Reset bộ đếm về 60 giây
             } else if (response.message) {
                 setIsLoading(false);
-                toast.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
+                toast.error(response.message || 'Lỗi trong quá trình gửi mã xác nhận' );
             }
 
         }
@@ -63,10 +63,10 @@ export function SignUpBusiness() {
 
     useEffect(() => {
         if (responseSignUp?.code === 200) {
-            toast.success({ message: 'Đăng ký tài khoản của bạn sẽ được xem xét!' });
+            toast.success('Đăng ký tài khoản của bạn sẽ được xem xét!' );
             navigate("/");
         } else if (responseSignUp?.message) {
-            toast.error({ message: responseSignUp.message || 'Mã xác minh không chính xác!' });
+            toast.error(responseSignUp.message || 'Mã xác minh không chính xác!' );
         }
     }, [responseSignUp, navigate]);
 
@@ -81,12 +81,12 @@ export function SignUpBusiness() {
         const maxSize = 2 * 1024 * 1024;
 
         if (!isImage) {
-            toast.error({ message: 'Chỉ chấp nhận ảnh.' });
+            toast.error('Chỉ chấp nhận ảnh.' );
             return false;
         }
 
         if (file.size > maxSize) {
-            toast.error({ message: 'Kích thước file không được vượt quá 2MB.' });
+            toast.error('Kích thước file không được vượt quá 2MB.' );
             return false;
         }
 
@@ -98,13 +98,13 @@ export function SignUpBusiness() {
         const { companyName, taxCode, email, phone, password, confirmPassword } = values;
 
         if (password !== confirmPassword) {
-            toast.error({ message: 'Mật khẩu và xác nhận mật khẩu không khớp.' });
+            toast.error('Mật khẩu và xác nhận mật khẩu không khớp.' );
             return;
         }
 
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
         if (!passwordRegex.test(password)) {
-            toast.error( 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.' );
+            toast.error('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.' );
             return;
         }
 
@@ -135,7 +135,7 @@ export function SignUpBusiness() {
     // Xác nhận mã
     const handleVerifyCodeSubmit = async () => {
         if (!code) {
-            toast.error({ message: 'Vui lòng nhập mã xác nhận.' });
+            toast.error('Vui lòng nhập mã xác nhận.' );
             return;
         }
 

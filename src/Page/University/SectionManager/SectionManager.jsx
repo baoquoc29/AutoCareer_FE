@@ -19,7 +19,6 @@ import {CSVLink} from "react-csv";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 
 
-
 const SectionManager = () => {
     const dispatch = useDispatch();
     const sections = useSelector((state) => state.SectionReducer.sections);
@@ -42,7 +41,7 @@ const SectionManager = () => {
     useEffect(() => {
         const data = filteredData.length > 0 || searchText || selectedStatus ? filteredData : sections;
         handlePagination(currentPage, pageSize, data);
-    }, [sections, filteredData, currentPage, pageSize, searchText,selectedStatus]);
+    }, [sections, filteredData, currentPage, pageSize, searchText, selectedStatus]);
     useEffect(() => {
         if (userData && userData["university"]) {
             setUniversityId(userData["university"].id);
@@ -176,12 +175,9 @@ const SectionManager = () => {
                             <Card style={{textAlign: 'center'}} title="Danh sách khoa">
                                 <div className="table-responsive">
                                     <div className="d-flex justify-content-between mb-3">
-                                        <Input placeholder="Tìm kiếm..." value={searchText}
-                                               onChange={handleSearch} prefix={<SearchOutlined/>}
-                                               style={{width: 200}}/>
-                                        <div className="d-flex justify-content-end">
+                                        <div className="d-flex justify-content-start">
                                             <Select
-                                                style={{marginRight:'10px'}}
+                                                style={{marginRight: '10px'}}
                                                 placeholder="Trạng thái"
                                                 value={selectedStatus}
                                                 onChange={handleStatusChange}
@@ -189,8 +185,13 @@ const SectionManager = () => {
                                                 <Select.Option value="">Tất cả</Select.Option>
                                                 <Select.Option value="active">Hoạt động</Select.Option>
                                                 <Select.Option value="inactive">Tạm ngưng</Select.Option>
-
                                             </Select>
+                                            <Input placeholder="Tìm kiếm..." value={searchText}
+                                                   onChange={handleSearch} prefix={<SearchOutlined/>}
+                                                   style={{width: 200}}/>
+                                        </div>
+                                        <div className="d-flex justify-content-end">
+
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -202,7 +203,11 @@ const SectionManager = () => {
                                                 Xóa
                                             </Button>
                                             <Button type="default" icon={<FileExcelOutlined/>}
-                                                    style={{backgroundColor: '#107C41', color: '#FFFFFF',marginLeft: '10px'}}
+                                                    style={{
+                                                        backgroundColor: '#107C41',
+                                                        color: '#FFFFFF',
+                                                        marginLeft: '10px'
+                                                    }}
                                                     onClick={exportToExcel}>
                                                 <CSVLink
                                                     data={filteredData.length > 0 ? filteredData : sections}
@@ -222,7 +227,7 @@ const SectionManager = () => {
                                         onRefund={handleRefundSection}
                                         selectedRowKeys={selectedRowKeys}
                                         setSelectedRowKeys={setSelectedRowKeys}/>
-                                    <ResultSummary totalElements={filteredData.length} />
+                                    <ResultSummary totalElements={filteredData.length}/>
                                     <div
                                         style={{
                                             display: "flex",
