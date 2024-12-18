@@ -1,5 +1,5 @@
 import {Button, Space, Table, Tag, Tooltip} from "antd";
-import {DeleteOutlined, EditOutlined, EyeOutlined, InfoCircleOutlined, ReloadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined,} from "@ant-design/icons";
 import React from "react";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
@@ -44,13 +44,19 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             dataIndex: "name",
             key: "name",
             align: 'center',
-            sorter: (a, b) => a.name.localeCompare(b.name)
+            sorter: (a, b) => a.name.localeCompare(b.name),
+            render: (name) => {
+                return name && name.length > 35 ? `${name.slice(0, 35)} ....` : name;
+            },
         },
         {
             title: "Email",
             dataIndex: "email",
             key: "email",
             align: 'center',
+            render: (email) => {
+                return email && email.length > 40 ? `${email.slice(0, 40)} ....` : email;
+            },
         },
         {
             title: "Số điện thoại",
@@ -104,17 +110,6 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
                                 onClick={() => onDetle(record.id)}/>
                     </Tooltip>
                 </Space>
-                // <Space size="middle">
-                //     <Button icon={<InfoCircleOutlined/>} onClick={() => onInfo(record)}
-                //             /*disabled={record.status !== 'ACTIVE'}*//>
-                //     <Button color="primary" icon={<EditOutlined/>} onClick={() => onEdit(record)}
-                //             disabled={record.status !== 'ACTIVE'}/>
-                //     {record.status === 'ACTIVE' ? (
-                //         <Button danger={true} icon={<DeleteOutlined/>} onClick={() => onDetle(record.id)}/>
-                //     ) : (
-                //         <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>
-                //     )}
-                // </Space>
             ),
         },
     ];

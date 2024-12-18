@@ -99,7 +99,6 @@ const ProfileBusinessEdit = () => {
     };
 
     const handleSubmit = (values) => {
-        console.log("Form values:", values);
 
         const formData = new FormData();
 
@@ -122,11 +121,8 @@ const ProfileBusinessEdit = () => {
             formData.append("licenseImage", licenseImageFile);
         }
 
-        console.log('FormData:', formData);
         dispatch(update_business(business.id, formData)); // Dispatch action update
         navigate("/profile-business"); // Chuyển hướng
-
-        console.log(formData)
     };
 
     const handleCancel = () => {
