@@ -14,7 +14,6 @@ import MajorManager from "../Page/University/MajorManager/MajorManager";
 import InstructionalManager from "../Page/University/InstructionalManager/InstructionalManager";
 import SectionManager from "../Page/University/SectionManager/SectionManager";
 import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager";
-import InstructionalEdit from "../Page/University/InstructionalManager/Modal/InstructionalEdit";
 import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
 import ProfileUniversityEdit from "../Page/ProfileUser/ProfileUniversity/ProfileUniversityEdit";
 import {BusinessTemplate} from "../Template/BusinessTemplate/BusinessTemplate";
@@ -54,7 +53,6 @@ export function AppRouter() {
                     <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
                     <Route path={"/major-manager"} element={<MajorManager/>}/>
                     <Route path={"/instructional-manager"} element={<InstructionalManager/>}/>
-                    <Route path={"/instructional-edit"} element={<InstructionalEdit/>}/>
                     <Route path={"/section-manager"} element={<SectionManager/>}/>
                     <Route path={"/workshop-manager"} element={<WorkShopManager/>}/>
                 </Route>

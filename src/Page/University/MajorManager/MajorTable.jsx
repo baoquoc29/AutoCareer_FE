@@ -6,7 +6,6 @@ const MajorTable = ({
                         data,
                         onInfo,
                         onEdit,
-                        onDelete,
                         onStop,
                         onRefund,
                         selectedRowKeys,
