@@ -55,6 +55,7 @@ const CooperationManager = () => {
     //Tu choi hop tac
     const handleApproveClick= (cooperation)=>{
 
+
     }
     //Xac nhan hop tac
     const confirmApprove = (cooperation) => {

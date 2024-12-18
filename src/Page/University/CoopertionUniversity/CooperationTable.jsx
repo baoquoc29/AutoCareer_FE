@@ -96,36 +96,61 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
             },
         },
         {
-            title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
+            title: 'Thao tác',
+            key: 'actions',
+            align: 'center',
+            render: (text, record) => (
                 <Space size="small" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                     <Tooltip title="Xem chi tiết">
-                        <Button type={"primary"} icon={<EyeOutlined />} onClick={() => onInfo(record.id)} />
+                        <Button
+                            type="primary"
+                            icon={<EyeOutlined />}
+                            onClick={() => onInfo(record.id)}
+                        />
                     </Tooltip>
 
-                    {record.statusConnected.toLowerCase() === "pending" && (
-                        <>
-                            <Tooltip title="Chấp nhận">
-                                <Button
-                                    type="default"
-                                    icon={<CheckOutlined />}
-                                    style={{
-                                        backgroundColor: 'rgb(31 211 72)', // Màu xanh lá cây
-                                        borderColor: 'rgb(31 211 72)',    // Viền màu xanh lá cây
-                                        color: 'white',                    // Chữ màu trắng
-                                    }}
-                                    onClick={() => onApprove(record)} // Đổi tên phương thức từ onEdit nếu cần
-                                />
-                            </Tooltip>
-                            <Tooltip title="Từ chối">
-                                <Button variant={"solid"} color={"danger"} icon={<CloseOutlined />}
-                                        onClick={() => onReject(record)}/>
-                            </Tooltip>
-                        </>
-                    )}
+                    <>
+                        <Tooltip title="Chấp nhận">
+                            <Button
+                                type="default"
+                                icon={<CheckOutlined />}
+                                style={{
+                                    backgroundColor: record.statusConnected.toLowerCase() === "pending"
+                                        ? 'rgb(31 211 72)' // Màu xanh lá cây nếu là pending
+                                        : 'rgb(180, 180, 180)', // Màu xám nếu không phải pending
+                                    borderColor: record.statusConnected.toLowerCase() === "pending"
+                                        ? 'rgb(31 211 72)' // Viền xanh lá cây
+                                        : 'rgb(180, 180, 180)', // Viền xám
+                                    color: 'white', // Chữ màu trắng
+                                }}
+                                disabled={record.statusConnected.toLowerCase() !== "pending"} // Vô hiệu hóa nếu không phải pending
+                                onClick={() => onApprove(record)}
+                            />
+                        </Tooltip>
+
+                        <Tooltip title="Từ chối">
+                            <Button
+                                type="default"
+                                icon={<CloseOutlined />}
+                                style={{
+                                    backgroundColor: record.statusConnected.toLowerCase() === "pending" || record.statusConnected.toLowerCase() === "approved"
+                                        ? 'rgb(255, 99, 71)' // Màu đỏ nếu là pending hoặc approved
+                                        : 'rgb(180, 180, 180)', // Màu xám nếu không phải pending/approved
+                                    borderColor: record.statusConnected.toLowerCase() === "pending" || record.statusConnected.toLowerCase() === "approved"
+                                        ? 'rgb(255, 99, 71)' // Viền đỏ
+                                        : 'rgb(180, 180, 180)', // Viền xám
+                                    color: 'white', // Chữ màu trắng
+                                }}
+                                disabled={record.statusConnected.toLowerCase() !== "pending" && record.statusConnected.toLowerCase() !== "approved"} // Chỉ vô hiệu hóa nếu không phải pending hoặc approved
+                                onClick={() => onReject(record)}
+                            />
+                        </Tooltip>
+                    </>
                 </Space>
             ),
         },
+
     ];
     return (
         <>
