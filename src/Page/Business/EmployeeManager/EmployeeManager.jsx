@@ -5,25 +5,26 @@ import {DownloadOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons"
 import {useDispatch, useSelector} from "react-redux";
 import {
     delete_employee_id,
-    get_all_employees, get_all_employees_of_business_page,
+    get_all_employees_of_business_page,
     get_employee_by_id
 } from "../../../Redux/actions/EmployeeThunk";
 import EmployeeTable from "./EmployeeTable";
 import EmployeeDetail from "./EmployeeDetail";
 import {toast} from "react-toastify";
 import {NavLink, useNavigate} from "react-router-dom";
+import ResultSummary from "../../../Component/Paging/ResultsSummary";
+import * as XLSX from "xlsx";
 
 const EmployeeManager = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {employees}= useSelector(state => state.EmployeeReducer);
+    const {employees} = useSelector(state => state.EmployeeReducer);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const currentPage=useSelector((state) => state.EmployeeReducer.currentPage);
-    const pageSize=useSelector((state) => state.EmployeeReducer.pageSize);
-    const keyword=useSelector((state) => state.EmployeeReducer.keyword);
-    const totalElements=useSelector((state) => state.EmployeeReducer.totalElements);
+    const currentPage = useSelector((state) => state.EmployeeReducer.currentPage);
+    const pageSize = useSelector((state) => state.EmployeeReducer.pageSize);
+    const keyword = useSelector((state) => state.EmployeeReducer.keyword);
+    const totalElements = useSelector((state) => state.EmployeeReducer.totalElements);
     const [searchText, setSearchText] = useState("");
-    // const [filteredData, setFilteredData] = useState([]);
     const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
 
@@ -32,14 +33,10 @@ const EmployeeManager = () => {
     }, [dispatch, currentPage, pageSize, load]);
 
     // useEffect(() => {
-    //     dispatch(get_all_employees());
+    //     if (selectedEmployee) {
+    //         dispatch(get_employee_by_id(selectedEmployee.id));
+    //     }
     // }, [dispatch]);
-
-    useEffect(() => {
-        if (selectedEmployee) {
-            dispatch(get_employee_by_id(selectedEmployee.id));
-        }
-    }, [dispatch]);
 
     //xem chi tiet nhan vien
     const handleInfo = (record) => {
@@ -51,7 +48,7 @@ const EmployeeManager = () => {
     const handleEdit = (id) => {
         const employee = employees.find(e => e.id === id); // Tìm nhân viên theo ID
         setSelectedEmployee(employee); // Đặt nhân viên được chọn (nếu cần dùng trong component này)
-        navigate(`/employee-edit`, { state: { employee } }); // Điều hướng với đối tượng employee
+        navigate(`/employee-edit`, {state: {employee}}); // Điều hướng với đối tượng employee
     };
 
     const handlePageChange = (page, pageSize) => {
@@ -70,7 +67,7 @@ const EmployeeManager = () => {
             content: "Bạn có chắc muốn xóa nhân viên này",
             okText: "Xác nhận",
             okType: "danger",
-            cancelText:"Hủy",
+            cancelText: "Hủy",
             onOk() {
                 handleDelete(record);
             },
@@ -83,17 +80,43 @@ const EmployeeManager = () => {
         dispatch(delete_employee_id(employeeId))
             .then(() => {
                 toast.success("Xóa nhân viên thành công")
-                dispatch(get_all_employees())
+                dispatch(get_all_employees_of_business_page())
             })
             .catch((error) => {
                 toast.success(error.messages)
             })
     }
 
+    const exportToExcel = () => {
+        if (employees.length === 0) {
+            alert("No data to export!");
+            return;
+        }
+
+        // Chuyển đổi dữ liệu thành định dạng Excel
+        const worksheet = XLSX.utils.json_to_sheet(
+            employees.map((employee) => ({
+                "Mã nhân viên": employee.employeeCode,
+                "Họ và tên": employee.name,
+                "Email": employee.email,
+                "Số điện thoại": employee.phone,
+                "Giới tính": employee.gender,
+                "Địa chỉ": employee.address,
+            }))
+        );
+
+        // Tạo workbook mới và thêm worksheet
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Employees");
+
+        // Xuất file Excel
+        XLSX.writeFile(workbook, "Employees.xlsx");
+    }
+
     // const data = employees.map((employee, index) => ({
     const data = Array.isArray(employees) ? employees.map((employee, index) => ({
         id: employee.id,
-        stt: index + 1,
+        stt: (currentPage - 1) * pageSize + index + 1,
         employeeCode: employee.employeeCode,
         employeeImageId: employee.employeeImageId,
         name: employee.name,
@@ -104,8 +127,7 @@ const EmployeeManager = () => {
         dateOfBirth: employee.dateOfBirth,
         address: employee.address,
         createdAt: employee.createdAt,
-    })):[];
-    console.log(data)
+    })) : [];
     return (
         <>
             <section id="content" className="content">
@@ -140,7 +162,7 @@ const EmployeeManager = () => {
                                                     <Button
                                                         type="default"
                                                         icon={<DownloadOutlined/>}
-                                                        /*onClick={exportToExcelSection}*/
+                                                        onClick={exportToExcel}
                                                         style={{
                                                             backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
                                                             borderColor: '#1d8f29',      // Màu viền
@@ -159,14 +181,20 @@ const EmployeeManager = () => {
                                                 onDetle={confirmDelete}
                                                 onEdit={handleEdit}
                                             />
+                                            <ResultSummary totalElements={totalElements}/>
                                         </div>
-                                        <Pagination
-                                            current={currentPage}
-                                            pageSize={pageSize}
-                                            total={totalElements}
-                                            onChange={handlePageChange}
-                                            className="text-center mt-3"
-                                        />
+                                        <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
+                                            <Pagination
+                                                current={currentPage} // Gán mặc định nếu currentPage không hợp lệ
+                                                pageSize={pageSize}   // Gán mặc định nếu pageSize không hợp lệ
+                                                defaultPageSize={7}
+                                                defaultCurrent={1}
+                                                total={totalElements} // Gán mặc định nếu totalElements không hợp lệ
+                                                onChange={handlePageChange}
+                                                showSizeChanger={true}
+                                                pageSizeOptions={[7, 10, 20, 50, 100]} // Đảm bảo mọi giá trị trong mảng là chuỗi
+                                            />
+                                        </div>
                                     </Card>
                                 </div>
                             </div>
@@ -179,7 +207,7 @@ const EmployeeManager = () => {
                 onClose={() => setOpen(false)}
                 employee={selectedEmployee}
             />
-    </>
+        </>
     );
 }
 export default EmployeeManager;

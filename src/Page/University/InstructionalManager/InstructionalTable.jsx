@@ -1,8 +1,20 @@
-import {Button, Modal, Space, Table, Tag, Tooltip} from "antd";
+import {Button, Modal, Space, Table, Tooltip} from "antd";
 import {EditOutlined, EyeOutlined, ReloadOutlined, StopOutlined} from "@ant-design/icons";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {statusRender} from "../../../Component/RenderFunctions/RenderFunctions";
 
-const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRowKeys, setSelectedRowKeys, currentPage,pageSize }) => {
+
+const InstructionalTable = ({
+                                instructional,
+                                onStop,
+                                onRefund,
+                                onInfo,
+                                onEdit,
+                                selectedRowKeys,
+                                setSelectedRowKeys,
+                                currentPage,
+                                pageSize
+                            }) => {
     const showConfirm = (title, content, onConfirm) => {
         Modal.confirm({
             title: title,
@@ -13,7 +25,8 @@ const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRow
         });
     };
     const columns = [
-        {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center', sorter: (a, b) => a.stt - b.stt},
+        {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center'},
+        {title: 'Mã giáo vụ', dataIndex: 'instructionalCode', key: 'instructionalCode', align: 'center'},
         {
             title: 'Ảnh',
             dataIndex: 'instructionalImageId',
@@ -31,7 +44,10 @@ const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRow
                         borderRadius: "50%",
                         border: "1px solid #ccc"
                     }}
-                    onError={(e) => { e.target.onerror = null; e.target.src = 'placeholder-avatar.jpg'; }}
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'placeholder-avatar.jpg';
+                    }}
                 />
             ),
         },
@@ -43,57 +59,37 @@ const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRow
             dataIndex: 'status',
             key: 'status',
             align: 'center',
-            render: (status) => {
-                // Gán màu dựa trên trạng thái
-                let color = "";
-                let displayStatus = "";
-                switch (status.toLowerCase()) {
-                    case "active":
-                        color = "green";
-                        displayStatus = "Hoạt động"; // ACTIVE -> Hoạt động
-                        break;
-                    case "inactive":
-                        color = "volcano";
-                        displayStatus = "Không hoạt động"; // INACTIVE -> Không hoạt động
-                        break;
-                    default:
-                        color = "geekblue"; // Mặc định cho các trạng thái khác
-                        displayStatus = status.toUpperCase(); // Hiển thị trạng thái mặc định
-                }
-                return (
-                    <Tag color={color} key={status}>
-                        {displayStatus} {/* Hiển thị trạng thái đã chuyển */}
-                    </Tag>
-                );
-            }
+            render: statusRender,
         },
         {
             title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => {
                 return (
                     <Space size="middle">
                         <Tooltip title="Xem thông tin">
-                            <Button type={"primary"} icon={<EyeOutlined/>}/>
+                            <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onInfo(record.id)}/>
                         </Tooltip>
                         <Tooltip title="Chỉnh sửa">
                             <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
-                                    disabled={record.status !== 'ACTIVE'}/>
+                                    onClick={() => onEdit(record.id)} disabled={record.status !== 'ACTIVE'}/>
                         </Tooltip>
                         {record.status === 'ACTIVE' ? (
                             <Tooltip title="Tạm ngưng">
-                                <Button variant={"solid"} danger={true} color={"danger"} icon={<StopOutlined />}
-                                        style={{backgroundColor: '#FF8C00', color: 'white'}}  disabled={record.status !== 'ACTIVE'}  onClick={() => showConfirm(
+                                <Button variant={"solid"} danger={true} color={"danger"} icon={<StopOutlined/>}
+                                        style={{backgroundColor: '#FF8C00', color: 'white'}}
+                                        disabled={record.status !== 'ACTIVE'} onClick={() => showConfirm(
                                     'Bạn chắc chắn muốn tạm ngưng?',
                                     'Hành động này sẽ tạm ngưng người dùng này.',
                                     () => onStop(record.id)
-                                )} />
+                                )}/>
                             </Tooltip>
                         ) : (
                             <Tooltip title="Khôi phục">
-                                <Button style={{backgroundColor: '#32CD32',color: 'white'}} icon={<ReloadOutlined/>} onClick={() => showConfirm(
-                                    'Bạn chắc chắn muốn khôi phục?',
-                                    'Hành động này sẽ khôi phục người dùng này.',
-                                    () => onRefund(record.id)
-                                )}/>
+                                <Button style={{backgroundColor: '#32CD32', color: 'white'}} icon={<ReloadOutlined/>}
+                                        onClick={() => showConfirm(
+                                            'Bạn chắc chắn muốn khôi phục?',
+                                            'Hành động này sẽ khôi phục người dùng này.',
+                                            () => onRefund(record.id)
+                                        )}/>
                             </Tooltip>
                         )}
                     </Space>
@@ -105,6 +101,7 @@ const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRow
         key: ins.id,
         id: ins.id,
         stt: (currentPage - 1) * pageSize + (index + 1),
+        instructionalCode:ins.instructionalCode,
         instructionalImageId: ins.instructionalImageId,
         name: ins.name,
         email: ins.email,
@@ -121,7 +118,8 @@ const InstructionalTable = ({instructional, onStop,onRefund ,onInfo, selectedRow
 
     return (
         <>
-            <Table locale={{emptyText:''}}  rowSelection={rowSelection} size='small' columns={columns} dataSource={data} pagination={false}/>
+            <Table locale={{emptyText: "Không tìm thấy kết quả tương ứng."}} rowSelection={rowSelection} size='small' columns={columns} dataSource={data}
+                   pagination={false}/>
         </>
     )
 }

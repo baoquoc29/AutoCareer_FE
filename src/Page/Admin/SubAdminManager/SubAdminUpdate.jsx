@@ -21,7 +21,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
             subAdminImage: null,
         },
         onSubmit: async (values) => {
-            handleSubmit(values)
+            await handleSubmit(values)
         },
     });
     const handleSubmit = async (values) => {

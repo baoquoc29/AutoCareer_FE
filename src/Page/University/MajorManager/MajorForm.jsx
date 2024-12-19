@@ -28,20 +28,14 @@ const MajorForm = ({onSubmit, initialValues}) => {
         enableReinitialize: true,
         validationSchema: MajorValidation(true),
         onSubmit: async (values,{resetForm}) => {
-            try {
-                await onSubmit(values);
-                resetForm({
-                    values: {
-                        sectionId: '',
-                        name: '',
-                        code: '',
-                        numberStudent: '',
-                        description: '',
-                    },
-                });
-            } catch (err) {
-                console.error("Error submitting form:", err);
-            }
+            const trimmedValues = {
+                ...values,
+                name: values.name.trim(),
+                code: values.code.trim(),
+                description: values.description.trim(),
+            };
+            await onSubmit(trimmedValues);
+
         },
     });
 
@@ -51,7 +45,7 @@ const MajorForm = ({onSubmit, initialValues}) => {
                 <Form.Item label="Tên khoa" required={true}
                            validateStatus={formik.errors.sectionId && formik.touched.sectionId ? 'error' : ''}
                            help={formik.errors.sectionId && formik.touched.sectionId ? formik.errors.sectionId : ''}>
-                    <Select style={{width: 340}}
+                    <Select
                             showSearch
                             autoFocus={true}
                             placeholder="Tìm kiếm khoa"
@@ -76,7 +70,7 @@ const MajorForm = ({onSubmit, initialValues}) => {
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item
-                            label="Mã chuyên ngành"
+                            label="Mã ngành"
                             name="code"
                             required={true}
                             validateStatus={formik.errors.code && formik.touched.code ? 'error' : ''}
@@ -87,13 +81,13 @@ const MajorForm = ({onSubmit, initialValues}) => {
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            label="Số lượng sinh viên"
+                            label="Số sinh viên"
                             name="numberStudent"
                             required={true}
                             validateStatus={formik.errors.numberStudent && formik.touched.numberStudent ? 'error' : ''}
                             help={formik.errors.numberStudent && formik.touched.numberStudent ? formik.errors.numberStudent : ''}
                         >
-                            <Input type="number" onChange={formik.handleChange} value={formik.values.numberStudent}
+                            <Input type={'number'} onChange={formik.handleChange} value={formik.values.numberStudent}
                                    name="numberStudent"/>
                         </Form.Item>
                     </Col>

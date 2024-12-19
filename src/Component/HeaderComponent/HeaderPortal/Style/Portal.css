@@ -1,89 +1,160 @@
+/* Header */
 .custom-header-portal {
     background: #ffffff;
     width: 100%;
     border-bottom: 1px solid #f0f0f0;
     padding: 0 20px; /* Cách lề trái và phải 20px */
+    height: 60px;
 }
 
+/* Container */
 .header-container-portal {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     max-width: 100%;
+    height: 60px;
     margin: 0 auto;
 }
 
-.logo-portal img {
-    width: 40px;
-    height: 40px;
+.brand-wrap-portal {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
 }
 
+.logo-portal {
+    width: 40px;
+    color: #3E7494;
+    height: auto;
+    margin-right: 10px;
+}
+.card-slogan-portal{
+    height: 350px;
+    background: #3E7494;
+}
+.brand-title-portal {
+    font-size: 25px;
+    font-weight: bold;
+    color: #3E7494;
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+}
+
+
 /* Menu */
-.nav-menu-portal {
-    flex: 1;
+.nav-menu-wrapper {
+    flex: 1; /* Để menu chiếm khoảng trống còn lại giữa logo và buttons */
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 100%; /* Đảm bảo chiều cao khớp với header */
+}
+
+.nav-menu-portal {
+    display: flex;
+    flex: 1; /* Giãn menu ra để phù hợp chiều ngang */
+    justify-content: center;
+    height: 100%;
 }
 
 .nav-menu-portal .ant-menu-item {
     font-size: 16px;
     font-weight: 500;
     text-align: center;
+    padding: 0 20px; /* Tăng khoảng cách ngang */
 }
 
 .nav-menu-portal .ant-menu-item a {
     text-decoration: none;
     color: #333;
-    transition: color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
+    transition: color 0.3s ease;
+    line-height: 64px; /* Đảm bảo căn giữa văn bản theo chiều dọc */
 }
 
-.nav-menu-portal .ant-menu-item:hover a {
+.nav-menu-portal .ant-menu-item:hover a,
+.nav-menu-portal .ant-menu-item-selected a {
     color: #007bff;
 }
 
 /* Buttons */
-.header-brand-portal {
-    display: flex;
-    align-items: center;
-    margin-left: 5px; /* Đảm bảo logo cách lề trái 20px */
-}
-
 .header-buttons-portal {
     display: flex;
-    gap: 10px; /* Khoảng cách giữa các nút là 10px */
-    margin-right: 20px; /* Đảm bảo nút cách lề phải 20px */
+    gap: 15px; /* Khoảng cách giữa các nút */
+    height: 100%; /* Đảm bảo căn chỉnh nút với header */
+    align-items: center; /* Căn giữa nút theo chiều dọc */
 }
 
-.header-buttons-portal .btn-login-portal {
-    border: 1px solid #d9d9d9;
-    background-color: white;
-    color: #333;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.btn-login-portal,
+.btn-register-portal,
+.btn-employer-portal {
+    line-height: 1; /* Đảm bảo các nút không bị tràn */
 }
 
-.header-buttons-portal .btn-login-portal:hover {
-    background-color: #f5f5f5;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .header-container-portal {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-menu-wrapper {
+        width: 100%;
+    }
+
+    .nav-menu-portal {
+        width: 100%;
+        justify-content: space-evenly;
+    }
+
+    .header-buttons-portal {
+        width: 100%;
+        justify-content: space-evenly;
+    }
+
+    .nav-menu-portal .ant-menu-item {
+        padding: 10px 15px; /* Ensure good spacing on smaller screens */
+    }
 }
 
-.header-buttons-portal .btn-register-portal {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: white;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+
+.slogan-container {
+    text-align: center;
+}
+.card-slogan-portal .slogan-container  {
+    padding: 30px;
 }
 
-.header-buttons-portal .btn-register-portal:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
+.slogan-portal {
+    color: #0ABFAC;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+
 }
 
-.header-buttons-portal .btn-employer-portal {
-    color: #333;
-    font-weight: bold;
-    transition: color 0.3s ease;
+.sub-slogan-portal {
+    font-size: 0.75rem;
+    margin-top: 10px;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    color: #FFFFFF;
 }
 
-.header-buttons-portal .btn-employer-portal:hover {
-    color: #007bff;
+h1, h3 {
+    margin: 0;
 }
+
+@media (max-width: 768px) {
+    .slogan-portal {
+        font-size: 2rem;
+    }
+
+    .sub-slogan-portal {
+        font-size: 1.2rem;
+    }
+}
+

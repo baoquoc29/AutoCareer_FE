@@ -1,43 +1,83 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Input, Modal, Pagination} from "antd";
+import {Button, Card, Input, Modal, Pagination, Select} from "antd";
 import {DeleteOutlined, FileExcelOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {CSVLink} from "react-csv";
 import InstructionalTable from "./InstructionalTable";
 import {useDispatch, useSelector} from "react-redux";
 import {
     create_instructional,
-    delete_instructional,
-    get_all_instructional, refund_instructional, stop_instructional
+    delete_instructional, get_all_active_ins,
+    get_all_instructional, get_all_stop_ins, refund_instructional, stop_instructional
 } from "../../../Redux/actions/InstructionalThunk";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import InstructionalCreateModal from "./Modal/InstructionalCreateModal";
+import InstructionalDetailModal from "./Modal/InstructionalDetailModal";
+import {get_university_id} from "../../../Redux/actions/UniversityThunk";
+import InstructionalEditModal from "./Modal/InstructionalEditModal";
+import {toast} from "react-toastify";
 
 const InstructionalManager = () => {
     const dispatch = useDispatch();
-    const {instructional = [], totalElements,currentPage,pageSize} = useSelector(state => state.InstructionalReducer);
-    const userData = useSelector(state => state.UserReducer.userData);
+    const {
+        instructional = [],
+        totalElements,
+        currentPage = 1,
+        pageSize = 7
+    } = useSelector(state => state.InstructionalReducer);
+    const university = useSelector(state => state.UserReducer.userData?.university);
+    const [openDetail, setOpenDetail] = useState(false);// Trạng thái mở modal chi tiết
     const [modalCreate, setModalCreate] = useState(false);
-    const [universityId, setUniversityId] = useState(null);
+    const [editOpen, setEditOpen] = useState(false);// Trạng thái mở modal chỉnh sửa
+    const [selectedInstructional, setSelectedInstructional] = useState(null);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Lưu trữ ID các mục đã chọn
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [filteredInstructional, setFilteredInstructional] = useState(instructional);
     useEffect(() => {
-        dispatch(get_all_instructional(currentPage, pageSize));
-    }, [dispatch, currentPage, pageSize]);
+        // Lọc dữ liệu khi từ khóa tìm kiếm thay đổi
+        const filtered = instructional.filter(item =>
+            item.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.instructionalCode.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.phone.includes(searchKeyword)
+        );
+        setFilteredInstructional(filtered);
+        console.log('data', filtered)
+    }, [searchKeyword, instructional]);
     useEffect(() => {
-        if (userData && userData["university"]) {
-            setUniversityId(userData["university"].id);
+        if (selectedStatus === "active") {
+            dispatch(get_all_active_ins(currentPage, pageSize));
+        } else if (selectedStatus === "inactive") {
+            dispatch(get_all_stop_ins(currentPage, pageSize));
+        } else {
+            dispatch(get_all_instructional(currentPage, pageSize, selectedStatus, searchKeyword));
         }
-    }, [userData]);
+    }, [dispatch, currentPage, pageSize, selectedStatus, searchKeyword]);
+    useEffect(() => {
+        if (university?.id) {
+            dispatch(get_university_id(university.id));
+        }
+    }, [university, dispatch]);
 
     const handlePageChange = (page) => {
         dispatch(get_all_instructional(page, pageSize));
     };
     const handleCreate = async (values) => {
         await dispatch(create_instructional(values));
-        dispatch(get_all_instructional(currentPage, pageSize));
-        setModalCreate(false);
+        await dispatch(get_all_instructional(currentPage, pageSize));
+    };
+    const handleStatusChange = (value) => {
+        setSelectedStatus(value); // Lưu trạng thái được chọn
+        if (value === "active") {
+            dispatch(get_all_active_ins(1, pageSize));
+        } else if (value === "inactive") {
+            dispatch(get_all_stop_ins(1, pageSize));
+        } else {
+            dispatch(get_all_instructional(1, pageSize, value, searchKeyword));
+        }
     };
     const handleStopInstructional = async (id) => {
-       await dispatch(stop_instructional(id));
+        await dispatch(stop_instructional(id));
         dispatch(get_all_instructional(currentPage, pageSize));
     };
     const handleRefundInstructional = async (id) => {
@@ -64,11 +104,43 @@ const InstructionalManager = () => {
             onOk: async () => {
                 // Gọi API xóa với danh sách các ID đã chọn
                 await dispatch(delete_instructional(selectedRowKeys));
-                dispatch(get_all_instructional(currentPage, pageSize)); // Lấy lại danh sách
+                await dispatch(get_all_instructional(currentPage, pageSize)); // Lấy lại danh sách
                 setSelectedRowKeys([]); // Reset lại danh sách các ID đã chọn
             },
         });
     };
+    const handleInfo = (id) => {
+        const ins = instructional.find(s => s.id === id); // Find section by ID
+        setSelectedInstructional(ins);
+        setOpenDetail(true);
+    };
+    const handleEdit = (id) => {
+        const ins = instructional.find(s => s.id === id); // Find section by ID
+        setSelectedInstructional(ins);
+        setEditOpen(true);
+    };
+
+    const handleEditSubmit = async () => {
+        // await dispatch(update_ins(instructional.id, values));
+        await dispatch(get_all_instructional(currentPage, pageSize));
+    }
+    const handleExportClick = () => {
+        const dataExport = filteredInstructional.length > 0 ? filteredInstructional : instructional;
+        if (dataExport && dataExport.length < 0) {
+
+            toast.error('Không có dữ liệu để xuất');
+        } else {
+            toast.success('Tải xuống thành công');
+        }
+    };
+    const csvHeader = [
+        {label: "Tên", key: "name"},
+        {label: "Mã giáo vụ", key: "instructionalCode"},
+        {label: "Email", key: "email"},
+        {label: "Số điện thoại", key: "phone"},
+        {label: "Trạng thái", key: "status"},
+        {label: "Địa chỉ", key: "address"},
+    ]
 
     return (
         <>
@@ -76,15 +148,29 @@ const InstructionalManager = () => {
                 <div className="m-5 mt-5">
                     <div className="row">
                         <div className="col-12 mb-3">
-                            <Card style={{textAlign:'center'}} title="Danh sách giáo vụ">
+                            <Card style={{textAlign: 'center'}} title="Danh sách giáo vụ">
                                 <div className="table-responsive">
                                     <div className="d-flex justify-content-between mb-3">
-                                        <Input
-                                            placeholder="Tìm kiếm theo tên"
-                                            prefix={<SearchOutlined/>}
-                                            style={{width: 200}}
-                                        />
+                                        <div className="d-flex justify-content-start">
+                                            <Select
+                                                style={{width: 100, marginRight: '10px'}}
+                                                placeholder="Trạng thái"
+                                                onChange={handleStatusChange}
+                                                value={selectedStatus}
+                                            >
+                                                <Select.Option value="">Tất cả</Select.Option>
+                                                <Select.Option value="active">Hoạt động</Select.Option>
+                                                <Select.Option value="inactive">Tạm ngưng</Select.Option>
+                                            </Select>
+                                            <Input
+                                                placeholder="Tìm kiếm "
+                                                prefix={<SearchOutlined/>}
+                                                style={{width: 200}}
+                                                onChange={e => setSearchKeyword(e.target.value)}
+                                            />
+                                        </div>
                                         <div className="d-flex justify-content-end">
+
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
@@ -112,11 +198,12 @@ const InstructionalManager = () => {
                                                     color: '#FFFFFF',
                                                     marginLeft: '10px'
                                                 }}
+                                                onClick={handleExportClick}
                                             >
                                                 <CSVLink
-                                                    data={""}
-                                                    headers={""}
-                                                    filename={"DanhSachKhoa.csv"}
+                                                    data={filteredInstructional.length > 0 ? filteredInstructional : instructional}
+                                                    headers={csvHeader}
+                                                    filename={"DanhSachGiaoVu.csv"}
                                                     style={{color: 'inherit', textDecoration: 'none'}}
                                                 >
                                                     Export excel
@@ -127,8 +214,10 @@ const InstructionalManager = () => {
                                     <InstructionalTable
                                         onRefund={handleRefundInstructional}
                                         onStop={handleStopInstructional}
-                                        instructional={instructional}
-                                        totalElements={totalElements}
+                                        onInfo={handleInfo}
+                                        onEdit={handleEdit}
+                                        instructional={filteredInstructional} // Sử dụng dữ liệu đã lọc
+                                        totalElements={filteredInstructional.length} // Cập nhật tổng số phần tử
                                         currentPage={currentPage}
                                         pageSize={7}
                                         handlePageChange={handlePageChange}
@@ -136,7 +225,9 @@ const InstructionalManager = () => {
                                         setSelectedRowKeys={setSelectedRowKeys}
                                         onDelete={handleDeleteSelected}
                                     />
-                                    <ResultSummary totalElements={totalElements}/>
+                                    <ResultSummary
+                                        totalElements={searchKeyword ? (filteredInstructional.length > 0 ? filteredInstructional.length : 0) : totalElements}
+                                    />
                                     <div
                                         style={{
                                             display: "flex",
@@ -163,8 +254,12 @@ const InstructionalManager = () => {
                 open={modalCreate}
                 onClose={() => setModalCreate(false)}
                 onCreate={handleCreate}
-                universityId={universityId}
+                uniId={university?.id}
             />
+            <InstructionalDetailModal open={openDetail} onClose={() => setOpenDetail(false)}
+                                      instructional={selectedInstructional}/>
+            <InstructionalEditModal open={editOpen} onClose={() => setEditOpen(false)}
+                                    instructional={selectedInstructional} onSubmit={handleEditSubmit}/>
         </>
     );
 };

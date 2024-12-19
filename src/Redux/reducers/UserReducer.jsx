@@ -7,7 +7,7 @@ import {
     VERIFY_CODE_FAIL,
     SEND_CODE_REMINDER_SUCCESS,
     SEND_CODE_UNIVERSITY_SUCCESS,
-    SEND_CODE_BUSINESS_SUCCESS,
+    SEND_CODE_BUSINESS_SUCCESS, SIGNUP_BUSINESS_SUCCESS, CLEAR_RESPONSE, SIGNUP_UNIVERSITY_SUCCESS, SEND_NEW_PASSWORD,
 } from "../../Utils/Setting/Config";
 import { jwtDecode } from 'jwt-decode';
 import {toast} from "react-toastify";
@@ -28,6 +28,9 @@ const initialState = {
     responseBusiness: null,
     responsePasswordReminder: null,
     responseSendPassWordCode : null,
+    responseSignUpBusiness : null,
+    responseSignUpUniversity : null,
+    responseSendNewPassword : null,
     response : null,
     error: null,
 }
@@ -40,6 +43,18 @@ export const UserReducer = (state = initialState, action) => {
                 isAuthenticated: true,
                 userData: action.payload.userData,
                 token: action.payload.token,
+            };
+        case CLEAR_RESPONSE:
+            return {
+                ...state,
+                responseUniversity: null,
+                responseBusiness: null,
+                responsePasswordReminder: null,
+                responseSendPassWordCode : null,
+                responseSignUpBusiness : null,
+                response : null,
+                responseSignUpUniversity: null,
+                responseSendNewPassword: null,
             };
         case LOGOUT_SUCCESS:
             return {
@@ -77,8 +92,24 @@ export const UserReducer = (state = initialState, action) => {
                 responsePasswordReminder: action.payload,
                 error: null,
             };
-
-
+        case SIGNUP_BUSINESS_SUCCESS:
+            return {
+                ...state,
+                responseSignUpBusiness: action.payload,
+                error: null,
+            }
+            case SIGNUP_UNIVERSITY_SUCCESS:
+                return {
+                    ...state,
+                    responseSignUpUniversity: action.payload,
+                    error: null,
+                }
+        case SEND_NEW_PASSWORD:
+            return {
+                ...state,
+                responseSendNewPassword: action.payload,
+                error: null,
+            }
         case VERIFY_CODE_FAIL:
             return {
                 ...state,

@@ -18,7 +18,7 @@ const WorkShopManager = () => {
     const [selectedWorkshop, setSelectedWorkshop] = useState(null);
     const [viewMode, setViewMode] = useState(null);
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
+    const [size, setSize] = useState(7);
 
     const userInfo = JSON.parse(localStorage.getItem("USER_LOGIN")) || {};
     const idUniversity = userInfo.university?.id || null;
@@ -40,7 +40,9 @@ const WorkShopManager = () => {
     // Filter workshops by search keyword
     const filteredWorkshops = useMemo(() => {
         return workshops.filter((workshop) => {
-            return workshop.title.toLowerCase().includes(searchKeyword.toLowerCase());
+            // Kiểm tra xem workshop.title có phải là chuỗi hợp lệ không
+            return workshop.title && typeof workshop.title === 'string' &&
+                workshop.title.toLowerCase().includes(searchKeyword.toLowerCase());
         });
     }, [workshops, searchKeyword]);
 
@@ -79,11 +81,13 @@ const WorkShopManager = () => {
         });
     };
 
-    const resetView = () => {
+    const resetView = async () => {
         setSelectedWorkshop(null);
         setViewMode(null);
         setIsAdding(false);
+        await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size));
     };
+
 
     const handlePageChange = async (newPage, newSize) => {
         setPage(newPage);
@@ -130,6 +134,8 @@ const WorkShopManager = () => {
                                 onEdit={handleViewEdit}
                                 onDelete={handleDelete}
                                 onView={handleViewDetails}
+                                page={page}
+                                size={size}
                             />
 
                             {/* Container for pagination and results label */}
@@ -140,6 +146,8 @@ const WorkShopManager = () => {
                                     pageSize={size}
                                     total={totalItems} // Adjust total records based on search or not
                                     onChange={handlePageChange}
+                                    pageSizeOptions={[7, 10, 20, 50, 100]}
+                                    showSizeChanger={true}
                                 />
                                 {/* Label showing total results at the bottom right */}
                                 {searchKeyword && (

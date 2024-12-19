@@ -1,0 +1,90 @@
+.home-screen-workshop {
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #f9f9f9;
+    margin-left: 109px;
+    margin-right: 109px;
+}
+
+.workshop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.workshop-header-title{
+    display: flex;
+}
+.workshop-actions{
+    margin-left: 20px;
+    margin-top: 3px;
+}
+.highlight {
+    color: #1890ff;
+}
+
+.edit-button {
+    margin-left: 8px;
+    color: #1890ff;
+}
+
+.see-all-button {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1890ff;
+}
+
+.workshop-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.workshop-card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px; /* Padding bên trong card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+    background-color: #ffffff; /* Nền trắng */
+}
+
+.workshop-image {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.workshop-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 10px 0; /* Xóa khoảng cách trên và giữ khoảng cách dưới */
+    white-space: nowrap; /* Chỉ hiển thị 1 dòng */
+    overflow: hidden; /* Ẩn phần dư */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." nếu nội dung vượt quá */
+}
+.workshop-host {
+    color: #888;
+    font-size: 12px;
+    margin-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.workshop-info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.workshop-price {
+    color: #52c41a;
+    font-weight: bold;
+    margin: 0; /* Không cần margin bên dưới, vì đây là thành phần cuối */
+}
