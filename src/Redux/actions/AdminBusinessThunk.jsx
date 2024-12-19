@@ -1,24 +1,22 @@
-import {toast} from "react-toastify";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
-import {subAdminService} from "../../Service/AdminService/SubAdminService";
+import {adminBusinessService} from "../../Service/AdminService/AdminBusinessService";
+import {toast} from "react-toastify";
 import {
-    ALL_SUB_ADMIN,
-    CREATE_SUB_ADMIN,
-    DELETE_SUB_ADMIN,
-    DETAIL_SUB_ADMIN,
-    PAGING_SUB_ADMIN,
-    UPDATE_SUB_ADMIN
-} from "../types/SubAdminType";
+    APPROVED_BUSINESS, GET_ALL_BUSINESSES,
+    GET_APPROVED_BUSINESSES,
+    GET_PENDING_BUSINESSES,
+    GET_REJECTED_BUSINESSES,
+    REJECTED_BUSINESS,
+} from "../types/AdminBusinessType";
 
-export const create_sub_admin = (formData) => {
+export const approved_business = (req) => {
     return async (dispatch) => {
         try {
-            const res = await subAdminService.create(formData);
+            const res = await adminBusinessService.approved_business(req);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
-                toast.success("Thêm thành công")
                 dispatch({
-                    type: CREATE_SUB_ADMIN,
+                    type: APPROVED_BUSINESS,
                     payload: res.data
                 })
             }
@@ -27,15 +25,15 @@ export const create_sub_admin = (formData) => {
         }
     }
 }
-export const update_sub_admin = (formData) => {
+
+export const rejected_business = (req) => {
     return async (dispatch) => {
         try {
-            const res = await subAdminService.update_sub_admin(formData);
-            console.log(res.data)
+            const res = await adminBusinessService.rejected_business(req);
+            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
-                toast.success("Sửa thành công")
                 dispatch({
-                    type: UPDATE_SUB_ADMIN,
+                    type: REJECTED_BUSINESS,
                     payload: res.data
                 })
             }
@@ -44,15 +42,15 @@ export const update_sub_admin = (formData) => {
         }
     }
 }
-export const delete_sub_admin = (id) => {
+
+export const get_all_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
-            const res = await subAdminService.delete_sub_admin(id);
-            console.log(res.data)
+            const res = await adminBusinessService.get_all_businesses(pageNo, pageSize, keyword);
+            console.log(res.data.content);
             if (res.code === STATUS_CODE.SUCCESS) {
-                toast.success("Xóa thành công")
                 dispatch({
-                    type: DELETE_SUB_ADMIN,
+                    type: GET_ALL_BUSINESSES,
                     payload: res.data
                 })
             }
@@ -61,54 +59,56 @@ export const delete_sub_admin = (id) => {
         }
     }
 }
-export const get_detail_sub_admin = (id) => {
+
+export const get_approved_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
-            const res = await subAdminService.get_detail_sub_admin(id);
-            console.log(res.data);
+            const res = await adminBusinessService.get_approved_businesses(pageNo, pageSize, keyword);
+            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
-                    type: DETAIL_SUB_ADMIN,
+                    type: GET_APPROVED_BUSINESSES,
                     payload: res.data
                 })
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.response.data.message)
         }
     }
 }
-export const get_all_sub_admin = () => {
+export const get_pending_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
-            const res = await subAdminService.get_all();
-            console.log(res.data)
+            const res = await adminBusinessService.get_pending_businesses(pageNo, pageSize, keyword);
+            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
-                    type: ALL_SUB_ADMIN,
-                    payload: res.data,
-                })
-            }
-        } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message)
-        }
-    }
-}
-export const get_all_paging_sub_admin = (page, pageSize, keyword) => {
-    return async (dispatch) => {
-        try {
-            const res = await subAdminService.get_paging_sub_admin(page, pageSize, keyword);
-            if (res.code === STATUS_CODE.SUCCESS) {
-                dispatch({
-                    type: PAGING_SUB_ADMIN,
+                    type: GET_PENDING_BUSINESSES,
                     payload: res.data
                 })
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.response.data.message)
         }
     }
 }
+export const get_rejected_businesses = (pageNo, pageSize, keyword) => {
+    return async (dispatch) => {
+        try {
+            const res = await adminBusinessService.get_rejected_businesses(pageNo, pageSize, keyword);
+            console.log(res)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: GET_REJECTED_BUSINESSES,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+
+
+
 
