@@ -1,25 +1,104 @@
-// Thunk để lắng nghe thông báo qua SSE và dispatch hành động khi có thông báo mới
 import {notificationService} from "../../Service/NotificationService/NotificationService";
-import {NOTIFICATION_RECEIVED} from "../types/NotificationType";
-import {TOKEN} from "../../Utils/Setting/Config";
-import RNEventSource from "react-native-event-source";
+import {
+    GET_NOTIFICATIONS,
+    MARK_ALL_AS_READ,
+    MARK_AS_READ,
+    NOTIFICATION_RECEIVED,
+    SET_UNREAD_COUNT
+} from "../types/NotificationType";
+import {notification} from "antd";
+import {adminJobService} from "../../Service/AdminService/AdminJobService.jsx";
+import {STATUS_CODE} from "../../Utils/Setting/Config";
+import {APPROVED_JOB} from "../types/AdminJobType";
+import {toast} from "react-toastify";
 
-export const listen_for_notifications = () => (dispatch) => {
-    const token = localStorage.getItem(TOKEN);
-    const options = {headers: {Authorization: `Bearer${token}`}};
-    const eventSource = new RNEventSource(notificationService.streamNotifications(), options);
+export const listen_for_notifications = (userId) => {
+    return (dispatch) => {
+        const eventSource = new EventSource(notificationService.stream_notifications(userId));
 
-    eventSource.addEventListener('notification', (event) => {
-        const notification = JSON.parse(event.data);
-        console.log(notification);
-        dispatch({type: NOTIFICATION_RECEIVED, payload: notification});
-    });
+        eventSource.addEventListener('notification', (event) => {
+            const req = JSON.parse(event.data);
+            console.log(notification);
+            notification.open({
+                message: '',
+                description: req.message,
+                key: req.id,
+            });
+            dispatch({type: NOTIFICATION_RECEIVED, payload: req});
+        });
 
-    eventSource.addEventListener('error', (event) => {
-        console.error("Error with SSE connection", event);
-        eventSource.close();
-    });
+        // Xử lý lỗi
+        eventSource.addEventListener('error', (error) => {
+            console.error("SSE connection error", error);
+            eventSource.close();
+        });
+    };
+}
+export const count_unread_notifications = () => {
+    return async (dispatch) => {
+        try {
+            const res = await notificationService.count_unread_notifications();
+            console.log(res)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: SET_UNREAD_COUNT,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+export const mask_read_notification = (data) => {
+    return async (dispatch) => {
+        try {
+            const res = await notificationService.mark_read_notification(data);
+            console.log(res)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: MARK_AS_READ,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
 
-    return eventSource; // Trả về eventSource để có thể tắt kết nối khi không cần thiết
-};
+export const mask_read_all_notifications = () => {
+    return async (dispatch) => {
+        try {
+            const res = await notificationService.mark_read_all_notifications();
+            console.log(res)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: MARK_ALL_AS_READ,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+export const get_all_paging_notifications = (pageNo, pageSize) => {
+    return async (dispatch) => {
+        try {
+            const res = await notificationService.get_all_paging_notifications(pageNo, pageSize);
+            console.log(res)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: GET_NOTIFICATIONS,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+
+
 

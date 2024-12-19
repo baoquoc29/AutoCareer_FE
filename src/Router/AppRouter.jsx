@@ -40,6 +40,7 @@ import CooperationManager from "../Page/University/CoopertionUniversity/Cooperat
 import CooperationDetail from "../Page/University/CoopertionUniversity/CooperationDetail";
 import BusinessManager from "../Page/Admin/BusinessManager/BusinessManager";
 import UniversityManager from "../Page/Admin/UniversityManager/UniversityManager";
+import AdminJobManager from "../Page/Admin/JobManager/AdminJobManager";
 
 export function AppRouter() {
     return (
@@ -85,8 +86,9 @@ export function AppRouter() {
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/admin"} element={<Admin/>}/>
                     <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
-                    <Route path={"/business-manager"} element={<BusinessManager/>}/>
-                    <Route path={"/university-manager"} element={<UniversityManager/>}/>
+                    <Route path={"/admin-business-manager"} element={<BusinessManager/>}/>
+                    <Route path={"/admin-university-manager"} element={<UniversityManager/>}/>
+                    <Route path={"/admin-job-manager"} element={<AdminJobManager/>}/>
                 </Route>
             </Routes>
         </>

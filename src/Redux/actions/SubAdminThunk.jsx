@@ -32,11 +32,13 @@ export const update_sub_admin = (formData) => {
         try {
             const res = await subAdminService.update_sub_admin(formData);
             console.log(res.data)
-            toast.success("Sửa thành công")
-            dispatch({
-                type: UPDATE_SUB_ADMIN,
-                payload: res.data
-            })
+            if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Sửa thành công")
+                dispatch({
+                    type: UPDATE_SUB_ADMIN,
+                    payload: res.data
+                })
+            }
         } catch (error) {
             toast.error(error.response.data.message)
         }
@@ -47,11 +49,13 @@ export const delete_sub_admin = (id) => {
         try {
             const res = await subAdminService.delete_sub_admin(id);
             console.log(res.data)
-            toast.success("Xóa thành công")
-            dispatch({
-                type: DELETE_SUB_ADMIN,
-                payload: res.data
-            })
+            if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Xóa thành công")
+                dispatch({
+                    type: DELETE_SUB_ADMIN,
+                    payload: res.data
+                })
+            }
         } catch (error) {
             toast.error(error.response.data.message)
         }
@@ -62,10 +66,12 @@ export const get_detail_sub_admin = (id) => {
         try {
             const res = await subAdminService.get_detail_sub_admin(id);
             console.log(res.data);
-            dispatch({
-                type: DETAIL_SUB_ADMIN,
-                payload: res.data
-            })
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: DETAIL_SUB_ADMIN,
+                    payload: res.data
+                })
+            }
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message)
@@ -77,24 +83,28 @@ export const get_all_sub_admin = () => {
         try {
             const res = await subAdminService.get_all();
             console.log(res.data)
-            dispatch({
-                type: ALL_SUB_ADMIN,
-                payload: res.data,
-            })
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: ALL_SUB_ADMIN,
+                    payload: res.data,
+                })
+            }
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message)
         }
     }
 }
-export const get_all_paging_sub_admin = (page, pageSize) => {
+export const get_all_paging_sub_admin = (page, pageSize, keyword) => {
     return async (dispatch) => {
         try {
-            const res = await subAdminService.get_paging_sub_admin(page, pageSize);
-            dispatch({
-                type: PAGING_SUB_ADMIN,
-                payload: res.data
-            })
+            const res = await subAdminService.get_paging_sub_admin(page, pageSize, keyword);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: PAGING_SUB_ADMIN,
+                    payload: res.data
+                })
+            }
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message)

@@ -1,5 +1,5 @@
 import { baseService } from "../BaseService";
-
+import {DOMAIN} from "../../Utils/Setting/Config";
 
 export class NotificationService extends baseService {
     // eslint-disable-next-line no-useless-constructor
@@ -7,14 +7,25 @@ export class NotificationService extends baseService {
         super();
     }
 
-    get_all_notifications = () => {
-        return this.get('api/notification/get-all');
+    get_all_paging_notifications = (pageNo, pageSize) => {
+        return this.get(`api/notification/get-all-paging?pageNo=${pageNo}&pageSize=${pageSize}`);
     };
 
-    streamNotifications = () => {
-        return 'api/notification/streamNotifications';
+    count_unread_notifications = () => {
+        return this.get(`api/notification/count-unread`);
     }
 
+    mark_read_notification = (data) => {
+        return this.post(`api/notification/mark-read`, data);
+    }
+
+    mark_read_all_notifications = (data) => {
+        return this.post('api/notification/mark-read-all');
+    }
+
+    stream_notifications = (userId) => {
+        return `${DOMAIN}/api/notification/stream/${userId}`;
+    }
 
 }
 

@@ -15,8 +15,8 @@ export class SubAdminService extends baseService {
     update_sub_admin = (formData) => {
         return this.putFormData('api/sub-admin/update', formData)
     }
-    get_paging_sub_admin = (page, pageSize) => {
-        return this.get(`api/sub-admin/get-paging?page=${page}&pageSize=${pageSize}`)
+    get_paging_sub_admin = (page, pageSize, keyword) => {
+        return this.get(`api/sub-admin/get-paging?pageNo=${page}&pageSize=${pageSize}&keyword=${keyword}`)
     }
     get_all= () => {
         return this.get(`api/sub-admin/get-all`)
