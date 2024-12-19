@@ -1,9 +1,10 @@
-import {CLEAR_JOBS_LIST, GET_ALL_JOB_LIST} from "../types/PortalType";
+import {CLEAR_JOBS_LIST, GET_ALL_BUSINESS_FEATURE, GET_ALL_JOB_LIST} from "../types/PortalType";
 
 
 const initialState = {
     jobList: [],
     totalElements: 0,
+    businessFeatures: [],
 }
 
 export const PortalReducer = (state = initialState, action) => {
@@ -13,6 +14,7 @@ export const PortalReducer = (state = initialState, action) => {
                 ...state,
                 jobList: [],
                 totalElements: 0,
+                businessFeatures: [],
             };
         case GET_ALL_JOB_LIST:
             if (action.payload && action.payload.code === 200) {
@@ -26,6 +28,17 @@ export const PortalReducer = (state = initialState, action) => {
                 ...state,
                 jobList: null,
                 totalElements: null,
+            };
+        case GET_ALL_BUSINESS_FEATURE:
+            if (action.payload && action.payload.code === 200) {
+                return {
+                    ...state,
+                    businessFeatures: action.payload.data,
+                };
+            }
+            return {
+                ...state,
+                businessFeatures: null,
             };
 
         default:

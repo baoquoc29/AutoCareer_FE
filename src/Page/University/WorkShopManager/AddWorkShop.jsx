@@ -118,15 +118,7 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
         dispatch(get_all_provinces());
     }, [dispatch]);
 
-    const disablePastDates = (current) => {
-        return current && current < dayjs().startOf("day");
-    };
 
-    const disableExpirationDate = (current) => {
-        const startDate = form.getFieldValue("startDate");
-        const endDate = form.getFieldValue("endDate");
-        return current && (current < startDate || current > endDate);
-    };
     const DraggerWrapper = styled.div`
         transition: opacity 0.5s ease-in-out;
         opacity: ${(props) => (props.isHidden ? 0 : 1)};
@@ -134,15 +126,51 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     `;
 
 
+    const disablePastDates = (current) => {
+        // Disable all dates before the current date and time
+        return current && current < dayjs().startOf('minute'); // So sánh với thời gian hiện tại đến phút
+    };
+
+    const disableEndDate = (current) => {
+        const startDate = form.getFieldValue("startDate");
+        const endDate = form.getFieldValue("endDate");
+
+        // Nếu chưa chọn ngày bắt đầu, vô hiệu hóa tất cả
+        if (!startDate) return true;
+
+        // Kiểm tra nếu endDate nhỏ hơn startDate và hiển thị thông báo lỗi
+        if (endDate && dayjs(endDate).isBefore(dayjs(startDate))) {
+            toast.error("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!");
+            // Reset trường ngày kết thúc về giá trị null
+            form.setFieldsValue({
+                endDate: null
+            });
+            return true; // Ngừng chọn ngày kết thúc nếu không hợp lệ
+        }
+
+        // So sánh ngày, giờ, phút (ngày kết thúc không thể trước ngày bắt đầu)
+        return current && current < dayjs(startDate).startOf("day");
+    };
+
+
+
+    const disableExpirationDate = (current) => {
+        const startDate = form.getFieldValue("startDate");
+        const endDate = form.getFieldValue("endDate");
+        if (!startDate || !endDate) return true; // Nếu chưa chọn ngày bắt đầu/kết thúc, disable tất cả
+        // Disable dates outside the range of startDate and endDate, including hour and minute
+        return current && (current < dayjs(startDate).startOf('minute') || current > dayjs(endDate).endOf('minute'));
+    };
+
     const handleStartDateChange = (value) => {
         setIsStartDateSelected(!!value);
-        form.setFieldsValue({endDate: null, expirationDate: null});
+        form.setFieldsValue({ endDate: null, expirationDate: null }); // Reset ngày liên quan
         setIsEndDateSelected(false);
     };
 
     const handleEndDateChange = (value) => {
         setIsEndDateSelected(!!value);
-        form.setFieldsValue({expirationDate: null});
+        form.setFieldsValue({ expirationDate: null }); // Reset ngày hết hạn
     };
 
     const handleProvinceChange = (value) => {
@@ -267,7 +295,7 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     return (
         <Container>
             <Title>Thêm hội thảo</Title>
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" autocomplete="off">
                 <FormItem
                     rules={[{required: true, message: 'Vui lòng nhập tiêu đề'}]}
                     label="Tiêu đề"
@@ -279,50 +307,46 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem
-                            rules={[{required: true, message: 'Vui lòng chọn ngày bắt đầu'}]}
                             label="Ngày bắt đầu"
                             name="startDate"
+                            rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu' }]}
                         >
                             <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                style={{ width: "100%" }}
                                 placeholder="Chọn ngày bắt đầu"
                                 showTime
                                 disabledDate={disablePastDates}
-                                style={{width: "100%"}}
-                                format="YYYY-MM-DD HH:mm"
                                 onChange={handleStartDateChange}
                             />
                         </FormItem>
                     </Col>
-
                     <Col span={8}>
                         <FormItem
-                            rules={[{required: true, message: 'Vui lòng chọn ngày kết thúc'}]}
                             label="Ngày kết thúc"
                             name="endDate"
+                            rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc' }]}
                         >
                             <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                style={{ width: "100%" }}
                                 placeholder="Chọn ngày kết thúc"
                                 showTime
-                                disabled={!isStartDateSelected}
-                                disabledDate={disablePastDates}
-                                style={{width: "100%"}}
-                                format="YYYY-MM-DD HH:mm"
+                                disabledDate={disableEndDate}
                                 onChange={handleEndDateChange}
                             />
                         </FormItem>
                     </Col>
-
                     <Col span={8}>
                         <FormItem
-                            rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}
                             label="Ngày hết hạn"
                             name="expirationDate"
+                            rules={[{ required: true, message: 'Vui lòng chọn ngày hết hạn' }]}
                         >
-                            <DatePicker placeholder="Chọn ngày hết hạn"
-                                        disabled={!isEndDateSelected}
-                                        disabledDate={disableExpirationDate}
-                                        style={{width: "100%"}}
-                                        format="YYYY-MM-DD"
+                            <DatePicker
+                                style={{ width: "100%" }}
+                                placeholder="Chọn ngày hết hạn"
+                                disabledDate={disableExpirationDate}
                             />
                         </FormItem>
                     </Col>

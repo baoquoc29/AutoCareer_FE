@@ -27,7 +27,9 @@ export class WorkShopService extends baseService {
     get_all_company_pending = (idWorkShop) => {
         return this.get(`api/work-shop/${idWorkShop}?state=PENDING`);
     }
-
+    get_all_workshop_by_state = (page,size,state) =>{
+        return this.get(`api/work-shop/state/${state}`);
+    }
     accept_request_company = (formdata) => {
         return this.post(`api/work-shop/accept-request`,formdata);
     }
