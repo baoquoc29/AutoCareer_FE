@@ -3,6 +3,7 @@ import {create_employee} from "../../../Redux/actions/EmployeeThunk";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
+import './EmployeeCSS/EmployeeCreateCSS.css';
 
 const EmployeeCreate = () => {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const EmployeeCreate = () => {
         gender: "",
         dateOfBirth: "",
         address: "",
-        employeeImage: "",
+        employeeImage: null,
     });
 
     const [errors, setErrors] = useState({});
@@ -27,16 +28,20 @@ const EmployeeCreate = () => {
         switch (field) {
             case "email":
                 if (!value) return "Email là bắt buộc.";
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const emailNoSpace = /^\S.*$/; // Không bắt đầu bằng dấu cách
+                if (!emailNoSpace.test(value)) return "Email không được bắt đầu bằng dấu cách";
+                const emailRegex = /^(?!\s)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 if (!emailRegex.test(value)) return "Email không hợp lệ.";
                 break;
             case "name":
                 if (!value) return "Tên là bắt buộc.";
+                const nameRegex = /^\S.*$/;
+                if (!nameRegex.test(value)) return "Tên không được bắt đầu bằng dấu cách";
                 break;
             case "phone":
                 if (!value) return "Số điện thoại là bắt buộc.";
-                const phoneRegex = /^[0-9]{10,11}$/;
-                if (!phoneRegex.test(value)) return "Số điện thoại không hợp lệ.";
+                const phoneRegex = /^(\+84|0)[3-9]\d{8}$/;
+                if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0 theo sau là số từ 3-9.";
                 break;
             default:
                 break;
@@ -57,15 +62,26 @@ const EmployeeCreate = () => {
     };
 
     const handleInputChange = (event) => {
-        const {id, value} = event.target;
+        const { id, value } = event.target;
+
+        // Cập nhật dữ liệu form
         setFormData((prevData) => ({
             ...prevData,
             [id]: value,
         }));
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [id]: validateField(id, value),
-        }));
+
+        // Kiểm tra độ dài chuỗi nhập vào
+        if (value.length > 255) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [id]: "Trường này không được vượt quá 255 ký tự",
+            }));
+        } else {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [id]: validateField(id, value), // Gọi hàm validate cho các kiểm tra khác
+            }));
+        }
     };
 
     const handleSave = (event) => {
@@ -120,17 +136,17 @@ const EmployeeCreate = () => {
                                     <div className="row">
                                         <div className="card h-100">
                                             <div className="card-body">
-                                                <h1 className="card-title">Thêm mới nhân viên</h1>
+                                                <h1 className="card-title font_style_employee">Thêm mới nhân viên</h1>
                                                 <form className="row g-3" onSubmit={handleSave}>
                                                     <div className="col-md-6">
-                                                        <h4>Tài khoản</h4>
+                                                        <h4 className="font_style_employee_account">Tài khoản</h4>
                                                         <div className="mb-3">
-                                                            <label htmlFor="email" className="form-label">
-                                                                Gmail
+                                                            <label htmlFor="email" className="form-label-customer" style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Gmail
                                                             </label>
                                                             <input
                                                                 id="email"
-                                                                type="email"
+                                                                type="text"
                                                                 className={`form-control ${
                                                                     errors.email ? "is-invalid" : ""
                                                                 }`}
@@ -141,11 +157,12 @@ const EmployeeCreate = () => {
                                                                 <div className="invalid-feedback">{errors.email}</div>
                                                             )}
                                                         </div>
-                                                        <h4>Hình ảnh</h4>
+                                                        <h4 className="font_style_employee_account">Hình ảnh</h4>
                                                         <div className="mb-3 text-center">
                                                             <label
                                                                 htmlFor="employeeImage"
                                                                 className="form-label"
+                                                                style={{fontWeight: "bold"}}
                                                             >
                                                                 Ảnh đại diện
                                                             </label>
@@ -172,10 +189,10 @@ const EmployeeCreate = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
-                                                        <h4>Thông tin cá nhân</h4>
+                                                        <h4 className="font_style_employee_account">Thông tin cá nhân</h4>
                                                         <div className="mb-3">
-                                                            <label htmlFor="name" className="form-label">
-                                                                Họ và tên
+                                                            <label htmlFor="name" className="form-label-customer" style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Họ và tên
                                                             </label>
                                                             <input
                                                                 id="name"
@@ -192,8 +209,8 @@ const EmployeeCreate = () => {
                                                             )}
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="phone" className="form-label">
-                                                                Số điện thoại
+                                                            <label htmlFor="phone" className="form-label-customer" style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Số điện thoại
                                                             </label>
                                                             <input
                                                                 id="phone"
@@ -210,8 +227,8 @@ const EmployeeCreate = () => {
                                                             )}
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="gender" className="form-label">
-                                                                Giới tính
+                                                            <label htmlFor="gender" className="form-label-customer" style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Giới tính
                                                             </label>
                                                             <select
                                                                 id="gender"
@@ -226,7 +243,7 @@ const EmployeeCreate = () => {
                                                             </select>
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="dateOfBirth" className="form-label">
+                                                            <label htmlFor="dateOfBirth" className="form-label" style={{fontWeight: "bold"}}>
                                                                 Ngày sinh
                                                             </label>
                                                             <input
@@ -238,7 +255,7 @@ const EmployeeCreate = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="address" className="form-label">
+                                                            <label htmlFor="address" className="form-label" style={{fontWeight: "bold"}}>
                                                                 Địa chỉ
                                                             </label>
                                                             <input
@@ -251,7 +268,7 @@ const EmployeeCreate = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="col-12 text-center">
+                                                    <div className="col-12 text-end">
                                                         <button
                                                             type="button"
                                                             className="btn btn-outline-danger mt-3 mx-3"
@@ -278,7 +295,7 @@ const EmployeeCreate = () => {
                                                         </button>
                                                         <button
                                                             type="submit"
-                                                            className="btn btn-outline-primary mt-3 mx-3"
+                                                            className="btn btn-outline-primary mt-3 "
                                                             style={{
                                                                 borderColor: primaryColor,
                                                                 backgroundColor: primaryColor,

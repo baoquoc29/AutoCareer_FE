@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_university_id} from "../../Redux/actions/UniversityThunk";
 import {Footer} from "../../Component/FooterComponent/Footer";
+import {UsergroupAddOutlined} from "@ant-design/icons";
 
 
 export function UniversityTemplate() {
@@ -47,6 +48,14 @@ export function UniversityTemplate() {
                 {label: 'Danh sách công việc', link: '/workshop-manager', icon: ''},
                 {label: 'Đề xuất công việc', link: '/section-manager', icon: ''},
                 {label: 'Yêu cầu hợp tác', link: '/section-manager', icon: ''}
+            ]
+        },
+        {
+            label: 'Hợp tác',
+            icon: 'fa-solid fa-handshake',
+            subMenu: [
+                {label: 'Quản lý hợp tác', link: '/cooperation-manager', icon: ''},
+
             ]
         },
         {

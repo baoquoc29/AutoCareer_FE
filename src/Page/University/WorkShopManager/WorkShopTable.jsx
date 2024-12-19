@@ -6,19 +6,25 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
-const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
+const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
     const columns = [
         {
             title: "STT",
-            dataIndex: "id",
-            key: "id",
-            sorter: (a, b) => a.id - b.id, // Sắp xếp số
+            key: "stt",
+            render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
+            sorter: (a, b) => a.id - b.id,
         },
         {
             title: "Tiêu đề",
             dataIndex: "title",
             key: "title",
             sorter: (a, b) => a.title.localeCompare(b.title), // Sắp xếp chuỗi
+            render: (text) => (
+                <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {text}
+                </div>
+            ),
+            ellipsis: true, // Tự động cắt và thêm dấu ba chấm
         },
         {
             title: "Ngày bắt đầu",
@@ -31,6 +37,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
                 startDate
                     ? dayjs(startDate, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY")
                     : "N/A",
+            ellipsis: true,
         },
         {
             title: "Ngày kết thúc",
@@ -60,8 +67,12 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
             title: "Địa điểm",
             dataIndex: "location",
             key: "location",
-            render: (location) =>
-                location && location.description ? location.description : "N/A",
+            render: (location) => (
+                <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {location && location.description ? location.description : "N/A"}
+                </div>
+            ),
+            ellipsis: true, // Tự động cắt và thêm dấu ba chấm
         },
         {
             title: "Trạng thái",
@@ -87,25 +98,50 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView }) => {
         {
             title: "Hành động",
             key: "action",
-            render: (_, record) => (
-        <Space size="middle" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <Tooltip title="Xem chi tiết ">
-                <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onView(record)}/>
-            </Tooltip>
-            <Tooltip title=" Chỉnh sửa ">
-                <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
-                        onClick={() => onEdit(record)}/>
-            </Tooltip>
-            <Tooltip title="Xóa">
-                <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>}   onClick={() => onDelete(record.id,record.title)}/>
-            </Tooltip>
-        </Space>
-            ),
-        },
+            render: (_, record) => {
+                const isFutureStartDate = record.startDate
+                    ? dayjs(record.startDate, "DD/MM/YYYY HH:mm").isBefore(dayjs())
+                    : false;
+
+                return (
+                    <Space size="middle" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Tooltip title="Xem chi tiết">
+                            <Button
+                                type="primary"
+                                icon={<EyeOutlined />}
+                                onClick={() => onView(record)}
+                            />
+                        </Tooltip>
+                        <Tooltip title={isFutureStartDate ? "Không thể chỉnh sửa trước khi bắt đầu" : "Chỉnh sửa"}>
+                            <Button
+                                style={{
+                                    backgroundColor: isFutureStartDate ? "#f5f5f5" : "yellow", // Đổi màu nếu bị disable
+                                    pointerEvents: isFutureStartDate ? "none" : "auto", // Ngăn chặn sự kiện click nếu disable
+                                }}
+                                variant="outlined"
+                                icon={<EditOutlined />}
+                                disabled={isFutureStartDate} // Disable nếu ngày bắt đầu > ngày hiện tại
+                                onClick={() => onEdit(record)}
+                            />
+                        </Tooltip>
+                        <Tooltip title="Xóa">
+                            <Button
+                                variant="solid"
+                                color="danger"
+                                icon={<DeleteOutlined />}
+                                onClick={() => onDelete(record.id, record.title)}
+                            />
+                        </Tooltip>
+                    </Space>
+                );
+            },
+        }
+
     ];
 
     return (
         <Table
+            style={{ marginTop: 50 }}
             locale={{
                 emptyText: "Không tìm thấy kết quả tương ứng."
             }}

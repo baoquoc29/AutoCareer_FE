@@ -6,6 +6,7 @@ import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './SubAdminUpdate.css';
+import SubAdminValidation from "../../../Utils/Validation/University/SubAdminValidation";
 
 const SubAdminUpdate = ({open, onClose, subAdminData}) => {
     const dispatch = useDispatch();
@@ -20,6 +21,8 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
             address: "",
             subAdminImage: null,
         },
+        enableReinitialize: true,
+        validationSchema: SubAdminValidation(["phone", "gender", "address", "name", "subAdminImage"]),
         onSubmit: async (values) => {
             await handleSubmit(values)
         },
@@ -38,11 +41,10 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
         console.log(formData.values);
 
         dispatch(update_sub_admin(formData))
-            .then(() => {
-                toast.success("Sửa thành công");
-                dispatch(get_detail_sub_admin(subAdminData.id));
-                dispatch(get_all_sub_admin());
+            .then(async () => {
                 onClose();
+                await dispatch(get_detail_sub_admin(subAdminData.id));
+                await dispatch(get_all_sub_admin());
             })
             .catch((error) => {
                 toast.error(error.messages);
@@ -70,34 +72,45 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
             <Form layout="vertical" onFinish={formik.handleSubmit}>
                 <Row gutter={[16, 16]}>
                     <Col span={12}>
-                        <div className="image-sub-admin-container">
-                            {formik.values.subAdminImage ? (
-                                <img
-                                    src={URL.createObjectURL(formik.values.subAdminImage)}
-                                    alt="Preview"
-                                />
-                            ) : subAdminData?.subAdminImageId ? (
-                                <img
-                                    src={`${GET_IMAGE_URI}${subAdminData.subAdminImageId}`}
-                                    alt="Preview"
-                                />
-                            ) : (
-                                <img
-                                    src={"placeholder-avatar.jpg"}
-                                    alt="Preview"
-                                />
-                            )}
-                            <Upload
-                                name="subAdminImage"
-                                beforeUpload={(file) => {
-                                    formik.setFieldValue("subAdminImage", file);
-                                    return false;
-                                }}
-                                showUploadList={false}
-                            >
-                                <i className="fa-solid fa-pen upload-icon"></i>
-                            </Upload>
-                        </div>
+                        <Form.Item
+                            style={{
+                                textAlign: "center",
+                                display: "flex",
+                                justifyContent: "center"
+                            }}
+                            validateStatus={formik.errors.subAdminImage && formik.touched.subAdminImage ? 'error' : ''}
+                            help={formik.errors.subAdminImage && formik.touched.subAdminImage ? formik.errors.subAdminImage : ''}
+                        >
+
+                            <div className="image-sub-admin-container">
+                                {formik.values.subAdminImage ? (
+                                    <img
+                                        src={URL.createObjectURL(formik.values.subAdminImage)}
+                                        alt="Preview"
+                                    />
+                                ) : subAdminData?.subAdminImageId ? (
+                                    <img
+                                        src={`${GET_IMAGE_URI}${subAdminData.subAdminImageId}`}
+                                        alt="Preview"
+                                    />
+                                ) : (
+                                    <img
+                                        src={"placeholder-avatar.jpg"}
+                                        alt="Preview"
+                                    />
+                                )}
+                                <Upload
+                                    name="subAdminImage"
+                                    beforeUpload={(file) => {
+                                        formik.setFieldValue("subAdminImage", file);
+                                        return false;
+                                    }}
+                                    showUploadList={false}
+                                >
+                                    <i className="fa-solid fa-pen upload-icon"></i>
+                                </Upload>
+                            </div>
+                        </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item label="Mã quản trị viên">
@@ -111,12 +124,18 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
 
                 <Row gutter={[16, 16]}>
                     <Col span={12}>
-                        <Form.Item label="Họ tên">
+                        <Form.Item label="Họ tên"
+                                   validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}
+                                   help={formik.errors.name && formik.touched.name ? formik.errors.name : ''}
+                                   >
                             <Input name="name" value={formik.values.name} onChange={formik.handleChange}/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Giới tính">
+                        <Form.Item label="Giới tính"
+                                   validateStatus={formik.errors.gender && formik.touched.gender ? 'error' : ''}
+                                   help={formik.errors.gender && formik.touched.gender ? formik.errors.gender : ''}
+                                   >
                             <Select
                                 name="gender"
                                 value={formik.values.gender}
@@ -132,25 +151,33 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
 
                 <Row gutter={[16, 16]}>
                     <Col span={12}>
-                        <Form.Item label="Số điện thoại">
+                        <Form.Item label="Số điện thoại"
+                                   validateStatus={formik.errors.phone && formik.touched.phone ? 'error' : ''}
+                                   help={formik.errors.phone && formik.touched.phone ? formik.errors.phone : ''}
+                        >
                             <Input name="phone" onChange={formik.handleChange} value={formik.values.phone}/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ">
+                        <Form.Item label="Địa chỉ"
+                                   validateStatus={formik.errors.address && formik.touched.address ? 'error' : ''}
+                                   help={formik.errors.address && formik.touched.address ? formik.errors.address : ''}
+                        >
                             <Input name="address" onChange={formik.handleChange} value={formik.values.address}/>
                         </Form.Item>
                     </Col>
                 </Row>
+                <Form.Item>
 
-                <div className="action-buttons">
-                    <Button type="primary" htmlType="submit">
-                        Lưu
-                    </Button>
-                    <Button type="default" onClick={onClose}>
-                        Hủy
-                    </Button>
-                </div>
+                    <div className="action-buttons">
+                        <Button type="primary" htmlType="submit">
+                            Lưu
+                        </Button>
+                        <Button type="default" onClick={onClose}>
+                            Hủy
+                        </Button>
+                    </div>
+                </Form.Item>
             </Form>
         </Modal>
     );

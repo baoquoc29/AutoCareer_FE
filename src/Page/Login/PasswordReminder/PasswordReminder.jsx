@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Input, Button, Form, notification, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    clearResponseBusiness,
     send_code_forgot,
     send_new_password,
 } from "../../../Redux/actions/UserThunk";
@@ -16,7 +17,21 @@ export const PasswordReminder = () => {
     const [timer, setTimer] = useState(60); // Countdown timer state
     const [canResend, setCanResend] = useState(false); // State for controlling resend button
     const response = useSelector((state) => state.UserReducer?.response); // Get response from redux store
+    const responseSendNewPassword = useSelector((state) => state.UserReducer?.responseSendNewPassword);
+    useEffect(() => {
+        return () => {
+            dispatch(clearResponseBusiness());
+        };
+    }, [dispatch]);
 
+    useEffect(() => {
+        if (responseSendNewPassword?.code === 200) {
+            notification.success({ message: 'Mật mới đã được cấp trong email. Vui lòng đăng nhập để đổi mật khẩu!' });
+            navigate("/");
+        } else if (responseSendNewPassword?.message) {
+            notification.error({ message: responseSendNewPassword.message || 'Mã xác minh không chính xác!' });
+        }
+    }, [responseSendNewPassword, navigate]);
     // Handle form submission for email
     const onFinish = (values) => {
         const { email } = values;
@@ -58,15 +73,13 @@ export const PasswordReminder = () => {
 
     // Handle code verification submission
     const handleSubmitCode = () => {
-        if (code === response?.data?.verificationCode) {
-            notification.success({ message: "Mã xác minh hợp lệ!", description: "Mã xác minh đã được xác nhận." });
-            const requestBody = { email: response?.data?.email, forgotCode: code };
-            dispatch(send_new_password(requestBody)); // Dispatch the action to set new password
-            notification.success({ message: 'Mật mới đã được cấp trong email. Vui lòng đăng nhập để đổi mật khẩu!' });
-            navigate("/"); // Redirect to the login page
-        } else {
-            notification.error({ message: "Mã xác minh không hợp lệ!", description: "Vui lòng nhập mã chính xác." });
-        }
+        const requestBody = {
+            forgotCode: code ,
+            email : response?.data?.email,
+        };
+        console.log(requestBody);
+        dispatch(send_new_password(requestBody));
+
     };
 
     // Handle resend verification code

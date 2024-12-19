@@ -35,7 +35,7 @@ const ProfileBusiness = () => {
 
     const handleEditClick = () => {
         if (business?.id) {
-            navigate(`/profile-business-edit`, { state: { businessId: business.id } });
+            navigate(`/profile-business-edit`, { state: { businessId: business.id }});
         }
     };
 

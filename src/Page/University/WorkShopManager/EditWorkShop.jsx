@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Upload, Button, Select, DatePicker, Row, Col, Modal } from "antd";
+import {Form, Input, Upload, Button, Select, DatePicker, Row, Col, Modal, notification} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import the styles for ReactQuill
 
 import { useDispatch, useSelector } from "react-redux";
-import { update_work_shop, get_all_ward, get_all_provinces, get_all_district } from "../../../Redux/actions/WorkShopThunk";
+import {
+    update_work_shop,
+    get_all_ward,
+    get_all_provinces,
+    get_all_district,
+    clearResponseWorkshop
+} from "../../../Redux/actions/WorkShopThunk";
 import PropTypes from 'prop-types';
 import { toast } from "react-toastify";
 
@@ -98,7 +104,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
     const { provinces, districts, wards } = useSelector(state => state.WorkShopReducer);
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
-
+    const responseWorkShop = useSelector(state => state.WorkShopReducer.responseWorkShop);
     const handlePreview = (file) => {
         if (!file.url && !file.preview) {
             file.preview = URL.createObjectURL(file.originFileObj);
@@ -106,7 +112,22 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
         setPreviewImage(file.url || file.preview);
         setPreviewVisible(true);
     };
-
+    useEffect(() => {
+        form.resetFields();
+        return () => {
+            dispatch(clearResponseWorkshop());
+        };
+    }, [dispatch]);
+    useEffect(() => {
+        if (responseWorkShop?.code === 200) {
+            toast.success("Hội thảo đã được cập nhật thành công!");
+            form.resetFields();
+            setFileList([]);
+            onFinish();
+        } else if (responseWorkShop?.message) {
+            notification.error({ message: responseWorkShop.message || 'Lỗi không xác định!' });
+        }
+    }, [responseWorkShop]);
 
 
     useEffect(() => {
@@ -141,25 +162,51 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
     }, [dispatch, form, workshop]);
 
     const disablePastDates = (current) => {
-        return current && current < dayjs().startOf("day");
+        // Disable all dates before the current date and time
+        return current && current < dayjs().startOf('minute'); // So sánh với thời gian hiện tại đến phút
     };
+
+    const disableEndDate = (current) => {
+        const startDate = form.getFieldValue("startDate");
+        const endDate = form.getFieldValue("endDate");
+
+        // Nếu chưa chọn ngày bắt đầu, vô hiệu hóa tất cả
+        if (!startDate) return true;
+
+        // Kiểm tra nếu endDate nhỏ hơn startDate và hiển thị thông báo lỗi
+        if (endDate && dayjs(endDate).isBefore(dayjs(startDate))) {
+            toast.error("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!");
+            form.setFieldsValue({
+                endDate: null
+            });
+            return true; // Ngừng chọn ngày kết thúc nếu không hợp lệ
+        }
+
+        // So sánh ngày, giờ, phút (ngày kết thúc không thể trước ngày bắt đầu)
+        return current && current < dayjs(startDate).startOf("day");
+    };
+
+
 
     const disableExpirationDate = (current) => {
         const startDate = form.getFieldValue("startDate");
         const endDate = form.getFieldValue("endDate");
-        return current && (current < startDate || current > endDate);
+        if (!startDate || !endDate) return true; // Nếu chưa chọn ngày bắt đầu/kết thúc, disable tất cả
+        // Disable dates outside the range of startDate and endDate, including hour and minute
+        return current && (current < dayjs(startDate).startOf('minute') || current > dayjs(endDate).endOf('minute'));
     };
 
     const handleStartDateChange = (value) => {
         setIsStartDateSelected(!!value);
-        form.setFieldsValue({ endDate: null, expirationDate: null });
+        form.setFieldsValue({ endDate: null, expirationDate: null }); // Reset ngày liên quan
         setIsEndDateSelected(false);
     };
 
     const handleEndDateChange = (value) => {
         setIsEndDateSelected(!!value);
-        form.setFieldsValue({ expirationDate: null });
+        form.setFieldsValue({ expirationDate: null }); // Reset ngày hết hạn
     };
+
 
     const handleProvinceChange = (value) => {
         const provinceId = value;
@@ -257,17 +304,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                 formData.append("imageWorkshop", fileList[0].originFileObj);
             }
 
-            dispatch(update_work_shop(workshop.id, formData))
-                .then(() => {
-                    toast.success("Hội thảo đã được cập nhật thành công!");
-                    form.resetFields();
-                    setFileList([]); // Clear file list after success
-                    onFinish(); // Handle success callback
-                })
-                .catch(error => {
-                    toast.error("Cập nhật hội thảo thất bại!");
-                    console.error(error); // Log the error for debugging
-                });
+            dispatch(update_work_shop(workshop.id, formData));
         })
             .catch((errorInfo) => {
                 console.log('Validate Failed:', errorInfo);  // Xem lỗi nếu có
@@ -280,7 +317,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
     return (
         <Container>
             <Title>Chỉnh sửa hội thảo</Title>
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" autocomplete="off">
                 <FormItem    rules={[{required: true, message: 'Vui lòng nhập tiêu đề'}]} label="Tiêu đề" name="title">
                     <Input
                     rules
@@ -289,21 +326,52 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
 
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem label="Ngày bắt đầu" name="startDate"   rules={[{required: true, message: 'Vui lòng chọn ngày bắt đầu'}]}>
-                            <DatePicker     format="YYYY-MM-DD HH:mm"  style={{ width: "100%" }} placeholder="Chọn ngày bắt đầu" showTime disabledDate={disablePastDates} onChange={handleStartDateChange} />
+                        <FormItem
+                            label="Ngày bắt đầu"
+                            name="startDate"
+                            rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu' }]}
+                        >
+                            <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                style={{ width: "100%" }}
+                                placeholder="Chọn ngày bắt đầu"
+                                showTime
+                                disabledDate={disablePastDates}
+                                onChange={handleStartDateChange}
+                            />
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Ngày kết thúc" name="endDate"       rules={[{required: true, message: 'Vui lòng chọn ngày kết thúc'}]}>
-                            <DatePicker    format="YYYY-MM-DD HH:mm"   style={{ width: "100%" }} placeholder="Chọn ngày kết thúc" showTime disabledDate={disablePastDates} onChange={handleEndDateChange} />
+                        <FormItem
+                            label="Ngày kết thúc"
+                            name="endDate"
+                            rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc' }]}
+                        >
+                            <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                style={{ width: "100%" }}
+                                placeholder="Chọn ngày kết thúc"
+                                showTime
+                                disabledDate={disableEndDate}
+                                onChange={handleEndDateChange}
+                            />
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="Ngày hết hạn" name="expirationDate"   rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}>
-                            <DatePicker   style={{ width: "100%" }} placeholder="Chọn ngày hết hạn" disabledDate={disableExpirationDate} />
+                        <FormItem
+                            label="Ngày hết hạn"
+                            name="expirationDate"
+                            rules={[{ required: true, message: 'Vui lòng chọn ngày hết hạn' }]}
+                        >
+                            <DatePicker
+                                style={{ width: "100%" }}
+                                placeholder="Chọn ngày hết hạn"
+                                disabledDate={disableExpirationDate}
+                            />
                         </FormItem>
                     </Col>
                 </Row>
+
 
                 <Row gutter={16}>
                     <Col span={8}>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, Upload, Modal, notification, Spin } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import {sign_up_business, verify_account_business} from "../../../Redux/actions/UserThunk";
+import {clearResponseBusiness, sign_up_business, verify_account_business} from "../../../Redux/actions/UserThunk";
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
 import {toast} from "react-toastify";
@@ -22,8 +22,13 @@ export function SignUpBusiness() {
     const [hasShownModal, setHasShownModal] = useState(false);
 
     const response = useSelector((state) => state.UserReducer?.responseBusiness);
-
-    // Quản lý thời gian và khả năng gửi lại mã
+    const responseSignUp= useSelector((state) => state.UserReducer?.responseSignUpBusiness);
+    useEffect(() => {
+        form.resetFields();
+        return () => {
+            dispatch(clearResponseBusiness());
+        };
+    }, [dispatch]);
     useEffect(() => {
         let interval;
         if (!canResend && timer > 0) {
@@ -38,7 +43,7 @@ export function SignUpBusiness() {
     useEffect(() => {
         if (response) {
             if (response.code === 200) {
-                notification.success({ message: 'Mã xác nhận đã được gửi thành công!' });
+                // notification.success({ message: 'Mã xác nhận đã được gửi thành công!' });
                 setTimeout(() => {
                     setIsLoading(false);
                     if (!hasShownModal) {
@@ -50,11 +55,20 @@ export function SignUpBusiness() {
                 setTimer(60); // Reset bộ đếm về 60 giây
             } else if (response.message) {
                 setIsLoading(false);
-                notification.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
+                toast.error(response.message || 'Lỗi trong quá trình gửi mã xác nhận' );
             }
 
         }
     }, [response, hasShownModal]);
+
+    useEffect(() => {
+        if (responseSignUp?.code === 200) {
+            toast.success('Đăng ký tài khoản của bạn sẽ được xem xét!' );
+            navigate("/");
+        } else if (responseSignUp?.message) {
+            toast.error(responseSignUp.message || 'Mã xác minh không chính xác!' );
+        }
+    }, [responseSignUp, navigate]);
 
 
 
@@ -67,12 +81,12 @@ export function SignUpBusiness() {
         const maxSize = 2 * 1024 * 1024;
 
         if (!isImage) {
-            notification.error({ message: 'Chỉ chấp nhận ảnh.' });
+            toast.error('Chỉ chấp nhận ảnh.' );
             return false;
         }
 
         if (file.size > maxSize) {
-            notification.error({ message: 'Kích thước file không được vượt quá 2MB.' });
+            toast.error('Kích thước file không được vượt quá 2MB.' );
             return false;
         }
 
@@ -84,13 +98,13 @@ export function SignUpBusiness() {
         const { companyName, taxCode, email, phone, password, confirmPassword } = values;
 
         if (password !== confirmPassword) {
-            notification.error({ message: 'Mật khẩu và xác nhận mật khẩu không khớp.' });
+            toast.error('Mật khẩu và xác nhận mật khẩu không khớp.' );
             return;
         }
 
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
         if (!passwordRegex.test(password)) {
-            notification.error({ message: 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.' });
+            toast.error('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.' );
             return;
         }
 
@@ -121,11 +135,10 @@ export function SignUpBusiness() {
     // Xác nhận mã
     const handleVerifyCodeSubmit = async () => {
         if (!code) {
-            notification.error({ message: 'Vui lòng nhập mã xác nhận.' });
+            toast.error('Vui lòng nhập mã xác nhận.' );
             return;
         }
 
-        if (code === response?.data?.verificationCode) {
             // Tạo FormData và thêm các giá trị từ form vào
             const businessData = new FormData();
             businessData.set("verificationCode", code);
@@ -142,14 +155,8 @@ export function SignUpBusiness() {
             if (licenseImage) {
                 businessData.append("licenseImage", licenseImage);
             }
-            console.log(formValues);
-            // Gửi thông tin lên server
             dispatch(sign_up_business(businessData));
-            notification.success({ message: 'Đăng ký tài khoản của bạn sẽ được xem xét!' });
-            navigate("/");
-        } else {
-            notification.error({ message: 'Mã xác nhận không chính xác!' });
-        }
+
     };
 
 
@@ -162,7 +169,6 @@ export function SignUpBusiness() {
         setFileList(newFileList);
 
     };
-
     // Xem trước ảnh
     const handleImagePreview = (file) => {
         setImagePreview(file.url || URL.createObjectURL(file.originFileObj));
@@ -197,7 +203,7 @@ export function SignUpBusiness() {
                                 <Input placeholder="Nhập email"/>
                             </Form.Item>
 
-                            <Form.Item label="Ảnh giấy phép" name="image">
+                            <Form.Item   rules={[{required: true, message: 'Ảnh là bắt buộc.'}]} label="Ảnh giấy phép" name="image">
                                 <Upload
                                     listType="picture"
                                     fileList={fileList}
@@ -267,7 +273,12 @@ export function SignUpBusiness() {
                         </Modal>
                         <div className="d-flex justify-content-end align-items-center gap-md-3 mt-4">
                             <p className="mb-0 fs-6">Bạn đã có tài khoản?</p>
-                            <NavLink to={"/"} className="btn-link text-decoration-none ms-1 fs-6">Đăng nhập</NavLink>
+                            <NavLink
+                                to={"/"}
+                                className="btn-link text-decoration-none ms-1 fs-6"
+                            >
+                                Đăng nhập
+                            </NavLink>
                         </div>
 
 
