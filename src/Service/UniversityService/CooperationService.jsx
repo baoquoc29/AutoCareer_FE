@@ -10,6 +10,10 @@ export class CooperationService extends baseService{
         return this.get(`api/cooperation/get-all-cooperation-university?page=${page}&size=${size}&keyword=${keyword}`);
     };
 
+    approve_cooperation_of_university = (formData) =>{
+        return this.postFormData('api/cooperation/approve-request')
+    }
+
 
 }
 export default CooperationService = new CooperationService();

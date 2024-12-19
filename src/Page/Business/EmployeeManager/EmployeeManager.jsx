@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Input, Modal, Pagination} from "antd";
+import {Button, Card, Input, Modal, Pagination, Select} from "antd";
 import "antd/dist/reset.css";
 import {DownloadOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    delete_employee_id,
-    get_all_employees_of_business_page,
-    get_employee_by_id
+    delete_employee_id, get_all_employees,
+    get_all_employees_of_business_page, restore_employee_id,
 } from "../../../Redux/actions/EmployeeThunk";
 import EmployeeTable from "./EmployeeTable";
 import EmployeeDetail from "./EmployeeDetail";
@@ -15,6 +14,8 @@ import {NavLink, useNavigate} from "react-router-dom";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import * as XLSX from "xlsx";
 
+const {Option} = Select;
+
 const EmployeeManager = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -22,21 +23,15 @@ const EmployeeManager = () => {
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const currentPage = useSelector((state) => state.EmployeeReducer.currentPage);
     const pageSize = useSelector((state) => state.EmployeeReducer.pageSize);
-    const keyword = useSelector((state) => state.EmployeeReducer.keyword);
     const totalElements = useSelector((state) => state.EmployeeReducer.totalElements);
+    const [status,setStatus] = useState("");
     const [searchText, setSearchText] = useState("");
     const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
 
     useEffect(() => {
-        dispatch(get_all_employees_of_business_page(currentPage, pageSize, keyword));
-    }, [dispatch, currentPage, pageSize, load]);
-
-    // useEffect(() => {
-    //     if (selectedEmployee) {
-    //         dispatch(get_employee_by_id(selectedEmployee.id));
-    //     }
-    // }, [dispatch]);
+        dispatch(get_all_employees_of_business_page(currentPage, pageSize, searchText, status));
+    }, [dispatch, currentPage, searchText, pageSize, status, load]);
 
     //xem chi tiet nhan vien
     const handleInfo = (record) => {
@@ -52,13 +47,12 @@ const EmployeeManager = () => {
     };
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_employees_of_business_page(page, pageSize, searchText)); // Gọi API với trang và kích thước mới
+        dispatch(get_all_employees_of_business_page(page, pageSize, searchText, status)); // Gọi API với trang và kích thước mới
     };
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
-        dispatch(get_all_employees_of_business_page(1, pageSize, value)); // Gọi API với từ khóa
     };
 
     const confirmDelete = (record) => {
@@ -74,6 +68,18 @@ const EmployeeManager = () => {
         });
     }
 
+    const confirmRestore = (record) => {
+        Modal.confirm({
+            title: "Xác nhận khôi phục",
+            content: "Bạn có chắc muốn khôi phục nhân viên này",
+            okText: "Xác nhận",
+            okType: "danger",
+            cancelText: "Hủy",
+            onOk() {
+                handleRestore(record);
+            },
+        });
+    }
     //xoa nhan vien
     const handleDelete = (employeeId) => {
 
@@ -87,7 +93,21 @@ const EmployeeManager = () => {
             })
     }
 
+    //Khôi phục nhân viên
+    const handleRestore = (employeeId) => {
+
+        dispatch(restore_employee_id(employeeId))
+            .then(() => {
+                toast.success("Khôi phục nhân viên thành công")
+                dispatch(get_all_employees_of_business_page())
+            })
+            .catch((error) => {
+                toast.success(error.messages)
+            })
+    }
+
     const exportToExcel = () => {
+
         if (employees.length === 0) {
             alert("No data to export!");
             return;
@@ -95,7 +115,8 @@ const EmployeeManager = () => {
 
         // Chuyển đổi dữ liệu thành định dạng Excel
         const worksheet = XLSX.utils.json_to_sheet(
-            employees.map((employee) => ({
+            employees.map((employee,index) => ({
+                "STT": index++,
                 "Mã nhân viên": employee.employeeCode,
                 "Họ và tên": employee.name,
                 "Email": employee.email,
@@ -140,50 +161,67 @@ const EmployeeManager = () => {
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between align-items-center mb-3">
                                                 {/* Thanh tìm kiếm */}
-                                                <Input
-                                                    placeholder="Tìm kiếm nhân viên..."
-                                                    value={searchText}
-                                                    onChange={handleSearch}
-                                                    prefix={<SearchOutlined/>}
-                                                    style={{width: 400}}
-                                                />
-
-                                                {/* Nút hành động */}
-                                                <div className="d-flex">
-                                                    <Button type="primary" icon={<PlusOutlined/>}
-                                                            style={{marginRight: 10}}>
-                                                        <NavLink
-                                                            to="/employee-create"
-                                                            style={{textDecoration: 'none', color: 'inherit'}}
-                                                        >
-                                                            Thêm mới
-                                                        </NavLink>
-                                                    </Button>
-                                                    <Button
-                                                        type="default"
-                                                        icon={<DownloadOutlined/>}
-                                                        onClick={exportToExcel}
-                                                        style={{
-                                                            backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
-                                                            borderColor: '#1d8f29',      // Màu viền
-                                                            color: 'white',              // Màu chữ
+                                                <div style={{display: 'flex', gap: '10px'}}>
+                                                    <Input
+                                                        placeholder="Tìm kiếm nhân viên..."
+                                                        value={searchText}
+                                                        onChange={handleSearch}
+                                                        prefix={<SearchOutlined/>}
+                                                        style={{width: 400}}
+                                                    />
+                                                    <Select
+                                                        placeholder="Chọn trạng thái duyệt"
+                                                        value={status}
+                                                        showSearch
+                                                        onChange={(value) => setStatus(value)}
+                                                        style={{width: 200}}
+                                                        filterOption={(input, option) => {
+                                                            const childrenText = String(option.props.children || ""); // Chuyển thành chuỗi nếu không phải
+                                                            return childrenText.toLowerCase().includes(input.toLowerCase()); // So sánh chữ thường
                                                         }}
                                                     >
-                                                        Xuất Excel
-                                                    </Button>
+                                                        <Option value="">Tất cả trạng thái</Option>
+                                                        <Option value="ACTIVE">Hoạt động</Option>
+                                                        <Option value="INACTIVE">Đã xóa</Option>
+                                                    </Select>
+                                                </div>
+                                                <div style={{display: 'flex', gap: '10px'}}>
+                                                    {/* Nút hành động */}
+                                                    <div className="d-flex">
+                                                        <Button type="primary" icon={<PlusOutlined/>}
+                                                                style={{marginRight: 10}}>
+                                                            <NavLink
+                                                                to="/employee-create"
+                                                                style={{textDecoration: 'none', color: 'inherit'}}
+                                                            >
+                                                                Thêm mới
+                                                            </NavLink>
+                                                        </Button>
+                                                        <Button
+                                                            type="default"
+                                                            icon={<DownloadOutlined/>}
+                                                            onClick={exportToExcel}
+                                                            style={{
+                                                                backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
+                                                                borderColor: '#1d8f29',      // Màu viền
+                                                                color: 'white',              // Màu chữ
+                                                            }}
+                                                        >
+                                                            Xuất Excel
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
-
-
-                                            <EmployeeTable
-                                                data={data}
-                                                onInfo={handleInfo}
-                                                onDetle={confirmDelete}
-                                                onEdit={handleEdit}
-                                            />
-                                            <ResultSummary totalElements={totalElements}/>
-                                        </div>
-                                        <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
+                                                <EmployeeTable
+                                                    data={data}
+                                                    onInfo={handleInfo}
+                                                    onDetle={confirmDelete}
+                                                    onEdit={handleEdit}
+                                                    onRestore={confirmRestore}
+                                                />
+                                                <ResultSummary totalElements={totalElements}/>
+                                            </div>
+                                            <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
                                             <Pagination
                                                 current={currentPage} // Gán mặc định nếu currentPage không hợp lệ
                                                 pageSize={pageSize}   // Gán mặc định nếu pageSize không hợp lệ

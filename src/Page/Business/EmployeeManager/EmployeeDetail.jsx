@@ -21,7 +21,7 @@ const EmployeeDetail = ({ open, onClose, employee }) => {
         const date = new Date(isoDate);
         const day = String(date.getDate()).padStart(2, "0");
         const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
-        const year = String(date.getFullYear()).slice(2); // Lấy 2 chữ số cuối của năm
+        const year = String(date.getFullYear()); // Lấy 2 chữ số cuối của năm
         return `${day}/${month}/${year}`;
     };
 
@@ -34,8 +34,8 @@ const EmployeeDetail = ({ open, onClose, employee }) => {
                 <p><strong>Giới tính:</strong> {employee.gender}</p>
                 <p><strong>Email nhân viên:</strong> {employee.email}</p>
                 <p><strong>Số điện thoại:</strong> {employee.phone}</p>
-                <p><strong>Ngày sinh:</strong> {formatDate(employee.dateOfBirth)}</p>
-                <p><strong>Địa chỉ:</strong> {employee.address}</p>
+                <p><strong>Ngày sinh:</strong> {employee.dateOfBirth ? formatDate(employee.dateOfBirth) : 'N/A'}</p>
+                <p><strong>Địa chỉ:</strong> {employee.address ? employee.address : 'N/A'}</p>
                 <p>
                     <strong>Trạng thái tài khoản: </strong>
                     <Tag color={getStatusColor(employee.status)}>{employee.status.toUpperCase()}</Tag>

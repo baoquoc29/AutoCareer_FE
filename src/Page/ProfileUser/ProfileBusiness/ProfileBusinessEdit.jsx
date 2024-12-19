@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './ProfileBusinessEdit.css';
-import {Button, Form, Input, InputNumber, Upload, Select, Row, Col, message} from "antd";
+import {Button, Form, Input, Upload, Select, Row, Col,} from "antd";
 import {get_business_by_id, update_business} from "../../../Redux/actions/BusinessThunk";
 import {UploadOutlined} from '@ant-design/icons';
 import {useLocation, useNavigate} from "react-router-dom";
@@ -138,8 +138,9 @@ const ProfileBusinessEdit = () => {
                             <div className="container__businessEdit mt-3">
                                 <div className="row">
                                     <div className="col-12">
-                                        <h1>Chỉnh sửa hồ sơ</h1>
                                         <div className="card__university__edit">
+                                            <h1 className="title__Business__edit">Chỉnh sửa hồ sơ</h1>
+                                            <hr className="line__Business__edit"/>
                                             <Form
                                                 name="businessForm"
                                                 form={form}
@@ -229,7 +230,7 @@ const ProfileBusinessEdit = () => {
                                                                 }
                                                             ]}
                                                         >
-                                                            <Input />
+                                                            <Input/>
                                                         </Form.Item>
 
 
@@ -278,7 +279,7 @@ const ProfileBusinessEdit = () => {
                                                                 },
                                                             ]}
                                                         >
-                                                            <Input.TextArea rows={5}/>
+                                                            <Input.TextArea autoSize={{minRows: 5, maxRows: 5}}/>
                                                         </Form.Item>
 
                                                         <Form.Item

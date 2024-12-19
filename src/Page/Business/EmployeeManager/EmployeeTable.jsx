@@ -1,5 +1,5 @@
 import {Button, Space, Table, Tag, Tooltip} from "antd";
-import {DeleteOutlined, EditOutlined, EyeOutlined,} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined,} from "@ant-design/icons";
 import React from "react";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
@@ -16,7 +16,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             title: "Mã nhân viên",
             dataIndex: "employeeCode",
             key: "employeeCode",
-            align: 'center',
+            align: 'left',
             sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
         },
         {
@@ -43,17 +43,17 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             title: "Họ và tên",
             dataIndex: "name",
             key: "name",
-            align: 'center',
+            align: 'left',
             sorter: (a, b) => a.name.localeCompare(b.name),
             render: (name) => {
-                return name && name.length > 35 ? `${name.slice(0, 35)} ....` : name;
+                return name && name.length > 20 ? `${name.slice(0, 20)} ....` : name;
             },
         },
         {
             title: "Email",
             dataIndex: "email",
             key: "email",
-            align: 'center',
+            align: 'left',
             render: (email) => {
                 return email && email.length > 40 ? `${email.slice(0, 40)} ....` : email;
             },
@@ -62,13 +62,13 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             title: "Số điện thoại",
             dataIndex: "phone",
             key: "phone",
-            align: 'center',
+            align: 'left',
         },
         {
             title: "Trạng thái",
             key: "status",
             dataIndex: "status",
-            align: 'center',
+            align: 'left',
             render: (status) => {
                 // Gán màu dựa trên trạng thái
                 let color = "";
@@ -81,7 +81,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
                         break;
                     case "inactive":
                         color = "volcano";
-                        statusText = "Không hoạt động"; // Hiển thị "Không hoạt động"
+                        statusText = "Đã xóa"; // Hiển thị "Không hoạt động"
                         break;
                     default:
                         color = "geekblue"; // Mặc định cho các trạng thái khác
@@ -96,21 +96,33 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             },
         },
         {
-            title: 'Thao tác', key: 'actions',align: 'center', render: (text, record) => (
-                <Space size="small" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <Tooltip title="Xem chi tiết">
-                        <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onInfo(record)}/>
-                    </Tooltip>
-                    <Tooltip title="Chỉnh sửa">
-                        <Button style={{backgroundColor: "yellow"}} icon={<EditOutlined/>}
-                                onClick={() => onEdit(record.id)}/>
-                    </Tooltip>
-                    <Tooltip title="Xóa">
-                        <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>}
-                                onClick={() => onDetle(record.id)}/>
-                    </Tooltip>
-                </Space>
-            ),
+            title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => {
+                const isInactive = record.status.toLowerCase() === 'inactive'; // Check if status is inactive
+                return (
+                    <Space size="small" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Tooltip title="Xem chi tiết">
+                            <Button type={"primary"} icon={<EyeOutlined />} onClick={() => onInfo(record)} />
+                        </Tooltip>
+                        <Tooltip title="Chỉnh sửa">
+                            <Button
+                                style={{ backgroundColor: "yellow" }}
+                                icon={<EditOutlined />}
+                                onClick={() => onEdit(record.id)}
+                                disabled={isInactive} // Disable if inactive
+                            />
+                        </Tooltip>
+                        {isInactive ? (
+                            <Tooltip title="Khôi phục">
+                                <Button style={{ backgroundColor: '#32CD32', color: 'white' }} icon={<ReloadOutlined />} onClick={() => onRestore(record.id)} />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Xóa">
+                                <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined />} onClick={() => onDetle(record.id)} />
+                            </Tooltip>
+                        )}
+                    </Space>
+                );
+            },
         },
     ];
     return (

@@ -45,16 +45,16 @@ const CooperationManager = () => {
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
         dispatch(get_all_cooperation_of_university_page(1, pageSize, value)); // Gọi API với từ khóa
     };
-    //Chap thuan hop tac
+    //Tu choi hop tac
     const handleRejectClick= (message)=>{
         const data =  ({"id": selectedCooperation.id, "message": message})
         console.log(data);
         // call api rejected
     }
 
-    //Tu choi hop tac
+    //Chap thuan hop tac
     const handleApproveClick= (cooperation)=>{
-
+        
 
     }
     //Xac nhan hop tac

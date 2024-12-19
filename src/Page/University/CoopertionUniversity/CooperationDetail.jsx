@@ -154,13 +154,8 @@ const CooperationDetail = () => {
                                     <Row justify="space-between" style={{ marginTop: "20px" }}>
                                         <Button
                                             type="default"
+                                            danger
                                             onClick={() => navigate(-1)} // Quay lại trang trước
-                                            style={{
-                                                backgroundColor: "#f0f0f0",  // Màu nền nhẹ
-                                                borderColor: "#d9d9d9",
-                                                color: "#595959",
-                                                marginRight: "10px",  // Thêm khoảng cách giữa 2 nút
-                                            }}
                                         >
                                             Quay lại
                                         </Button>

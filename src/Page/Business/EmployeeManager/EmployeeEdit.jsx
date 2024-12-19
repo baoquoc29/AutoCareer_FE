@@ -4,15 +4,18 @@ import {useDispatch} from "react-redux";
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {toast} from "react-toastify";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import './EmployeeCSS/EmployeeCreateCSS.css';
 
 const EmployeeEdit = () => {
     const location = useLocation();
-    const { employee } = location.state;
+    // const { employee } = location.state;
+    const employee = location.state?.employee || null;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(null);
     const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
     const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
+    const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
         email: '',
@@ -23,6 +26,31 @@ const EmployeeEdit = () => {
         address: '',
         employeeImage: null,
     });
+
+    const validateField = (field, value) => {
+        switch (field) {
+            case "email":
+                if (!value) return "Email là bắt buộc.";
+                const emailNoSpace = /^\S.*$/; // Không bắt đầu bằng dấu cách
+                if (!emailNoSpace.test(value)) return "Email không được bắt đầu bằng dấu cách";
+                const emailRegex = /^(?!\s)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(value)) return "Email không hợp lệ.";
+                break;
+            case "name":
+                if (!value) return "Tên là bắt buộc.";
+                const nameRegex = /^\S.*$/;
+                if (!nameRegex.test(value)) return "Tên không được bắt đầu bằng dấu cách";
+                break;
+            case "phone":
+                if (!value) return "Số điện thoại là bắt buộc.";
+                const phoneRegex = /^(\+84|0)[3-9]\d{8}$/;
+                if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0 theo sau là số từ 3-9.";
+                break;
+            default:
+                break;
+        }
+        return null;
+    };
 
     useEffect(() => {
         if (employee) {
@@ -61,14 +89,33 @@ const EmployeeEdit = () => {
             ...prevData,
             [id]: value,
         }));
+
+        // Kiểm tra độ dài chuỗi nhập vào
+        if (value.length > 255) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [id]: "Trường này không được vượt quá 255 ký tự",
+            }));
+        } else {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [id]: validateField(id, value), // Gọi hàm validate cho các kiểm tra khác
+            }));
+        }
     };
 
     const handleSave = (event) => {
         event.preventDefault(); // Ngăn tải lại trang
-        console.log(formData);
-        // Kiểm tra xem các trường bắt buộc đã được điền đầy đủ chưa
-        if (!formData.email || !formData.name || !formData.phone) {
-            toast.error("Vui lòng điền đầy đủ thông tin bắt buộc!");
+
+        // Kiểm tra lỗi cho tất cả các trường
+        const newErrors = {};
+        Object.keys(formData).forEach((field) => {
+            const error = validateField(field, formData[field]);
+            if (error) newErrors[field] = error;
+        });
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
 
@@ -112,12 +159,14 @@ const EmployeeEdit = () => {
                                     <div className="row">
                                         <div className="card h-100">
                                             <div className="card-body">
-                                                <h1 className="card-title">Chỉnh sửa nhân viên</h1>
+                                                <h1 className="card-title font_style_employee">Chỉnh sửa nhân viên</h1>
                                                 <form className="row g-3" onSubmit={handleSave}>
                                                     <div className="col-md-6">
-                                                        <h4>Tài khoản</h4>
+                                                        <h4 className="font_style_employee_account" >Tài khoản</h4>
                                                         <div className="mb-3">
-                                                            <label htmlFor="email" className="form-label">Gmail</label>
+                                                            <label htmlFor="email" className="form-label-customer" style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Gmail
+                                                            </label>
                                                             <input
                                                                 id="email"
                                                                 type="email"
@@ -127,9 +176,9 @@ const EmployeeEdit = () => {
                                                                 value={formData.email}
                                                             />
                                                         </div>
-                                                        <h4>Hình ảnh</h4>
+                                                        <h4 className="font_style_employee_account">Hình ảnh</h4>
                                                         <div className="mb-3 text-center">
-                                                            <label htmlFor="employeeImage" className="form-label">Ảnh
+                                                            <label htmlFor="employeeImage" className="form-label" style={{fontWeight: "bold"}}>Ảnh
                                                                 đại diện</label>
                                                             <div className="mb-3">
                                                                 <input
@@ -166,34 +215,51 @@ const EmployeeEdit = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
-                                                        <h4>Thông tin cá nhân</h4>
+                                                        <h4 className="font_style_employee_account">Thông tin cá
+                                                            nhân</h4>
                                                         <div className="mb-3">
-                                                            <label htmlFor="name" className="form-label">Họ và
-                                                                tên</label>
+                                                            <label htmlFor="name" className="form-label-customer"
+                                                                   style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Họ và tên
+                                                            </label>
                                                             <input
                                                                 id="name"
                                                                 type="text"
-                                                                className="form-control"
+                                                                className={`form-control ${
+                                                                    errors.name ? "is-invalid" : ""
+                                                                }`}
                                                                 placeholder="Họ và tên"
                                                                 value={formData.name}
                                                                 onChange={handleInputChange}
                                                             />
+                                                            {errors.name && (
+                                                                <div className="invalid-feedback">{errors.name}</div>
+                                                            )}
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="phone" className="form-label">Số điện
-                                                                thoại</label>
+                                                            <label htmlFor="phone" className="form-label-customer"
+                                                                   style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Số điện thoại
+                                                            </label>
                                                             <input
                                                                 id="phone"
                                                                 type="text"
-                                                                className="form-control"
+                                                                className={`form-control ${
+                                                                    errors.phone ? "is-invalid" : ""
+                                                                }`}
                                                                 placeholder="Số điện thoại"
                                                                 value={formData.phone}
                                                                 onChange={handleInputChange}
                                                             />
+                                                            {errors.phone && (
+                                                                <div className="invalid-feedback">{errors.phone}</div>
+                                                            )}
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="gender" className="form-label">Giới
-                                                                tính</label>
+                                                            <label htmlFor="gender" className="form-label-customer"
+                                                                   style={{fontWeight: "bold"}}>
+                                                                <span className="required-label">*</span>Giới tính
+                                                            </label>
                                                             <select
                                                                 id="gender"
                                                                 className="form-control"
@@ -207,7 +273,7 @@ const EmployeeEdit = () => {
                                                             </select>
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="dateOfBirth" className="form-label">Ngày
+                                                            <label htmlFor="dateOfBirth" className="form-label" style={{fontWeight: "bold"}}>Ngày
                                                                 sinh</label>
                                                             <input
                                                                 id="dateOfBirth"
@@ -218,7 +284,7 @@ const EmployeeEdit = () => {
                                                             />
                                                         </div>
                                                         <div className="mb-3">
-                                                            <label htmlFor="address" className="form-label">Địa
+                                                            <label htmlFor="address" className="form-label" style={{fontWeight: "bold"}}>Địa
                                                                 chỉ</label>
                                                             <input
                                                                 id="address"
@@ -230,7 +296,7 @@ const EmployeeEdit = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="col-12 text-center">
+                                                    <div className="col-12 text-end">
                                                         <button
                                                             type="button"
                                                             className="btn btn-outline-danger mt-3 mx-3"
@@ -257,7 +323,7 @@ const EmployeeEdit = () => {
                                                         </button>
                                                         <button
                                                             type="submit"
-                                                            className="btn btn-outline-primary mt-3 mx-3"
+                                                            className="btn btn-outline-primary mt-3 "
                                                             style={{
                                                                 borderColor: primaryColor,
                                                                 backgroundColor: primaryColor,
