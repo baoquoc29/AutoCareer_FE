@@ -19,6 +19,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
+    "dompurify": "^3.2.3",
     "express": "^4.21.1",
     "extended-eventsource": "^2.0.0",
     "font-awesome": "^4.7.0",

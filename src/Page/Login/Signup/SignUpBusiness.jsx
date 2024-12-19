@@ -203,7 +203,7 @@ export function SignUpBusiness() {
                                 <Input placeholder="Nhập email"/>
                             </Form.Item>
 
-                            <Form.Item label="Ảnh giấy phép" name="image">
+                            <Form.Item   rules={[{required: true, message: 'Ảnh là bắt buộc.'}]} label="Ảnh giấy phép" name="image">
                                 <Upload
                                     listType="picture"
                                     fileList={fileList}

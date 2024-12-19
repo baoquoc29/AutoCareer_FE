@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef, useMemo} from "react";
-import { Card, Row, Col, Dropdown, Menu, Pagination, Spin } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import { Card, Row, Col, Dropdown, Menu, Pagination, Popover } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { get_all_industry } from "../../Redux/actions/IndustryThunk";
@@ -10,14 +10,19 @@ import {
     get_all_job_by_region
 } from "../../Redux/actions/PortalThunk";
 import "../Portal/StylePortal/JobPortal.css";
+import DOMPurify from 'dompurify';
 import { DOMAIN } from "../../Utils/Setting/Config";
-import {CLEAR_JOBS_LIST} from "../../Redux/types/PortalType";
+import {
+    FaCalendarAlt,
+    FaExternalLinkAlt,
+    FaFileAlt,
+    FaMapMarkerAlt,
+} from "react-icons/fa";
 
 const defaultLocations = [
     { id: 0, name: "Tất cả" },
     { id: 1, name: "Hà Nội" },
     { id: 79, name: "Thành phố Hồ Chí Minh" },
-
 ];
 
 const salary = [
@@ -42,7 +47,7 @@ const JobPortal = () => {
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
 
-    const [size, setSize] = useState(9); // Số lượng item mỗi trang
+    const [size, setSize] = useState(9);
     const locationListRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -65,7 +70,6 @@ const JobPortal = () => {
                 setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
                 break;
             case "experience":
-
                 setFilteredOptions(undergraduateStudent);
                 setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
                 break;
@@ -83,7 +87,6 @@ const JobPortal = () => {
                 break;
         }
     }, [filter, industries]);
-
 
     // Lọc dữ liệu theo ngành nghề
     const onHandleChangeIndustry = (industryId) => {
@@ -181,6 +184,79 @@ const JobPortal = () => {
         </Menu>
     );
 
+    const jobPopoverContent = (job) => (
+        <div className="popover-content">
+
+            {/* Header với hình ảnh và thông tin job */}
+            <div className="popover-header">
+                <div className="header-left">
+                    <img
+                        src={`${DOMAIN}/api/v1/image/resource?imageId=${job.imageBusinessId}`}
+                        alt="job-img"
+                        className="job-img"
+                    />
+                </div>
+                <div className="header-right">
+                    <h3>
+                        <p className="icon-title"/> {job.title}
+                    </h3>
+                    <p className="business-name">
+                        <p className="icon-business"/> {job.businessName}
+                    </p>
+                    <p className="salary">
+                        <p className="icon-salary"/> {job.salary} triệu
+                    </p>
+                </div>
+
+            </div>
+
+            {/* Nội dung chính */}
+            <div className="popover-body">
+                <p className={"job-location-popover"}>
+                    <FaMapMarkerAlt className="icon-location"/> {job.province}
+                </p>
+                <p className={"job-location-requirement"}>
+                    <FaFileAlt className="icon-requirement"/> Sinh viên năm {job.level}
+                </p>
+                <p className={"job-location-expireDate"}>
+                    <FaCalendarAlt className="icon-calendar"/> {job.expireDate}
+                </p>
+            </div>
+
+            {/* Chi tiết công việc */}
+            <div className="popover-details">
+                <p>
+                    <strong>Mô tả công việc: </strong>
+                    <span dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(job.description)}}/>
+                </p>
+                <p>
+                    <strong>Yêu cầu công việc: </strong>
+                    <span dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(job.requirement)}}/>
+                </p>
+                <p>
+                    <strong>Quyền lợi: </strong>
+                    <span dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(job.benefit)}}/>
+                </p>
+                <p className="popover-job-location">
+                    <strong>Địa điểm làm việc: </strong>
+                    <span>{job.address}, {job.ward}, {job.district}, {job.province}</span>
+                </p>
+            </div>
+            <div className="popover-footer">
+                <a
+                    href={`/job/${job.id}`}
+                    className="view-details-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <FaExternalLinkAlt className="icon-link"/> Xem chi tiết
+                </a>
+            </div>
+
+        </div>
+    );
+
+
     return (
         <div className="job-portal-container">
             <p className="title-job-portal">Việc làm tốt nhất</p>
@@ -197,7 +273,6 @@ const JobPortal = () => {
                                 <DownOutlined className="dropdown-icon" />
                             </div>
                         </Dropdown>
-
                     </div>
 
                     <div className="location-scroll-container">
@@ -212,11 +287,9 @@ const JobPortal = () => {
                                         if (filter === "industry") onHandleChangeIndustry(option.id);
                                         setSelectedOption(option.id); // Cập nhật selectedOption
                                     }}
-
                                 >
                                     {option.name}
                                 </div>
-
                             ))}
                         </div>
                         <button className="scroll-btn" onClick={scrollRight}>{">"}</button>
@@ -224,46 +297,45 @@ const JobPortal = () => {
                 </div>
             </Card>
 
-                <>
-                    <Row gutter={[16, 2]} className="grid">
-                        {!response?.jobList?.length ? (
-                            <Col span={24}>
-                                <div className="no-jobs-message">
-                                    <p>Không có công việc nào phù hợp.</p>
+            <Row gutter={[16, 2]} className="grid">
+                {!response?.jobList?.length ? (
+                    <Col span={24}>
+                        <div className="no-jobs-message">
+                            <p>Không có công việc nào phù hợp.</p>
+                        </div>
+                    </Col>
+                ) : (
+                    response?.jobList?.map((job, index) => (
+                        <Col xs={24} sm={12} md={8} key={index}>
+                            <div className="job-portal-card">
+                                <div className="job-portal-card-image">
+                                    <img src={`${DOMAIN}/api/v1/image/resource?imageId=${job.imageBusinessId}`} alt="job-img" />
                                 </div>
-                            </Col>
-                        ) : (
-                            response?.jobList?.map((job, index) => (
-                                <Col xs={24} sm={12} md={8} key={index}>
-                                    <div className="job-portal-card">
-                                        <div className="job-portal-card-image">
-                                            <img src={`${DOMAIN}/api/v1/image/resource?imageId=${job.imageBusinessId}`} alt="job-img" />
-                                        </div>
-                                        <div className="job-portal-card-content">
-                                            <h3 className="job-portal-card-title">{job.title}</h3>
-                                            <p className="job-portal-card-company">{job.businessName}</p>
-                                            <div className="job-portal-card-location-salary">
-                                                <span className="job-portal-card-tag">{job.salary}</span>
-                                                <span className="job-portal-card-tag">{job.province}</span>
-                                            </div>
-                                        </div>
+                                <div className="job-portal-card-content">
+                                    <Popover content={jobPopoverContent(job)}  placement="right"
+                                             trigger="hover">
+                                        <h3 className="job-portal-card-title">{job.title}</h3>
+                                    </Popover>
+                                    <p className="job-portal-card-company">{job.businessName}</p>
+                                    <div className="job-portal-card-location-salary">
+                                        <span className="job-portal-card-tag">{job.salary}</span>
+                                        <span className="job-portal-card-tag">{job.province}</span>
                                     </div>
-                                </Col>
-                            ))
-                        )}
-                    </Row>
+                                </div>
+                            </div>
+                        </Col>
+                    ))
+                )}
+            </Row>
 
-
-
-                    <Pagination
-                        style={{ marginTop: "30px", display: "flex", justifyContent: "center" }}
-                        className="job-portal-pagination"
-                        current={currentPage}
-                        pageSize={size}
-                        total={totalElements}
-                        onChange={handlePageChange}
-                    />
-                </>
+            <Pagination
+                style={{ marginTop: "30px", display: "flex", justifyContent: "center" }}
+                className="job-portal-pagination"
+                current={currentPage}
+                pageSize={size}
+                total={totalElements}
+                onChange={handlePageChange}
+            />
         </div>
     );
 };

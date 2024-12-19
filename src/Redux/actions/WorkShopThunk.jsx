@@ -28,6 +28,23 @@ export const get_all_workshop_by_university = (idUniversity,page,size) => {
         }
     };
 };
+export const get_all_workshop_by_state = (state,page,size) => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_all_workshop_by_state(state,page,size);
+            if (res?.data?.workshops) {
+
+                dispatch({
+                    type: SET_WORK_SHOP,
+                    payload: res.data,
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching workshops:", error);
+            // Optionally, you can dispatch an error action or show a notification
+        }
+    };
+};
 
 // Action to create a new workshop
 export const create_work_shop = (formData) => {

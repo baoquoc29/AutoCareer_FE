@@ -9,41 +9,42 @@ const { Text } = Typography;
 const workshops = [
     {
         id: 1,
-        title: "Make friends & BlaBla Language Exchange Hanoi",
-        host: "Make friends & BlaBla Language Exchange Hanoi",
-        date: "Thu, Dec 12 · 7:30 PM GMT+7",
+        title: "Kết bạn & Giao lưu ngôn ngữ BlaBla tại Hà Nội",
+        host: "Kết bạn & Giao lưu ngôn ngữ BlaBla tại Hà Nội",
+        date: "Thứ Năm, 12 Tháng 12 · 7:30 PM",
         attendees: 45,
-        price: "Free",
+        price: "Miễn phí",
         image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=400&q=60",
     },
     {
         id: 2,
-        title: "Hanoi English Club",
-        host: "Hanoi English Club",
-        date: "Fri, Dec 13 · 7:30 PM GMT+7",
+        title: "Câu lạc bộ Tiếng Anh Hà Nội",
+        host: "Câu lạc bộ Tiếng Anh Hà Nội",
+        date: "Thứ Sáu, 13 Tháng 12 · 7:30 PM",
         attendees: 4,
-        price: "Free",
+        price: "Miễn phí",
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60",
     },
     {
         id: 3,
-        title: "Make friends & BlaBla Language Exchange Hanoi #2",
-        host: "Make friends  Hanoi 2",
-        date: "Fri, Dec 20 · 8:00 PM GMT+7",
+        title: "Kết bạn & Giao lưu ngôn ngữ BlaBla tại Hà Nội #2",
+        host: "Kết bạn Hà Nội 2",
+        date: "Thứ Sáu, 20 Tháng 12 · 8:00 PM",
         attendees: 18,
-        price: "Free",
+        price: "Miễn phí",
         image: "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?auto=format&fit=crop&w=400&q=60",
     },
     {
         id: 4,
-        title: "Make Friends & BlaBla Language Exchange - Special Secret Santa Hanoi",
-        host: "Make friends & BlaBla Language",
-        date: "Thu, Dec 19 · 7:30 PM GMT+7",
+        title: "Kết bạn & Giao lưu ngôn ngữ BlaBla - Bí mật tặng quà Noel tại Hà Nội",
+        host: "Kết bạn & Giao lưu ngôn ngữ BlaBla",
+        date: "Thứ Năm, 19 Tháng 12 · 7:30 PM ",
         attendees: 27,
-        price: "Free",
+        price: "Miễn phí",
         image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=400&q=60",
     },
 ];
+
 
 export default function WorkshopPortal() {
     return (

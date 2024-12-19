@@ -1,54 +1,39 @@
-import React, { useState, useRef } from "react";
-import { Row, Col, Pagination, Card } from "antd";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { Row, Col, Card } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { get_all_industry } from "../../Redux/actions/IndustryThunk";
+import { get_all_business_feature } from "../../Redux/actions/PortalThunk";
+import { DOMAIN } from "../../Utils/Setting/Config";
 import "../Portal/StylePortal/BusinessPortal.css";
 
-const jobs = [
-    { company: "Công Ty TNHH Giải Pháp Kết Nối", industry: "Bán lẻ", imageUrl: "https://via.placeholder.com/90", totalJob: "9 việc làm" },
-    { company: "Công Ty Cổ Phần Tổng RCC", industry: "Tài chính", imageUrl: "https://via.placeholder.com/90", totalJob: "2 việc làm" },
-    { company: "Công Ty Công Nghệ Giáo Dục Moon.vn", industry: "Marketing", imageUrl: "https://via.placeholder.com/90", totalJob: "3 việc làm" },
-    { company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", industry: "Y tế", imageUrl: "https://via.placeholder.com/90", totalJob: "4 việc làm" },
-    { company: "Công Ty ABC", industry: "Marketing", imageUrl: "https://via.placeholder.com/90", totalJob: "1 việc làm" },
-    { company: "Công Ty TNHH Giải Pháp Kết Nối", industry: "Bán lẻ", imageUrl: "https://via.placeholder.com/90", totalJob: "9 việc làm" },
-    { company: "Công Ty Cổ Phần Tổng RCC", industry: "Tài chính", imageUrl: "https://via.placeholder.com/90", totalJob: "2 việc làm" },
-    { company: "Công Ty Công Nghệ Giáo Dục Moon.vn", industry: "Marketing", imageUrl: "https://via.placeholder.com/90", totalJob: "3 việc làm" },
-    { company: "Công Ty Đầu Tư Phát Triển Y Khoa Việt Smile", industry: "Y tế", imageUrl: "https://via.placeholder.com/90", totalJob: "4 việc làm" },
-    { company: "Công Ty ABC", industry: "Marketing", imageUrl: "https://via.placeholder.com/90", totalJob: "1 việc làm" }, { company: "Công Ty TNHH Giải Pháp Kết Nối", industry: "Bán lẻ", imageUrl: "https://via.placeholder.com/90", totalJob: "9 việc làm" },
-    { company: "Công Ty Cổ Phần Tổng RCC", industry: "Tài chính", imageUrl: "https://via.placeholder.com/90", totalJob: "2 việc làm" },
-
-
-];
-
-const industry = [
-    "Tất cả", "Công nghệ", "Tài chính", "Marketing", "Bán lẻ", "Y tế", "Giáo dục", "Kỹ thuật",
-    "Nhân sự", "Sản xuất", "Nông nghiệp", "Dịch vụ khách hàng", "Bất động sản", "Hàng tiêu dùng",
-    "Vận tải", "Du lịch", "Khoa học", "Môi trường", "Nghệ thuật", "Truyền thông", "Ngân hàng",
-    "Văn hóa", "Pháp lý", "Xây dựng", "Thể thao", "Thực phẩm & Đồ uống", "IT & Phần mềm", "Tư vấn", "Giải trí"
-];
-
 const BusinessPortal = () => {
-    const [filter, setFilter] = useState("Tất cả");
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 9;
+    const [selectedIndustryId, setSelectedIndustryId] = useState(); // Lưu ID ngành đã chọn
     const locationListRef = useRef(null);
+    const dispatch = useDispatch();
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
+    const industries = useSelector((state) => state.IndustryReducer.industriesNoPag || []);
+    const businesses = useSelector((state) => state.PortalReducer.businessFeatures || []);
 
-    const scrollLeft = () => {
-        if (locationListRef.current) {
-            smoothScroll(locationListRef.current, -500); // Scroll left by 500 pixels
+    // Thêm "Tất cả" vào danh sách ngành
+    const updatedIndustries = useMemo(() =>
+            [{ id: 0, name: "Tất cả" }, ...industries.map((industry) => ({ id: industry.id, name: industry.name }))],
+        [industries]
+    );
+
+    // Gọi API để lấy danh sách ngành và doanh nghiệp
+    useEffect(() => {
+        if (!industries.length) {
+            dispatch(get_all_industry());
         }
-    };
+        dispatch(get_all_business_feature());
+    }, [dispatch, industries.length]);
 
-    const scrollRight = () => {
-        if (locationListRef.current) {
-            smoothScroll(locationListRef.current, 500); // Scroll right by 500 pixels
-        }
-    };
+    // Cuộn mượt sang trái/phải
+    const scrollLeft = () => smoothScroll(locationListRef.current, -500);
+    const scrollRight = () => smoothScroll(locationListRef.current, 500);
 
-// Smooth scrolling function with requestAnimationFrame
     const smoothScroll = (element, distance) => {
+        if (!element) return;
         const start = element.scrollLeft;
         const change = distance;
         const duration = 500;
@@ -69,19 +54,19 @@ const BusinessPortal = () => {
         requestAnimationFrame(animateScroll);
     };
 
+    // Thay đổi ngành được chọn
+    const onChangeIndustry = useCallback((industryId) => {
+        setSelectedIndustryId(industryId);
+        console.log(industryId);
+        dispatch(get_all_business_feature(industryId));
+    }, [dispatch]);
 
-    const handleFilterChange = (selectedFilter) => {
-        setFilter(selectedFilter);
-        setCurrentPage(1);
-    };
+    // Lọc doanh nghiệp dựa trên ngành đã chọn
+    const filteredBusiness = useMemo(() =>
+        selectedIndustryId === 0
+            ? businesses
+            : businesses.filter((business) => business.industryId === Number(selectedIndustryId))
 
-    const filteredJobs = jobs.filter((job) =>
-        filter === "Tất cả" || job.industry === filter
-    );
-
-    const paginatedJobs = filteredJobs.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
     );
 
     return (
@@ -90,58 +75,49 @@ const BusinessPortal = () => {
                 Doanh nghiệp tiêu biểu
             </div>
 
-
-            {/* Industry Scroll Container */}
+            {/* Container cuộn ngành */}
             <div className="industry-scroll-container">
-            <button className="scroll-btn" onClick={scrollLeft}>{"<"}</button>
+                <button className="scroll-btn" onClick={scrollLeft}>{"<"}</button>
                 <div className="industry-list" ref={locationListRef}>
-                    {industry.map((option, index) => (
+                    {updatedIndustries.map((industry) => (
                         <div
-                            key={index}
-                            className={`industry-item ${filter === option ? "active" : ""}`}
-                            onClick={() => handleFilterChange(option)} // Update active class on click
+                            key={industry.id}
+                            className={`industry-item ${selectedIndustryId === industry.id ? "active" : ""}`}
+                            onClick={() => onChangeIndustry(industry.id)}
                         >
-                            {option}
+                            {industry.name}
                         </div>
                     ))}
                 </div>
                 <button className="scroll-btn" onClick={scrollRight}>{">"}</button>
             </div>
 
-            {/* Display Jobs */}
-            <Row gutter={[16, 2]} className="grid-business-portal">
-                {paginatedJobs.length > 0 ? (
-                    paginatedJobs.map((job, index) => (
+            <Row gutter={[16, 16]} className="grid-business-portal">
+                {filteredBusiness.length > 0 ? (
+                    filteredBusiness.map((business, index) => (
                         <Col xs={24} sm={12} md={8} key={index}>
                             <div className="business-portal-card">
                                 <div className="business-portal-card-image">
-                                    <img src={job.imageUrl} alt={job.company || "Job Image"}/>
+                                    <img
+                                        src={`${DOMAIN}/api/v1/image/resource?imageId=${business.imageID}`}
+                                        alt={business.businessName || "Job Image"}
+                                    />
                                 </div>
                                 <div className="business-portal-card-content">
-                                    <h3 className="business-portal-card-title">{job.company}</h3>
-                                    <p className="business-portal-card-company">{job.industry}</p>
+                                    <h3 className="business-portal-card-title">{business.businessName}</h3>
+                                    <p className="business-portal-card-company">{business.industryName}</p>
                                     <div className="business-portal-card-location-salary">
-                                        <span className="business-portal-card-tag">{job.totalJob}</span>
+                                        <span className="business-portal-card-tag">{business.totalJob} Việc làm</span>
                                     </div>
                                 </div>
                             </div>
                         </Col>
                     ))
                 ) : (
-                    <p className="no-jobs-message">Không có công ty nào trong ngành này</p>
+                    <p className="no-business-message">Không có công ty nào trong ngành này</p>
                 )}
             </Row>
-
-            <div className="business-portal-pagination">
-                <Pagination
-                    current={currentPage}
-                    pageSize={pageSize}
-                    total={filteredJobs.length}
-                    onChange={handlePageChange}
-                />
-            </div>
         </Card>
-
     );
 };
 
