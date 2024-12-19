@@ -1,12 +1,12 @@
 import {Button, Modal} from "antd";
-
+import '../Style/Major.css'
 const MajorDetailModal = ({open, onClose, major,sections}) => {
     if (!major) return null;
     // Tìm section tương ứng với major.sectionId
     const sectionName = sections.find(section => section.id === major.sectionId)?.name || 'Không có thông tin';
     return (
         <>
-            <Modal open={open} onCancel={onClose} footer={null}>
+            <Modal className='modal-major' open={open} onCancel={onClose} footer={null}>
                 <h2 style={{textAlign:'center'}}>Chi tiết chuyên ngành</h2>
                 <p><strong>Khoa:</strong> {sectionName}</p> {/* Hiển thị tên khoa */}
                 <p><strong>Tên chuyên ngành:</strong> {major.name}</p>

@@ -1,82 +1,101 @@
-import React, {useEffect, useState} from "react";
-import {Bar} from 'react-chartjs-2';
-import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
-// Register necessary components for Chart.js
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import React, {useEffect} from 'react';
+import {Chart, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend} from 'chart.js';
+import {useDispatch, useSelector} from "react-redux";
+import {get_university_id} from "../../Redux/actions/UniversityThunk";
+import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
+import {Card} from "antd";
+import {get_total_ins} from "../../Redux/actions/InstructionalThunk";
+import {get_total_section} from "../../Redux/actions/SectionThunk";
+import {get_total_major} from "../../Redux/actions/MajorThunk";
+import PieChartComponent from "../../Component/ChartComponent/PieChartComponent";
+
+
+Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 export function University() {
-    const initialData = {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-            {
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3], // initial data
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
+    const dispatch = useDispatch();
 
-    // State to hold the chart data
-    const [data, setData] = useState(initialData);
-
-    // Effect to simulate data update
+    // Lấy thông tin trường đại học từ Redux store
+    const university = useSelector(state => state.UserReducer.userData?.university);
+    const universityDetails = useSelector(state => state.UniversityReducer.university);
+    const totalInstruction = useSelector(state => state.InstructionalReducer.totalInstruction)
+    const totalSections = useSelector(state => state.SectionReducer.totalSections)
+    const totalMajor = useSelector(state => state.MajorReducer.totalMajor)
+    console.log(totalMajor)
     useEffect(() => {
-        // Simulate data change after 3 seconds
-        const interval = setInterval(() => {
-            setData((prevData) => {
-                // Generate new data for the chart
-                const newData = prevData.datasets[0].data.map(() => Math.floor(Math.random() * 20));
-                return {
-                    ...prevData,
-                    datasets: [
-                        {
-                            ...prevData.datasets[0],
-                            data: newData,
-                        },
-                    ],
-                };
-            });
-        }, 3000); // Update every 3 seconds
+        dispatch(get_total_ins())
+        dispatch(get_total_section())
+        dispatch(get_total_major())
+    }, [dispatch]);
+    useEffect(() => {
+        if (university?.id) {
+            dispatch(get_university_id(university.id));
+        }
+    }, [university, dispatch]);
+    const formattedDate =new Date().toLocaleDateString();
 
-        return () => clearInterval(interval); // Cleanup the interval on component unmount
-    }, []);
-
-    // Chart options
-    const options = {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true, // Ensures the y-axis starts at 0
-            },
-        },
-    };
+    const chartPie = [totalInstruction, totalSections, totalMajor]; // Replace 50 with the appropriate value if needed
+    const chartLabelsPie = ['Tổng giáo vụ', 'Tổng khoa', 'Tổng chuyên ngành']; // Adjust labels as needed
 
     return (
         <>
             <section>
-                <div className="m-5 mt-5">
-                    <div style={{ width: '800px', height: '400px' }}>
-                        <h2>University Bar Chart</h2>
-                        <Bar data={data} options={options}/>
+                <div className="m-5 mt-1">
+                    <div>
+                        <header
+                            className="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
+                            <div className="d-flex align-items-center">
+                                <img src={`${GET_IMAGE_URI}${universityDetails.logoImageId}`} alt="logo"
+                                     style={{borderRadius: '50%'}} width="80" height="80" className="me-2"/>
+                                <span style={{fontSize: '40px'}}>{universityDetails.name}</span>
+                            </div>
+                            <div>
+                                <span style={{fontSize: '40px'}}>{formattedDate}</span>
+                            </div>
+                        </header>
+                        <h1 className="mb-4">Tổng quan </h1>
+                        <div className="row">
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng giáo vụ</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{totalInstruction}</h2>
+                                    </div>
+                                </Card>
+                            </div>
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng khoa</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{totalSections}</h2>
+                                    </div>
+                                </Card>
+                            </div>
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng chuyên ngành</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{totalMajor}</h2>
+                                    </div>
+                                </Card>
+                            </div>
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng giáo vụ</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">50</h2>
+                                    </div>
+                                </Card>
+                            </div>
+                            <div className="col-md-3">
+                                <h2 className="mt-5">Biểu đồ tổng quan</h2>
+                                <PieChartComponent  data={chartPie} labels={chartLabelsPie}  />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
+
         </>
     );
 }

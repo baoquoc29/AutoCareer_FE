@@ -4,6 +4,7 @@ import {create_section} from "../../../Redux/actions/SectionThunk";
 import {Button, Card, Form, Input} from "antd";
 import SectionValidation from "../../../Utils/Validation/University/SectionValidation";
 import {PlusOutlined} from "@ant-design/icons";
+import './Style/Section.css'
 
 export const SectionForm = ({universityId}) => {
     const dispatch = useDispatch();
@@ -28,7 +29,7 @@ export const SectionForm = ({universityId}) => {
     });
     return (
         <>
-            <Card style={{textAlign:'center'}} title="Thêm mới khoa">
+            <Card className='card-section'  title="Thêm mới khoa">
                 <Form layout="vertical" onFinish={formik.handleSubmit} requiredMark={true} name="trigger">
                     <Form.Item
                         hasFeedback

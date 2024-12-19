@@ -46,7 +46,7 @@ const MajorManager = () => {
         setCurrentPage(1); // Reset to first page when section changes
     };
     const handleSearchChange = (e) => {
-        setSearchKeyword(e.target.value);
+        setSearchKeyword(e.target.value.trim());
         setCurrentPage(1); // Reset to first page when search keyword changes
     };
     const handleStatusChange = (value) => {
@@ -118,11 +118,14 @@ const MajorManager = () => {
         sectionName: sections.find(section => section.id === major.sectionId)?.name || 'Không có thông tin', // Thêm tên khoa vào data
     }));
     const filteredData = data.filter((major) =>
-        (selectedSection === '' || major.sectionId === selectedSection) &&
-        (selectedStatus === '' || major.status.toLowerCase() === selectedStatus.toLowerCase()) &&
-        (major.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+        (selectedSection === '' || major.sectionId === selectedSection) &&  // Lọc theo khoa
+        (selectedStatus === '' || major.status.toLowerCase() === selectedStatus.toLowerCase()) && // Lọc theo trạng thái
+        (major.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||  // Lọc theo từ khóa tìm kiếm
             major.code.toLowerCase().includes(searchKeyword.toLowerCase()))
-    );
+    ).map((major, index) => ({
+        ...major,
+        stt: index + 1 // Sắp xếp lại STT sau khi lọc
+    }));
 // Calculate start and end index for pagination
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -151,27 +154,30 @@ const MajorManager = () => {
                 <div className="m-5 mt-5">
                     <div className="row">
                         <div className="col-lg-3 mb-3 border-5">
-                            <Card title="Thông tin chuyên ngành">
+                            <Card className='card-major' title="Thông tin chuyên ngành">
                                 <MajorForm onSubmit={handleSubmit}/>
                             </Card>
                         </div>
                         <div className="col-lg-9 mb-3">
-                            <Card title="Danh sách chuyên ngành">
+                            <Card className='card-major' title="Danh sách chuyên ngành">
                                 <div className="table-responsive">
                                     <div className="d-flex mb-3 search-section">
+                                        <Input placeholder="Tìm kiếm theo tên hoặc mã ngành "
+                                               value={searchKeyword}
+                                               onChange={handleSearchChange} prefix={<SearchOutlined/>}/>
                                         <Select
-                                            style={{width: 200}}
+                                            style={{width: 300}}
                                             autoFocus={true}
                                             placeholder="Tìm kiếm theo khoa"
                                             optionFilterProp="label"
                                             filterSort={(optionA, optionB) =>
-                                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                                (optionA?.label ?? '').toLowerCase().trim().localeCompare((optionB?.label ?? '').toLowerCase().trim())
                                             }
                                             options={[
                                                 {value: "", label: "Tất cả"}, // Lựa chọn "Tất cả" ở đầu
                                                 ...sections.map(section => ({
                                                     value: section.id,
-                                                    label: section.name
+                                                    label: section.name.trim(),
                                                 }))
                                             ]}
                                             onChange={handleSectionChange}
@@ -179,7 +185,7 @@ const MajorManager = () => {
                                         />
 
                                         <Select
-                                            style={{width: 180}}
+                                            style={{width: 230}}
                                             placeholder="Trạng thái"
                                             onChange={handleStatusChange}
                                             value={selectedStatus}
@@ -189,9 +195,7 @@ const MajorManager = () => {
                                             <Select.Option value="inactive">Tạm ngưng</Select.Option>
 
                                         </Select>
-                                        <Input placeholder="Tìm kiếm theo tên hoặc mã ngành "
-                                               value={searchKeyword}
-                                               onChange={handleSearchChange} prefix={<SearchOutlined/>}/>
+
                                         <Button
                                             type="primary"
                                             htmlType="submit"
@@ -210,7 +214,7 @@ const MajorManager = () => {
                                                 filename={'DanhSachChuyenNganh.csv'}
                                                 style={{color: 'inherit', textDecoration: 'none'}}
                                             >
-                                                Export excel
+                                               Xuất excel
                                             </CSVLink>
                                         </Button>
                                     </div>
@@ -235,7 +239,7 @@ const MajorManager = () => {
                                         <Pagination
                                             current={currentPage}
                                             pageSize={pageSize}
-                                            total={searchKeyword ? filteredData.length : majors.length}
+                                            total={filteredData.length}  // Cập nhật tổng số phần tử dựa trên tìm kiếm
                                             onChange={(page) => setCurrentPage(page)}
                                             showSizeChanger={false}
                                         />
