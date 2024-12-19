@@ -1,20 +1,8 @@
-/* File: Section.css */
+.card-section {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 
-/*.section-form,.section-table {*/
-/*    border-radius: 10px; !* Bo góc nhỏ *!*/
-/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); !* Bóng nhẹ *!*/
-/*    background-color: #fff;*/
-/*    margin-bottom: 10px;*/
-/*    padding: 10px;*/
+}
 
-/*}*/
-
-
-/*.section-table {*/
-/*    border-radius: 10px; !* Bo góc nhỏ *!*/
-/*    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); !* Bóng nhẹ *!*/
-/*    background-color: #fff;*/
-/*    margin-bottom: 20px;*/
-/*    padding: 20px;*/
-
-/*}*/
+.modal-section h2{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif ;
+}

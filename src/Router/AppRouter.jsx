@@ -38,6 +38,9 @@ import UniversityDetailPortal from "../Page/Portal/University/UniversityDetailPo
 import BusinessDetailPage from "../Page/Portal/BusinessDetailPage";
 import CooperationManager from "../Page/University/CoopertionUniversity/CooperationManager";
 import CooperationDetail from "../Page/University/CoopertionUniversity/CooperationDetail";
+import BusinessManager from "../Page/Admin/BusinessManager/BusinessManager";
+import UniversityManager from "../Page/Admin/UniversityManager/UniversityManager";
+import AdminJobManager from "../Page/Admin/JobManager/AdminJobManager";
 
 export function AppRouter() {
     return (
@@ -51,7 +54,6 @@ export function AppRouter() {
                     <Route path={"/reset-password"} element={<PasswordReminder/>}/>
                     <Route path={"/lock-screen"} element={<LockScreen/>}/>
                     <Route path={"/home-screen"} element={<HomeScreen/>}/>
-                    <Route path={"/test"} element={<WorkshopDetailsScreen/>}/>
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
@@ -84,6 +86,9 @@ export function AppRouter() {
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/admin"} element={<Admin/>}/>
                     <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
+                    <Route path={"/admin-business-manager"} element={<BusinessManager/>}/>
+                    <Route path={"/admin-university-manager"} element={<UniversityManager/>}/>
+                    <Route path={"/admin-job-manager"} element={<AdminJobManager/>}/>
                 </Route>
             </Routes>
         </>

@@ -51,9 +51,9 @@ const MajorForm = ({onSubmit, initialValues}) => {
                             placeholder="Tìm kiếm khoa"
                             optionFilterProp="label"
                             filterSort={(optionA, optionB) =>
-                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                (optionA?.label ?? '').toLowerCase().trimStart().localeCompare((optionB?.label ?? '').toLowerCase().trimStart())
                             }
-                            options={sections.map(section => ({value: section.id, label: section.name}))}
+                            options={sections.map(section => ({value: section.id, label: section.name.trim()}))}
                             onChange={(value) => formik.setFieldValue('sectionId', value)}
                             value={formik.values.sectionId || undefined}
                     />

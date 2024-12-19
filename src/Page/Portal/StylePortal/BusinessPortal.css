@@ -137,7 +137,7 @@ border: 1px solid transparent; /* No visible border */
     width: 90px; /* Chiều rộng cố định */
     height: 90px; /* Chiều cao cố định */
     border-radius: 10px; /* Bo góc */
-    object-fit: cover; /* Giữ tỷ lệ ảnh */
+    object-fit: scale-down; /* Giữ tỷ lệ ảnh */
 }
 .business-portal-card:hover {
     transform: translateY(-5px);

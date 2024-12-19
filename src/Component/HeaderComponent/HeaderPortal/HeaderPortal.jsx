@@ -34,11 +34,11 @@ const HeaderPortal = () => {
                                 Hội thảo
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="3">
-                            <Link to="university-section" smooth={true} duration={500}>
-                                Trường học
-                            </Link>
-                        </Menu.Item>
+                        {/*<Menu.Item key="3">*/}
+                        {/*    <Link to="university-section" smooth={true} duration={500}>*/}
+                        {/*        Trường học*/}
+                        {/*    </Link>*/}
+                        {/*</Menu.Item>*/}
                         {/* Use Link component for scroll-to functionality */}
                         <Menu.Item key="4">
                             <Link to="business-section" smooth={true} duration={500}>

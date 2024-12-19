@@ -34,11 +34,11 @@ const MajorTable = ({
                 return section ? section.name : 'Không có thông tin';
             },
             ellipsis: true,
-            width: 100,
+            width: 130,
         },
-        {title: 'Tên ngành', dataIndex: 'name', key: 'name', align: 'center', ellipsis: true},
+        {title: 'Tên ngành', dataIndex: 'name', key: 'name', align: 'center', ellipsis: true,width: 160,},
         {title: 'Mã ngành', dataIndex: 'code', key: 'code', align: 'center'},
-        {title: 'Số sinh viên', dataIndex: 'numberStudent', key: 'numberStudent', align: 'center',},
+        {title: 'Sinh viên', dataIndex: 'numberStudent', key: 'numberStudent', align: 'center',width: 80,},
         {
             title: 'Trạng thái',
             dataIndex: 'status',
