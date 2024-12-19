@@ -81,9 +81,6 @@ export function UniversityTemplate() {
                 <section id="content" className="content">
                     <div className="content__header content__boxed rounded-0">
                         <Outlet/>
-                        {/*<div className="content__wrap">*/}
-                        {/*    <Outlet/>*/}
-                        {/*</div>*/}
                     </div>
                     <Footer/>
                 </section>

@@ -1,5 +1,5 @@
 import {sectionService} from "../../Service/UniversityService/SectionService";
-import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, UPDATE_SECTION_ID} from "../types/SectionType";
+import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, TOTAL_SECTION, UPDATE_SECTION_ID} from "../types/SectionType";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
@@ -43,7 +43,7 @@ export const delete_section = (selectedIds) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
-    }
+        }
     }
 }
 export const update_section = (id, formData) => {
@@ -84,6 +84,19 @@ export const refund_section = (id) => {
                 toast.success("Cập nhật trạng thái thành công")
             }
             console.log(res.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_total_section = () => {
+    return async (dispatch) => {
+        try {
+            const res = await sectionService.get_total_section();
+            dispatch({
+                type: TOTAL_SECTION,
+                payload: res
+            })
         } catch (error) {
             console.log(error);
         }

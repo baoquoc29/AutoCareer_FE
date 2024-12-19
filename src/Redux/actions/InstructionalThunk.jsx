@@ -1,5 +1,5 @@
 import {instructionalService} from "../../Service/UniversityService/InstructionalService";
-import {SET_INSTRUCTIONAL, UPDATE_INSTRUCTIONAL} from "../types/InstructionalType";
+import {SET_INSTRUCTIONAL, TOTAL_INSTRUCTIONAL, UPDATE_INSTRUCTIONAL} from "../types/InstructionalType";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
@@ -98,7 +98,7 @@ export const get_all_active_ins = (page, size) => {
     return async (dispatch) => {
         try {
             const res = await instructionalService.get_all_active_instructional(page, size);
-            if(res.code === STATUS_CODE.SUCCESS){
+            if (res.code === STATUS_CODE.SUCCESS) {
                 const {content, totalElements, pageSize, currentPage} = res.data
                 dispatch({
                     type: SET_INSTRUCTIONAL,
@@ -129,6 +129,19 @@ export const get_all_stop_ins = (page, size) => {
                     currentPage,
                 }
             })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_total_ins = () => {
+    return async (dispatch) => {
+        try {
+            const res = await instructionalService.get_total_instructional();
+           dispatch({
+                type: TOTAL_INSTRUCTIONAL,
+                payload: res,
+           })
         } catch (error) {
             console.log(error);
         }
