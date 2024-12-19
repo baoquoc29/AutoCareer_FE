@@ -44,7 +44,8 @@ export const SubAdminReducer = (state = initialState, action) => {
         case PAGING_SUB_ADMIN:
             return {
                 ...state,
-                subAdmins: action.payload,
+                subAdmins: action.payload.content,
+                totalElements: action.payload.totalElements,
             }
         default:
             return {...state}

@@ -1,0 +1,17 @@
+.font_style_employee {
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 25px !important;
+}
+.font_style_employee_account {
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 600 !important;
+}
+.required-label {
+    color: red;
+    margin-right: 3px;
+    font-size: 20px;
+    vertical-align: middle
+}
+.form-label-customer{
+    color: black !important;
+}

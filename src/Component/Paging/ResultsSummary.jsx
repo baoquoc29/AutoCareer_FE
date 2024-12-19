@@ -2,7 +2,7 @@ import React from "react";
 
 const ResultSummary = ({ totalElements }) => {
     return (
-        <div className="mt-3">
+        <div >
             {totalElements === 0 ? (
                 <span style={{
                     float: "right",
