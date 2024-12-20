@@ -4,8 +4,9 @@ import {create_section} from "../../../Redux/actions/SectionThunk";
 import {Button, Card, Form, Input} from "antd";
 import SectionValidation from "../../../Utils/Validation/University/SectionValidation";
 import {PlusOutlined} from "@ant-design/icons";
+import './Style/Section.css'
 
-export const SectionForm = ({ universityId }) => {
+export const SectionForm = ({universityId}) => {
     const dispatch = useDispatch();
 
     const formik = useFormik({
@@ -18,13 +19,17 @@ export const SectionForm = ({ universityId }) => {
         enableReinitialize: true,
         validationSchema: SectionValidation,
         onSubmit: (values) => {
-            console.log('Form submitted with values:', values);
-            dispatch(create_section(values));
+            const trimmedValues = {
+                ...values,
+                name: values.name.trim(),
+                description: values.description.trim(),
+            };
+            dispatch(create_section(trimmedValues));
         }
     });
     return (
         <>
-            <Card title="Thông tin Khoa">
+            <Card className='card-section'  title="Thêm mới khoa">
                 <Form layout="vertical" onFinish={formik.handleSubmit} requiredMark={true} name="trigger">
                     <Form.Item
                         hasFeedback
@@ -41,12 +46,18 @@ export const SectionForm = ({ universityId }) => {
                             name="name"
                         />
                     </Form.Item>
-                    <Form.Item label="Mô tả" name="description">
+                    <Form.Item
+                        label="Mô tả"
+                        name="description"
+                        help={formik.errors.description && formik.touched.description ? formik.errors.description : null}
+                        validateStatus={formik.errors.description && formik.touched.description ? 'error' : ''}
+                    >
                         <Input.TextArea
+                            rows={8}
                             onChange={formik.handleChange}
                             value={formik.values.description}
                             name="description"
-                            autoSize={{ minRows: 8 }}
+
                         />
                     </Form.Item>
                     <Form.Item style={{display: 'flex', justifyContent: 'flex-end'}}>

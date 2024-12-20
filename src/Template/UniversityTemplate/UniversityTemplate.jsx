@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_university_id} from "../../Redux/actions/UniversityThunk";
 import {Footer} from "../../Component/FooterComponent/Footer";
+import {UsergroupAddOutlined} from "@ant-design/icons";
 
 
 export function UniversityTemplate() {
@@ -50,6 +51,14 @@ export function UniversityTemplate() {
             ]
         },
         {
+            label: 'Hợp tác',
+            icon: 'fa-solid fa-handshake',
+            subMenu: [
+                {label: 'Quản lý hợp tác', link: '/cooperation-manager', icon: ''},
+
+            ]
+        },
+        {
             label: 'Thống kê',
             icon: 'home',
             subMenu: [
@@ -72,9 +81,6 @@ export function UniversityTemplate() {
                 <section id="content" className="content">
                     <div className="content__header content__boxed rounded-0">
                         <Outlet/>
-                        {/*<div className="content__wrap">*/}
-                        {/*    <Outlet/>*/}
-                        {/*</div>*/}
                     </div>
                     <Footer/>
                 </section>

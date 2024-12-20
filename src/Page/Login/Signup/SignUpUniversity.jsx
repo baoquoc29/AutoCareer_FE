@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, Modal, notification, Spin } from 'antd';
 import {
+    clearResponseBusiness,
     sign_up_university,
     verify_account_university
 } from "../../../Redux/actions/UserThunk";
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
+import {toast} from "react-toastify";
 
 export function SignUpUniversity() {
     const [form] = Form.useForm();
@@ -21,7 +23,21 @@ export function SignUpUniversity() {
     const [hasShownModal, setHasShownModal] = useState(false);
 
     const response = useSelector((state) => state.UserReducer?.responseUniversity);
+    const responseSignUpUniversity = useSelector((state) => state.UserReducer?.responseSignUpUniversity);
+    useEffect(() => {
+        return () => {
+            dispatch(clearResponseBusiness());
+        };
+    }, [dispatch]);
 
+    useEffect(() => {
+        if (responseSignUpUniversity?.code === 200) {
+            toast.success('Đăng ký tài khoản của bạn sẽ được xem xét!' );
+            navigate("/");
+        } else if (responseSignUpUniversity?.message) {
+            toast.error (responseSignUpUniversity.message || 'Mã xác minh không chính xác!' );
+        }
+    }, [responseSignUpUniversity, navigate]);
 
     // Quản lý thời gian và khả năng gửi lại mã
     useEffect(() => {
@@ -38,7 +54,7 @@ export function SignUpUniversity() {
     useEffect(() => {
         if (response) {
             if (response.code === 200) {
-                notification.success({ message: 'Mã xác nhận đã được gửi thành công!' });
+                toast.success('Mã xác nhận đã được gửi thành công!' );
                 setTimeout(() => {
                     setIsLoading(false);
                     if (!hasShownModal) {
@@ -50,25 +66,26 @@ export function SignUpUniversity() {
                 setTimer(60); // Reset bộ đếm về 60 giây
             } else if (response.message) {
                 setIsLoading(false);
-                notification.error({ message: response.message || 'Lỗi trong quá trình gửi mã xác nhận' });
+                toast.error(response.message || 'Lỗi trong quá trình gửi mã xác nhận' );
             }
 
         }
+
     }, [response, hasShownModal]);
 
 
     // Gửi yêu cầu mã xác nhận
     const handleSendCode = (values) => {
-        const { universityName, numberPhone, password, confirmPassword,email } = values;
 
+        const { universityName, numberPhone, password, confirmPassword,email } = values;
         if (password !== confirmPassword) {
-            notification.error({ message: 'Mật khẩu và xác nhận mật khẩu không khớp.' });
+            toast.error('Mật khẩu và xác nhận mật khẩu không khớp.' );
             return;
         }
 
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
         if (!passwordRegex.test(password)) {
-            notification.error({ message: 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.' });
+            toast.error('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.');
             return;
         }
 
@@ -82,7 +99,8 @@ export function SignUpUniversity() {
         };
 
         setIsLoading(true);
-        dispatch(verify_account_university(requestBody));  // Send request with JSON body
+        dispatch(verify_account_university(requestBody));
+
     };
 
     // Gửi lại mã xác nhận
@@ -95,11 +113,10 @@ export function SignUpUniversity() {
     // Xác nhận mã
     const handleVerifyCodeSubmit = async () => {
         if (!code) {
-            notification.error({ message: 'Vui lòng nhập mã xác nhận.' });
+            notification.error( 'Vui lòng nhập mã xác nhận.' );
             return;
         }
 
-        if (code === response?.data?.verificationCode) {
             const formValues = form.getFieldsValue();
             const requestBody = {
                 verificationCode: code,
@@ -110,12 +127,7 @@ export function SignUpUniversity() {
                 rePassword: formValues.confirmPassword
             };
 
-            dispatch(sign_up_university(requestBody));  // Send request with JSON body
-            notification.success({ message: 'Đăng ký tài khoản của bạn sẽ được xem xét!' });
-            navigate("/");
-        } else {
-            notification.error({ message: 'Mã xác nhận không chính xác!' });
-        }
+            dispatch(sign_up_university(requestBody));
     };
 
     return (

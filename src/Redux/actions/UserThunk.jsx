@@ -1,4 +1,5 @@
 import {
+    CLEAR_RESPONSE,
     DISPLAY_LOADING,
     HIDE_LOADING,
     LOGIN_SUCCESS,
@@ -65,7 +66,7 @@ export const sign_up_university = (formData) => {
             const res = await userService.sign_up_university(formData);
             dispatch({
                 type: SIGNUP_UNIVERSITY_SUCCESS,
-                payload: res.data,
+                payload: res,
             });
         } catch (error) {
             console.log('sign_up_university error:', error);
@@ -74,16 +75,19 @@ export const sign_up_university = (formData) => {
         }
     };
 };
-
+export const clearResponseBusiness = () => {
+    return { type: CLEAR_RESPONSE };
+};
 export const sign_up_business = (formData) => {
     return async (dispatch) => {
         dispatch({ type: DISPLAY_LOADING });  // Show loading state
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.sign_up_business(formData);
+            console.log(res);
             dispatch({
                 type: SIGNUP_BUSINESS_SUCCESS,
-                payload: res.data,
+                payload: res,
             });
         } catch (error) {
             console.log('sign_up_business error:', error);

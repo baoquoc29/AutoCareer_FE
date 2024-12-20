@@ -3,7 +3,7 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const SIGNUP_UNIVERSITY_SUCCESS = 'SIGNUP_UNIVERSITY_SUCCESS';
 export const SIGNUP_BUSINESS_SUCCESS = 'SIGNUP_BUSINESS_SUCCESS';
-
+export const CLEAR_RESPONSE = 'CLEAR_RESPONSE';
 export const SEND_CODE_UNIVERSITY_SUCCESS = 'SEND_CODE_UNIVERSITY_SUCCESS';
 export const SEND_CODE_BUSINESS_SUCCESS = 'SEND_CODE_BUSINESS_SUCCESS';
 export const SEND_CODE_REMINDER_SUCCESS = 'SEND_CODE_REMINDER_SUCCESS';
@@ -15,7 +15,7 @@ export const DISPLAY_LOADING = 'DISPLAY_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 
 // export const DOMAIN = 'http://192.168.0.152:8081/auto-career'
-export const DOMAIN = 'http://localhost:8081/auto-career'
+export const DOMAIN = 'http://localhost:1111/auto-career'
 export const GET_IMAGE_URI = `${DOMAIN}/api/v1/image/resource?imageId=`
 // export const GET_IMAGE_URI = `http://192.168.0.152:8081/auto-career/api/v1/image/resource?imageId=`
 

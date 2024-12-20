@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {create_sub_admin, get_all_sub_admin} from "../../../Redux/actions/SubAdminThunk";
 import {STATUS_CODE} from "../../../Utils/Setting/Config";
+import SubAdminValidation from "../../../Utils/Validation/University/SubAdminValidation";
 
 const SubAdminCreateForm = ({open, onClose}) => {
     const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const SubAdminCreateForm = ({open, onClose}) => {
             address: "",
             subAdminImage: "",
         },
+        enableReinitialize: true,
+        validationSchema: SubAdminValidation(["subAdminCode", "name", "gender", "email", "phone", "address", "subAdminImage"],),
         onSubmit: (values) => {
             handleSubmit(values); // Gọi hàm handleSubmit
         },
@@ -61,76 +64,88 @@ const SubAdminCreateForm = ({open, onClose}) => {
             <Form layout="vertical" onFinish={formik.handleSubmit}>
 
                 {/* Khu vực tải ảnh */}
-                <div style={{
+                <Form.Item style={{
                     textAlign: "center",
-                    marginBottom: "20px",
-                    position: "relative",
                     display: "flex",
                     justifyContent: "center"
-                }}>
+                }}
+                    validateStatus={formik.errors.subAdminImage && formik.touched.subAdminImage ? 'error' : ''}
+                    help={formik.errors.subAdminImage && formik.touched.subAdminImage ? formik.errors.subAdminImage : ''}>
                     {/* Khung hiển thị ảnh */}
-                    {formik.values.subAdminImage ? (
-                        <img
-                            src={URL.createObjectURL(formik.values.subAdminImage)}
-                            alt="Preview"
-                            style={{
-                                width: "120px",
-                                height: "120px",
-                                borderRadius: "50%",
-                                border: "3px solid #f0f2f5",
-                                marginBottom: "10px",
-                                objectFit: "cover",
-                            }}
-                        />
-                    ) : (
-                        <div
-                            style={{
-                                width: "120px",
-                                height: "120px",
-                                borderRadius: "50%",
-                                border: "2px dashed #d9d9d9",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginBottom: "10px",
-                                backgroundColor: "#f9f9f9"
-                            }}
-                        >
-                            Không có tệp
-                        </div>
-                    )}
+                    <div style={{
+                        textAlign: "center",
+                        marginBottom: "20px",
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "center"
+                    }}>
 
-                    {/* Nút upload (icon bút) */}
-                    <Upload
-                        name="subAdminImage"
-                        beforeUpload={(file) => {
-                            formik.setFieldValue("subAdminImage", file);
-                            return false;
-                        }}
-                        showUploadList={false}
-                    >
-                        <i
-                            className="fa-solid fa-pen"
-                            style={{
-                                fontSize: "16px",
-                                color: "#007bff",
-                                position: "absolute",
-                                top: "5px",
-                                backgroundColor: "#fff",
-                                borderRadius: "50%",
-                                padding: "5px",
-                                cursor: "pointer",
-                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                        {formik.values.subAdminImage ? (
+                            <img
+                                src={URL.createObjectURL(formik.values.subAdminImage)}
+                                alt="Preview"
+                                style={{
+                                    width: "120px",
+                                    height: "120px",
+                                    borderRadius: "50%",
+                                    border: "3px solid #f0f2f5",
+                                    marginBottom: "10px",
+                                    objectFit: "cover",
+                                }}
+                            />
+                        ) : (
+                            <div
+                                style={{
+                                    width: "120px",
+                                    height: "120px",
+                                    borderRadius: "50%",
+                                    border: "2px dashed #d9d9d9",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    marginBottom: "10px",
+                                    backgroundColor: "#f9f9f9"
+                                }}
+                            >
+                                Không có tệp
+                            </div>
+                        )}
+
+                        {/* Nút upload (icon bút) */}
+                        <Upload
+                            name="subAdminImage"
+                            beforeUpload={(file) => {
+                                formik.setFieldValue("subAdminImage", file);
+                                return false;
                             }}
-                        ></i>
-                    </Upload>
-                </div>
+                            showUploadList={false}
+                        >
+                            <i
+                                className="fa-solid fa-pen"
+                                style={{
+                                    fontSize: "16px",
+                                    color: "#007bff",
+                                    position: "absolute",
+                                    top: "5px",
+                                    backgroundColor: "#fff",
+                                    borderRadius: "50%",
+                                    padding: "5px",
+                                    cursor: "pointer",
+                                    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                                }}
+                            ></i>
+                        </Upload>
+                    </div>
+                </Form.Item>
 
 
                 {/* Các trường thông tin */}
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Họ tên" required>
+                        <Form.Item label="Họ tên"
+                                   validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}
+                                   help={formik.errors.name && formik.touched.name ? formik.errors.name : ''}
+                                   required>
                             <Input
                                 name="name"
                                 placeholder="Nhập họ tên"
@@ -140,7 +155,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Giới tính" required>
+                        <Form.Item label="Giới tính"
+                                   validateStatus={formik.errors.gender && formik.touched.gender ? 'error' : ''}
+                                   help={formik.errors.gender && formik.touched.gender ? formik.errors.gender : ''}
+                                   required>
                             <Select
                                 name="gender"
                                 onChange={(value) => formik.setFieldValue("gender", value)}
@@ -156,7 +174,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Mã quản trị viên" required>
+                        <Form.Item label="Mã quản trị viên"
+                                   validateStatus={formik.errors.subAdminCode && formik.touched.subAdminCode ? 'error' : ''}
+                                   help={formik.errors.subAdminCode && formik.touched.subAdminCode ? formik.errors.subAdminCode : ''}
+                                   required>
                             <Input
                                 name="subAdminCode"
                                 placeholder="Nhập mã quản trị viên"
@@ -166,7 +187,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Email" required>
+                        <Form.Item label="Email"
+                                   validateStatus={formik.errors.email && formik.touched.email ? 'error' : ''}
+                                   help={formik.errors.email && formik.touched.email ? formik.errors.email : ''}
+                                   required>
                             <Input
                                 name="email"
                                 placeholder="Nhập email"
@@ -179,7 +203,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Số điện thoại" required>
+                        <Form.Item label="Số điện thoại"
+                                   validateStatus={formik.errors.phone && formik.touched.phone ? 'error' : ''}
+                                   help={formik.errors.phone && formik.touched.phone ? formik.errors.phone : ''}
+                                   required>
                             <Input
                                 name="phone"
                                 placeholder="Nhập số điện thoại"
@@ -189,7 +216,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Địa chỉ" required>
+                        <Form.Item label="Địa chỉ"
+                                   validateStatus={formik.errors.address && formik.touched.address ? 'error' : ''}
+                                   help={formik.errors.address && formik.touched.address ? formik.errors.address : ''}
+                                   required>
                             <Input
                                 name="address"
                                 placeholder="Nhập địa chỉ"

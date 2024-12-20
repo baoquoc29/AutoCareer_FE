@@ -1,0 +1,379 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+.job-portal-container {
+    margin-left: 109px;
+    margin-right: 109px;
+    min-height: calc(100vh);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+}
+
+.grid {
+    flex: 1; /* Để phần danh sách card chiếm khoảng trống giữa */
+}
+
+.job-portal-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.job-portal-card {
+    margin-top: 20px;
+    display: flex; /* Sắp xếp các phần tử theo chiều ngang */
+    flex-direction: row; /* Mặc định là hàng ngang */
+    align-items: center; /* Căn giữa nội dung theo chiều dọc */
+    gap: 16px; /* Khoảng cách giữa ảnh và nội dung */
+    background-color: #fff; /* Nền trắng */
+    border-radius: 8px; /* Bo góc */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    padding: 16px; /* Khoảng cách bên trong */
+    transition: box-shadow 0.3s ease; /* Hiệu ứng hover */
+}
+
+.job-portal-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng khi hover */
+}
+
+.job-portal-card-image {
+    flex-shrink: 0; /* Không cho ảnh co lại */
+}
+
+.job-portal-card-image img {
+    width: 90px; /* Chiều rộng cố định */
+    height: 90px; /* Chiều cao cố định */
+    border-radius: 10px; /* Bo góc */
+    object-fit: scale-down; /* Giữ tỷ lệ ảnh */
+}
+
+.job-portal-card-content {
+    display: flex;
+    flex-direction: column; /* Nội dung xếp theo cột */
+    justify-content: center; /* Căn giữa nội dung */
+    flex-grow: 1; /* Cho phép nội dung chiếm không gian còn lại */
+    overflow: hidden; /* Tránh tràn nội dung */
+}
+
+.job-portal-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Cắt nội dung tràn */
+    text-overflow: ellipsis; /* Hiển thị "..." nếu quá dài */
+}
+.no-jobs-message {
+    margin-top: 200px;
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.job-portal-card-company {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Cắt nội dung tràn */
+    text-overflow: ellipsis; /* Hiển thị "..." nếu quá dài */
+}
+
+.job-portal-card-location-salary {
+    display: flex;
+    gap: 8px; /* Khoảng cách giữa các thẻ lương và địa điểm */
+    align-items: center;
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Cắt nội dung tràn */
+    text-overflow: ellipsis; /* Hiển thị "..." nếu quá dài */
+}
+
+.job-portal-card-tag {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #333;
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Cắt nội dung tràn */
+    text-overflow: ellipsis; /* Hiển thị "..." nếu quá dài */
+}
+
+.title-job-portal {
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #3E7494;
+}
+
+.search-bar {
+    background-color: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đảm bảo nội dung căn giữa đều */
+    width: 260px;
+    height: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Không cho phép co lại */
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Căn nội dung về phía đầu */
+    gap: 8px;
+
+    min-width: 250px;
+    flex-wrap: nowrap; /* Không cho phép các phần tử xuống dòng */
+    overflow: hidden; /* Cắt nội dung thừa nếu quá dài */
+}
+
+.filter-container > * {
+    flex-shrink: 0; /* Không cho phép co lại */
+    flex-grow: 0; /* Không cho phép mở rộng thêm */
+}
+
+.filter-icon {
+    color: #8c8c8c;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.filter-label {
+    font-size: 14px;
+    color: #8c8c8c;
+    font-weight: 500;
+}
+
+.dropdown-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dropdown-container:hover {
+    color: #3E7494;
+}
+
+.dropdown-icon {
+    font-size: 12px;
+    color: #8c8c8c;
+    margin-left: 0;
+    text-align: end;
+}
+
+.filter-location-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đặt "lọc theo" và thanh cuộn cách nhau đều */
+    gap: 16px;
+    width: 100%;
+    padding: 8px 0;
+}
+
+.location-scroll-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    scroll-behavior: smooth;
+    flex-grow: 1;
+    overflow-x: auto; /* Horizontal scroll if content overflows */
+    white-space: nowrap; /* Prevent content from wrapping */
+    max-width: 1000px; /* Đảm bảo không vượt quá chiều rộng của .job-portal-container */
+    padding-right: 60px; /* Đảm bảo không bị chồng lên nút cuộn */
+}
+
+.scroll-btn {
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 100%;
+    width: 45px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure it's above the list */
+}
+
+.scroll-btn:hover {
+    background-color: #3E7494;
+    color: #fff;
+}
+
+.location-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%; /* Giới hạn chiều rộng của danh sách không vượt qua container */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    width: fit-content; /* Chiều rộng tự động thay đổi theo nội dung */
+}
+
+.location-list::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên các trình duyệt Webkit */
+}
+
+.location-item {
+    background-color: #f9f9f9;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.location-item:hover {
+    background-color: #3E7494;
+    color: #fff;
+}
+.location-item.active {
+    background-color: #3E7494;
+    color: white;
+    font-weight: bold;
+}
+.popover-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 400px;
+    max-width: 400px;
+    height: 400px;
+    border-radius: 5px;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+.popover-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-left img.job-img {
+    width: 90px; /* Chiều rộng cố định */
+    height: 90px; /* Chiều cao cố định */
+    border-radius: 10px; /* Bo góc */
+    object-fit: scale-down; /* Giữ tỷ lệ ảnh */
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header-right h3,
+.header-right p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.popover-body {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.popover-body .job-location-popover {
+    border:   #ccc; /* Đổi màu viền sáng hơn */
+    padding: 2px 6px; /* Tạo khoảng cách bên trong */
+    background-color: #f9f9f9; /* Màu nền nhạt hơn */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng mờ */
+    font-size: 11px; /* Cỡ chữ vừa phải */
+    color: #8c8b8b; /* Màu chữ dễ nhìn */
+    line-height: 1.6; /* Tăng khoảng cách giữa các dòng */
+    margin-top: 10px; /* Thêm khoảng cách với phần trên */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Hiệu ứng hover */
+}
+.popover-body .job-location-requirement {
+    border:   #ccc; /* Đổi màu viền sáng hơn */
+    padding: 2px 6px; /* Tạo khoảng cách bên trong */
+    background-color: #f9f9f9; /* Màu nền nhạt hơn */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng mờ */
+    font-size: 11px; /* Cỡ chữ vừa phải */
+    color: #8c8b8b; /* Màu chữ dễ nhìn */
+    line-height: 1.6; /* Tăng khoảng cách giữa các dòng */
+    margin-top: 10px; /* Thêm khoảng cách với phần trên */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Hiệu ứng hover */
+}
+.popover-body .job-location-expireDate {
+    border:   #ccc; /* Đổi màu viền sáng hơn */
+    padding: 2px 6px; /* Tạo khoảng cách bên trong */
+    background-color: #f9f9f9; /* Màu nền nhạt hơn */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng mờ */
+    font-size: 11px; /* Cỡ chữ vừa phải */
+    color: #8c8b8b; /* Màu chữ dễ nhìn */
+    line-height: 1.6; /* Tăng khoảng cách giữa các dòng */
+    margin-top: 10px; /* Thêm khoảng cách với phần trên */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Hiệu ứng hover */
+}
+.popover-body p {
+    font-size: 12px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.popover-details {
+    margin-top: 30px;
+    font-size: 12px;
+
+
+}
+.popover-details p strong,
+.popover-details p span {
+    display: block;
+}
+
+.popover-footer {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.view-details-link {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+}
+.header-right h3 {
+    font-weight: bold; /* Chữ đậm cho title */
+    font-size: 1rem; /* Đặt kích thước font cho title, có thể điều chỉnh */
+}
+
+.header-right .business-name {
+    font-weight: normal; /* Chữ nhạt cho businessName */
+    font-size: 0.8rem; /* Kích thước font phù hợp cho businessName */
+    color: #666; /* Màu chữ nhạt */
+}
+
+.header-right .salary {
+    color: #3E7494; /* Chữ xanh cho salary */
+    font-size: 0.8rem; /* Kích thước font cho salary */
+}

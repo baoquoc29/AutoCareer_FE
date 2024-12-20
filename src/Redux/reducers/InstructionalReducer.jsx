@@ -1,0 +1,35 @@
+import {SET_INSTRUCTIONAL, TOTAL_INSTRUCTIONAL, UPDATE_INSTRUCTIONAL} from "../types/InstructionalType";
+
+const initialState = {
+    instructional: [],
+    totalElements: 0,
+    pageSize: 7,
+    currentPage: 1,
+    selectedIds: [], // Thêm trường selectedIds
+    instructionalId: null,
+    totalInstruction: 0,
+}
+export const InstructionalReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case SET_INSTRUCTIONAL:
+            return {
+                ...state,
+                instructional: action.payload.content,
+                totalElements: action.payload.totalElements,
+                pageSize: action.payload.pageSize,
+                currentPage: action.payload.currentPage,
+            };
+        case UPDATE_INSTRUCTIONAL:
+            return {
+                ...state,
+                instructionalId: action.payload,
+            }
+        case TOTAL_INSTRUCTIONAL:
+            return {
+                ...state,
+                totalInstruction: action.payload,
+            }
+        default:
+            return {...state}
+    }
+}

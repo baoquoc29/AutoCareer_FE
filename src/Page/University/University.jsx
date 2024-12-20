@@ -1,408 +1,101 @@
-import React from "react";
+import React, {useEffect} from 'react';
+import {Chart, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend} from 'chart.js';
+import {useDispatch, useSelector} from "react-redux";
+import {get_university_id} from "../../Redux/actions/UniversityThunk";
+import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
+import {Card} from "antd";
+import {get_total_ins} from "../../Redux/actions/InstructionalThunk";
+import {get_total_section} from "../../Redux/actions/SectionThunk";
+import {get_total_major} from "../../Redux/actions/MajorThunk";
+import PieChartComponent from "../../Component/ChartComponent/PieChartComponent";
+
+
+Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 export function University() {
-  return (
-    <>
-      <section id="content" className="content">
-        <div className="content__header content__boxed rounded-0">
-          <div className="content__wrap">
-            <div className="content__boxed">
-              <div className="content__wrap">
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <div className="card">
-                      <div className="card-body">
-                        <h5 className="card-title">Custom styles</h5>
+    const dispatch = useDispatch();
 
-                        <form className="row g-3 needs-validation" noValidate>
-                          <div className="col-md-4">
-                            <label
-                              htmlFor="_dm-vCustomFirsname"
-                              className="form-label"
-                            >
-                              First name
-                            </label>
-                            <input
-                              id="_dm-vCustomFirsname"
-                              type="text"
-                              className="form-control"
-                              value="Aaron"
-                              required
-                            />
-                            <div className="invalid-feedback">
-                              Please input your first name
+    // Lấy thông tin trường đại học từ Redux store
+    const university = useSelector(state => state.UserReducer.userData?.university);
+    const universityDetails = useSelector(state => state.UniversityReducer.university);
+    const totalInstruction = useSelector(state => state.InstructionalReducer.totalInstruction)
+    const totalSections = useSelector(state => state.SectionReducer.totalSections)
+    const totalMajor = useSelector(state => state.MajorReducer.totalMajor)
+    console.log(totalMajor)
+    useEffect(() => {
+        dispatch(get_total_ins())
+        dispatch(get_total_section())
+        dispatch(get_total_major())
+    }, [dispatch]);
+    useEffect(() => {
+        if (university?.id) {
+            dispatch(get_university_id(university.id));
+        }
+    }, [university, dispatch]);
+    const formattedDate =new Date().toLocaleDateString();
+
+    const chartPie = [totalInstruction, totalSections, totalMajor]; // Replace 50 with the appropriate value if needed
+    const chartLabelsPie = ['Tổng giáo vụ', 'Tổng khoa', 'Tổng chuyên ngành']; // Adjust labels as needed
+
+    return (
+        <>
+            <section>
+                <div className="m-5 mt-1">
+                    <div>
+                        <header
+                            className="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
+                            <div className="d-flex align-items-center">
+                                <img src={`${GET_IMAGE_URI}${universityDetails.logoImageId}`} alt="logo"
+                                     style={{borderRadius: '50%'}} width="80" height="80" className="me-2"/>
+                                <span style={{fontSize: '40px'}}>{universityDetails.name}</span>
                             </div>
-                          </div>
-                          <div className="col-md-6">
-                            <label
-                              htmlFor="_dm-vCustomLastname"
-                              className="form-label"
-                            >
-                              Last name
-                            </label>
-                            <input
-                              id="_dm-vCustomLastname"
-                              type="text"
-                              className="form-control"
-                              required
-                            />
-                            <div className="valid-feedback">Looks good!</div>
-                            <div className="invalid-feedback">
-                              Please input your last name
+                            <div>
+                                <span style={{fontSize: '40px'}}>{formattedDate}</span>
                             </div>
-                          </div>
-                          <div className="col-md-12">
-                            <label
-                              htmlFor="_dm-vCustomAddress"
-                              className="form-label"
-                            >
-                              Address
-                            </label>
-                            <input
-                              id="_dm-vCustomAddress"
-                              type="text"
-                              className="form-control"
-                              required
-                            />
-                            <div className="invalid-feedback">
-                              Please provide a valid address.
+                        </header>
+                        <h1 className="mb-4">Tổng quan </h1>
+                        <div className="row">
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng giáo vụ</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{totalInstruction}</h2>
+                                    </div>
+                                </Card>
                             </div>
-                          </div>
-                          <div className="col-md-6">
-                            <label
-                              htmlFor="_dm-vCustomCountry"
-                              className="form-label"
-                            >
-                              Country
-                            </label>
-                            <select
-                              id="_dm-vCustomCountry"
-                              className="form-select"
-                              required
-                            >
-                              <option selected disabled value="">
-                                Choose...
-                              </option>
-                              <option>...</option>
-                            </select>
-                            <div className="invalid-feedback">
-                              Please select a valid country.
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng khoa</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{totalSections}</h2>
+                                    </div>
+                                </Card>
                             </div>
-                          </div>
-                          <div className="col-md-5">
-                            <label
-                              htmlFor="_dm-vCustomCity"
-                              className="form-label"
-                            >
-                              City
-                            </label>
-                            <input
-                              id="_dm-vCustomCity"
-                              type="text"
-                              className="form-control"
-                              required
-                            />
-                            <div className="invalid-feedback">
-                              Please provide a valid city.
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng chuyên ngành</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{totalMajor}</h2>
+                                    </div>
+                                </Card>
                             </div>
-                          </div>
-                          <div className="col-md-12">
-                            <label
-                              htmlFor="_dm-vCustomAbout"
-                              className="form-label"
-                            >
-                              About
-                            </label>
-                            <textarea
-                              id="_dm-vCustomAbout"
-                              className="form-control"
-                              rows="2"
-                              required
-                            ></textarea>
-                            <div className="invalid-feedback">
-                              Tell me us your self.
+                            <div className="col-md-3">
+                                <Card>
+                                    <div className="card-header">Tổng giáo vụ</div>
+                                    <div className="card-body">
+                                        <h2 className="card-title">50</h2>
+                                    </div>
+                                </Card>
                             </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="form-check">
-                              <input
-                                id="_dm-vCustomAgree"
-                                className="form-check-input"
-                                type="checkbox"
-                                required
-                              />
-                              <label
-                                htmlFor="_dm-vCustomAgree"
-                                className="form-check-label"
-                              >
-                                Agree to terms and conditions
-                              </label>
-                              <div className="invalid-feedback">
-                                You must agree before submitting.
-                              </div>
+                            <div className="col-md-3">
+                                <h2 className="mt-5">Biểu đồ tổng quan</h2>
+                                <PieChartComponent  data={chartPie} labels={chartLabelsPie}  />
                             </div>
-                          </div>
-                          <div className="col-12 pt-4">
-                            <button className="btn btn-primary" type="submit">
-                              Submit form
-                            </button>
-                          </div>
-                        </form>
-                      </div>
+                        </div>
                     </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="card">
-                      <div className="card-body">
-                        <h5 className="card-title">Tooltips</h5>
-                        <form className="row g-3 needs-validation" noValidate>
-                          <div className="col-md-4 position-relative">
-                            <label
-                              htmlFor="_dm-vTooltipFirsname"
-                              className="form-label"
-                            >
-                              First name
-                            </label>
-                            <input
-                              id="_dm-vTooltipFirsname"
-                              type="text"
-                              className="form-control"
-                              value="Aaron"
-                              required
-                            />
-                            <div className="invalid-tooltip">
-                              Please input your first name
-                            </div>
-                          </div>
-                          <div className="col-md-6 position-relative">
-                            <label
-                              htmlFor="_dm-vTooltipLastname"
-                              className="form-label"
-                            >
-                              Last name
-                            </label>
-                            <input
-                              id="_dm-vTooltipLastname"
-                              type="text"
-                              className="form-control"
-                              required
-                            />
-                            <div className="valid-tooltip">Looks good!</div>
-                            <div className="invalid-tooltip">
-                              Please input your last name
-                            </div>
-                          </div>
-                          <div className="col-md-12 position-relative">
-                            <label
-                              htmlFor="_dm-vTooltipAddress"
-                              className="form-label"
-                            >
-                              Address
-                            </label>
-                            <input
-                              id="_dm-vTooltipAddress"
-                              type="text"
-                              className="form-control"
-                              required
-                            />
-                            <div className="invalid-tooltip">
-                              Please provide a valid address.
-                            </div>
-                          </div>
-                          <div className="col-md-6 position-relative">
-                            <label
-                              htmlFor="_dm-vTooltipCountry"
-                              className="form-label"
-                            >
-                              Country
-                            </label>
-                            <select
-                              id="_dm-vTooltipCountry"
-                              className="form-select"
-                              required
-                            >
-                              <option selected disabled value="">
-                                Choose...
-                              </option>
-                              <option>...</option>
-                            </select>
-                            <div className="invalid-tooltip">
-                              Please select a valid country.
-                            </div>
-                          </div>
-                          <div className="col-md-5 position-relative">
-                            <label
-                              htmlFor="_dm-vTooltipCity"
-                              className="form-label"
-                            >
-                              City
-                            </label>
-                            <input
-                              id="_dm-vTooltipCity"
-                              type="text"
-                              className="form-control"
-                              required
-                            />
-                            <div className="invalid-tooltip">
-                              Please provide a valid city.
-                            </div>
-                          </div>
-                          <div className="col-md-12 position-relative">
-                            <label
-                              htmlFor="_dm-vTooltipAbout"
-                              className="form-label"
-                            >
-                              About
-                            </label>
-                            <textarea
-                              id="_dm-vTooltipAbout"
-                              className="form-control"
-                              rows="2"
-                              required
-                            ></textarea>
-                            <div className="invalid-tooltip">
-                              Tell me us your self.
-                            </div>
-                          </div>
-                          <div className="col-12 position-relative">
-                            <div className="form-check">
-                              <input
-                                id="_dm-vTooltipAgree"
-                                className="form-check-input"
-                                type="checkbox"
-                                required
-                              />
-                              <label
-                                htmlFor="_dm-vTooltipAgree"
-                                className="form-check-label"
-                              >
-                                Agree to terms and conditions
-                              </label>
-                              <div className="invalid-tooltip">
-                                You must agree before submitting.
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-12 pt-4">
-                            <button className="btn btn-primary" type="submit">
-                              Submit form
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Supported elements</h5>
+            </section>
 
-                    <form className="was-validated">
-                      <div className="mb-3">
-                        <label
-                          htmlFor="validationTextarea"
-                          className="form-label"
-                        >
-                          Textarea
-                        </label>
-                        <textarea
-                          className="form-control"
-                          id="validationTextarea"
-                          placeholder="Required example textarea"
-                          required
-                        ></textarea>
-                        <div className="invalid-feedback">
-                          Please enter a message in the textarea.
-                        </div>
-                      </div>
-
-                      <div className="form-check mb-3">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="validationFormCheck1"
-                          required
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="validationFormCheck1"
-                        >
-                          Check this checkbox
-                        </label>
-                        <div className="invalid-feedback">
-                          Example invalid feedback text
-                        </div>
-                      </div>
-
-                      <div className="form-check">
-                        <input
-                          type="radio"
-                          className="form-check-input"
-                          id="validationFormCheck2"
-                          name="radio-stacked"
-                          required
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="validationFormCheck2"
-                        >
-                          Toggle this radio
-                        </label>
-                      </div>
-                      <div className="form-check mb-3">
-                        <input
-                          type="radio"
-                          className="form-check-input"
-                          id="validationFormCheck3"
-                          name="radio-stacked"
-                          required
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="validationFormCheck3"
-                        >
-                          Or toggle this other radio
-                        </label>
-                        <div className="invalid-feedback">
-                          More example invalid feedback text
-                        </div>
-                      </div>
-
-                      <div className="mb-3">
-                        <select
-                          className="form-select"
-                          required
-                          aria-label="select example"
-                        >
-                          <option value="">Open this select menu</option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                        </select>
-                        <div className="invalid-feedback">
-                          Example invalid select feedback
-                        </div>
-                      </div>
-
-                      <div className="mb-3">
-                        <input
-                          type="file"
-                          className="form-control"
-                          aria-label="file example"
-                          required
-                        />
-                        <div className="invalid-feedback">
-                          Example invalid form file feedback
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
-  );
+        </>
+    );
 }

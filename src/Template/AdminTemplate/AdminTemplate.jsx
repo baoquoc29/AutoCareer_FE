@@ -23,9 +23,9 @@ export function AdminTemplate() {
                 label: 'Tài khoản quản trị viên',
                 link: '/sub-admin-manager',
                 icon: ''
-            }, {label: 'Tài khoản doanh nghiệp', link: '/section-manager', icon: ''}, {
+            }, {label: 'Tài khoản doanh nghiệp', link: '/admin-business-manager', icon: ''}, {
                 label: 'Tài khoản trường học',
-                link: '/major-manager',
+                link: '/admin-university-manager',
                 icon: ''
             },]
         },
@@ -33,14 +33,16 @@ export function AdminTemplate() {
         {
             label: 'Quản lý tin tuyển dụng',
             icon: 'fa-solid fa-store',
-            subMenu: [{label: 'Yêu cầu chờ duyệt', link: '/section-manager', icon: ''}, {
+            subMenu: [{
                 label: 'Danh sách tuyển dụng',
-                link: '/workshop-manager',
+                link: '/admin-job-manager',
                 icon: ''
             },]
         }, {
             label: 'Quản lý hội thảo',
             icon: 'fa-solid fa-briefcase',
+            subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''},]
+        }, {
             subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''}, {
                 label: 'Yêu cầu chờ duyệt',
                 link: '/section-manager',
@@ -61,8 +63,7 @@ export function AdminTemplate() {
             },]
         },{
             label: 'Thống kê', icon: 'home', subMenu: [{label: '123', link: '', icon: ''},]
-        }
-        ];
+        }];
     const filteredMenuItems = menuItems.map(item => {
         if (item.label === 'Quản lý tài khoản' && userData.role.name === 'SUB_ADMIN') {
             return {

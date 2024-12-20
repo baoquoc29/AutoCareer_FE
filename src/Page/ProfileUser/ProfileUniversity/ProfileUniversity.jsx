@@ -1,11 +1,21 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
-import { get_all_sections } from "../../../Redux/actions/SectionThunk";
-import { get_all_majors } from "../../../Redux/actions/MajorThunk";
-import { get_university_id } from "../../../Redux/actions/UniversityThunk";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {get_all_sections} from "../../../Redux/actions/SectionThunk";
+import {get_all_majors} from "../../../Redux/actions/MajorThunk";
+import {get_university_id} from "../../../Redux/actions/UniversityThunk";
+import {NavLink, useNavigate} from "react-router-dom";
+import {Button, Card, Col, Divider, Row, Space, Typography} from "antd";
 import './style/Profile.css'
+import {
+    CalendarOutlined,
+    EnvironmentOutlined,
+    HomeOutlined,
+    LinkOutlined,
+    MailOutlined, PhoneOutlined
+} from "@ant-design/icons";
+
+const {Text, Title} = Typography;
 
 const ProfileUniversity = () => {
     const navigate = useNavigate();
@@ -43,76 +53,120 @@ const ProfileUniversity = () => {
     if (!university || !universityDetails) {
         return <p>Loading...</p>;
     }
-
     return (
-        <section id="content" className="content">
-            <div className="content__header content__boxed rounded-0">
+        <section className="profile-university">
+            <div className="m-1 mt-1">
                 <div className="content__wrap">
-                    <section>
-                        <div className="container">
-                            <div className="card card-profile-university p-4">
-                                <div className="row mb-4">
-                                    <div className="col-md-3 text-center">
+                    <div className="profile-university">
+                        <Row gutter={[16, 16]}>
+                            <Col span={24} md={16}>
+                                <Card bordered={false}>
+                                    <div className="university-header">
                                         <img
                                             src={`${GET_IMAGE_URI}${universityDetails.logoImageId}`}
-                                            alt="Logo Trường"
-                                            className="img-fluid"
+                                            alt="Logo truong hoc"
+                                            className="university-logo"
                                         />
+                                        <Title level={2} className="university-title">{universityDetails.name}</Title>
                                     </div>
-                                    <div className="col-md-9">
-                                        <h1>{universityDetails.name}</h1>
-                                        <p>{universityDetails.description}</p>
-                                    </div>
-                                </div>
-
-                                {/* Thông tin chung */}
-                                <div className="row mb-3">
-                                    <div className="col-md-6">
-                                        <h2 className="header">Thông Tin Chung</h2>
-                                        <p><strong>Tên Trường:</strong> {universityDetails.name}</p>
-                                        <p><strong>Website:</strong> <a href={universityDetails.website}>{universityDetails.website}</a></p>
-                                        <p><strong>Năm thành lập:</strong> {universityDetails.foundedYear}</p>
-                                        <p><strong>Địa Chỉ:</strong> {universityDetails.locationId}</p>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <h2 className="header">Liên Hệ</h2>
-                                        <p><strong>Email:</strong> {universityDetails.email}</p>
-                                        <p><strong>Điện Thoại:</strong> {universityDetails.phone}</p>
-                                    </div>
-                                </div>
-
-                                {/* Khoa giảng dạy */}
-                                <div className="row mb-3">
-                                    <h2 className="header">Khoa Giảng Dạy</h2>
-                                    <div className="d-flex flex-wrap">
-                                        {sections.map((item, index) => (
-                                            <span className="badge badge-pill badge-blue mt-2 mx-2" key={index}>{item.name}</span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Ngành học */}
-                                <div className="row mb-4">
-                                    <h2 className="header">Ngành Học</h2>
-                                    <div className="d-flex flex-wrap">
-                                        {majors.map((item, index) => (
-                                            <span className="badge badge-pill badge-blue-dark mt-3 mx-2" key={index}>{item.name}</span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Nút chỉnh sửa */}
-                                <div className="text-center">
-                                    <button
-                                        onClick={handleEditClick}
-                                        className="btn btn-warning btn-profile-university-custom"
-                                    >
-                                        Chỉnh Sửa
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                                    <Text>{universityDetails.description}</Text>
+                                    <Divider orientation="left" className="divider-title">Thông tin
+                                        chung</Divider>
+                                    <Space direction="vertical" size={4} style={{width: "100%"}}>
+                                        <Row gutter={[16, 16]}>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{color: "#096dd9"}}>
+                                                        <HomeOutlined style={{marginRight: "8px"}}/>
+                                                        Tên doanh nghiệp:
+                                                    </Text>
+                                                    <Text>{universityDetails.name}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{color: "#096dd9"}}>
+                                                        <LinkOutlined style={{marginRight: "8px"}}/>
+                                                        Website:
+                                                    </Text>
+                                                    <Text>
+                                                        <NavLink
+                                                            to={universityDetails.website}>{universityDetails.website}</NavLink>
+                                                    </Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{color: "#096dd9"}}>
+                                                        <CalendarOutlined style={{marginRight: "8px"}}/>
+                                                        Năm thành lập:
+                                                    </Text>
+                                                    <Text>{universityDetails.foundedYear}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{color: "#096dd9"}}>
+                                                        <MailOutlined style={{marginRight: "8px"}}/>
+                                                        Email:
+                                                    </Text>
+                                                    <Text>{universityDetails.email}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{color: "#096dd9"}}>
+                                                        <PhoneOutlined style={{marginRight: "8px"}}/>
+                                                        Điện thoại:
+                                                    </Text>
+                                                    <Text>{universityDetails.phone}</Text>
+                                                </Space>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Space direction="vertical" size={4}>
+                                                    <Text strong style={{color: "#096dd9"}}>
+                                                        <EnvironmentOutlined style={{marginRight: "8px"}}/>
+                                                        Địa chỉ:
+                                                    </Text>
+                                                    <Text>
+                                                        {universityDetails.locationId}
+                                                    </Text>
+                                                </Space>
+                                            </Col>
+                                        </Row>
+                                    </Space>
+                                    <Divider/>
+                                    <Row justify="end">
+                                        <Button type="primary" onClick={handleEditClick}>Chỉnh sửa</Button>
+                                    </Row>
+                                </Card>
+                            </Col>
+                            <Col span={24} md={8}>
+                                <Row gutter={[16, 16]}>
+                                    <Col span={24}>
+                                        <Card bordered={false}>
+                                            <Divider orientation="left"
+                                                     className="divider-title">Khoa </Divider>
+                                            {sections.map((item, index) => (
+                                                <span className="badge badge-pill badge-blue mt-2 mx-2"
+                                                      key={index}>{item.name}</span>
+                                            ))}
+                                        </Card>
+                                    </Col>
+                                    <Col span={24}>
+                                        <Card bordered={false}>
+                                            <Divider orientation="left" className="divider-title">Chuyên
+                                                ngành </Divider>
+                                            {majors.map((item, index) => (
+                                                <span className="badge badge-pill badge-blue mt-2 mx-2"
+                                                      key={index}>{item.name}</span>
+                                            ))}
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
             </div>
         </section>
