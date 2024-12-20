@@ -1,17 +1,18 @@
+import React from "react";
 import {Button, Modal, Space, Table} from "antd";
-import {DeleteOutlined, EyeOutlined, ReloadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined} from "@ant-design/icons";
 
-const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelectChange}) => {
+const IndustryAdminTable = ({data, onInfo, onEdit, onDelete, onRestore, selectedRows, onSelectChange}) => {
 
     const confirmDelete = (record) => {
         Modal.confirm({
             title: 'Xác nhận xóa',
-            content: `Bạn có chắc chắn muốn xóa ngành nghề "${record.name}" khỏi doanh nghiệp?`,
+            content: `Bạn có chắc chắn muốn xóa ngành nghề "${record.name}"?`,
             okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                 onDelete(record)
+                onDelete(record)
             },
         });
     };
@@ -37,19 +38,20 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
         // Kết hợp giờ và ngày bằng dấu "-"
         return `${time} - ${day}`;
     };
+
     const columns = [
         {title: 'STT', dataIndex: 'stt', align: 'center', key: 'stt', sorter: (a, b) => a.stt - b.stt},
         {
             title: 'Mã ngành',
             dataIndex: 'code',
-            align: 'left',
+            align: 'center',
             key: 'code',
             sorter: (a, b) => a.code.localeCompare(b.code)
         },
         {
             title: 'Tên ngành',
             dataIndex: 'name',
-            align: 'left',
+            align: 'center',
             key: 'name',
             sorter: (a, b) => a.name.localeCompare(b.name)
         },
@@ -69,10 +71,12 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
         //     render: (text) => (text === 'ACTIVE' ? 'Hoạt động' : 'Tạm ngưng')
         // },
         {
-            title: 'Thao tác', key: 'actions', render: (text, record) => (
+            title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="middle">
                     <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onInfo(record)}
                             disabled={record.status !== 'ACTIVE'}/>
+                    <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
+                            onClick={() => onEdit(record)}/>
                     {record.status === 'ACTIVE' ? (
                         <Button variant={"solid"} danger={true} color={"danger"} icon={<DeleteOutlined/>}
                                 onClick={() => confirmDelete(record)}/>
@@ -96,8 +100,9 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
                 locale={{
                     emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
                 }}
+
             />
         </>
     )
 }
-export default IndustryTable;
+export default IndustryAdminTable;

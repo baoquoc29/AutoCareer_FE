@@ -2,24 +2,25 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     delete_industry_by_id,
-    get_all_industry,
-    get_all_industry_business,
-    get_industry_detail
+    get_all_industry_paging,
+    get_industry_detail_admin, inactive_industry_by_id,
+    update_industry_by_id
 } from "../../../Redux/actions/IndustryThunk";
 import {Button, Card, Input, Pagination} from "antd";
-import IndustryTable from "./IndustryTable";
-import IndustryForm from "./IndustryForm";
-import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
+import IndustryAdminTable from "./IndustryAdminTable";
+import IndustryAdminForm from "./IndustryAdminForm";
+import IndustryAdminDetail from "./IndustryAdminDetail"; // Import Modal mới
 import {DownloadOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton";
+import IndustryEditModal from "./IndustryEditModal";
+import {toast} from "react-toastify";
 
-const IndustryManager = () => {
+const IndustryAdminManager = () => {
     const dispatch = useDispatch();
-    const industryTable = useSelector((state) => state.IndustryReducer.industries); // Cho Table
+    const industryAdminTable = useSelector((state) => state.IndustryReducer.industriesAllPag); // Cho Table
     const selectedIndustry = useSelector((state) => state.IndustryReducer.industryDetail);
-    const industryOptions = useSelector((state) => state.IndustryReducer.industriesAll); // Cho Select
     const totalElements = useSelector((state) => state.IndustryReducer.totalElements); // Tổng số bản ghi
     const currentPage = useSelector((state) => state.IndustryReducer.currentPage); // Trang hiện tại
     const pageSize = useSelector((state) => state.IndustryReducer.pageSize); // Số bản ghi 1 trang
@@ -29,22 +30,34 @@ const IndustryManager = () => {
     const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các bản ghi đã chọn
+    const [editModalOpen, setEditModalOpen] = useState(false); // Quản lý trạng thái mở modal chỉnh sửa
+    const [editingIndustry, setEditingIndustry] = useState(null); // Lưu ngành nghề cần chỉnh sửa
 
     useEffect(() => {
-        dispatch(get_all_industry_business(currentPage, pageSize, keyword));
-        dispatch(get_all_industry());
+        dispatch(get_all_industry_paging(currentPage, pageSize, keyword));
     }, [dispatch, currentPage, pageSize, load]);
 
     useEffect(() => {
-        setFilteredData(industryTable);
-    }, [industryTable]);
+        setFilteredData(industryAdminTable);
+    }, [industryAdminTable]);
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_industry_business(page, pageSize, searchText)); // Gọi API với trang và kích thước mới
+        dispatch(get_all_industry_paging(page, pageSize, searchText)); // Gọi API với trang và kích thước mới
+    };
+
+    const handleEdit = (record) => {
+        dispatch(get_industry_detail_admin(record.id)) // Fetch industry details
+            .then(() => {
+                setEditingIndustry(record); // Set the industry for editing
+                setEditModalOpen(true); // Open the modal
+            })
+            .catch(() => {
+                toast.error("Không thể tải thông tin ngành nghề.");
+            });
     };
 
     const handleDelete = (record) => {
-        dispatch(delete_industry_by_id(record.key));
+        dispatch(inactive_industry_by_id(record.id));
     };
 
     const handleDeleteMultiple = async (records) => {
@@ -56,23 +69,28 @@ const IndustryManager = () => {
 
         // Sử dụng Promise.all để xóa song song
         try {
-            dispatch(delete_industry_by_id(idsToDelete));
+            // Map over each ID and create a promise for each deletion
+            const deletePromises = idsToDelete.map(id => dispatch(inactive_industry_by_id(id)));
+
+            // Wait for all deletions to complete
+            await Promise.all(deletePromises);
             setSelectedRows([]);
-            //toast.success(`Xóa ${records.length} ngành nghề thành công`);
+            toast.success(`Xóa ${records.length} ngành nghề thành công`);
         } catch (error) {
             console.error("Lỗi khi xóa các bản ghi:", error);
         }
     };
 
     const handleInfo = (record) => {
-        dispatch(get_industry_detail(record.id)); // id của industry
+        dispatch(get_industry_detail_admin(record.id)); // id của industry
         setOpen(true) // Mở modal industry detail
     };
+
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
-        dispatch(get_all_industry_business(1, pageSize, value)); // Gọi API với từ khóa
+        dispatch(get_all_industry_paging(1, pageSize, value)); // Gọi API với từ khóa
     };
 
     const handleSelectChange = (selectedRowKeys, selectedRows) => {
@@ -80,10 +98,10 @@ const IndustryManager = () => {
     };
     const data = Array.isArray(filteredData) ? filteredData.map((industry, index) => ({
         key: industry.id,
-        id: industry.industryId,
+        id: industry.id,
         stt: (currentPage - 1) * pageSize + index + 1,
-        name: industry.industryName,
-        code: industry.industryCode,
+        name: industry.name,
+        code: industry.code,
         status: industry.status,
         createAt: industry.createAt,
         createBy: industry.createBy,
@@ -100,8 +118,8 @@ const IndustryManager = () => {
         // Chuyển đổi dữ liệu thành định dạng Excel
         const worksheet = XLSX.utils.json_to_sheet(
             filteredData.map((industry) => ({
-                "Tên ngành nghề": industry.industryName,
-                "Mã ngành nghề": industry.industryCode,
+                "Tên ngành nghề": industry.name,
+                "Mã ngành nghề": industry.code,
                 "Trạng thái": industry.status,
             }))
         );
@@ -120,7 +138,7 @@ const IndustryManager = () => {
                     <div className="mt-auto">
                         <div className="row">
                             <div className="col-md-4 mb-3 border-5">
-                                <IndustryForm selectData={industryOptions} load={setLoad}/>
+                                <IndustryAdminForm load={setLoad}/>
                                 <img
                                     src={"aotucareer-logo.svg"}
                                     alt="Ngành nghề"
@@ -156,10 +174,11 @@ const IndustryManager = () => {
                                                 </Button>
                                             </div>
                                         </div>
-                                        <IndustryTable
+                                        <IndustryAdminTable
                                             data={data}
                                             onInfo={handleInfo}
                                             onDelete={handleDelete}
+                                            onEdit={handleEdit}
                                             selectedRows={selectedRows}
                                             onSelectChange={handleSelectChange}/>
                                         <ResultsSummary
@@ -185,11 +204,19 @@ const IndustryManager = () => {
                 </div>
             </div>
         </section>
-        <IndustryDetailModal
+        <IndustryAdminDetail
             open={open}
             onClose={() => setOpen(false)}
             industry={selectedIndustry}
         />
+        <IndustryEditModal
+            visible={editModalOpen}
+            onClose={() => setEditModalOpen(false)} // Đóng modal
+            industry={editingIndustry} // Truyền thông tin ngành nghề
+            onSubmit={(id, industryRequest) => {
+                dispatch(update_industry_by_id(id, industryRequest))
+            }}
+        />
     </>);
 };
-export default IndustryManager;
+export default IndustryAdminManager;

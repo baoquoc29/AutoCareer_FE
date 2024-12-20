@@ -2,12 +2,13 @@ import React, {useEffect, useState} from "react";
 import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {create_job} from "../../../Redux/actions/JobThunk";
-import {get_all_industry_no_pag} from "../../../Redux/actions/IndustryThunk";
+import {get_all_industry_business_no_pag} from "../../../Redux/actions/IndustryThunk";
 import {useNavigate} from "react-router-dom";
 import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import {toast} from "react-toastify";
 
 const JobCreatePage = () => {
     const dispatch = useDispatch();
@@ -18,10 +19,12 @@ const JobCreatePage = () => {
     const [jobDescription, setJobDescription] = useState("");
     const [requirement, setRequirement] = useState("");
     const [benefit, setBenefit] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
     dayjs.extend(utc);
 
     useEffect(() => {
-        dispatch(get_all_industry_no_pag());
+        dispatch(get_all_industry_business_no_pag());
     }, [dispatch]);
 
     const handleDateChange = (value) => {
@@ -30,17 +33,27 @@ const JobCreatePage = () => {
         setDate(formattedDate);
     };
 
-    const handleSubmit = (values) => {
-        const formattedValues = {
-            ...values,
-            expireDate: date,
-            jobDescription,
-            requirement,
-            benefit,// Đảm bảo ngày hết hạn lấy từ state
-        };
-        dispatch(create_job(formattedValues));
-        navigate("/job-manager");
-        form.resetFields();
+    const handleSubmit = async (values) => {
+        try {
+            const formattedValues = {
+                ...values,
+                expireDate: date,
+                jobDescription,
+                requirement,
+                benefit,
+            };
+            const response = await dispatch(create_job(formattedValues))// Assuming Redux Toolkit's createAsyncThunk
+            if (response.success) { // Kiểm tra kết quả trả về từ API
+                toast.success("Công việc đã được tạo thành công!");
+                navigate("/job-manager"); // Chỉ chuyển trang khi thành công
+                form.resetFields();
+            }
+        } catch (error) {
+            // Set the error message if the job creation fails
+            const errorMsg = error.response?.data?.message || "Đã xảy ra lỗi!";
+            setErrorMessage(error.response.data.message);
+            toast.error(errorMsg);
+        }
     };
 
     return (
@@ -192,6 +205,7 @@ const JobCreatePage = () => {
                                             <Form.Item
                                                 label="Phúc lợi"
                                                 name="benefit"
+                                                rules={[{required: true, message: "Vui lòng nhập phúc lợi"}]}
                                             >
                                                 <ReactQuill
                                                     theme="snow"
