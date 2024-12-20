@@ -5,7 +5,7 @@ import {
     SET_INDUSTRIES_ALL,
     SET_INDUSTRIES_NO_PAG,
     SET_INDUSTRIES_ALL_PAG,
-    UPDATE_INDUSTRY_SUCCESS
+    UPDATE_INDUSTRY_SUCCESS, SET_COUNT_INDUSTRY
 } from "../types/IndustryType";
 import {toast} from "react-toastify";
 
@@ -200,4 +200,19 @@ export const update_industry_by_id = (id, industryRequest) => async (dispatch) =
         toast.error(errorMessage);
     }
 };
+
+export const get_count_used_industry = () => {
+    return async (dispatch) => {
+        try {
+            const res = await industryService.get_count_used_industry();
+            dispatch({
+                type: SET_COUNT_INDUSTRY,
+                payload: res.data,
+            });
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
+    };
+};
+
 

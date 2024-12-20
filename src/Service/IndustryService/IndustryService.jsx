@@ -46,6 +46,9 @@ export class IndustryService extends baseService {
     get_industry_business_all_no_pag = () => {
         return this.get("api/industry/get-all-industry-business-no-pag");
     };
+    get_count_used_industry = () => {
+        return this.get("api/industry/get-used-industry");
+    };
 }
 
 export const industryService = new IndustryService();

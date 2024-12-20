@@ -4,15 +4,16 @@ import {
     SET_INDUSTRIES,
     SET_INDUSTRY_OPTIONS,
     SET_INDUSTRIES_NO_PAG,
-    SET_INDUSTRIES_ALL, SET_INDUSTRIES_ALL_PAG, UPDATE_INDUSTRY_SUCCESS,
+    SET_INDUSTRIES_ALL, SET_INDUSTRIES_ALL_PAG, UPDATE_INDUSTRY_SUCCESS, SET_COUNT_INDUSTRY,
 } from "../types/IndustryType";
 
 const initialState = {
     industries: [],
     industryOptions: [], // Dữ liệu cho Select
     industriesNoPag: [],
+    industriesCount: [],
     industriesAll: [],
-    industryDetail:{},
+    industryDetail: {},
     industriesAllPag: []
 
 };
@@ -66,6 +67,11 @@ export const IndustryReducer = (state = initialState, action) => {
                 industriesAllPag: state.industriesAllPag.map((industry) =>
                     industry.id === action.payload.id ? action.payload : industry
                 ),
+            };
+        case SET_COUNT_INDUSTRY:
+            return {
+                ...state,
+                industriesCount: action.payload,
             };
         default:
             return {...state};
