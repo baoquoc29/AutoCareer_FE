@@ -1,7 +1,7 @@
 import {Button, Col, Form, Input, Modal, Row} from "antd";
 import {useFormik} from "formik";
 import MajorValidation from "../../../../Utils/Validation/University/MajorValidation";
-
+import '../Style/Major.css'
 
 const MajorEditModal = ({open, onClose, major, onSubmit}) => {
 
@@ -40,7 +40,7 @@ const MajorEditModal = ({open, onClose, major, onSubmit}) => {
     };
 
     return (
-        <Modal open={open} onCancel={handleClose} footer={null}>
+        <Modal className='modal-major' open={open} onCancel={handleClose} footer={null}>
             <h2 style={{textAlign: 'center'}}>Chỉnh sửa chuyên ngành</h2>
 
             <Form onFinish={formik.handleSubmit} layout="vertical">
@@ -61,7 +61,7 @@ const MajorEditModal = ({open, onClose, major, onSubmit}) => {
                         <Form.Item label="Số lượng sinh viên" required={true}
                                    validateStatus={formik.errors.numberStudent && formik.touched.numberStudent ? 'error' : ''}
                                    help={formik.errors.numberStudent && formik.touched.numberStudent ? formik.errors.numberStudent : ''}>
-                            <Input name="numberStudent" value={formik.values.numberStudent}
+                            <Input type={'number'} name="numberStudent" value={formik.values.numberStudent}
                                    onChange={formik.handleChange}/>
                         </Form.Item>
                     </Col>

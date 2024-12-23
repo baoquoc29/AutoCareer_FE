@@ -94,7 +94,7 @@ const SectionTable = ({
     };
     return (
         <>
-            <Table locale={{emptyText: "Không tìm thấy kết quả tương ứng."}} size='small' columns={columns}
+            <Table className='section-table' locale={{emptyText: "Không tìm thấy kết quả tương ứng."}} size='small' columns={columns}
                    dataSource={data} pagination={false}
                    rowSelection={rowSelection} rowKey={record => record.id}/>
         </>

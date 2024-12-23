@@ -27,6 +27,9 @@ export class MajorService extends baseService {
     set_start_major_by_id = (id)=>{
         return this.post(`api/major/active/${id}`)
     }
+    get_total_major=()=>{
+        return this.get('api/major/count-total')
+    }
 }
 
 export const majorService = new MajorService();

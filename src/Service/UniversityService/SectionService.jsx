@@ -10,23 +10,26 @@ export class SectionService extends baseService {
     create_section = (formData) => {
         return this.post('api/section/create', formData)
     }
-    update_section = (id,formData) => {
-            return this.post(`api/section/update/${id}`, formData)
+    update_section = (id, formData) => {
+        return this.post(`api/section/update/${id}`, formData)
     }
-    delete_section = (ids)=>{
-        return this.deleteData(`api/section/delete`,ids)
+    delete_section = (ids) => {
+        return this.deleteData(`api/section/delete`, ids)
     }
-    get_section_id =(id)=>{
+    get_section_id = (id) => {
         return this.post(`api/section/get/${id}`)
     }
     get_section_all = () => {
         return this.get('api/section/get-all')
     }
-    set_stop_section_by_id = (id)=>{
+    set_stop_section_by_id = (id) => {
         return this.post(`api/section/inactive/${id}`)
     }
-    set_start_section_by_id = (id)=>{
+    set_start_section_by_id = (id) => {
         return this.post(`api/section/active/${id}`)
+    }
+    get_total_section = () => {
+       return this.get('api/section/count-total')
     }
 }
 

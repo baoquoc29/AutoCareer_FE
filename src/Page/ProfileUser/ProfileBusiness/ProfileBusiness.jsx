@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
-import { get_all_industry_no_pag } from "../../../Redux/actions/IndustryThunk";
+import { get_all_industry_business_no_pag } from "../../../Redux/actions/IndustryThunk";
 import { useNavigate } from "react-router-dom";
 import { get_business_by_id } from "../../../Redux/actions/BusinessThunk";
 import { Button, Card, Col, Divider, Row, Space, Typography } from "antd";
@@ -27,7 +27,7 @@ const ProfileBusiness = () => {
 
     useEffect(() => {
         if (business?.id) {
-            dispatch(get_all_industry_no_pag());
+            dispatch(get_all_industry_business_no_pag());
             dispatch(get_business_by_id(business.id));
         }
     }, [dispatch, business]);
