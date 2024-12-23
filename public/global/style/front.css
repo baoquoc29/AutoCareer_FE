@@ -1,0 +1,23 @@
+/* styles.css */
+
+/* Thêm font chữ Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Áp dụng font Roboto cho toàn bộ trang web */
+body, input, textarea, button {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Cấu hình mặc định cho các yếu tố khác */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+}
+
+p, span, a, li {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Các kiểu định dạng khác */
+table, th, td {
+    font-family: 'Roboto', sans-serif;
+}
