@@ -74,7 +74,7 @@ export const SignIn = () => {
                                         </div>
                                     </Form.Item>
                                     <Form.Item>
-                                        <div className="d-grid mt-3">
+                                        <div className="d-grid">
                                             <button
                                                 className="btn btn-secondary btn-lg"
                                                 onClick={() => navigate('/')}

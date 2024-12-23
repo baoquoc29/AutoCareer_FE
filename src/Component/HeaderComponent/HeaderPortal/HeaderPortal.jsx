@@ -8,7 +8,14 @@ import { useNavigate } from 'react-router-dom';
 
 import {DOMAIN, TOKEN, USER_LOGIN} from "../../../Utils/Setting/Config";
 import {logoutUser} from "../../../Redux/actions/UserThunk";
-import {DownOutlined, LogoutOutlined, SettingOutlined, UserOutlined} from "@ant-design/icons";
+import {
+    DownOutlined,
+    EditOutlined,
+    LogoutOutlined, ProjectOutlined,
+    SettingOutlined,
+    UsergroupDeleteOutlined,
+    UserOutlined
+} from "@ant-design/icons";
 import WorkshopPortal from "../../../Page/Portal/WorkshopPortal";
 const { Header: AntHeader } = Layout;
 
@@ -47,15 +54,43 @@ const HeaderPortal = () => {
         }
     };
 
-    const menuItems = userData?.role?.name === 'UNIVERSITY' ? [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
-        { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: () => handleToManagerClick() },
-        { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
-    ] : [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
-        { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: () => handleToManagerClick() },
-        { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
-    ];
+    const menuItems = userData?.role?.name ?
+        [
+            { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
+            { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: () => handleToManagerClick() },
+            { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+        ]
+        : userData?.role?.name === 'UNIVERSITY' ?
+            [
+                { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
+                { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: () => handleToManagerClick() },
+                { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+            ]
+            : userData?.role?.name === 'ADMIN' ?
+                [
+                    { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/admin') },
+                    { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />, onClick: () => navigate('/admin') },
+                    { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+                ]
+                : userData?.role?.name === 'BUSINESS' ?
+                    [
+                        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/business') },
+                        { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />, onClick: () => navigate('/business') },
+                        { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+                    ]
+                : userData?.role?.name === 'SUB_ADMIN' ?
+                    [
+                        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />,onClick: () => navigate('/admin') },
+                        { key: '2', label: 'Quản lý người dùng', icon: <EditOutlined />,onClick: () => navigate('/admin') },
+                        { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+                    ]
+                    : userData?.role?.name === 'EMPLOYEE' ?
+                        [
+                            { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/business') },
+                            { key: '2', label: 'Quản lý công việc', icon: <ProjectOutlined />, onClick: () => navigate('/business') },
+                            { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+                        ]
+                        : [];
     const menu = (
         <Menu items={menuItems} />
     );
