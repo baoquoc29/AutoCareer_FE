@@ -37,6 +37,15 @@ const HeaderPortal = () => {
         else if(userData?.role?.name === "UNIVERSITY") {
             window.open('/university', '_blank');
         }
+        else if(userData?.role?.name === "ADMIN") {
+            window.open('/admin', '_blank');
+        }
+        else if(userData?.role?.name === "BUSINESS") {
+            window.open('/business', '_blank');
+        }
+        else if(userData?.role?.name === "EMPLOYEE") {
+            window.open('/business', '_blank');
+        }
     }
 
 
@@ -54,13 +63,7 @@ const HeaderPortal = () => {
         }
     };
 
-    const menuItems = userData?.role?.name ?
-        [
-            { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
-            { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: () => handleToManagerClick() },
-            { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
-        ]
-        : userData?.role?.name === 'UNIVERSITY' ?
+    const menuItems =  userData?.role?.name === 'UNIVERSITY' ?
             [
                 { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
                 { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: () => handleToManagerClick() },
@@ -69,25 +72,25 @@ const HeaderPortal = () => {
             : userData?.role?.name === 'ADMIN' ?
                 [
                     { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/admin') },
-                    { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />, onClick: () => navigate('/admin') },
+                    { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />,  onClick: () => handleToManagerClick() },
                     { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
                 ]
                 : userData?.role?.name === 'BUSINESS' ?
                     [
                         { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/business') },
-                        { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />, onClick: () => navigate('/business') },
+                        { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />,  onClick: () => handleToManagerClick() },
                         { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
                     ]
                 : userData?.role?.name === 'SUB_ADMIN' ?
                     [
                         { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />,onClick: () => navigate('/admin') },
-                        { key: '2', label: 'Quản lý người dùng', icon: <EditOutlined />,onClick: () => navigate('/admin') },
+                        { key: '2', label: 'Quản lý người dùng', icon: <EditOutlined />, onClick: () => handleToManagerClick() },
                         { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
                     ]
                     : userData?.role?.name === 'EMPLOYEE' ?
                         [
                             { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/business') },
-                            { key: '2', label: 'Quản lý công việc', icon: <ProjectOutlined />, onClick: () => navigate('/business') },
+                            { key: '2', label: 'Quản lý công việc', icon: <ProjectOutlined />,onClick: () => handleToManagerClick() },
                             { key: '3', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
                         ]
                         : [];
@@ -155,7 +158,7 @@ const HeaderPortal = () => {
                                         icon={<UserOutlined />}
                                     />
                                     <span style={{ fontWeight: 500, fontSize: '16px' }}>
-                        {userData?.university?.name || userData?.business?.name || 'Người dùng'}
+                        {userData?.university?.name || userData?.business?.name || userData?.role?.description ||  'Người dùng'}
                     </span>
                                     <DownOutlined />
                                 </Space>
