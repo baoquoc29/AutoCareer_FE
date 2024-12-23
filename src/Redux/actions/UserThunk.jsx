@@ -1,4 +1,5 @@
 import {
+    CLEAN_LOCAL_STORAGE,
     CLEAR_RESPONSE,
     DISPLAY_LOADING,
     HIDE_LOADING,
@@ -77,6 +78,9 @@ export const sign_up_university = (formData) => {
 };
 export const clearResponseBusiness = () => {
     return { type: CLEAR_RESPONSE };
+};
+export const clearLocalStorage = () => {
+    return { type: CLEAN_LOCAL_STORAGE };
 };
 export const sign_up_business = (formData) => {
     return async (dispatch) => {

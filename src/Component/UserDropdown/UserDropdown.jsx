@@ -1,8 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
-import {logoutUser} from "../../Redux/actions/UserThunk";
+import {clearLocalStorage, logoutUser} from "../../Redux/actions/UserThunk";
 import {Button} from "antd";
 import {NavLink} from "react-router-dom";
+import {useEffect} from "react";
 
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
@@ -16,7 +17,11 @@ export const UserDropdown = ({navigate}) => {
     const dispatch = useDispatch();
     const userId = user ? user.id : null;
     const userType = user ? user.role.name : null;
-
+    useEffect(() => {
+        return () => {
+            dispatch(clearLocalStorage());
+        };
+    }, [dispatch]);
     const handleLogout = async () => {
         const token = localStorage.getItem(TOKEN);
         if (token) {

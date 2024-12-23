@@ -141,30 +141,53 @@ export function SignUpUniversity() {
 
                             <Form form={form} layout="vertical" onFinish={handleSendCode}>
                                 <Form.Item label="Tên trường đại học" name="universityName"
-                                           rules={[{required: true, message: 'Tên trường là bắt buộc.'}]}>
+                                           rules={[
+                                               { required: true, message: 'Tên trường là bắt buộc.' },
+                                               { max: 256, message: 'Tên trường không được quá 256 ký tự.' },
+                                               { pattern: /^[^\s].*$/, message: 'Tên trường không được có dấu cách ở đầu.' }
+                                           ]}>
                                     <Input placeholder="Nhập tên trường đại học"/>
                                 </Form.Item>
 
                                 <Form.Item label="Số điện thoại" name="numberPhone"
-                                           rules={[{required: true, message: 'Số điện thoại là bắt buộc.'}]}>
+                                           rules={[
+                                               { required: true, message: 'Số điện thoại là bắt buộc.' },
+                                               { pattern: /^0\d{9}$/, message: 'Số điện thoại phải bắt đầu từ 0 và có 10 số.' }
+
+                                           ]}>
                                     <Input placeholder="Nhập số điện thoại"/>
                                 </Form.Item>
 
                                 <Form.Item label="Email" name="email"
-                                           rules={[{required: true, message: 'Email là bắt buộc.'}, {
-                                               type: 'email',
-                                               message: 'Email không hợp lệ!'
-                                           }]}>
+                                           rules={[
+                                               { required: true, message: 'Email là bắt buộc.' },
+                                               { type: 'email', message: 'Email không hợp lệ!' },
+                                               { min: 5,max:50, message: 'Email không hợp lệ!' },
+                                               { pattern: /^[^\s].*$/, message: 'Email không được có dấu cách ở đầu.' }
+                                           ]}
+                                >
                                     <Input placeholder="Nhập email"/>
                                 </Form.Item>
-
                                 <Form.Item label="Mật khẩu" name="password"
-                                           rules={[{required: true, message: 'Mật khẩu là bắt buộc.'}]}>
+                                           rules={[
+                                               { required: true, message: 'Mật khẩu là bắt buộc.' },
+                                               { pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/, message: 'Mật khẩu phải chứa ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số.' }
+                                           ]}>
                                     <Input.Password placeholder="Nhập mật khẩu"/>
                                 </Form.Item>
 
                                 <Form.Item label="Xác nhận mật khẩu" name="confirmPassword"
-                                           rules={[{required: true, message: 'Xác nhận mật khẩu là bắt buộc.'}]}>
+                                           rules={[
+                                               { required: true, message: 'Xác nhận mật khẩu là bắt buộc.' },
+                                               ({ getFieldValue }) => ({
+                                                   validator(_, value) {
+                                                       if (!value || getFieldValue('password') === value) {
+                                                           return Promise.resolve();
+                                                       }
+                                                       return Promise.reject(new Error('Xác nhận mật khẩu không trùng khớp!'));
+                                                   }
+                                               })
+                                           ]}>
                                     <Input.Password placeholder="Nhập lại mật khẩu"/>
                                 </Form.Item>
 
@@ -212,7 +235,7 @@ export function SignUpUniversity() {
 
                             <div className="d-flex justify-content-end align-items-center gap-md-3 mt-4">
                                 <p className="mb-0 fs-6">Bạn đã có tài khoản?</p>
-                                <NavLink to={"/"} className="btn-link text-decoration-none ms-1 fs-6">Đăng
+                                <NavLink to={"/login"} className="btn-link text-decoration-none ms-1 fs-6">Đăng
                                     nhập</NavLink>
                             </div>
                         </div>

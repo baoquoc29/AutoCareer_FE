@@ -10,7 +10,9 @@
     height: 60px; /* Chiều cao 60px */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
 }
-
+.home-screen-container{
+    background: #ffffff;
+}
 /* Container */
 .header-container-portal {
     display: flex;
@@ -28,22 +30,99 @@
     text-decoration: none;
     padding: 10px;
 }
+.brand-wrap-portal:hover {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+}
 
 .logo-portal {
     width: 40px;
-    color: #3E7494;
+    color: #ffffff;
     height: auto;
     margin-right: 10px;
 }
-.card-slogan-portal{
-    height: 350px;
-    background: #3E7494;
+.card-slogan-portal {
+    position: relative; /* Để định vị ảnh trong container */
+    height: 670px;
+    background-color: #ffffff;
+    background-image:
+            linear-gradient(0deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 90px 90px; /* Lưới lớn hơn */
 }
+
+.corner-image {
+    position: absolute; /* Định vị ảnh trong các góc */
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.top-left {
+    top: 60px;
+    left: 10px;
+    border-radius: 10px;
+    width: 140px;
+    height: 140px;
+    margin-left: 20px;
+    background-image: url('/public/imagedecor1.jpg');
+}
+
+.top-right {
+    top: 60px;
+    width: 175px;
+    height: 170px;
+    margin-right: 100px;
+    right: 10px;
+    border-radius: 10px;
+    background-image: url('/public/asian.webp'); /* Link hình ảnh */
+}
+.middle-left{
+    top: 250px;
+    left: 10px;
+    border-radius: 10px;
+    width: 160px;
+    height: 140px;
+    margin-left: 150px;
+    background-image: url('/public/desginer.png');
+}
+.bottom-left {
+    bottom: 70px;
+    left: 40px;
+    border-radius: 10px;
+    width: 175px;
+    height: 150px;
+    background-image: url('/public/businessimage.jpg'); /* Link hình ảnh */
+}
+.middle-right{
+    bottom: 80px;
+    right: 10px;
+    width: 145px;
+    height: 140px;
+    margin-right: 180px;
+    border-radius: 10px;
+    background-image: url('/public/ks.jpg'); /* Link hình ảnh */
+}
+.bottom-right {
+    bottom: 250px;
+    right: 10px;
+    width: 145px;
+    height: 140px;
+    margin-right: 30px;
+    border-radius: 10px;
+    background-image: url('/public/student.jpg'); /* Link hình ảnh */
+}
+
+
+
 .brand-title-portal {
     font-size: 25px;
     font-weight: bold;
     color: #3E7494;
-    font-family: 'Poppins', sans-serif;
     font-style: italic;
 }
 
@@ -132,20 +211,21 @@
 }
 
 .slogan-portal {
-    color: #0ABFAC;
-    font-size: 1.5rem;
+    color: #111112;
+    font-size: 2.6rem;
+    margin-top: 50px;
     font-weight: 700;
     letter-spacing: 0.02em;
 
 }
 
 .sub-slogan-portal {
-    font-size: 0.75rem;
     margin-top: 10px;
     font-style: italic;
     letter-spacing: 0.05em;
     font-weight: 500;
-    color: #FFFFFF;
+    color: #8c8b8b;
+    font-size: 1.4rem;
 }
 
 h1, h3 {
@@ -159,6 +239,29 @@ h1, h3 {
 
     .sub-slogan-portal {
         font-size: 1.2rem;
+
     }
 }
 
+/* Define the animation */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply the animation to the h1 */
+.slogan-portal {
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+/* Apply the animation to the h3 */
+.sub-slogan-portal {
+    animation: fadeInUp 1.5s ease-out forwards;
+    animation-delay: 0.5s; /* Make the h3 appear slightly after h1 */
+}
