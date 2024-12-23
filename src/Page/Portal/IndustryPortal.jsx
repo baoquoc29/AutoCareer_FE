@@ -1,22 +1,46 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { Row, Col, Card, Typography, Carousel, Button } from 'antd';
-import { DollarCircleOutlined, AppstoreAddOutlined, PhoneOutlined, UserOutlined, BankOutlined, LaptopOutlined, HomeOutlined, FileProtectOutlined } from '@ant-design/icons';
-import './StylePortal/IndustryPortal.css'; // Import the CSS file
-
+import './StylePortal/IndustryPortal.css';
+import {useDispatch, useSelector} from "react-redux";
+import {get_total_all_job} from "../../Redux/actions/PortalThunk";
+import {
+    LaptopOutlined,
+    MedicineBoxOutlined,
+    BookOutlined,
+    BuildOutlined,
+    BankOutlined,
+    ShopOutlined,
+    HomeOutlined,
+    ShoppingCartOutlined,
+    ThunderboltOutlined,
+    CarOutlined,
+    NotificationOutlined,
+    CustomerServiceOutlined,
+    AppleOutlined,
+    ShoppingOutlined,
+    GlobalOutlined,
+} from '@ant-design/icons';
 const { Text } = Typography;
-
-const jobCategories = [
-    { title: 'Kinh doanh - Bán hàng', icon: <DollarCircleOutlined />, jobs: '9.350' },
-    { title: 'Marketing - PR - Quảng cáo', icon: <AppstoreAddOutlined />, jobs: '5.277' },
-    { title: 'Dịch vụ khách hàng - Vận hành', icon: <PhoneOutlined />, jobs: '1.895' },
-    { title: 'Nhân sự - Hành chính - Pháp lý', icon: <UserOutlined />, jobs: '2.974' },
-    { title: 'Tài chính - Ngân hàng - Bảo hiểm', icon: <BankOutlined />, jobs: '872' },
-    { title: 'Công nghệ Thông tin', icon: <LaptopOutlined />, jobs: '3.696' },
-    { title: 'Bất động sản - Xây dựng', icon: <HomeOutlined />, jobs: '1.535' },
-    { title: 'Kế toán - Kiểm toán - Thuế', icon: <FileProtectOutlined />, jobs: '3.112' },
-];
+const industryIcons = {
+    "Công nghệ thông tin": <LaptopOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Y tế": <MedicineBoxOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Giáo dục": <BookOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Xây dựng": <BuildOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Tài chính - Ngân hàng": <BankOutlined style={{ fontSize: '50px', color: '#1c1c23' }} />,
+    "Sản xuất": <ShopOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Bất động sản": <HomeOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Thương mại điện tử": <ShoppingCartOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Năng lượng": <ThunderboltOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Vận tải": <CarOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Truyền thông - Quảng cáo": <NotificationOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Dịch vụ khách hàng": <CustomerServiceOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Nông nghiệp": <AppleOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Hàng tiêu dùng": <ShoppingOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+    "Du lịch - Khách sạn": <GlobalOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />,
+};
 
 const JobCategoryCard = ({ title, icon, jobs }) => (
+
     <Col span={6} style={{ marginBottom: '20px' }}>
         <Card
             bordered={false}
@@ -33,14 +57,16 @@ const JobCategoryCard = ({ title, icon, jobs }) => (
 );
 
 const JobCategories = () => {
+
     const carouselRef = useRef(null); // Reference to the carousel
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 4; // Set number of items per slide
-
+    const dispatch = useDispatch();
+    const industriesTotalJob = useSelector((state) => state.PortalReducer.industryTotalJob || []);
     // Divide the job categories into chunks for each slide
     const paginatedCategories = [];
-    for (let i = 0; i < jobCategories.length; i += pageSize) {
-        paginatedCategories.push(jobCategories.slice(i, i + pageSize));
+    for (let i = 0; i < industriesTotalJob.length; i += pageSize) {
+        paginatedCategories.push(industriesTotalJob.slice(i, i + pageSize));
     }
 
     // Move to the previous slide
@@ -56,12 +82,15 @@ const JobCategories = () => {
             carouselRef.current.next();
         }
     };
+    useEffect(() => {
+        dispatch(get_total_all_job());
+    }, [dispatch]);
 
     return (
-        <div className="job-categories-container">
+        <div className="job-categories-container" data-aos="fade-up">
             <Row justify="space-between" align="middle" className="title-pagination-row">
                 <Col>
-                    <Typography.Title level={3} className="title">
+                    <Typography.Title level={3} >
                         Top ngành nghề nổi bật
                     </Typography.Title>
                     <Text className="job-count-text">Tất cả các ngành nghề</Text>
@@ -104,10 +133,11 @@ const JobCategories = () => {
                             {categoryGroup.map((category, index) => (
                                 <JobCategoryCard
                                     key={index}
-                                    title={category.title}
-                                    icon={category.icon}
-                                    jobs={category.jobs}
+                                    title={category.industryName}
+                                    icon={industryIcons[category.industryName]} // Lấy icon từ danh sách industryIcons
+                                    jobs={category.totalJobs}
                                 />
+
                             ))}
                         </Row>
                     </div>

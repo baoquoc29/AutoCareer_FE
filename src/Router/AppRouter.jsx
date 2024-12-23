@@ -31,7 +31,6 @@ import ProfileBusiness from "../Page/ProfileUser/ProfileBusiness/ProfileBusiness
 import SubAdminManager from "../Page/Admin/SubAdminManager/SubAdminManager";
 import EmployeeEdit from "../Page/Business/EmployeeManager/EmployeeEdit";
 import HomeScreen from "../Page/Portal/HomeScreen";
-import WorkShopDetails from "../Page/University/WorkShopManager/WorkShopDetails";
 import WorkshopDetailsScreen from "../Page/Portal/WorkshopDetailsScreen";
 import ProfileBusinessEdit from "../Page/ProfileUser/ProfileBusiness/ProfileBusinessEdit";
 import UniversityDetailPortal from "../Page/Portal/University/UniversityDetailPortal";
@@ -41,19 +40,24 @@ import CooperationDetail from "../Page/University/CoopertionUniversity/Cooperati
 import BusinessManager from "../Page/Admin/BusinessManager/BusinessManager";
 import UniversityManager from "../Page/Admin/UniversityManager/UniversityManager";
 import AdminJobManager from "../Page/Admin/JobManager/AdminJobManager";
+import WorkshopListPortal from "../Page/Portal/WorkshopListPortal";
 
 export function AppRouter() {
     return (
         <>
             <Routes>
                 <Route element={<UserTemplate/>}>
-                    <Route path={"/"} element={<SignIn/>}/>
+                    <Route path={"*"} element={<PageError/>}/>
+                    <Route path={"/login"} element={<SignIn/>}/>
                     <Route path={"/account-type-selection"} element={<AccountTypeSelection/>}/>
                     <Route path={"/signup-university"} element={<SignUpUniversity/>}/>
                     <Route path={"/signup-business"} element={<SignUpBusiness/>}/>
                     <Route path={"/reset-password"} element={<PasswordReminder/>}/>
                     <Route path={"/lock-screen"} element={<LockScreen/>}/>
-                    <Route path={"/home-screen"} element={<HomeScreen/>}/>
+                    <Route path={"/"} element={<HomeScreen/>}/>
+                    <Route path={"/work-shop-all"} element={<WorkshopListPortal/>}/>
+                    <Route path="/workshop-details/:id" element={<WorkshopDetailsScreen />} />
+
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
