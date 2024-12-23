@@ -1,9 +1,10 @@
 import {Header} from "../../Component/HeaderComponent/HeaderCRM/Header";
 import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
+import {Footer} from "../../Component/FooterComponent/Footer";
 
 export function AdminTemplate() {
     const subAdmin = useSelector(state => state.UserReducer.userData?.subAdmin);
@@ -42,6 +43,25 @@ export function AdminTemplate() {
             icon: 'fa-solid fa-briefcase',
             subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''},]
         }, {
+            subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''}, {
+                label: 'Yêu cầu chờ duyệt',
+                link: '/section-manager',
+                icon: ''
+            },]
+        },
+        {
+            label: 'Quản lý ngành nghề',
+            icon: 'fa-solid fa-school',
+            subMenu: [{
+                label: 'Danh sách ngành nghề',
+                link: '/industry-admin-manager',
+                icon: ''
+            }, {label: 'Tài khoản doanh nghiệp', link: '/section-manager', icon: ''}, {
+                label: 'Tài khoản trường học',
+                link: '/major-manager',
+                icon: ''
+            },]
+        },{
             label: 'Thống kê', icon: 'home', subMenu: [{label: '123', link: '', icon: ''},]
         }];
     const filteredMenuItems = menuItems.map(item => {
@@ -63,6 +83,15 @@ export function AdminTemplate() {
                 menuItems={filteredMenuItems}
             />
             <Outlet/>
+            <section id="content" className="content">
+                <div className="content__header content__boxed rounded-2">
+                    <Outlet/>
+                    {/*<div className="content__wrap">*/}
+                    {/*    <Outlet/>*/}
+                    {/*</div>*/}
+                </div>
+                <Footer/>
+            </section>
         </div>
     </>)
 }

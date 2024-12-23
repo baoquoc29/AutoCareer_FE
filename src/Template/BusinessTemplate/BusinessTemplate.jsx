@@ -8,10 +8,15 @@ import {Footer} from "../../Component/FooterComponent/Footer";
 import {get_business_by_id} from "../../Redux/actions/BusinessThunk";
 
 export function BusinessTemplate() {
-    const user=useSelector(state => state.UserReducer.userData);
-    const businessId= user.business.id;
-    const bus=useSelector(state => state.BusinessReducer.business);
-    const dispatch=useDispatch();
+    const user = useSelector(state => state.UserReducer.userData);
+    let businessId = null;
+    if (user?.businessId) {
+        businessId = user.businessId;
+    } else if (user?.business?.id) {
+        businessId = user.business.id;
+    }
+    const bus = useSelector(state => state.BusinessReducer.business);
+    const dispatch = useDispatch();
     useEffect(() => {
         dispatch(get_business_by_id(businessId));
     }, [dispatch]);

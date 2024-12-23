@@ -34,6 +34,7 @@ import HomeScreen from "../Page/Portal/HomeScreen";
 import WorkShopDetails from "../Page/University/WorkShopManager/WorkShopDetails";
 import WorkshopDetailsScreen from "../Page/Portal/WorkshopDetailsScreen";
 import ProfileBusinessEdit from "../Page/ProfileUser/ProfileBusiness/ProfileBusinessEdit";
+import IndustryAdminManager from "../Page/Admin/IndustryAdminManager/IndustryAdminManager";
 import UniversityDetailPortal from "../Page/Portal/University/UniversityDetailPortal";
 import BusinessDetailPage from "../Page/Portal/BusinessDetailPage";
 import CooperationManager from "../Page/University/CoopertionUniversity/CooperationManager";
@@ -79,6 +80,7 @@ export function AppRouter() {
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
                     <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
+                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                     <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
 
                 </Route>
@@ -86,6 +88,7 @@ export function AppRouter() {
                 <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/admin"} element={<Admin/>}/>
                     <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
+                    <Route path={"/industry-admin-manager"} element={<IndustryAdminManager/>}/>
                     <Route path={"/admin-business-manager"} element={<BusinessManager/>}/>
                     <Route path={"/admin-university-manager"} element={<UniversityManager/>}/>
                     <Route path={"/admin-job-manager"} element={<AdminJobManager/>}/>

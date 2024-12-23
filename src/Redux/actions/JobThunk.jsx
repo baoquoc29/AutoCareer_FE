@@ -1,11 +1,11 @@
 import {jobService} from "../../Service/JobService/JobService";
-import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB, INACTIVE_JOB} from "../types/JobType";
+import {CREATE_JOB, GET_JOB_DETAIL, INACTIVE_JOB, SET_JOBS, UPDATE_JOB} from "../types/JobType";
 import {toast} from "react-toastify";
 
-export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '') => {
+export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '', statusBrowse = '', industryId='') => {
     return async (dispatch) => {
         try {
-            const res = await jobService.get_all_job_of_business_paging(page, size, keyword);
+        const res = await jobService.get_all_job_of_business_paging(page, size, keyword, statusBrowse||'', industryId||'');
             const {content, totalElements, pageSize, currentPage} = res.data;
             if (Array.isArray(res.data.content)) {
                 dispatch({
@@ -16,6 +16,8 @@ export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '')
                         pageSize, // Số bản ghi mỗi trang
                         currentPage,
                         keyword,// Trang hiện tại
+                        statusBrowse, // Trạng thái duyệt
+                        industryId, //Ngành nghề
                     },
                 });
             } else {
@@ -45,17 +47,16 @@ export const get_job_detail = (id) => {
 export const create_job = (jobData) => {
     return async (dispatch) => {
         try {
-            const res = await jobService.create_job(jobData);
+            const res = await jobService.create_job(jobData); // Kiểm tra nếu API trả về undefined
             dispatch({
                 type: CREATE_JOB,
                 payload: res.data,
             });
-            toast.success("Công việc đã được tạo thành công!");
-            dispatch(get_all_job_of_business_paging());
-
+            return {success: true, data: res.data};
         } catch (error) {
             console.error("Error creating job:", error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Đã xảy ra lỗi khi tạo công việc");
+            return {success: false, error};
         }
     };
 };
@@ -64,14 +65,17 @@ export const update_job = (jobId, jobData) => {
     return async (dispatch) => {
         try {
             const res = await jobService.update_job(jobId, jobData);
+
             dispatch({
                 type: UPDATE_JOB, // Action cụ thể để cập nhật job trong store
                 payload: res.data,
             });
-            dispatch(get_all_job_of_business_paging());
             toast.success("Cập nhật công việc thành công!");
+            return {success: true, data: res.data};
         } catch (error) {
-            toast.error(error.response.data.message);
+            console.error("Error edit job:", error);
+            toast.error(error.response?.data?.message);
+            return {success: false, error};
         }
     };
 };
@@ -84,8 +88,9 @@ export const inactive_job = (jobId) => {
                 type: INACTIVE_JOB,
                 payload: res.data, // Chỉ cần gửi jobId để cập nhật trạng thái
             });
-            toast.success(res.data);
             dispatch(get_all_job_of_business_paging());
+            toast.clearWaitingQueue();
+            toast.success(res.data);
         } catch (error) {
             console.error("Error inactivating job:", error);
             toast.error(error.response.data.message);
