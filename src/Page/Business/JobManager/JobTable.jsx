@@ -29,8 +29,6 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
         navigate('/job-detail');
     };
 
-
-
     const handleEdit = (id) => {
         // Navigate to the JobUpdatePage and pass the job ID in the URL
         localStorage.setItem("jobId", id);
@@ -89,42 +87,11 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
             title: 'Ngày hết hạn',
             dataIndex: 'expireDate',
             key: 'expireDate',
-            align: 'center',
+            align: 'left',
             sorter: (a, b) => a.expireDate.localeCompare(b.expireDate),
             render: (text) => formatDateTime(text), // Sử dụng hàm formatDate
 
         },
-        // {
-        //     title: "Trạng thái",
-        //     key: "status",
-        //     dataIndex: "status",
-        //     align: 'center',
-        //     render: (status) => {
-        //         // Gán màu dựa trên trạng thái
-        //         let color = "";
-        //         let statusText ;
-        //
-        //         switch (status.toLowerCase()) {
-        //             case "active":
-        //                 color = "green";
-        //                 statusText = "Hoạt động"; // Hiển thị "Hoạt động"
-        //                 break;
-        //             case "inactive":
-        //                 color = "volcano";
-        //                 statusText = "Không hoạt động"; // Hiển thị "Không hoạt động"
-        //                 break;
-        //             default:
-        //                 color = "geekblue"; // Mặc định cho các trạng thái khác
-        //                 statusText = status; // Giữ nguyên trạng thái nếu không phải "active" hoặc "inactive"
-        //         }
-        //
-        //         return (
-        //             <Tag color={color} key={status}>
-        //                 {statusText} {/* Hiển thị trạng thái với chữ được thay đổi */}
-        //             </Tag>
-        //         );
-        //     },
-        // },
         {
             title: 'Trạng thái duyệt',
             dataIndex: 'statusBrowse',

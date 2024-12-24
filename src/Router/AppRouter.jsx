@@ -17,7 +17,7 @@ import WorkShopManager from "../Page/University/WorkShopManager/WorkShopManager"
 import PrivateRoute from "../Component/PrivateRouteComponent/PrivateRoute";
 import ProfileUniversityEdit from "../Page/ProfileUser/ProfileUniversity/ProfileUniversityEdit";
 import {BusinessTemplate} from "../Template/BusinessTemplate/BusinessTemplate";
-import {Business} from "../Page/Business/Business";
+import {DashboardIndustry} from "../Page/Business/DashboardIndustry";
 import EmployeeManager from "../Page/Business/EmployeeManager/EmployeeManager";
 import IndustryManager from "../Page/Business/IndustryManager/IndustryManager";
 import JobManager from "../Page/Business/JobManager/JobManager";
@@ -42,6 +42,7 @@ import CooperationDetail from "../Page/University/CoopertionUniversity/Cooperati
 import BusinessManager from "../Page/Admin/BusinessManager/BusinessManager";
 import UniversityManager from "../Page/Admin/UniversityManager/UniversityManager";
 import AdminJobManager from "../Page/Admin/JobManager/AdminJobManager";
+import {DashboardJob} from "../Page/Business/DashboardJob";
 
 export function AppRouter() {
     return (
@@ -68,7 +69,8 @@ export function AppRouter() {
                     <Route path={"/cooperation-detail"} element={<CooperationDetail/>}/>
                 </Route>
                 <Route element={<PrivateRoute>{" "}<BusinessTemplate/>{" "}</PrivateRoute>}>
-                    <Route path={"/business"} element={<Business/>}/>
+                    <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
+                    <Route path={"/dashboard-job"} element={<DashboardJob/>}/>
                     <Route path={"/industry-manager"} element={<IndustryManager/>}/>
                     <Route path={"/employee-manager"} element={<EmployeeManager />} />
                     <Route path={"/employee-create"} element={<EmployeeCreate />} />

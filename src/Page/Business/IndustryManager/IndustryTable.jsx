@@ -56,18 +56,11 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
         {
             title: 'Ngày tạo',
             dataIndex: 'createAt',
-            align: 'center',
+            align: 'left',
             key: 'createAt',
             sorter: (a, b) => a.createAt.localeCompare(b.createAt),
             render: (text) => formatDateTime(text), // Hiển thị theo định dạng
         },
-        // {
-        //     title: 'Trạng thái',
-        //     dataIndex: 'status',
-        //     key: 'status',
-        //     sorter: (a, b) => a.status.localeCompare(b.status),
-        //     render: (text) => (text === 'ACTIVE' ? 'Hoạt động' : 'Tạm ngưng')
-        // },
         {
             title: 'Thao tác', key: 'actions', render: (text, record) => (
                 <Space size="middle">

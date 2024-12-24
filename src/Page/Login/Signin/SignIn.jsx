@@ -42,7 +42,7 @@ export const SignIn = () => {
                         navigate('/admin');
                         break;
                         case "EMPLOYEE":
-                        navigate('/business');
+                        navigate('/job-manager');
                         break;
                     default:
                         navigate('/');

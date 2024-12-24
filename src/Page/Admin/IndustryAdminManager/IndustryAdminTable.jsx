@@ -46,14 +46,46 @@ const IndustryAdminTable = ({data, onInfo, onEdit, onDelete, onRestore, selected
             dataIndex: 'code',
             align: 'center',
             key: 'code',
-            sorter: (a, b) => a.code.localeCompare(b.code)
+            sorter: (a, b) => a.code.localeCompare(b.code),
+            render: (text) => {
+                const maxLength = 30; // Giới hạn số ký tự trước khi thêm ">>>"
+
+                // Kiểm tra và xử lý chuỗi nếu dài hơn maxLength
+                const displayText = text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+                return (
+                    <div style={{
+                        whiteSpace: 'nowrap', // Không xuống dòng
+                        overflow: 'hidden',  // Ẩn phần văn bản tràn
+                        textOverflow: 'ellipsis', // Hiển thị dấu "..."
+                    }}>
+                        {displayText}
+                    </div>
+                );
+            },
         },
         {
             title: 'Tên ngành',
             dataIndex: 'name',
             align: 'center',
             key: 'name',
-            sorter: (a, b) => a.name.localeCompare(b.name)
+            sorter: (a, b) => a.name.localeCompare(b.name),
+            render: (text) => {
+                const maxLength = 30; // Giới hạn số ký tự trước khi thêm ">>>"
+
+                // Kiểm tra và xử lý chuỗi nếu dài hơn maxLength
+                const displayText = text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+                return (
+                    <div style={{
+                        whiteSpace: 'nowrap', // Không xuống dòng
+                        overflow: 'hidden',  // Ẩn phần văn bản tràn
+                        textOverflow: 'ellipsis', // Hiển thị dấu "..."
+                    }}>
+                        {displayText}
+                    </div>
+                );
+            },
         },
         {
             title: 'Ngày tạo',
@@ -63,13 +95,6 @@ const IndustryAdminTable = ({data, onInfo, onEdit, onDelete, onRestore, selected
             sorter: (a, b) => a.createAt.localeCompare(b.createAt),
             render: (text) => formatDateTime(text), // Hiển thị theo định dạng
         },
-        // {
-        //     title: 'Trạng thái',
-        //     dataIndex: 'status',
-        //     key: 'status',
-        //     sorter: (a, b) => a.status.localeCompare(b.status),
-        //     render: (text) => (text === 'ACTIVE' ? 'Hoạt động' : 'Tạm ngưng')
-        // },
         {
             title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="middle">
