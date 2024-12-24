@@ -1,6 +1,7 @@
 import { SET_BUSINESS, UPDATE_BUSINESS} from "../types/BusinessType.jsx";
-import {DISPLAY_LOADING, HIDE_LOADING, STATUS_CODE} from "../../Utils/Setting/Config";
+import { STATUS_CODE} from "../../Utils/Setting/Config";
 import {businessService} from "../../Service/BusinessService/BusinessService";
+import {toast} from "react-toastify";
 
 
 export const get_business_by_id = (id) => {
@@ -19,22 +20,23 @@ export const get_business_by_id = (id) => {
 
 export const update_business = (id, formData) => {
     return async (dispatch) => {
-        dispatch({type: DISPLAY_LOADING})
-        await new Promise(resolve => setTimeout(resolve, 1000));
         try {
             const res = await businessService.update_business_id(id, formData);
             if (res.code === STATUS_CODE.SUCCESS) {
-                console.log("Update successful", res.data); // Thêm log
+                console.log("Update successful", res.data);
                 dispatch({
                     type: UPDATE_BUSINESS,
                     payload: res.data
-                })
+                });
+                dispatch(get_business_by_id(id));
+                toast.success("Doanh nghiệp được cập nhật thành công!");
+                return { success: true, data: res.data };
+            }else if(res.code === STATUS_CODE.BAD_REQUEST){
+                toast.error(res.message)
             }
-            dispatch(get_business_by_id(id));
         } catch (error) {
-            console.log("Update successful", error); // Thêm log
+            toast.error(error.message || "Đã xảy ra lỗi khi chỉnh sửa doanh nghiệp.");
+            return {success: false, error: error.message};
         }
-        dispatch({type: HIDE_LOADING})
-    }
-
-}
+    };
+};

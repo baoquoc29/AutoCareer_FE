@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './ProfileBusinessEdit.css';
-import {Button, Form, Input, InputNumber, Upload, Select, Row, Col, message} from "antd";
+import {Button, Form, Input, Upload, Select, Row, Col,} from "antd";
 import {get_business_by_id, update_business} from "../../../Redux/actions/BusinessThunk";
 import {UploadOutlined} from '@ant-design/icons';
 import {useLocation, useNavigate} from "react-router-dom";
 import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/WorkShopThunk";
+import {toast} from "react-toastify";
 
 const {Option} = Select;
 const ProfileBusinessEdit = () => {
@@ -19,7 +20,7 @@ const ProfileBusinessEdit = () => {
     const [selectedProvince, setSelectedProvince] = useState(null);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const location = useLocation(); // Sử dụng useLocation để lấy state
-    const { businessId } = location.state || {}; // Lấy id từ state được truyền vào
+    const {businessId} = location.state || {}; // Lấy id từ state được truyền vào
     const {provinces, districts, wards} = useSelector(state => state.LocationReducer);
     useEffect(() => {
         if (businessId) {
@@ -45,18 +46,15 @@ const ProfileBusinessEdit = () => {
                 provinceId: business.location?.province?.id,
                 districtId: business.location?.district?.id,
                 wardId: business.location?.ward?.id,
-
             })
             setSelectedProvince(business.location?.province?.id);
             setSelectedDistrict(business.location?.district?.id);
             if (business.location?.province?.id) {
                 dispatch(get_all_district(business.location.province?.id));
             }
-
             if (business.location?.district?.id) {
                 dispatch(get_all_ward(business.location.district?.id));
             }
-
             if (business.businessImageId) {
                 setBusinessImagePreview(`${GET_IMAGE_URI}${business.businessImageId}`);
             }
@@ -64,7 +62,6 @@ const ProfileBusinessEdit = () => {
                 setLicenseImagePreview(`${GET_IMAGE_URI}${business.licenseImageId}`);
             }
         }
-
     }, [business, form, dispatch])
 
     const handleProvinceChange = (provinceId) => {
@@ -99,9 +96,7 @@ const ProfileBusinessEdit = () => {
     };
 
     const handleSubmit = (values) => {
-
         const formData = new FormData();
-
         // Thêm các giá trị khác từ form vào FormData
         for (const key in values) {
             if (values[key] && key !== 'businessImage' && key !== 'licenseImage') {
@@ -121,8 +116,16 @@ const ProfileBusinessEdit = () => {
             formData.append("licenseImage", licenseImageFile);
         }
 
-        dispatch(update_business(business.id, formData)); // Dispatch action update
-        navigate("/profile-business"); // Chuyển hướng
+        dispatch(update_business(business.id, formData))// Dispatch action update
+            .then((success) => {
+                if (success) {
+                    navigate(-1);
+                }
+            })
+            .catch((error) => {
+                console.error("Lỗi khi chỉnh sửa doanh nghiệp:", error);
+                toast.error("Có lỗi xảy ra khi chỉnh sửa doanh nghiệp. Vui lòng thử lại.");
+            });
     };
 
     const handleCancel = () => {
@@ -130,7 +133,8 @@ const ProfileBusinessEdit = () => {
         navigate(-1); // Quay lại trang trước (nếu sử dụng React Router)
     };
 
-    return (<section id="content__university__edit" className="content">
+    return (
+        <section id="content__university__edit" className="content">
             <div className="container ">
                 <div className="content__profile__university__edit">
                     <div className="content__business__edit content__wrap">
@@ -138,8 +142,9 @@ const ProfileBusinessEdit = () => {
                             <div className="container__businessEdit mt-3">
                                 <div className="row">
                                     <div className="col-12">
-                                        <h1>Chỉnh sửa hồ sơ</h1>
                                         <div className="card__university__edit">
+                                            <h1 className="title__Business__edit">Chỉnh sửa hồ sơ</h1>
+                                            <hr className="line__Business__edit"/>
                                             <Form
                                                 name="businessForm"
                                                 form={form}
@@ -147,18 +152,24 @@ const ProfileBusinessEdit = () => {
                                                 layout="vertical"
                                             >
                                                 <Row gutter={24}>
-                                                    {/* Image Uploads Side by Side */}
                                                     <Col span={12}>
                                                         <Form.Item
-                                                            label="Ảnh doanh nghiep"
+                                                            label={(
+                                                                <span>
+                                                                    Ảnh doanh nghiệp
+                                                                    <span style={{fontSize: '12px', marginLeft: '5px'}}>
+                                                                        (click vào ảnh để chọn)
+                                                                    </span>
+                                                                </span>
+                                                            )}
                                                             name="businessImage"
                                                         >
                                                             <Upload
                                                                 listType="picture-card"
                                                                 maxCount={1}
-                                                                fileList={null}
-                                                                beforeUpload={handleBusinessImageChange} // Gọi hàm xử lý ảnh
-                                                                showUploadList={false} // Không hiển thị danh sách file
+                                                                fileList={[]}
+                                                                beforeUpload={handleBusinessImageChange}
+                                                                showUploadList={false}
                                                             >
                                                                 {businessImagePreview ? (<img
                                                                     src={businessImagePreview}
@@ -168,19 +179,27 @@ const ProfileBusinessEdit = () => {
                                                                     <UploadOutlined/>
                                                                     <div>Click để chọn ảnh</div>
                                                                 </div>)}
-                                                            </Upload></Form.Item>
+                                                            </Upload>
+                                                        </Form.Item>
                                                     </Col>
                                                     <Col span={12}>
                                                         <Form.Item
-                                                            label="Ảnh giấy phép"
+                                                            label={(
+                                                                <span>
+                                                                    Ảnh giấy phép
+                                                                    <span style={{fontSize: '12px', marginLeft: '5px'}}>
+                                                                        (click vào ảnh để chọn)
+                                                                    </span>
+                                                                </span>
+                                                            )}
                                                             name="licenseImage"
                                                         >
                                                             <Upload
                                                                 listType="picture-card"
                                                                 maxCount={1}
-                                                                fileList={null}
-                                                                beforeUpload={handleLicenseImageChange} // Gọi hàm xử lý ảnh
-                                                                showUploadList={false} // Không hiển thị danh sách file
+                                                                fileList={[]}
+                                                                beforeUpload={handleLicenseImageChange}
+                                                                showUploadList={false}
                                                             >
                                                                 {licenseImagePreview ? (<img
                                                                     src={licenseImagePreview}
@@ -199,10 +218,24 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Tên doanh nghiệp"
                                                             name="name"
-                                                            rules={[{
-                                                                required: true,
-                                                                message: "Vui lòng nhập tên doanh nghiệp"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: "Vui lòng nhập tên doanh nghiệp"
+                                                                },
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if (value && value.startsWith(' ')) {
+                                                                            return Promise.reject(new Error('Tên không được bắt đầu bằng dấu cách'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                },
+                                                                {
+                                                                    max: 255,
+                                                                    message: "Tên doanh nghiệp không được quá 255 ký tự"
+                                                                },
+                                                            ]}
                                                         >
                                                             <Input/>
                                                         </Form.Item>
@@ -210,13 +243,31 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Mã số thuế"
                                                             name="taxCode"
-                                                            rules={[{
-                                                                required: true, message: "Vui lòng nhập mã số thuế"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: "Vui lòng nhập mã số thuế"
+                                                                },
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if (value && value.startsWith(' ')) {
+                                                                            return Promise.reject(new Error('Mã số thuế không được bắt đầu bằng dấu cách'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                },
+                                                                {
+                                                                    pattern: /^[0-9]+$/,
+                                                                    message: "Mã số thuế chỉ được chứa số"
+                                                                },
+                                                                {
+                                                                    min: 10,
+                                                                    max: 13,
+                                                                    message: "Mã số thuế phải từ 10 đến 13 ký tự"
+                                                                },
+                                                            ]}
                                                         >
-                                                            <Input
-
-                                                            />
+                                                            <Input/>
                                                         </Form.Item>
 
                                                         <Form.Item
@@ -224,21 +275,57 @@ const ProfileBusinessEdit = () => {
                                                             name="companySize"
                                                             rules={[
                                                                 {
-                                                                    pattern: /^[0-9]*$/,  // Kiểm tra là số
+                                                                    validator: (_, value) => {
+                                                                        if (value && value.startsWith(' ')) {
+                                                                            return Promise.reject(new Error('Số lượng nhân viên không được bắt đầu bằng dấu cách'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                },
+                                                                {
+                                                                    pattern: /^[0-9]+$/,
                                                                     message: "Số lượng nhân viên phải là một số"
-                                                                }
+                                                                },
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if(value){
+                                                                            const numberValue = parseInt(value);
+                                                                            if(numberValue < 50){
+                                                                                return Promise.reject(new Error("Số lượng nhân viên phải lớn hơn hoặc bằng 50"));
+                                                                            }
+                                                                            if(numberValue > 1000000){
+                                                                                return Promise.reject(new Error("Số lượng nhân viên phải nhỏ hơn hoặc bằng 1.000.000"));
+                                                                            }
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    }
+                                                                },
                                                             ]}
                                                         >
-                                                            <Input />
+                                                            <Input/>
                                                         </Form.Item>
-
 
                                                         <Form.Item
                                                             label="Website"
                                                             name="website"
-                                                            rules={[{
-                                                                required: true, message: "Vui lòng nhập website"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if (value && value.startsWith(' ')) {
+                                                                            return Promise.reject(new Error('Website không được bắt đầu bằng dấu cách'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                },
+                                                                {
+                                                                    type: 'url',
+                                                                    message: "Vui lòng nhập đúng định dạng website"
+                                                                },
+                                                                {
+                                                                    max: 255,
+                                                                    message: "Website không được quá 255 ký tự"
+                                                                },
+                                                            ]}
                                                         >
                                                             <Input/>
                                                         </Form.Item>
@@ -246,9 +333,24 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Số điện thoại"
                                                             name="phone"
-                                                            rules={[{
-                                                                required: true, message: "Vui lòng nhập số điện thoại"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: "Vui lòng nhập số điện thoại"
+                                                                },
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if (value && value.startsWith(' ')) {
+                                                                            return Promise.reject(new Error('Số điện thoại không được bắt đầu bằng dấu cách'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                },
+                                                                {
+                                                                    pattern: /^[0-9]{10}$/,
+                                                                    message: "Số điện thoại phải là 10 số"
+                                                                }
+                                                            ]}
                                                         >
                                                             <Input/>
                                                         </Form.Item>
@@ -256,6 +358,36 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Năm thành lập"
                                                             name="foundYear"
+                                                            rules={[
+
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if(value && value.toString().startsWith(' ')) {
+                                                                            return Promise.reject(new Error('Năm thành lập không được bắt đầu bằng dấu cách'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                },
+                                                                {
+                                                                    validator: (_, value) => {
+                                                                        if(value && isNaN(value)){
+                                                                            return Promise.reject(new Error('Năm thành lập phải là một số'));
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    }
+                                                                },
+                                                                ({ getFieldValue }) => ({
+                                                                    validator(_, value) {
+                                                                        if(value){
+                                                                            const currentYear = new Date().getFullYear();
+                                                                            if (parseInt(value) > currentYear) {
+                                                                                return Promise.reject(new Error(`Năm thành lập không được lớn hơn năm hiện tại (${currentYear})`));
+                                                                            }
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                }),
+                                                            ]}
                                                         >
                                                             <Input/>
                                                         </Form.Item>
@@ -268,17 +400,17 @@ const ProfileBusinessEdit = () => {
                                                                 {
                                                                     validator: (_, value) => {
                                                                         if (value) {
-                                                                            const wordCount = value.trim().split(/\s+/).length; // Tính số từ
+                                                                            const wordCount = value.trim().split(/\s+/).length;
                                                                             if (wordCount > 1000) {
                                                                                 return Promise.reject(new Error("Mô tả không được vượt quá 1000 từ"));
                                                                             }
                                                                         }
-                                                                        return Promise.resolve(); // Nếu không có lỗi
+                                                                        return Promise.resolve();
                                                                     },
                                                                 },
                                                             ]}
                                                         >
-                                                            <Input.TextArea rows={5}/>
+                                                            <Input.TextArea autoSize={{minRows: 5, maxRows: 5}}/>
                                                         </Form.Item>
 
                                                         <Form.Item
@@ -289,12 +421,16 @@ const ProfileBusinessEdit = () => {
                                                             }]}
                                                         >
                                                             <Select
+                                                                showSearch
                                                                 placeholder="Chọn tỉnh/thành phố"
                                                                 value={selectedProvince}
-                                                                onChange={handleProvinceChange} // Gọi hàm xử lý thay đổi tỉnh
+                                                                onChange={handleProvinceChange}
+                                                                filterOption={(input, option) =>
+                                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                                }
                                                             >
-                                                                {provinces.map(province => (
-                                                                    <Option key={province.id} value={province.id}>
+                                                                {provinces?.map(province => (
+                                                                    <Option key={province.id} value={province.id} label={province.name}>
                                                                         {province.name}
                                                                     </Option>))}
                                                             </Select>
@@ -308,13 +444,17 @@ const ProfileBusinessEdit = () => {
                                                             }]}
                                                         >
                                                             <Select
+                                                                showSearch
                                                                 placeholder="Chọn huyện"
                                                                 value={selectedDistrict}
-                                                                onChange={handleDistrictChange} // Gọi hàm xử lý thay đổi huyện
-                                                                disabled={!selectedProvince} // Vô hiệu hóa nếu chưa chọn tỉnh
+                                                                onChange={handleDistrictChange}
+                                                                disabled={!selectedProvince}
+                                                                filterOption={(input, option) =>
+                                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                                }
                                                             >
-                                                                {districts.map(district => (
-                                                                    <Option key={district.id} value={district.id}>
+                                                                {districts?.map(district => (
+                                                                    <Option key={district.id} value={district.id} label={district.name}>
                                                                         {district.name}
                                                                     </Option>))}
                                                             </Select>
@@ -327,11 +467,15 @@ const ProfileBusinessEdit = () => {
                                                             }]}
                                                         >
                                                             <Select
+                                                                showSearch
                                                                 placeholder="Chọn xã/phường"
-                                                                disabled={!selectedDistrict} // Vô hiệu hóa nếu chưa chọn huyện
+                                                                disabled={!selectedDistrict}
+                                                                filterOption={(input, option) =>
+                                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                                }
                                                             >
-                                                                {wards.map(ward => (
-                                                                    <Option key={ward.id} value={ward.id}>
+                                                                {wards?.map(ward => (
+                                                                    <Option key={ward.id} value={ward.id} label={ward.name}>
                                                                         {ward.name}
                                                                     </Option>))}
                                                             </Select>
@@ -339,19 +483,27 @@ const ProfileBusinessEdit = () => {
                                                         <Form.Item
                                                             label="Vị trí chi tiết"
                                                             name="descriptionLocation"
-                                                            rules={[{
-                                                                required: true, message: "Vui lòng nhập vị trí chi tiết"
-                                                            }]}
+                                                            rules={[
+                                                                {
+                                                                    required: true,
+                                                                    message: "Vui lòng nhập vị trí chi tiết"
+                                                                },
+                                                                {
+                                                                    max: 255,
+                                                                    message: "Vị trí chi tiết không được quá 255 ký tự"
+                                                                }
+                                                            ]}
                                                         >
                                                             <Input/>
                                                         </Form.Item>
                                                     </Col>
                                                 </Row>
 
-                                                <div className="form-actions d-flex justify-content-between w-100">
+                                                <div className="form-actions d-flex w-100"
+                                                     style={{justifyContent: 'flex-end'}}>
                                                     <Button onClick={handleCancel} type="default" danger>Hủy</Button>
                                                     <Button type="primary" htmlType="submit"
-                                                            style={{marginLeft: '10px'}}>
+                                                            style={{marginLeft: '20px'}}>
                                                         Lưu
                                                     </Button>
                                                 </div>
@@ -365,6 +517,8 @@ const ProfileBusinessEdit = () => {
                     </div>
                 </div>
             </div>
-        </section>);
+        </section>
+    );
 };
+
 export default ProfileBusinessEdit;

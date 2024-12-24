@@ -38,7 +38,6 @@ const rootReducer = combineReducers({
     LocationReducer,
     InstructionalReducer,
     CooperationReducer,
-
     AdminBusinessReducer,
     AdminUniversityReducer,
     AdminJobReducer,

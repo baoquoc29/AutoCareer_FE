@@ -20,7 +20,7 @@ export const listen_for_notifications = (userId) => {
             const req = JSON.parse(event.data);
             console.log(notification);
             notification.open({
-                message: '',
+                message: req.title,
                 description: req.message,
                 key: req.id,
             });
@@ -87,7 +87,6 @@ export const get_all_paging_notifications = (pageNo, pageSize) => {
     return async (dispatch) => {
         try {
             const res = await notificationService.get_all_paging_notifications(pageNo, pageSize);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_NOTIFICATIONS,
