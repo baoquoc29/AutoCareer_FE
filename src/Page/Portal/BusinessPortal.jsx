@@ -10,7 +10,7 @@ const BusinessPortal = () => {
     const locationListRef = useRef(null);
     const dispatch = useDispatch();
 
-    const industries = useSelector((state) => state.IndustryReducer.industriesNoPag || []);
+    const industries = useSelector((state) => state.IndustryReducer.industriesAll || []);
     const businesses = useSelector((state) => state.PortalReducer.businessFeatures || []);
     const totalBusinessElements = useSelector((state) => state.PortalReducer.totalBusinessFeatures || 0);
     // Thêm "Tất cả" vào danh sách ngành

@@ -129,10 +129,11 @@ const WorkshopListPortal = () => {
                 {/* Total results */}
                 <p className="total-results">
                     {totalElements > 0
-                        ? `Có  `
+                        ? <>
+                            <span style={{fontWeight: 'bold', color: '#Blue'}}>{totalElements}</span>
+                            <span> kết quả được tìm thấy!</span>
+                        </>
                         : "Không có dữ liệu."}
-                    <span style={{fontWeight: 'bold', color: '#4CAF50'}}>{totalElements}</span>
-                    {totalElements > 0 ? ` kết quả được tìm thấy!` : ""}
                 </p>
 
 

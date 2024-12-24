@@ -3,7 +3,6 @@ import React from "react";
 import "./StylePortal/WorkshopCard.css";
 import { DOMAIN } from "../../Utils/Setting/Config";
 import 'font-awesome/css/font-awesome.min.css';
-import { Button } from "antd";
 import {encryptId} from "../../Component/SecurityComponent/cryptoUtils";
 
 const WorkshopCard = ({ workshop }) => {
@@ -24,8 +23,8 @@ const WorkshopCard = ({ workshop }) => {
     };
 
     return (
-        <div className="card-workshop-list">
-            <div className="header-workshop-list">
+        <div className="card-workshop-list" >
+            <div className="header-workshop-list" onClick={() => handleDetailsWorkShop(workshop.id)}>
                 {/* Thêm ảnh cho workshop */}
                 <img
                     src={`${DOMAIN}/api/v1/image/resource?imageId=${workshop.imageId}`}
@@ -45,9 +44,6 @@ const WorkshopCard = ({ workshop }) => {
                 <span className={isOngoing ? 'ongoing' : ''}><i className="fa fa-calendar" aria-hidden="true"></i> Ngày kết thúc: {workshop.endDate}</span>
                 <span className={isExpired ? 'expired' : ''}><i className="fa fa-calendar-times-o" aria-hidden="true"></i> Ngày hết hạn: {workshop.expireDate}</span>
                 <span><i className="fa fa-building" aria-hidden="true"></i> Số công ty tham gia: {workshop.totalCompany}</span>
-                <Button onClick={() => handleDetailsWorkShop(workshop.id)} className="btn-join-request">
-                    Yêu cầu tham gia
-                </Button>
 
             </div>
         </div>

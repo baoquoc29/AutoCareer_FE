@@ -4,13 +4,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../Redux/actions/UserThunk";
 import { useFormik } from "formik";
-import { USER_LOGIN } from "../../../Utils/Setting/Config";
-import SigninValidation from "../../../Utils/Validation/User/SigninValidation";
 import { Form, Input } from "antd";
+import SigninValidation from "../../../Utils/Validation/User/SigninValidation";
 
 export const SignIn = () => {
     const dispatch = useDispatch();
-    const { isAuthenticated, userData } = useSelector(state => state.UserReducer);
+    const { isAuthenticated } = useSelector(state => state.UserReducer);
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -28,7 +27,7 @@ export const SignIn = () => {
         if (isAuthenticated) {
             navigate('/');
         }
-    }, [isAuthenticated, navigate, userData]);
+    }, [isAuthenticated, navigate]);
 
     return (
         <div className="signin-container">
@@ -61,11 +60,13 @@ export const SignIn = () => {
                                         help={formik.touched.password && formik.errors.password ? formik.errors.password : null}
                                     >
                                         <Input.Password
+                                            key={formik.values.password === '' ? Math.random() : 'password'}
                                             value={formik.values.password}
                                             onChange={formik.handleChange}
                                             placeholder="Nhập mật khẩu của bạn"
                                         />
                                     </Form.Item>
+
                                     <Form.Item>
                                         <div className="d-grid mt-3">
                                             <button className="btn btn-primary btn-lg" type="submit">
@@ -76,7 +77,7 @@ export const SignIn = () => {
                                     <Form.Item>
                                         <div className="d-grid">
                                             <button
-                                                className="btn btn-secondary btn-lg"
+                                                className="btn custom-btn btn-lg shadow-sm"
                                                 onClick={() => navigate('/')}
                                                 type="button"
                                             >
