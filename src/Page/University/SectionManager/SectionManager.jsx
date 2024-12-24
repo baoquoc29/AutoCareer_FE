@@ -94,7 +94,7 @@ const SectionManager = () => {
         setOpenEdit(true);
     };
     const handleSearch = (e) => {
-        const value = e.target.value.trim(); // Loại bỏ khoảng trắng thừa
+        const value = e.target.value.trimStart(); // Loại bỏ khoảng trắng thừa
         setSearchText(value);
 
         // Lọc các section theo name và status
@@ -216,7 +216,7 @@ const SectionManager = () => {
                                                     filename={"DanhSachKhoa.csv"}
                                                     style={{color: 'inherit', textDecoration: 'none'}}
                                                 >
-                                                    Export excel
+                                                    Xuất excel
                                                 </CSVLink>
                                             </Button>
                                         </div>

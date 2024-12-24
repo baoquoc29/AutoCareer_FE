@@ -1,10 +1,10 @@
 // src/components/OverviewChart.js
-import React, { useEffect, useRef } from 'react';
-import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, BarController,PieController } from 'chart.js';
+import React, {useEffect, useRef} from 'react';
+import {Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend, BarController, PieController} from 'chart.js';
 
-Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, BarController,PieController);
+Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, BarController, PieController);
 
-const PieChartComponent = ({ data, labels, title }) => {
+const PieChartComponent = ({data, labels, title}) => {
     const chartRef = useRef(null);
     const chartInstanceRef = useRef(null);
     useEffect(() => {
@@ -38,7 +38,34 @@ const PieChartComponent = ({ data, labels, title }) => {
             },
 
             options: {
-                responsive: true
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right', // Đặt vị trí của legend sang bên phải
+                        align: 'center', // Căn giữa
+                        labels: {
+                            usePointStyle: true, // Sử dụng các dấu tròn thay vì hình vuông
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: title,
+                    font: {
+                        size: 18
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 30
+                    }
+                },
+                legend: {
+                    position: 'right',
+                    align: 'center',
+                    labels: {
+                        usePointStyle: true,
+                    }
+                }
             }
         });
 
