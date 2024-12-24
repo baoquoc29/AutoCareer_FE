@@ -310,6 +310,10 @@ const ProfileBusinessEdit = () => {
                                                             name="website"
                                                             rules={[
                                                                 {
+                                                                    required: true,
+                                                                    message: "Vui lòng nhập website"
+                                                                },
+                                                                {
                                                                     validator: (_, value) => {
                                                                         if (value && value.startsWith(' ')) {
                                                                             return Promise.reject(new Error('Website không được bắt đầu bằng dấu cách'));
@@ -359,7 +363,10 @@ const ProfileBusinessEdit = () => {
                                                             label="Năm thành lập"
                                                             name="foundYear"
                                                             rules={[
-
+                                                                {
+                                                                    required: true,
+                                                                    message: "Vui lòng nhập năm thành lập"
+                                                                },
                                                                 {
                                                                     validator: (_, value) => {
                                                                         if(value && value.toString().startsWith(' ')) {
