@@ -1,4 +1,11 @@
-import {CREATE_EMPLOYEE, DELETE_EMPLOYEE, SET_EMPLOYEE, SET_EMPLOYEE_ID, UPDATE_EMPLOYEE} from "../types/EmployeeType";
+import {
+    CREATE_EMPLOYEE,
+    DELETE_EMPLOYEE,
+    RESTORE_EMPLOYEE,
+    SET_EMPLOYEE,
+    SET_EMPLOYEE_ID,
+    UPDATE_EMPLOYEE
+} from "../types/EmployeeType";
 
 const initialState = {
     employees: [],
@@ -24,13 +31,16 @@ export const EmployeeReducer = (state = initialState, action) => {
         case CREATE_EMPLOYEE:
             return {
                 ...state,
-
             };
         case UPDATE_EMPLOYEE:
             return {
                 ...state,
             };
         case DELETE_EMPLOYEE:
+            return {
+                ...state,
+            };
+        case RESTORE_EMPLOYEE:
             return {
                 ...state,
             };

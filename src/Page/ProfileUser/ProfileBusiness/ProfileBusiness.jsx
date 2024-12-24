@@ -39,19 +39,7 @@ const ProfileBusiness = () => {
         }
     };
 
-    if (!business || !businessDetail) {
-        return (
-            <section id="content" className="content">
-                <div className="content__header content__boxed rounded-0">
-                    <div className="content__wrap">
-                        <div style={{ padding: "20px", maxWidth: "2000px", margin: "0 auto" }}>
-                            <div>Loading...</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        );
-    }
+
     return (
         <section id="content" className="content">
             <div className="content__header content__boxed rounded-0">
