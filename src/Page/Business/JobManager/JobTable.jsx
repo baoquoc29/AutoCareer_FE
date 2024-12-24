@@ -3,8 +3,7 @@ import {DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined} from "@ant-de
 import {useNavigate} from "react-router-dom";
 
 
-
-const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) => {
+const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange, page, size}) => {
     const navigate = useNavigate();
 
     const userLogin = JSON.parse(localStorage.getItem("USER_LOGIN"));
@@ -58,7 +57,14 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
     };
 
     const columns = [
-        {title: 'STT', dataIndex: 'stt', align: 'center', key: 'stt', sorter: (a, b) => a.stt - b.stt},
+        {
+            title: 'STT',
+            dataIndex: 'stt',
+            align: 'center',
+            key: 'stt',
+            sorter: (a, b) => a.stt - b.stt,
+            render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
+        },
         {
             title: 'Tiêu đề',
             dataIndex: 'title',
@@ -130,7 +136,6 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
                     <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => handleInfo(record.key)}
                         // disabled={record.status !== 'ACTIVE'}
                     />
-
 
                     <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
                             onClick={() => handleEdit(record.key)}

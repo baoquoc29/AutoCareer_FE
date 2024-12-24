@@ -215,17 +215,17 @@ const JobManager = () => {
                                                     selectedRows={selectedRows}
                                                     onDeleteMultiple={handleDeleteMultiple}
                                                 />
-                                                <Button
-                                                    icon={<DownloadOutlined/>}
-                                                    onClick={exportToExcel}
-                                                    style={{
-                                                        backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
-                                                        borderColor: '#1d8f29',      // Màu viền
-                                                        color: 'white',              // Màu chữ
-                                                    }}
-                                                >
-                                                    Xuất Excel
-                                                </Button>
+                                                {/*<Button*/}
+                                                {/*    icon={<DownloadOutlined/>}*/}
+                                                {/*    onClick={exportToExcel}*/}
+                                                {/*    style={{*/}
+                                                {/*        backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)*/}
+                                                {/*        borderColor: '#1d8f29',      // Màu viền*/}
+                                                {/*        color: 'white',              // Màu chữ*/}
+                                                {/*    }}*/}
+                                                {/*>*/}
+                                                {/*    Xuất Excel*/}
+                                                {/*</Button>*/}
                                             </div>
                                         </div>
 
@@ -234,6 +234,8 @@ const JobManager = () => {
                                             onInfo={handleInfo}
                                             onDelete={(jobId) => dispatch(inactive_job(jobId))} // Gọi action
                                             selectedRows={selectedRows}
+                                            page={currentPage}
+                                            size={pageSize}
                                             onSelectChange={handleSelectChange}
                                         />
                                         <ResultsSummary

@@ -27,13 +27,13 @@ const IndustryDetailModal = ({ open, onClose, industry }) => {
 
     return (
         <Modal
-            title={<Title level={4}>Chi tiết ngành</Title>}
+            title={<Title level={4} style={{textAlign:"center"}}>Chi tiết ngành</Title>}
             open={open}
             onCancel={onClose}
             footer={null}
             width={600}
         >
-            <div style={{ padding: "10px 0" }}>
+            <div style={{ padding: "10px 0"}}>
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
                         <Text strong>Mã ngành:</Text> <Text>{industry.industryCode}</Text>

@@ -1,7 +1,7 @@
-import {Button, Modal, Space, Table} from "antd";
+import {Button, Modal, Space, Table, Tooltip} from "antd";
 import {DeleteOutlined, EyeOutlined, ReloadOutlined} from "@ant-design/icons";
 
-const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelectChange}) => {
+const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelectChange, page, size}) => {
 
     const confirmDelete = (record) => {
         Modal.confirm({
@@ -11,7 +11,7 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                 onDelete(record)
+                onDelete(record)
             },
         });
     };
@@ -37,8 +37,16 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
         // Kết hợp giờ và ngày bằng dấu "-"
         return `${time} - ${day}`;
     };
+
     const columns = [
-        {title: 'STT', dataIndex: 'stt', align: 'center', key: 'stt', sorter: (a, b) => a.stt - b.stt},
+        {
+            title: 'STT',
+            dataIndex: 'stt',
+            align: 'center',
+            key: 'stt',
+            sorter: (a, b) => a.stt - b.stt,
+            render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
+        },
         {
             title: 'Mã ngành',
             dataIndex: 'code',
@@ -59,7 +67,7 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
             align: 'left',
             key: 'createAt',
             sorter: (a, b) => a.createAt.localeCompare(b.createAt),
-            render: (text) => formatDateTime(text), // Hiển thị theo định dạng
+            render: (text) => formatDateTime(text),
         },
         {
             title: 'Thao tác', key: 'actions', render: (text, record) => (
@@ -67,15 +75,20 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
                     <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onInfo(record)}
                             disabled={record.status !== 'ACTIVE'}/>
                     {record.status === 'ACTIVE' ? (
-                        <Button variant={"solid"} danger={true} color={"danger"} icon={<DeleteOutlined/>}
-                                onClick={() => confirmDelete(record)}/>
+                        <Tooltip title="Xóa ngành nghề">
+                            <Button variant={"solid"} danger={true} color={"danger"} icon={<DeleteOutlined/>}
+                                    onClick={() => confirmDelete(record)}/>
+                        </Tooltip>
                     ) : (
-                        <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>
+                        <Tooltip title="Khôi phục ngành nghề">
+                            <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>
+                        </Tooltip>
                     )}
                 </Space>
             ),
         },
     ];
+
     return (
         <>
             <Table
@@ -87,10 +100,11 @@ const IndustryTable = ({data, onInfo, onDelete, onRestore, selectedRows, onSelec
                 dataSource={data}
                 pagination={false}
                 locale={{
-                    emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
+                    emptyText: "Không có dữ liệu",
                 }}
             />
         </>
     )
 }
+
 export default IndustryTable;
