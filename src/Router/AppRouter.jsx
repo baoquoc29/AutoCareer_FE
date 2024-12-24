@@ -59,7 +59,6 @@ export function AppRouter() {
                     <Route path={"/"} element={<HomeScreen/>}/>
                     <Route path={"/work-shop-all"} element={<WorkshopListPortal/>}/>
                     <Route path="/workshop-details/:id" element={<WorkshopDetailsScreen />} />
-
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>

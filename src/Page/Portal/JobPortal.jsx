@@ -41,7 +41,7 @@ const undergraduateStudent = [
 const JobPortal = () => {
 
     const response = useSelector((state) => state.PortalReducer || []);
-    const industries = useSelector((state) => state.IndustryReducer.industriesNoPag || []);
+    const industries = useSelector((state) => state.IndustryReducer.industriesAll || []);
     const totalElements = useSelector((state) => state.PortalReducer.totalJobFeatures || 0);
     const [filter, setFilter] = useState("location");
     const [currentPage, setCurrentPage] = useState(1);

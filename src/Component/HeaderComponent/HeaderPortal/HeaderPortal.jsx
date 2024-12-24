@@ -123,8 +123,15 @@ const HeaderPortal = () => {
                         )}
                         {userData?.role?.name !== "UNIVERSITY" && (
                             <Menu.Item key="2">
-                                <Link to="workshop-section" smooth={true} duration={500}>
+                                <Link to="work-shop-all" smooth={true} duration={500}>
                                     Hội thảo
+                                </Link>
+                            </Menu.Item>
+                        )}
+                        {userData?.role?.name !== "UNIVERSITY" && (
+                            <Menu.Item key="3">
+                                <Link to="university-section" smooth={true} duration={500}>
+                                    Trường học
                                 </Link>
                             </Menu.Item>
                         )}

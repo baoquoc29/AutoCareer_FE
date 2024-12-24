@@ -96,7 +96,6 @@ const WorkShopManager = () => {
         setSelectedWorkshop(null);
         setViewMode(null);
         setIsAdding(false);
-
         await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size));
     };
 
