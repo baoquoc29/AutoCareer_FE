@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Input, Modal, Pagination} from "antd";
+import {Button, Card, Input, Modal, Pagination, Select} from "antd";
 import "antd/dist/reset.css";
 import {DownloadOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -8,9 +8,15 @@ import {toast} from "react-toastify";
 import {NavLink, useNavigate} from "react-router-dom";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import * as XLSX from "xlsx";
-import {get_all_cooperation_of_university_page} from "../../../Redux/actions/CooperationThunk";
+import {
+    approved_cooperation,
+    get_all_cooperation_of_university_page,
+    reject_cooperation
+} from "../../../Redux/actions/CooperationThunk";
 import CooperationTable from "./CooperationTable";
 import RejectModal from "../../Modal/RejectModal";
+
+const {Option} = Select;
 
 const CooperationManager = () => {
     const navigate = useNavigate();
@@ -19,15 +25,16 @@ const CooperationManager = () => {
     const [selectedCooperation, setSelectedCooperation] = useState(null);
     const currentPage = useSelector((state) => state.CooperationReducer.currentPage);
     const pageSize = useSelector((state) => state.CooperationReducer.pageSize);
-    const keyword = useSelector((state) => state.CooperationReducer.keyword);
     const totalElements = useSelector((state) => state.CooperationReducer.totalElements);
     const [searchText, setSearchText] = useState("");
+    const [statusConnected,setstatusConnected] = useState("");
     const [load, setLoad] = useState(false);
     const [openRejectModal, setOpenRejectModal] = useState(false);
 
     useEffect(() => {
-        dispatch(get_all_cooperation_of_university_page(currentPage, pageSize, keyword));
-    }, [dispatch, currentPage, pageSize, load]);
+        dispatch(get_all_cooperation_of_university_page(currentPage, pageSize, searchText, statusConnected));
+        console.log(list_cooperation)
+        }, [dispatch, currentPage, searchText, pageSize, statusConnected, load]);
 
     //chinh xem chi tiết doanh nghiệp
     const handleInfo = (id) => {
@@ -37,24 +44,24 @@ const CooperationManager = () => {
     };
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_cooperation_of_university_page(page, pageSize, searchText)); // Gọi API với trang và kích thước mới
+        dispatch(get_all_cooperation_of_university_page(page, pageSize, searchText, statusConnected)); // Gọi API với trang và kích thước mới
     };
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
-        dispatch(get_all_cooperation_of_university_page(1, pageSize, value)); // Gọi API với từ khóa
     };
-    //Tu choi hop tac
-    const handleRejectClick= (message)=>{
-        const data =  ({"id": selectedCooperation.id, "message": message})
-        console.log(data);
-        // call api rejected
-    }
 
     //Chap thuan hop tac
-    const handleApproveClick= (cooperation)=>{
-        
+    const handleApproveClick = (cooperation) => {
+        dispatch(approved_cooperation({idCooperation: cooperation.id}))
+            .then(() => {
+                toast.success(`Chấp thuận hợp tác doanh nghiệp ${cooperation?.business.name} thành công.`);
+                dispatch(get_all_cooperation_of_university_page())
+            })
+            .catch((error) => {
+                toast.error(error.message);
+            })
 
     }
     //Xac nhan hop tac
@@ -71,13 +78,26 @@ const CooperationManager = () => {
         });
     };
 
+    //Tu choi hop tac
+    const handleRejectClick = (message) => {
+        const data = ({"idCooperation": selectedCooperation.id, "message": message})
+        console.log(data);
+        dispatch(reject_cooperation(data))
+            .then(() => {
+                toast.success(`Từ chối doanh nghiệp ${selectedCooperation.business?.name} thành công`)
+                dispatch(get_all_cooperation_of_university_page())
+            })
+            .catch((error) => {
+                toast.error(error.message);
+            })
+    }
     //Xac nhan tu choi
     const clickButtonReject = (cooperation) => {
         setOpenRejectModal(true);
         setSelectedCooperation(cooperation)
     };
 
-    const reject = (message) => {
+    const rejectTextBox = (message) => {
         console.log(message);
         Modal.confirm({
             title: "Xác nhận hợp tác",
@@ -87,6 +107,7 @@ const CooperationManager = () => {
             cancelText: "Hủy",
             onOk() {
                 handleRejectClick(message);
+                setOpenRejectModal(false);
             },
         });
     }
@@ -141,29 +162,49 @@ const CooperationManager = () => {
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between align-items-center mb-3">
                                                 {/* Thanh tìm kiếm */}
-                                                <Input
-                                                    placeholder="Tìm kiếm hợp tác..."
-                                                    value={searchText}
-                                                    onChange={handleSearch}
-                                                    prefix={<SearchOutlined/>}
-                                                    style={{width: 400}}
-                                                />
-
-                                                {/* Nút hành động */}
-                                                <div className="d-flex">
-                                                    <Button
-                                                        type="default"
-                                                        icon={<DownloadOutlined/>}
-                                                        onClick={exportToExcel}
-                                                        style={{
-                                                            backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
-                                                            borderColor: '#1d8f29',      // Màu viền
-                                                            color: 'white',              // Màu chữ
+                                                <div style={{display: 'flex', gap: '10px'}}>
+                                                    <Input
+                                                        placeholder="Tìm kiếm nhân viên..."
+                                                        value={searchText}
+                                                        onChange={handleSearch}
+                                                        prefix={<SearchOutlined/>}
+                                                        style={{width: 400}}
+                                                    />
+                                                    <Select
+                                                        placeholder="Chọn trạng thái duyệt"
+                                                        value={statusConnected}
+                                                        showSearch
+                                                        onChange={(value) => setstatusConnected(value)}
+                                                        style={{width: 200}}
+                                                        filterOption={(input, option) => {
+                                                            const childrenText = String(option.props.children || ""); // Chuyển thành chuỗi nếu không phải
+                                                            return childrenText.toLowerCase().includes(input.toLowerCase()); // So sánh chữ thường
                                                         }}
                                                     >
-                                                        Xuất Excel
-                                                    </Button>
+                                                        <Option value="">Tất cả trạng thái</Option>
+                                                        <Option value="PENDING">Chờ chấp thuận</Option>
+                                                        <Option value="APPROVED">Đang hợp tác</Option>
+                                                        <Option value="REJECTED">Đã từ chối</Option>
+                                                    </Select>
                                                 </div>
+                                                {/* Nút hành động */}
+                                                {/*<div style={{display: 'flex', gap: '10px'}}>*/}
+
+                                                {/*    <div className="d-flex">*/}
+                                                {/*        <Button*/}
+                                                {/*            type="default"*/}
+                                                {/*            icon={<DownloadOutlined/>}*/}
+                                                {/*            onClick={exportToExcel}*/}
+                                                {/*            style={{*/}
+                                                {/*                backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)*/}
+                                                {/*                borderColor: '#1d8f29',      // Màu viền*/}
+                                                {/*                color: 'white',              // Màu chữ*/}
+                                                {/*            }}*/}
+                                                {/*        >*/}
+                                                {/*            Xuất Excel*/}
+                                                {/*        </Button>*/}
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
                                             </div>
 
                                             <CooperationTable
@@ -196,7 +237,7 @@ const CooperationManager = () => {
             <RejectModal
                 open={openRejectModal}
                 onClose={() => setOpenRejectModal(false)}
-                handleReject={reject}
+                handleReject={rejectTextBox}
             ></RejectModal>
         </>
     );

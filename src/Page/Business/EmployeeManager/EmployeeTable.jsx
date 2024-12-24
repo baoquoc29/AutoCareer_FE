@@ -10,14 +10,12 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             dataIndex: "stt",
             key: "stt",
             align: 'center',
-            sorter: (a, b) => a.stt - b.stt // Hiển thị tên dưới dạng liên kết
         },
         {
             title: "Mã nhân viên",
             dataIndex: "employeeCode",
             key: "employeeCode",
             align: 'left',
-            sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
         },
         {
             title: "Ảnh",
@@ -28,7 +26,7 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
                 <img
                     src={employeeImageId ? `${GET_IMAGE_URI}${employeeImageId}` : 'placeholder-avatar.jpg'}
                     alt="Ảnh đại diện"
-                    className="img-fluid logo-image"
+                    className="img-fluid"
                     style={{
                         width: "50px",
                         height: "50px",
@@ -44,7 +42,6 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             dataIndex: "name",
             key: "name",
             align: 'left',
-            sorter: (a, b) => a.name.localeCompare(b.name),
             render: (name) => {
                 return name && name.length > 20 ? `${name.slice(0, 20)} ....` : name;
             },
@@ -56,6 +53,23 @@ const EmployeeTable=({data,onInfo, onEdit, onDetle, onRestore }) => {
             align: 'left',
             render: (email) => {
                 return email && email.length > 40 ? `${email.slice(0, 40)} ....` : email;
+            },
+        },
+        {
+            title: "Ngày cập nhật",
+            dataIndex: "updatedAt",
+            key: "updatedAt",
+            align: 'left',
+            render: (text) => {
+                if (!text) return 'N/A'; // Xử lý trường hợp `text` là `null` hoặc `undefined`
+                const date = new Date(text);
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+                const year = String(date.getFullYear());
+
+                return `${hours}:${minutes} - ${day}/${month}/${year}`;
             },
         },
         {

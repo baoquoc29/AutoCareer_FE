@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+ import React, {useEffect, useState} from "react";
 import {Button, Card, Input, Modal, Pagination, Select} from "antd";
 import "antd/dist/reset.css";
 import {DownloadOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    delete_employee_id, get_all_employees,
+    delete_employee_id,
     get_all_employees_of_business_page, restore_employee_id,
 } from "../../../Redux/actions/EmployeeThunk";
 import EmployeeTable from "./EmployeeTable";
@@ -89,7 +89,7 @@ const EmployeeManager = () => {
                 dispatch(get_all_employees_of_business_page())
             })
             .catch((error) => {
-                toast.success(error.messages)
+                toast.error(error.messages)
             })
     }
 
@@ -148,6 +148,8 @@ const EmployeeManager = () => {
         dateOfBirth: employee.dateOfBirth,
         address: employee.address,
         createdAt: employee.createdAt,
+        updatedAt: employee.updatedAt,
+
     })) : [];
     return (
         <>
@@ -189,7 +191,7 @@ const EmployeeManager = () => {
                                                     {/* Nút hành động */}
                                                     <div className="d-flex">
                                                         <Button type="primary" icon={<PlusOutlined/>}
-                                                                style={{marginRight: 10}}>
+                                                                style={{marginRight: 0}}>
                                                             <NavLink
                                                                 to="/employee-create"
                                                                 style={{textDecoration: 'none', color: 'inherit'}}
@@ -197,18 +199,18 @@ const EmployeeManager = () => {
                                                                 Thêm mới
                                                             </NavLink>
                                                         </Button>
-                                                        <Button
-                                                            type="default"
-                                                            icon={<DownloadOutlined/>}
-                                                            onClick={exportToExcel}
-                                                            style={{
-                                                                backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
-                                                                borderColor: '#1d8f29',      // Màu viền
-                                                                color: 'white',              // Màu chữ
-                                                            }}
-                                                        >
-                                                            Xuất Excel
-                                                        </Button>
+                                                        {/*<Button*/}
+                                                        {/*    type="default"*/}
+                                                        {/*    icon={<DownloadOutlined/>}*/}
+                                                        {/*    onClick={exportToExcel}*/}
+                                                        {/*    style={{*/}
+                                                        {/*        backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)*/}
+                                                        {/*        borderColor: '#1d8f29',      // Màu viền*/}
+                                                        {/*        color: 'white',              // Màu chữ*/}
+                                                        {/*    }}*/}
+                                                        {/*>*/}
+                                                        {/*    Xuất Excel*/}
+                                                        {/*</Button>*/}
                                                     </div>
                                                 </div>
                                             </div>

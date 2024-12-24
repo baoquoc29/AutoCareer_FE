@@ -43,8 +43,8 @@ const EmployeeEdit = () => {
                 break;
             case "phone":
                 if (!value) return "Số điện thoại là bắt buộc.";
-                const phoneRegex = /^(\+84|0)[3-9]\d{8}$/;
-                if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0 theo sau là số từ 3-9.";
+                const phoneRegex = /^(\+84|0)[1-9]\d{8}$/;
+                if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0.";
                 break;
             default:
                 break;
@@ -126,9 +126,9 @@ const EmployeeEdit = () => {
                 }
             })
             .catch((error) => {
-                console.error("Lỗi khi thêm nhân viên:", error);
+                console.error("Lỗi khi chỉnh sửa nhân viên:", error);
                 // Do not navigate, the form stays on the create employee screen
-                toast.error("Có lỗi xảy ra khi thêm nhân viên. Vui lòng thử lại.");
+                toast.error("Có lỗi xảy ra khi chỉnh sửa nhân viên. Vui lòng thử lại.");
             });
     };
 

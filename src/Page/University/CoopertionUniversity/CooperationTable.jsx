@@ -16,7 +16,6 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
             dataIndex: "stt",
             key: "stt",
             align: 'center',
-            sorter: (a, b) => a.stt - b.stt // Hiển thị tên dưới dạng liên kết
         },
         {
             title: "Ảnh",
@@ -42,29 +41,42 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
             title: "Tên doanh nghiệp",
             dataIndex: "nameBusiness",
             key: "nameBusiness",
-            align: 'center',
-            sorter: (a, b) => a.nameBusiness.localeCompare(b.nameBusiness),
+            align: 'left',
+            render: (nameBusiness) => {
+                return nameBusiness && nameBusiness.length > 40 ? `${nameBusiness.slice(0, 40)} ....` : nameBusiness;
+            },
         },
         {
             title: "Website",
             dataIndex: "website",
             key: "website",
-            align: 'center',
-            sorter: (a, b) => a.website.localeCompare(b.website),
+            align: 'left',
+            render: (website) => {
+                return website && website.length > 40 ? `${website.slice(0, 40)} ....` : website;
+            },
         },
         {
             title: "Ngày gửi",
             dataIndex: "createdAt",
             key: "createdAt",
-            align: "center",
-            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
-            render: (createdAt) => createdAt ? dayjs(createdAt).format("DD/MM/YYYY") : "N/A"
+            align: 'left',
+            render: (text) => {
+                if (!text) return 'N/A'; // Xử lý trường hợp `text` là `null` hoặc `undefined`
+                const date = new Date(text);
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+                const year = String(date.getFullYear());
+
+                return `${hours}:${minutes} - ${day}/${month}/${year}`;
+            },
         },
         {
             title: "Trạng thái",
             key: "statusConnected",
             dataIndex: "statusConnected",
-            align: 'center',
+            align: 'left',
             render: (statusConnected) => {
                 // Gán màu dựa trên trạng thái
                 let color = "";
