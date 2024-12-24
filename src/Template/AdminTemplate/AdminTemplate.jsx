@@ -1,9 +1,10 @@
 import {Header} from "../../Component/HeaderComponent/HeaderCRM/Header";
 import {SideBar} from "../../Component/SideBarComponent/SideBar";
 import {Outlet} from "react-router-dom";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
+import {Footer} from "../../Component/FooterComponent/Footer";
 
 export function AdminTemplate() {
     const subAdmin = useSelector(state => state.UserReducer.userData?.subAdmin);
@@ -40,9 +41,14 @@ export function AdminTemplate() {
         }, {
             label: 'Quản lý hội thảo',
             icon: 'fa-solid fa-briefcase',
-            subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''},]
+            subMenu: [{
+                label: 'Danh sách hội thảo',
+                link: '/admin-workshop-manager',
+                icon: ''},]
         }, {
-            label: 'Thống kê', icon: 'home', subMenu: [{label: '123', link: '', icon: ''},]
+            label: 'Thống kê',
+            icon: 'home',
+            subMenu: [{label: '123', link: '', icon: ''},]
         }];
     const filteredMenuItems = menuItems.map(item => {
         if (item.label === 'Quản lý tài khoản' && userData.role.name === 'SUB_ADMIN') {
@@ -63,6 +69,15 @@ export function AdminTemplate() {
                 menuItems={filteredMenuItems}
             />
             <Outlet/>
+            <section id="content" className="content">
+                <div className="content__header content__boxed rounded-0">
+                    <Outlet/>
+                    {/*<div className="content__wrap">*/}
+                    {/*    <Outlet/>*/}
+                    {/*</div>*/}
+                </div>
+                <Footer/>
+            </section>
         </div>
     </>)
 }

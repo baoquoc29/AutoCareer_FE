@@ -7,22 +7,28 @@ import {
     SET_UNREAD_COUNT
 } from "../types/NotificationType";
 import {notification} from "antd";
-import {adminJobService} from "../../Service/AdminService/AdminJobService.jsx";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
-import {APPROVED_JOB} from "../types/AdminJobType";
 import {toast} from "react-toastify";
+import {BellOutlined} from "@ant-design/icons";
 
 export const listen_for_notifications = (userId) => {
     return (dispatch) => {
+        console.log("Begin connecting")
         const eventSource = new EventSource(notificationService.stream_notifications(userId));
 
         eventSource.addEventListener('notification', (event) => {
             const req = JSON.parse(event.data);
             console.log(notification);
             notification.open({
-                message: '',
+                message: req.title,
                 description: req.message,
                 key: req.id,
+                icon: <BellOutlined style={{ color: '#ff4d4f', fontSize: '24px' }} />, // Icon thông báo
+                style: {
+                    borderRadius: 8,
+                    padding: '16px',
+                    width: 300,
+                },
             });
             dispatch({type: NOTIFICATION_RECEIVED, payload: req});
         });
@@ -89,7 +95,7 @@ export const get_all_paging_notifications = (pageNo, pageSize) => {
             const res = await notificationService.get_all_paging_notifications(pageNo, pageSize);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
-                dispatch({
+                await dispatch({
                     type: GET_NOTIFICATIONS,
                     payload: res.data
                 })

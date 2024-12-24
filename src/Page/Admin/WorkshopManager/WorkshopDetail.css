@@ -1,9 +1,6 @@
-.ant-modal-title {
-    background-color: #FFFFFF;
-box-shadow: none !important;
-}
-.card-profile-business {
-    background: #FFFFFF;
+
+.card-profile-workshop {
+    background: #ffffff;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -15,17 +12,17 @@ box-shadow: none !important;
     height: auto;
     border: 1px solid #ddd;
     padding: 5px;
-    background-color: #FFFFFF;
+    background-color: #f7f7f7;
 }
 
 /* Typography */
-.business-name {
+.workshop-name {
     font-size: 24px;
     font-weight: bold;
     color: #333;
 }
 
-.business-description {
+.workshop-description {
     font-size: 16px;
     color: #666;
     margin-top: 10px;
@@ -62,7 +59,7 @@ button {
 
 button.btn-primary {
     background-color: #007bff;
-    color: #FFFFFF;
+    color: #fff;
     border: none;
 }
 
@@ -86,11 +83,11 @@ button {
 
 /* Responsive Layout */
 @media (max-width: 768px) {
-    .business-name {
+    .workshop-name {
         font-size: 20px;
     }
 
-    .business-description {
+    .workshop-description {
         font-size: 14px;
     }
 

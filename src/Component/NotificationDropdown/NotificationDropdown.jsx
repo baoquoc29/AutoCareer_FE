@@ -4,7 +4,7 @@ import {BellOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {
     count_unread_notifications,
-    get_all_paging_notifications, mask_read_all_notifications,
+    get_all_paging_notifications, listen_for_notifications, mask_read_all_notifications, mask_read_notification,
 
 } from '../../Redux/actions/NotificationThunk';
 import "./NotificationStyle.css"
@@ -26,50 +26,38 @@ const NotificationDropdown = () => {
         const [isModalVisible, setIsModalVisible] = useState(false);
         const [selectedNotification, setSelectedNotification] = useState(null);
         const observer = useRef();
-        // useEffect(()=>{
-        //     dispatch(get_all_paging_notifications())
-        // })
-        // Lấy dữ liệu lần đầu
+
         useEffect(() => {
+            console.log(hasMore)
             if (userId) {
+                dispatch(listen_for_notifications(userId))
                 dispatch(get_all_paging_notifications(pageNo - 1, pageSize))
-                console.log(totalElements)
-                if (totalElements > pageSize) {
-                    setHasMore(false)
-                }
                 dispatch(count_unread_notifications());
             }
         }, [userId]);
         useEffect(() => {
-            setAllNotifications(notifications)
-        }, [notifications])
-        // useEffect(() => {
-        //     if (totalElements < pageSize) {
-        //         setHasMore(false)
-        //     }
-        // }, [totalElements])
-        // Tải thêm dữ liệu khi cuộn
-        const loadMoreData = () => {
-            if (loading || !hasMore) return;
-            setLoading(true);
-            dispatch(get_all_paging_notifications(pageNo, pageSize)).then(() => {
-                setPageNo(pageNo + 1)
-                if (totalElements > pageSize) {
-                    setHasMore(false)
-                }
-            })
-                .finally(() => setLoading(false));
+            console.log("totalElements", totalElements);
+            console.log("no*size", pageNo * pageSize);
+            console.log("1", hasMore)
+            if (totalElements !== 0 && totalElements <= pageNo * pageSize) {
+                setHasMore(false)
+                console.log("2", hasMore)
+            }
 
-        };
-        const loadNotifications = (page, size) => {
+        }, [totalElements, pageNo])
+
+        useEffect(() => {
+            if (notifications !== allNotifications) {
+                setAllNotifications(notifications);
+                console.log("Updated allNotifications");
+            }
+        }, [notifications, allNotifications]);
+
+        const loadNotifications = async (page, size) => {
+            console.log(hasMore)
             if (loading || !hasMore) return;
             setLoading(true);
-            dispatch(get_all_paging_notifications(page - 1, size))
-                .then(() => {
-                    if (totalElements > pageSize) {
-                        setHasMore(false)
-                    }
-                })
+            await dispatch(get_all_paging_notifications(page - 1, size))
                 .finally(() => setLoading(false));
         };
 
@@ -99,15 +87,18 @@ const NotificationDropdown = () => {
                     console.error(err);
                 });
         };
-
-        const showModal = (notification) => {
-            setSelectedNotification(notification);
-            setIsModalVisible(true);
+        const markAsRead = (data) => {
+            dispatch(mask_read_notification(data))
+                .then(() => {
+                    dispatch(count_unread_notifications());
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         };
 
-        const handleModalClose = () => {
-            setIsModalVisible(false);
-            setSelectedNotification(null);
+        const showModal = (notification) => {
+            markAsRead({id: notification.id})
         };
 
         const menu = (
@@ -134,15 +125,16 @@ const NotificationDropdown = () => {
                                     onClick={() => showModal(item)}
                                 >
                                     <List.Item.Meta
-                                        avatar={
-                                            <Avatar
-                                                icon={<BellOutlined/>}
-                                                style={{
-                                                    backgroundColor:
-                                                        item.statusRead === "UNREAD" ? '#ff4d4f' : '#a8a7a7',
-                                                }}
-                                            />
-                                        }
+                                        // avatar={
+                                        //     <Avatar
+                                        //         icon={<BellOutlined/>}
+                                        //         style={{
+                                        //             color:
+                                        //                 item.statusRead === "UNREAD" ? '#ff4d4f' : '#a8a7a7',
+                                        //             backgroundColor: "#fff"
+                                        //         }}
+                                        //     />
+                                        // }
                                         title={<span>{item.title}</span>}
                                         description={
                                             <div>
@@ -155,6 +147,7 @@ const NotificationDropdown = () => {
                                                 </div>
                                             </div>
                                         }
+                                        onClick={(item) => showModal(item)}
                                     />
                                 </List.Item>
                             );
@@ -174,7 +167,15 @@ const NotificationDropdown = () => {
 
         return (
             <Dropdown overlay={menu} trigger={['click']}>
-                <Badge count={unreadAmount}>
+                <Badge count={unreadAmount} offset={[-2, 4]} // Điều chỉnh vị trí của số đếm
+                       style={{
+                           backgroundColor: '#ff4d4f',
+                           fontSize: '10px', // Giảm kích thước font
+                           height: '16px',
+                           minWidth: '16px',
+                           lineHeight: '16px',
+                           borderRadius: '8px', // Bo góc
+                       }}>
                     <Button type="text" icon={<BellOutlined/>}/>
                 </Badge>
             </Dropdown>

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Modal, Space, Row, Col, Card, Divider, Typography} from "antd";
 
 import {
@@ -7,23 +7,22 @@ import {
     ExclamationCircleOutlined,
     QuestionCircleOutlined,
 } from "@ant-design/icons";
-import "./JobDetail.css";
+import "./WorkshopDetail.css";
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {get_job_detail} from "../../../Redux/actions/JobThunk";
-import {approved_job, rejected_job} from "../../../Redux/actions/AdminJobThunk";
+import {approved_workshop, get_detail_workshop, rejected_workshop} from "../../../Redux/actions/AdminWorkshopThunk";
 import RejectModal from "../../Modal/RejectModal";
 
 const {Text, Title} = Typography;
 
-const AdminJobDetail = () => {
+const AdminWorkshopDetail = () => {
     const dispatch = useDispatch();
-    const jobData = useSelector((state) => state.JobReducer.selectedJobDetail); // assuming job data is stored here
+    const workshopData = useSelector(state => state.AdminWorkshopReducer.workshop)  // assuming workshop data is stored here
     const navigate = useNavigate();
     const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
-    // const userLogin = JSON.parse(localStorage.getItem("USER_LOGIN"));
-    // const username = userLogin?.username; // Lấy username từ đối tượng USER_LOGIN
+    const [message, setMessage] = useState("");
+
 
     const formatSalary = (salary) => {
         if (!salary) return "Không xác định";
@@ -31,22 +30,48 @@ const AdminJobDetail = () => {
     };
 
     const formatDate = (dateString) => {
-        if (!dateString) return "Không xác định";
-        const date = new Date(dateString);
-        const time = new Intl.DateTimeFormat("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-        }).format(date);
+        try {
+            if (!dateString) return "Không xác định"; // Kiểm tra giá trị null hoặc undefined
+            const date = new Date(dateString);
 
-        const dateFormatted = new Intl.DateTimeFormat("vi-VN", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        }).format(date);
+            if (isNaN(date.getTime())) return "Không hợp lệ"; // Kiểm tra ngày hợp lệ
 
-        return `${time} - ${dateFormatted}`;
+            // Định dạng giờ
+            const time = new Intl.DateTimeFormat("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            }).format(date);
+
+            // Định dạng ngày
+            const dateFormatted = new Intl.DateTimeFormat("vi-VN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            }).format(date);
+
+            return `${time} - ${dateFormatted}`;
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Không xác định"; // Trả về mặc định nếu có lỗi
+        }
     };
+
+    const handleApproved = () => {
+        Modal.confirm({
+            title: 'Xác nhận phê duyệt',
+            content: `Bạn có chắc chắn muốn phê duyệt tin hội thảo "${workshopData.title}"?`,
+            okText: 'Phê duyệt',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Approved workshop: ${workshopData.title}`);
+                dispatch(approved_workshop({id: workshopData.id})).then(() => {
+                    dispatch(get_detail_workshop(workshopData.id))
+                }); // Gửi lý do từ chối
+            },
+        });
+    }
 
 
     // Trạng thái lưu lý do từ chối
@@ -61,44 +86,28 @@ const AdminJobDetail = () => {
     const handleConfirmReject = (message) => {
         Modal.confirm({
             title: 'Xác nhận từ chối',
-            content: `Bạn có chắc chắn muốn từ chối tài khoản doanh nghiệp "${jobData?.title}"?`,
+            content: `Bạn có chắc chắn muốn từ chối tài khoản doanh nghiệp "${workshopData?.title}"?`,
             okText: 'Từ chối',
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                console.log(`Rejected business: ${jobData.title}`);
-                let req = {id: jobData.jobId, message: message};
-                dispatch(rejected_job(req)).then(() =>{
-                    dispatch(get_job_detail(jobData.jobId));
+                console.log(`Rejected business: ${workshopData?.title}`);
+                let req = {id: workshopData.id, message: message};
+                dispatch(rejected_workshop(req)).then(() => {
+                    dispatch(get_detail_workshop(workshopData.id));
                 })
                 setIsRejectModalVisible(false); // Đóng modal
             },
         });
     };
-    const handleApproved = () => {
-        Modal.confirm({
-            title: 'Xác nhận phê duyệt',
-            content: `Bạn có chắc chắn muốn phê duyệt tin tuyển dụng "${jobData.title}"?`,
-            okText: 'Phê duyệt',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            onOk() {
-                console.log(`Approved job: ${jobData.title}`);
-                dispatch(approved_job({id: jobData.jobId})).then(() => {
-                    dispatch(get_job_detail(jobData.jobId));
-                })
-            },
-        });
-    }
 
-
-    if (!jobData) {
+    if (!workshopData) {
         return (
             <section id="content" className="content">
                 <div className="content__header content__boxed rounded-0">
                     <div className="content__wrap">
                         <div style={{padding: "20px", maxWidth: "2000px", margin: "0 auto"}}>
-                            <div>Không tìm thấy công việc.</div>
+                            <div>Không tìm thấy hội thảo.</div>
                         </div>
                     </div>
                 </div>
@@ -112,49 +121,54 @@ const AdminJobDetail = () => {
                 <div className="content__wrap">
                     <div style={{padding: "20px", maxWidth: "2000px", margin: "0 auto"}}>
                         <Row gutter={[16, 16]}>
-                            {/* Job Content Card */}
+                            {/* Workshop Content Card */}
                             <Col span={24} md={16}>
                                 <Card bordered={false}>
-                                    <Title level={2} style={{textAlign: "center"}}>{jobData.title}</Title>
-
-                                    {/* Nội dung công việc */}
+                                    <Title level={2} style={{textAlign: "center"}}>{workshopData?.title}</Title>
 
                                     <Space direction="vertical" size={4} style={{width: "100%"}}>
-                                        <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Chi
-                                            tiết
-                                            tuyển dụng</Divider>
-                                        <Text strong style={{color: "#ffafcc"}}>
-                                            <ExclamationCircleOutlined style={{color: "#ffafcc", marginRight: "8px"}}/>
-                                            Mô tả công việc:
-                                        </Text>
-                                        <div style={{whiteSpace: "pre-wrap"}}>
-                                            <DisplayRichText content={jobData.jobDescription}/>
-                                        </div>
-
-                                        <Text strong style={{color: "#52c41a"}}>
-                                            <QuestionCircleOutlined style={{color: "#52c41a", marginRight: "8px"}}/>
-                                            Yêu cầu ứng viên:
-                                        </Text>
-                                        <div style={{whiteSpace: "pre-wrap"}}>
-                                            <DisplayRichText content={jobData.requirement}/>
-                                        </div>
-
-                                        <Text strong style={{color: "#1890ff"}}>
-                                            <CheckCircleOutlined style={{color: "#1890ff", marginRight: "8px"}}/>
-                                            Quyền lợi:
-                                        </Text>
-                                        <div style={{whiteSpace: "pre-wrap"}}>
-                                            <DisplayRichText content={jobData.benefit}/>
-                                        </div>
-
-                                        {/* Thời gian làm việc */}
+                                        <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>
+                                            Chi tiết hội thảo</Divider>
                                         <Text strong style={{color: "#722ed1"}}>
-                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}}/>
-                                            Thời gian làm việc:
+                                            <ClockCircleOutlined
+                                                style={{color: "#722ed1", marginRight: "8px"}}/>
+                                            Ngày bắt đầu:
                                         </Text>
                                         <Text>
-                                            {jobData.workingTime ? jobData.workingTime : "Không xác định"}
+                                            {formatDate(workshopData?.startDate)}
                                         </Text>
+                                        <Text strong style={{color: "#722ed1"}}>
+                                            <ClockCircleOutlined
+                                                style={{color: "#722ed1", marginRight: "8px"}}/>
+                                            Ngày kết thúc:
+                                        </Text>
+                                        <Text>
+                                            {formatDate(workshopData?.endDate)}
+                                        </Text>
+                                        <Text strong style={{color: "#722ed1"}}>
+                                            <ClockCircleOutlined
+                                                style={{color: "#722ed1", marginRight: "8px"}}/>
+                                            Ngày hết hạn:
+                                        </Text>
+                                        <Text>
+                                            {formatDate(workshopData?.expireDate)}
+                                        </Text>
+                                        <Text strong style={{color: "#52c41a"}}>
+                                            <QuestionCircleOutlined style={{color: "#52c41a", marginRight: "8px"}}/>
+                                            Địa chỉ:
+                                        </Text>
+                                        <span style={{whiteSpace: "pre-wrap"}}>
+                                            <DisplayRichText
+                                                content={`${workshopData?.location?.description}, ${workshopData?.location?.ward?.fullName}, ${workshopData?.location?.district?.fullName}, ${workshopData?.location?.province?.fullName}`}/>
+                                        </span>
+
+                                        <Text strong style={{color: "#ffafcc"}}>
+                                            <ExclamationCircleOutlined style={{color: "#ffafcc", marginRight: "8px"}}/>
+                                            Mô tả:
+                                        </Text>
+                                        <div style={{whiteSpace: "pre-wrap"}}>
+                                            <DisplayRichText content={workshopData?.description}/>
+                                        </div>
                                     </Space>
 
                                     <Divider/>
@@ -170,11 +184,11 @@ const AdminJobDetail = () => {
                                         <Col>
                                             <Space>
                                                 <Button type="primary" danger onClick={handleReject}
-                                                        disabled={jobData.statusBrowse !== "PENDING"}>
+                                                        disabled={workshopData?.statusBrowse !== "PENDING"}>
                                                     Từ chối
                                                 </Button>
-                                                <Button type="primary" onClick={() => handleApproved()}
-                                                        disabled={jobData.statusBrowse !== "PENDING"}>
+                                                <Button type="primary" onClick={handleApproved}
+                                                        disabled={workshopData?.statusBrowse !== "PENDING"}>
                                                     Duyệt
                                                 </Button>
                                             </Space>
@@ -189,43 +203,19 @@ const AdminJobDetail = () => {
                                     <Col span={24}>
                                         <Card bordered={false}>
                                             <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
-                                                tin cơ bản</Divider>
+                                                tin trường học</Divider>
                                             <Row gutter={[16, 16]}>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#096dd9"}}>Tiêu đề:</Text>
-                                                        <Text>{jobData.title}</Text>
-                                                    </Space>
+                                                <Col span={24}>
+
+                                                </Col>
+                                                <Col span={24}>
+
+                                                </Col>
+                                                <Col span={24}>
+
                                                 </Col>
                                                 <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#ff70a6"}}>
-                                                            <DollarOutlined
-                                                                style={{color: "#ff70a6", marginRight: "8px"}}/>
-                                                            Mức lương:
-                                                        </Text>
-                                                        <Text>
-                                                            {formatSalary(jobData.salary)}
-                                                        </Text>
-                                                    </Space>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong>Kinh nghiệm:</Text>
-                                                        <Text>{jobData.level}</Text>
-                                                    </Space>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#722ed1"}}>
-                                                            <ClockCircleOutlined
-                                                                style={{color: "#722ed1", marginRight: "8px"}}/>
-                                                            Ngày hết hạn:
-                                                        </Text>
-                                                        <Text>
-                                                            {formatDate(jobData.expireDate)}
-                                                        </Text>
-                                                    </Space>
+
                                                 </Col>
                                             </Row>
                                         </Card>
@@ -241,12 +231,12 @@ const AdminJobDetail = () => {
                                                         <Text strong>Trạng thái:</Text>
                                                         <Text
                                                             style={{
-                                                                color: jobData.status === "ACTIVE" ? "green" : "red",
+                                                                color: workshopData?.status === "ACTIVE" ? "green" : "red",
                                                             }}
                                                         >
-                                                            {jobData.status === "ACTIVE"
+                                                            {workshopData?.status === "ACTIVE"
                                                                 ? "Hoạt động"
-                                                                : jobData.status === "INACTIVE"
+                                                                : workshopData?.status === "INACTIVE"
                                                                     ? "Không hoạt động"
                                                                     : "Không xác định"}
                                                         </Text>
@@ -258,16 +248,16 @@ const AdminJobDetail = () => {
                                                         <Text
                                                             style={{
                                                                 color:
-                                                                    jobData.statusBrowse === "PENDING"
+                                                                    workshopData?.statusBrowse === "PENDING"
                                                                         ? "orange"
-                                                                        : jobData.statusBrowse === "APPROVED"
+                                                                        : workshopData?.statusBrowse === "APPROVED"
                                                                             ? "green"
                                                                             : "red",
                                                             }}
                                                         >
-                                                            {jobData.statusBrowse === "PENDING"
+                                                            {workshopData?.statusBrowse === "PENDING"
                                                                 ? "Chờ duyệt"
-                                                                : jobData.statusBrowse === "APPROVED"
+                                                                : workshopData?.statusBrowse === "APPROVED"
                                                                     ? "Đã duyệt"
                                                                     : "Bị từ chối"}
                                                         </Text>
@@ -276,7 +266,7 @@ const AdminJobDetail = () => {
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
                                                         <Text strong>Người tạo:</Text>
-                                                        <Text>{jobData.createBy}</Text>
+                                                        <Text>{workshopData?.createdBy}</Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
@@ -287,14 +277,14 @@ const AdminJobDetail = () => {
                                                             Thời gian tạo:
                                                         </Text>
                                                         <Text>
-                                                            {formatDate(jobData.createAt)}
+                                                            {formatDate(workshopData?.createdAt)}
                                                         </Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
                                                         <Text strong>Người cập nhật:</Text>
-                                                        <Text>{jobData.updateBy}</Text>
+                                                        <Text>{workshopData?.updatedBy}</Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
@@ -304,7 +294,7 @@ const AdminJobDetail = () => {
                                                                 style={{color: "#722ed1", marginRight: "8px"}}/>
                                                             Thời gian cập nhật:
                                                         </Text>
-                                                        <Text>{formatDate(jobData.updateAt)}
+                                                        <Text>{formatDate(workshopData?.updatedAt)}
                                                         </Text>
                                                     </Space>
                                                 </Col>
@@ -326,4 +316,4 @@ const AdminJobDetail = () => {
     );
 };
 
-export default AdminJobDetail;
+export default AdminWorkshopDetail;
