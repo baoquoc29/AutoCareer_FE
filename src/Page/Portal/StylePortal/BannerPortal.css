@@ -1,0 +1,81 @@
+.banner-portal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 400px;
+    padding: 20px;
+    background-color: #FFFFFF;
+}
+
+.banner-header-portal {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.banner-link-portal {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.banner-link-portal:hover {
+    text-decoration: underline;
+}
+
+.banner-content-portal {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.left-content-portal {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.left-content-portal h2{
+    max-width: 600px; /* Giới hạn độ rộng */
+    line-height: 1.5; /* Điều chỉnh khoảng cách giữa các dòng */
+    word-wrap: break-word; /* Tự động xuống dòng nếu cần */
+}
+
+.companies-portal {
+    display: flex;
+    justify-content: start;
+    gap: 20px;
+    margin-top: 20px;
+
+}
+
+.companies-portal img {
+    height: 40px;
+    object-fit: contain;
+
+}
+
+.right-stats-portal {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 mục mỗi hàng */
+    gap: 20px; /* Khoảng cách giữa các mục */
+}
+
+.stat-item-portal {
+    text-align: center;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.stat-item-portal h2 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-item-portal p {
+    font-size: 14px;
+    color: #555;
+}
+

@@ -96,6 +96,7 @@ const WorkShopManager = () => {
         setSelectedWorkshop(null);
         setViewMode(null);
         setIsAdding(false);
+
         await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size));
     };
 
@@ -127,16 +128,16 @@ const WorkShopManager = () => {
                 <>
                     {!isAdding ? (
                         <>
-                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-                                <div style={{ display: "flex", gap: 8 }}>
+                            <div style={{display: "flex", justifyContent: "space-between", marginBottom: 16}}>
+                                <div style={{display: "flex", gap: 8}}>
                                     <Input
                                         placeholder="Tìm kiếm theo tiêu đề"
                                         onChange={handleSearch}
-                                        style={{ width: 200 }}
+                                        style={{width: 200}}
                                     />
                                     <Select
                                         placeholder="Chọn trạng thái"
-                                        style={{ width: 150 }}
+                                        style={{width: 150}}
                                         onChange={handleStatusChange}
                                         allowClear
                                     >
@@ -145,7 +146,7 @@ const WorkShopManager = () => {
                                         <Option value="PENDING">Chờ duyệt</Option>
                                     </Select>
                                 </div>
-                                <Button icon={<PlusOutlined />} type="primary" onClick={() => setIsAdding(true)}>
+                                <Button icon={<PlusOutlined/>} type="primary" onClick={() => setIsAdding(true)}>
                                     Thêm hội thảo
                                 </Button>
                             </div>
@@ -165,25 +166,28 @@ const WorkShopManager = () => {
                                     marginTop: 16,
                                 }}
                             >
-                                <Pagination
-                                    current={page}
-                                    pageSize={size}
-                                    total={totalItems}
-                                    onChange={handlePageChange}
-                                    pageSizeOptions={[7, 10, 20, 50, 100]}
-                                    showSizeChanger={true}
-                                />
+                                <div style={{flex: 1, display: "flex", justifyContent: "center"}}>
+                                    <Pagination
+                                        current={page}
+                                        pageSize={size}
+                                        total={totalItems}
+                                        onChange={handlePageChange}
+                                        pageSizeOptions={[7, 10, 20, 50, 100]}
+                                        showSizeChanger={true}
+                                    />
+                                </div>
 
-                                    <div style={{ marginLeft: 16, marginTop: 12 }}>
-                                        <p>
-                                            Có {filteredWorkshops.length || totalItems} kết quả được tìm thấy.
-                                        </p>
-                                    </div>
-
+                                <div style={{marginLeft: 16, marginTop: 16}}>
+                                    <p>
+                                        Có <strong>{filteredWorkshops.length || totalItems}</strong> kết quả được tìm
+                                        thấy.
+                                    </p>
+                                </div>
                             </div>
+
                         </>
                     ) : (
-                        <AddWorkShop visible={isAdding} onFinish={resetView} onCancel={resetView} />
+                        <AddWorkShop visible={isAdding} onFinish={resetView} onCancel={resetView}/>
                     )}
                 </>
             )}

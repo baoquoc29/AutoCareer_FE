@@ -174,7 +174,40 @@ export function SignUpBusiness() {
         setImagePreview(file.url || URL.createObjectURL(file.originFileObj));
         setShowImageModal(true);
     };
+    const getValidationMessage = (fieldName, value) => {
+        switch (fieldName) {
+            case 'companyName':
+                if (value.length < 10) return 'Tên doanh nghiệp không được ít hơn 10 ký tự.';
+                if (value.length > 256) return 'Tên doanh nghiệp không được vượt quá 256 ký tự.';
+                if (/^\s/.test(value)) return 'Tên doanh nghiệp không được có dấu cách ở đầu.';
+                break;
 
+            case 'taxCode':
+                if (!value) return 'Mã số thuế là bắt buộc.';
+                if (/^\s/.test(value)) return 'Mã số thuế không được có dấu cách ở đầu.';
+                if (value.length <= 10) return 'Mã số thuế phải có ít nhất 10 ký tự.';
+                if (value.length >= 13) return 'Mã số thuế không được vượt quá 13 ký tự.';
+                if (!/^\d+$/.test(value)) return 'Mã số thuế chỉ được chứa số.';
+                break;
+
+            case 'email':
+                if (!value) return 'Email là bắt buộc.';
+                if (!/\S+@\S+\.\S+/.test(value)) return 'Email không hợp lệ!';
+                if (value.length < 5) return 'Email phải có ít nhất 5 ký tự.';
+                if (value.length > 50) return 'Email không được vượt quá 50 ký tự.';
+                break;
+
+            case 'password':
+                if (!value) return 'Mật khẩu là bắt buộc.';
+                if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}/.test(value))
+                    return 'Mật khẩu phải chứa ít nhất 6 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt';
+                break;
+
+
+            default:
+                return null;
+        }
+    };
     return (
         <div className="signup-root">
         <div className="signup-business">
@@ -185,23 +218,38 @@ export function SignUpBusiness() {
                         <p className="text-center">Tham gia cộng đồng Auto Career!</p>
 
                         <Form form={form} layout="vertical" onFinish={handleSendCode}>
-                            <Form.Item label="Tên doanh nghiệp" name="companyName"
-                                       rules={[{required: true, message: 'Tên doanh nghiệp là bắt buộc.'}]}>
-                                <Input placeholder="Nhập tên doanh nghiệp"/>
+                            <Form.Item
+                                label="Tên doanh nghiệp"
+                                name="companyName"
+                                rules={[
+                                    { required: true,message: ""  },
+                                    { validator: (_, value) => getValidationMessage('companyName', value) ? Promise.reject(getValidationMessage('companyName', value)) : Promise.resolve() }
+                                ]}
+                            >
+                                <Input placeholder="Nhập tên doanh nghiệp" />
                             </Form.Item>
 
-                            <Form.Item label="Mã số thuế" name="taxCode"
-                                       rules={[{required: true, message: 'Mã số thuế là bắt buộc.'}]}>
-                                <Input placeholder="Nhập mã số thuế"/>
+                            <Form.Item
+                                label="Mã số thuế"
+                                name="taxCode"
+                                rules={[
+                                    { required: true,message: ""  },
+                                    { validator: (_, value) => getValidationMessage('taxCode', value) ? Promise.reject(getValidationMessage('taxCode', value)) : Promise.resolve() }
+                                ]}
+                            >
+                                <Input placeholder="Nhập mã số thuế" />
                             </Form.Item>
+
 
                             <Form.Item label="Email" name="email"
-                                       rules={[{required: true, message: 'Email là bắt buộc.'}, {
-                                           type: 'email',
-                                           message: 'Email không hợp lệ!'
-                                       }]}>
+                                       rules={[
+                                           { required: true,message: ""  },
+                                           { validator: (_, value) => getValidationMessage('email', value) ? Promise.reject(getValidationMessage('email', value)) : Promise.resolve() }
+                                       ]}
+                            >
                                 <Input placeholder="Nhập email"/>
                             </Form.Item>
+
 
                             <Form.Item   rules={[{required: true, message: 'Ảnh là bắt buộc.'}]} label="Ảnh giấy phép" name="image">
                                 <Upload
@@ -217,14 +265,29 @@ export function SignUpBusiness() {
                             </Form.Item>
 
                             <Form.Item label="Mật khẩu" name="password"
-                                       rules={[{required: true, message: 'Mật khẩu là bắt buộc.'}]}>
+                                       rules={[
+                                           { required: true,message: ""  },
+                                           { validator: (_, value) => getValidationMessage('password', value) ? Promise.reject(getValidationMessage('password', value)) : Promise.resolve() }
+                                       ]}
+                                       >
                                 <Input.Password placeholder="Nhập mật khẩu"/>
                             </Form.Item>
 
                             <Form.Item label="Xác nhận mật khẩu" name="confirmPassword"
-                                       rules={[{required: true, message: 'Xác nhận mật khẩu là bắt buộc.'}]}>
+                                       rules={[
+                                           { required: true, message: 'Xác nhận mật khẩu là bắt buộc.' },
+                                           ({ getFieldValue }) => ({
+                                               validator(_, value) {
+                                                   if (!value || getFieldValue('password') === value) {
+                                                       return Promise.resolve();
+                                                   }
+                                                   return Promise.reject(new Error('Xác nhận mật khẩu không trùng khớp!'));
+                                               }
+                                           })
+                                       ]}>
                                 <Input.Password placeholder="Nhập lại mật khẩu"/>
                             </Form.Item>
+
 
                             <Button type="primary" htmlType="submit" block disabled={!canResend}>
                                 {isLoading ? <Spin/> : 'Đăng ký tài khoản'}
@@ -274,7 +337,7 @@ export function SignUpBusiness() {
                         <div className="d-flex justify-content-end align-items-center gap-md-3 mt-4">
                             <p className="mb-0 fs-6">Bạn đã có tài khoản?</p>
                             <NavLink
-                                to={"/"}
+                                to={"/login"}
                                 className="btn-link text-decoration-none ms-1 fs-6"
                             >
                                 Đăng nhập
