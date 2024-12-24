@@ -1,25 +1,42 @@
-import { workShopService } from "../../Service/UniversityService/WorkShopService";
+import {workShopService} from "../../Service/UniversityService/WorkShopService";
 import {
     ACCEPT_WORK_SHOP,
     CREATE_WORK_SHOP, DELETE_WORK_SHOP, GET_ALL_COMPANY, GET_ALL_COMPANY_ACCEPT, GET_ALL_COMPANY_PENDING,
     GET_ALL_DISTRICT_BY_ID,
     GET_ALL_LOCATION,
-    GET_ALL_WARD_BY_ID_DISTRICT, REJECT_WORK_SHOP,
+    GET_ALL_WARD_BY_ID_DISTRICT, GET_STATUS_WORK_SHOP, GET_TOTAL_WORK_SHOP, REJECT_WORK_SHOP,
     SET_WORK_SHOP,
     UPDATE_WORK_SHOP,
 } from "../types/WorkShopType";
 import {CLEAR_RESPONSE} from "../../Utils/Setting/Config";
 
 // Action to fetch all workshops for a specific university
-export const get_all_workshop_by_university = (idUniversity,page,size) => {
+export const get_all_workshop_by_university = (idUniversity, page, size) => {
     return async (dispatch) => {
         try {
-            const res = await workShopService.get_workshop_all(idUniversity,page,size);
+            const res = await workShopService.get_workshop_all(idUniversity, page, size);
             if (res?.data?.workshops) {
 
                 dispatch({
                     type: SET_WORK_SHOP,
                     payload: res.data,  // Update the state with the fetched workshops list
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching workshops:", error);
+            // Optionally, you can dispatch an error action or show a notification
+        }
+    };
+};
+export const get_all_workshop_by_state = (state, page, size) => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_all_workshop_by_state(state, page, size);
+            if (res?.data?.workshops) {
+
+                dispatch({
+                    type: SET_WORK_SHOP,
+                    payload: res.data,
                 });
             }
         } catch (error) {
@@ -56,7 +73,7 @@ export const create_work_shop = (formData) => {
 };
 export const delete_work_shop = (id) => {
     return async (dispatch) => {
-        const res = await  workShopService.delete_work_shop(id);
+        const res = await workShopService.delete_work_shop(id);
         dispatch({
             type: DELETE_WORK_SHOP,
             payload: res.data,
@@ -66,7 +83,7 @@ export const delete_work_shop = (id) => {
 export const update_work_shop = (id, formData) => {
     return async (dispatch) => {
         try {
-            const res = await workShopService.update_work_shop(id,formData);
+            const res = await workShopService.update_work_shop(id, formData);
 
             dispatch({
                 type: UPDATE_WORK_SHOP,
@@ -91,7 +108,7 @@ export const get_all_company_pending = (idWorkShop) => {
             if (error.response && error.response.status === 400) {
                 dispatch({
                     type: GET_ALL_COMPANY_PENDING,
-                    payload: { businessList: [] },
+                    payload: {businessList: []},
                 });
             }
         }
@@ -100,16 +117,16 @@ export const get_all_company_pending = (idWorkShop) => {
 
 export const get_all_company_accept = (idWorkShop) => {
     return async (dispatch) => {
-        try{
-            const res = await  workShopService.get_all_company_accept(idWorkShop);
+        try {
+            const res = await workShopService.get_all_company_accept(idWorkShop);
             dispatch({
                 type: GET_ALL_COMPANY_ACCEPT,
                 payload: res.data,
             });
-        }catch(error){
+        } catch (error) {
             if (error.response) {
                 console.error("Error getting all_company_pending:", error.response, error);
-            }else if (error.request) {
+            } else if (error.request) {
                 // Lỗi khi không nhận được phản hồi từ server
                 console.error("Error request:", error.request);
             } else {
@@ -121,7 +138,7 @@ export const get_all_company_accept = (idWorkShop) => {
 }
 export const accept_company_work_shop = (formData) => {
     return async (dispatch) => {
-        const res = await  workShopService.accept_request_company(formData);
+        const res = await workShopService.accept_request_company(formData);
         dispatch({
             type: ACCEPT_WORK_SHOP,
             payload: res.data,
@@ -130,7 +147,7 @@ export const accept_company_work_shop = (formData) => {
 }
 export const reject_company_work_shop = (formData) => {
     return async (dispatch) => {
-        const res = await  workShopService.reject_request_company(formData);
+        const res = await workShopService.reject_request_company(formData);
         dispatch({
             type: REJECT_WORK_SHOP,
             payload: res.data,
@@ -188,5 +205,31 @@ export const get_all_ward = (districtId) => {
     };
 };
 export const clearResponseWorkshop = () => {
-    return { type: CLEAR_RESPONSE };
+    return {type: CLEAR_RESPONSE};
 };
+export const get_total_workshop = () => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_total_workshop();
+            dispatch({
+                type: GET_TOTAL_WORK_SHOP,
+                payload: res,
+            });
+        } catch (error) {
+            console.error("Error fetching total workshop:", error);
+        }
+    };
+}
+export const get_status_workShop = () => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_status_workshop();
+            dispatch({
+                type: GET_STATUS_WORK_SHOP,
+                payload: res,
+            });
+        } catch (error) {
+            console.error("Error fetching status workshop:", error);
+        }
+    };
+}

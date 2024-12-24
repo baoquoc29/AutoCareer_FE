@@ -1,5 +1,13 @@
 import {majorService} from "../../Service/UniversityService/MajorService";
-import {CREATE_MAJOR, SET_MAJOR, SET_MAJOR_ID, UPDATE_MAJOR_ID} from "../types/MajorType";
+import {
+    COUNT_STUDENT_MAJOR,
+    CREATE_MAJOR,
+    SET_MAJOR,
+    SET_MAJOR_ID,
+    TOTAL_MAJOR,
+    TOTAL_STUDENT,
+    UPDATE_MAJOR_ID
+} from "../types/MajorType";
 import {toast} from "react-toastify";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 
@@ -51,7 +59,7 @@ export const delete_major = (ids) => {
     return async () => {
         try {
             const res = await majorService.delete_major(ids);
-            if(res.code === STATUS_CODE.SUCCESS){
+            if (res.code === STATUS_CODE.SUCCESS) {
                 if (res.code === STATUS_CODE.SUCCESS) {
                     toast.success("Xóa chuyên ngành thành công")
                 }
@@ -100,6 +108,45 @@ export const refund_major = (id) => {
         } catch (error) {
             toast.error(error.response.data.message)
             console.log(error)
+        }
+    }
+}
+export const get_total_major = () => {
+    return async (dispatch) => {
+        try {
+            const res = await majorService.get_total_major();
+            dispatch({
+                type: TOTAL_MAJOR,
+                payload: res,
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_total_student = () => {
+    return async (dispatch) => {
+        try {
+            const res = await majorService.get_total_students();
+            dispatch({
+                type: TOTAL_STUDENT,
+                payload: res,
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const count_student_major=() => {
+    return async (dispatch) => {
+        try {
+            const res = await majorService.get_student_major();
+            dispatch({
+                type: COUNT_STUDENT_MAJOR,
+                payload: res,
+            })
+        } catch (error) {
+            console.log(error);
         }
     }
 }

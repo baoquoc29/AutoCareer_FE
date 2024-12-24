@@ -27,7 +27,9 @@ export class WorkShopService extends baseService {
     get_all_company_pending = (idWorkShop) => {
         return this.get(`api/work-shop/${idWorkShop}?state=PENDING`);
     }
-
+    get_all_workshop_by_state = (page,size,state) =>{
+        return this.get(`api/work-shop/state/${state}`);
+    }
     accept_request_company = (formdata) => {
         return this.post(`api/work-shop/accept-request`,formdata);
     }
@@ -45,8 +47,12 @@ export class WorkShopService extends baseService {
     get_wards = (districtId) => {
         return this.get(`api/administrative/get-all-wards?districtId=${districtId}`);
     };
-
-
+    get_total_workshop=()=>{
+        return this.get('api/work-shop/count-total')
+    }
+    get_status_workshop=()=>{
+        return this.get('api/work-shop/business-details')
+    }
 }
 
 // Instantiate WorkShopService

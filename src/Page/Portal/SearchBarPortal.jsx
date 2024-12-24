@@ -47,6 +47,7 @@ const SearchBarPortal = () => {
 const styles = {
     searchBar: {
         display: "flex",
+        width: "620px",
         alignItems: "center",
         gap: "12px",  // Thêm khoảng cách giữa các phần tử
         padding: "12px 20px",  // Padding thêm để các phần tử không quá sát nhau
@@ -54,25 +55,30 @@ const styles = {
         borderRadius: "10px",  // Border-radius bo tròn đẹp
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",  // Thêm hiệu ứng bóng đổ nhẹ
         maxWidth: "1000px",  // Đảm bảo chiều rộng không quá lớn
-        margin: "20px auto",  // Giữa trang
+        margin: "80px auto",  // Giữa trang
         height: "75px",
     },
     select: {
         width: "220px",  // Thu hẹp kích thước select để dễ nhìn
         borderRadius: "8px",  // Bo tròn các góc
+        border: "1px solid #d9d9d9",  // Viền màu nhẹ, phù hợp với nền trắng
     },
     input: {
         flex: 1,  // Chiếm hết chiều rộng còn lại
         borderRadius: "8px",  // Bo tròn các góc
+        border: "1px solid #d9d9d9",  // Viền nhẹ
     },
     selectLocation: {
         width: "220px",  // Kích thước của select tỉnh/thành phố
         borderRadius: "8px",  // Bo tròn các góc
+        border: "1px solid #d9d9d9",  // Viền nhẹ
     },
     searchButton: {
-        backgroundColor: "#1a45c4",
-        borderColor: "#1a45c4",
+        backgroundColor: "#1890ff",  // Màu nền nút tìm kiếm nổi bật
+        borderColor: "#1890ff",  // Màu viền
         borderRadius: "8px",
+        color: "#fff",  // Chữ màu trắng trên nền xanh
+        fontWeight: "bold",  // Làm đậm chữ
     },
 };
 

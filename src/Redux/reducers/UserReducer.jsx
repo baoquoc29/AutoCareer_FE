@@ -7,7 +7,12 @@ import {
     VERIFY_CODE_FAIL,
     SEND_CODE_REMINDER_SUCCESS,
     SEND_CODE_UNIVERSITY_SUCCESS,
-    SEND_CODE_BUSINESS_SUCCESS, SIGNUP_BUSINESS_SUCCESS, CLEAR_RESPONSE, SIGNUP_UNIVERSITY_SUCCESS, SEND_NEW_PASSWORD,
+    SEND_CODE_BUSINESS_SUCCESS,
+    SIGNUP_BUSINESS_SUCCESS,
+    CLEAR_RESPONSE,
+    SIGNUP_UNIVERSITY_SUCCESS,
+    SEND_NEW_PASSWORD,
+    CLEAN_LOCAL_STORAGE,
 } from "../../Utils/Setting/Config";
 import { jwtDecode } from 'jwt-decode';
 import {toast} from "react-toastify";
@@ -56,6 +61,13 @@ export const UserReducer = (state = initialState, action) => {
                 responseSignUpUniversity: null,
                 responseSendNewPassword: null,
             };
+        case CLEAN_LOCAL_STORAGE:
+            return {
+                ...state,
+                userData: null,
+                isAuthenticated: false,
+            }
+
         case LOGOUT_SUCCESS:
             return {
                 ...state,

@@ -1,7 +1,7 @@
 import {useFormik} from "formik";
 import {Button, Form, Input, Modal} from "antd";
 import SectionValidation from "../../../../Utils/Validation/University/SectionValidation";
-
+import '../Style/Section.css'
 const SectionEditModal = ({open, onClose, section, onSubmit, universityId}) => {
     const initialValues = {
         universityId: universityId || "",
@@ -43,7 +43,7 @@ const SectionEditModal = ({open, onClose, section, onSubmit, universityId}) => {
     };
     return (
         <>
-            <Modal open={open} onCancel={handleCancel} footer={null}>
+            <Modal className='modal-section' open={open} onCancel={handleCancel} footer={null}>
                 <h2 style={{textAlign: 'center'}}>Chỉnh sửa khoa</h2>
                 <Form onFinish={formik.handleSubmit} layout={"vertical"}>
                     <Form.Item required={true} label="Tên khoa" help={formik.errors.name && formik.touched.name ? formik.errors.name : null}

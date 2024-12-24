@@ -1,9 +1,18 @@
-import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, UPDATE_SECTION_ID} from "../types/SectionType";
+import {
+    COUNT_SECTION_MAJOR,
+    CREATE_SECTION,
+    DELETE_SECTION,
+    SET_SECTIONS,
+    TOTAL_SECTION,
+    UPDATE_SECTION_ID
+} from "../types/SectionType";
 
 
 const initialState = {
     sections: [],
-    sectionId: null
+    sectionId: null,
+    totalSections: 0,
+    countMajor: {},
 }
 
 export const SectionReducer = (state = initialState, action) => {
@@ -24,6 +33,16 @@ export const SectionReducer = (state = initialState, action) => {
             return {
                 ...state
             }
+        case TOTAL_SECTION:
+            return {
+                ...state,
+                totalSections: action.payload, // Lưu dữ liệu vào `totalSections` trong state
+            };
+        case COUNT_SECTION_MAJOR:
+            return {
+                ...state,
+                countMajor: action.payload,
+            };
         default:
             return {...state}
     }

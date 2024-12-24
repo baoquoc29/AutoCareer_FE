@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
-import { get_all_industry_no_pag } from "../../../Redux/actions/IndustryThunk";
+import { get_all_industry_business_no_pag } from "../../../Redux/actions/IndustryThunk";
 import {useLocation, useNavigate} from "react-router-dom";
 import { get_business_by_id } from "../../../Redux/actions/BusinessThunk";
 import { Button, Card, Col, Divider, Row, Space, Typography } from "antd";
@@ -28,7 +28,7 @@ const CooperationDetail = () => {
 
     useEffect(() => {
         if (cooperation.business?.id) {
-            dispatch(get_all_industry_no_pag());
+            dispatch(get_all_industry_business_no_pag());
             dispatch(get_business_by_id(cooperation.business?.id));
         }
     }, [dispatch, cooperation]);
@@ -154,13 +154,8 @@ const CooperationDetail = () => {
                                     <Row justify="space-between" style={{ marginTop: "20px" }}>
                                         <Button
                                             type="default"
+                                            danger
                                             onClick={() => navigate(-1)} // Quay lại trang trước
-                                            style={{
-                                                backgroundColor: "#f0f0f0",  // Màu nền nhẹ
-                                                borderColor: "#d9d9d9",
-                                                color: "#595959",
-                                                marginRight: "10px",  // Thêm khoảng cách giữa 2 nút
-                                            }}
                                         >
                                             Quay lại
                                         </Button>

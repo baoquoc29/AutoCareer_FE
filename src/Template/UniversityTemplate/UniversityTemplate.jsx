@@ -16,7 +16,8 @@ export function UniversityTemplate() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(get_university_id(universityId));
-    }, [dispatch]);
+        console.log(universityId);
+    }, [dispatch,universityId]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {userData} = useSelector((state) => state.UserReducer);
     const toggleSidebar = () => {
@@ -81,9 +82,6 @@ export function UniversityTemplate() {
                 <section id="content" className="content">
                     <div className="content__header content__boxed rounded-0">
                         <Outlet/>
-                        {/*<div className="content__wrap">*/}
-                        {/*    <Outlet/>*/}
-                        {/*</div>*/}
                     </div>
                     <Footer/>
                 </section>

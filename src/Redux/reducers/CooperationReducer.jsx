@@ -1,8 +1,9 @@
-import {SET_COOPERATION} from "../types/CooperationType";
+import {APPROVE_COOPERATION, REJECT_COOPERATION, SET_COOPERATION, TOTAL_COOPERATION} from "../types/CooperationType";
 
 const initialState = {
     cooperation: [],
     cooperationId: null,
+    totalCooperation:0
 }
 
 export const CooperationReducer = (state = initialState, action) => {
@@ -15,26 +16,22 @@ export const CooperationReducer = (state = initialState, action) => {
                 pageSize: action.payload.pageSize,
                 currentPage: action.payload.currentPage,
                 keyword: action.payload.keyword,
+                statusConnected: action.payload.statusConnected,
             };
-        //    case SET_EMPLOYEE_ID:
-        //     return {
-        //         ...state,
-        //         employeeId: action.payload,
-        //     };
-        // case CREATE_EMPLOYEE:
-        //     return {
-        //         ...state,
-        //
-        //     };
-        // case UPDATE_EMPLOYEE:
-        //     return {
-        //         ...state,
-        //     };
-        // case DELETE_EMPLOYEE:
-        //     return {
-        //         ...state,
-        //     };
-        // 
+        case APPROVE_COOPERATION:
+            return {
+                ...state,
+            };
+        case REJECT_COOPERATION:
+            return {
+                ...state,
+            };
+
+        case TOTAL_COOPERATION:
+            return {
+                ...state,
+                totalCooperation: action.payload,
+            };
         default:
             return {...state}
     }

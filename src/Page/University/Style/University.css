@@ -1,0 +1,118 @@
+
+.section-university {
+    margin: 1rem 0 5rem;
+}
+
+.header-university {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem ;
+
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    margin-right: 0.5rem;
+
+}
+
+.header-logo span {
+    font-size: 2.5rem;
+}
+
+.header-date-time span {
+    font-size: 2.5rem;
+}
+
+.ant-card .ant-card-body {
+    padding: 10px;
+}
+
+.card-header {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /*padding: 10px;*/
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.card-total-instructional {
+    background-color: #f8d7da;
+    border-left: 5px solid #f44336;
+}
+
+.card-total-section {
+    background-color: #d4edda;
+    border-left: 5px solid #28a745;
+}
+
+.card-total-major {
+    background-color: #fff3cd;
+    border-left: 5px solid #ffc107;
+}
+
+.card-total-student {
+    background-color: #d1ecf1;
+    border-left: 5px solid #17a2b8;
+}
+
+.card-total-workshop {
+    background-color: #e2e3e5;
+    border-left: 5px solid #6c757d;
+}
+
+.card-total-cooperation {
+    background-color: #fefefe;
+    border-left: 5px solid #007bff;
+}
+
+.info-barChart{
+    margin-bottom: 20px;
+}
+
+.card-infoMajor-barChart {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.card-infoMajor-barChart .ant-divider {
+    font-size: 18px;
+    color: #096dd9;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
+}
+
+.card-infoMajor-barChart .ant-divider .ant-divider-inner-text {
+
+    padding-inline:0;
+}
+
+.card-infoMajor-barChart p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.card-infoMajor-barChart p strong {
+    font-weight: bold;
+}

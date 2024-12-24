@@ -1,9 +1,10 @@
 import {Button, Modal, Space, Table, Tag} from "antd";
 import {DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
-import dayjs from "dayjs";
 
-const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
+
+
+const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) => {
     const navigate = useNavigate();
 
     const userLogin = JSON.parse(localStorage.getItem("USER_LOGIN"));
@@ -11,31 +12,51 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
 
     const confirmDelete = (record) => {
         Modal.confirm({
-            title: 'Xác nhận vô hiệu hóa',
-            content: `Bạn có chắc chắn muốn vô hiệu hóa công viêc "${record.title}"?`,
-            okText: 'Vô hiệu hóa',
+            title: 'Xác nhận xóa',
+            content: `Bạn có chắc chắn muốn xóa công viêc "${record.title}"?`,
+            okText: 'Xóa',
             okType: 'danger',
             cancelText: 'Hủy',
             onOk() {
-                onDelete(record.id);
+                onDelete(record.key);
             },
         });
     };
 
     const handleInfo = (id) => {
         // Navigate to the JobUpdatePage and pass the job ID in the URL
-        navigate('/job-detail', { state: { jobId: id } });
+        localStorage.setItem("jobId", id);
+        navigate('/job-detail');
     };
+
 
 
     const handleEdit = (id) => {
         // Navigate to the JobUpdatePage and pass the job ID in the URL
-        navigate('/job-update', { state: { jobId: id } });
+        localStorage.setItem("jobId", id);
+        navigate('/job-update');
     };
 
-    const formatDate = (dateString) => {
+    const formatDateTime = (dateString) => {
         if (!dateString) return "Không xác định";
-        return dayjs(dateString).locale('vi').format('DD-MM-YYYY');
+        const date = new Date(dateString);
+
+        // Định dạng thời gian
+        const time = date.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        });
+
+        // Định dạng ngày
+        const day = date.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
+
+        // Kết hợp giờ và ngày bằng dấu "-"
+        return `${time} - ${day}`;
     };
 
     const columns = [
@@ -43,7 +64,7 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
         {
             title: 'Tiêu đề',
             dataIndex: 'title',
-            align: 'center',
+            align: 'left',
             key: 'title',
             sorter: (a, b) => a.title.localeCompare(b.title),
             render: (text) => {
@@ -70,40 +91,40 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
             key: 'expireDate',
             align: 'center',
             sorter: (a, b) => a.expireDate.localeCompare(b.expireDate),
-            render: (text) => formatDate(text), // Sử dụng hàm formatDate
+            render: (text) => formatDateTime(text), // Sử dụng hàm formatDate
 
         },
-        {
-            title: "Trạng thái",
-            key: "status",
-            dataIndex: "status",
-            align: 'center',
-            render: (status) => {
-                // Gán màu dựa trên trạng thái
-                let color = "";
-                let statusText ;
-
-                switch (status.toLowerCase()) {
-                    case "active":
-                        color = "green";
-                        statusText = "Hoạt động"; // Hiển thị "Hoạt động"
-                        break;
-                    case "inactive":
-                        color = "volcano";
-                        statusText = "Không hoạt động"; // Hiển thị "Không hoạt động"
-                        break;
-                    default:
-                        color = "geekblue"; // Mặc định cho các trạng thái khác
-                        statusText = status; // Giữ nguyên trạng thái nếu không phải "active" hoặc "inactive"
-                }
-
-                return (
-                    <Tag color={color} key={status}>
-                        {statusText} {/* Hiển thị trạng thái với chữ được thay đổi */}
-                    </Tag>
-                );
-            },
-        },
+        // {
+        //     title: "Trạng thái",
+        //     key: "status",
+        //     dataIndex: "status",
+        //     align: 'center',
+        //     render: (status) => {
+        //         // Gán màu dựa trên trạng thái
+        //         let color = "";
+        //         let statusText ;
+        //
+        //         switch (status.toLowerCase()) {
+        //             case "active":
+        //                 color = "green";
+        //                 statusText = "Hoạt động"; // Hiển thị "Hoạt động"
+        //                 break;
+        //             case "inactive":
+        //                 color = "volcano";
+        //                 statusText = "Không hoạt động"; // Hiển thị "Không hoạt động"
+        //                 break;
+        //             default:
+        //                 color = "geekblue"; // Mặc định cho các trạng thái khác
+        //                 statusText = status; // Giữ nguyên trạng thái nếu không phải "active" hoặc "inactive"
+        //         }
+        //
+        //         return (
+        //             <Tag color={color} key={status}>
+        //                 {statusText} {/* Hiển thị trạng thái với chữ được thay đổi */}
+        //             </Tag>
+        //         );
+        //     },
+        // },
         {
             title: 'Trạng thái duyệt',
             dataIndex: 'statusBrowse',
@@ -112,8 +133,8 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
             sorter: (a, b) => a.statusBrowse.localeCompare(b.statusBrowse),
             render: (statusBrowse) => {
                 // Gán màu và trạng thái hiển thị dựa trên trạng thái duyệt
-                let color = "";
-                let statusText = "";
+                let color;
+                let statusText;
 
                 switch (statusBrowse.toLowerCase()) {
                     case "pending":
@@ -139,13 +160,13 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
         {
             title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => (
                 <Space size="middle">
-                    <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => handleInfo(record.id)}
-                            // disabled={record.status !== 'ACTIVE'}
+                    <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => handleInfo(record.key)}
+                        // disabled={record.status !== 'ACTIVE'}
                     />
 
 
                     <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
-                            onClick={() => handleEdit(record.id)}
+                            onClick={() => handleEdit(record.key)}
                             disabled={username !== record.createBy}/>
                     {record.status === 'ACTIVE' ? (
                         <Button variant={"solid"} danger={true} color={"danger"} icon={<DeleteOutlined/>}
@@ -160,12 +181,33 @@ const JobTable = ({data, onDelete, onRestore, userPermissions }) => {
     ];
     return (
         <>
-            <Table columns={columns}
-                   dataSource={data}
-                   pagination={false}
-                   locale={{
-                       emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
-                   }}/>
+            <Table
+                rowSelection={{
+                    selectedRowKeys: selectedRows.map(row => row.key),
+                    onChange: (selectedRowKeys, selectedRows) => {
+                        // Kiểm tra nếu tất cả các hàng được chọn đều hợp lệ
+                        const isValidSelection = selectedRows.every(row => row.createBy === username);
+                        if (isValidSelection) {
+                            onSelectChange(selectedRowKeys, selectedRows);
+                        } else {
+                            // Hiển thị thông báo lỗi hoặc không thực hiện thay đổi
+                            Modal.warning({
+                                title: 'Lỗi',
+                                content: 'Bạn chỉ có thể chọn những hàng do bạn tạo.',
+                            });
+                        }
+                    },
+                    getCheckboxProps: (record) => ({
+                        // Chỉ cho phép chọn nếu record.createBy === username
+                        disabled: record.createBy !== username,
+                    }),
+                }}
+                columns={columns}
+                dataSource={data}
+                pagination={false}
+                locale={{
+                    emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
+                }}/>
         </>
     )
 }

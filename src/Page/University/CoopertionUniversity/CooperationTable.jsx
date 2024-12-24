@@ -16,7 +16,6 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
             dataIndex: "stt",
             key: "stt",
             align: 'center',
-            sorter: (a, b) => a.stt - b.stt // Hiển thị tên dưới dạng liên kết
         },
         {
             title: "Ảnh",
@@ -42,29 +41,42 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
             title: "Tên doanh nghiệp",
             dataIndex: "nameBusiness",
             key: "nameBusiness",
-            align: 'center',
-            sorter: (a, b) => a.nameBusiness.localeCompare(b.nameBusiness),
+            align: 'left',
+            render: (nameBusiness) => {
+                return nameBusiness && nameBusiness.length > 40 ? `${nameBusiness.slice(0, 40)} ....` : nameBusiness;
+            },
         },
         {
             title: "Website",
             dataIndex: "website",
             key: "website",
-            align: 'center',
-            sorter: (a, b) => a.website.localeCompare(b.website),
+            align: 'left',
+            render: (website) => {
+                return website && website.length > 40 ? `${website.slice(0, 40)} ....` : website;
+            },
         },
         {
             title: "Ngày gửi",
             dataIndex: "createdAt",
             key: "createdAt",
-            align: "center",
-            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
-            render: (createdAt) => createdAt ? dayjs(createdAt).format("DD/MM/YYYY") : "N/A"
+            align: 'left',
+            render: (text) => {
+                if (!text) return 'N/A'; // Xử lý trường hợp `text` là `null` hoặc `undefined`
+                const date = new Date(text);
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+                const year = String(date.getFullYear());
+
+                return `${hours}:${minutes} - ${day}/${month}/${year}`;
+            },
         },
         {
             title: "Trạng thái",
             key: "statusConnected",
             dataIndex: "statusConnected",
-            align: 'center',
+            align: 'left',
             render: (statusConnected) => {
                 // Gán màu dựa trên trạng thái
                 let color = "";
@@ -100,7 +112,7 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
             key: 'actions',
             align: 'center',
             render: (text, record) => (
-                <Space size="small" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Space size="small" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
                     <Tooltip title="Xem chi tiết">
                         <Button
@@ -118,11 +130,12 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
                                 style={{
                                     backgroundColor: record.statusConnected.toLowerCase() === "pending"
                                         ? 'rgb(31 211 72)' // Màu xanh lá cây nếu là pending
-                                        : 'rgb(180, 180, 180)', // Màu xám nếu không phải pending
+                                        : 'rgb(31 211 72)', // Giữ màu nếu không phải pending
                                     borderColor: record.statusConnected.toLowerCase() === "pending"
-                                        ? 'rgb(31 211 72)' // Viền xanh lá cây
-                                        : 'rgb(180, 180, 180)', // Viền xám
+                                        ? 'rgb(31 211 72)' // Viền xanh lá cây nếu là pending
+                                        : 'rgb(31 211 72)', // Giữ viền nếu không phải pending
                                     color: 'white', // Chữ màu trắng
+                                    opacity: record.statusConnected.toLowerCase() !== "pending" ? 0.5 : 1, // Mờ đi khi không phải pending
                                 }}
                                 disabled={record.statusConnected.toLowerCase() !== "pending"} // Vô hiệu hóa nếu không phải pending
                                 onClick={() => onApprove(record)}
@@ -134,21 +147,23 @@ const CooperationTable=({data,onInfo, onApprove, onReject}) => {
                                 type="default"
                                 icon={<CloseOutlined />}
                                 style={{
-                                    backgroundColor: record.statusConnected.toLowerCase() === "pending" || record.statusConnected.toLowerCase() === "approved"
+                                    backgroundColor: (record.statusConnected.toLowerCase() === "pending" || record.statusConnected.toLowerCase() === "approved")
                                         ? 'rgb(255, 99, 71)' // Màu đỏ nếu là pending hoặc approved
-                                        : 'rgb(180, 180, 180)', // Màu xám nếu không phải pending/approved
-                                    borderColor: record.statusConnected.toLowerCase() === "pending" || record.statusConnected.toLowerCase() === "approved"
+                                        : 'rgb(255, 99, 71)', // Giữ màu nếu không phải pending/approved
+                                    borderColor: (record.statusConnected.toLowerCase() === "pending" || record.statusConnected.toLowerCase() === "approved")
                                         ? 'rgb(255, 99, 71)' // Viền đỏ
-                                        : 'rgb(180, 180, 180)', // Viền xám
+                                        : 'rgb(255, 99, 71)', // Giữ viền nếu không phải pending/approved
                                     color: 'white', // Chữ màu trắng
+                                    opacity: (record.statusConnected.toLowerCase() !== "pending" && record.statusConnected.toLowerCase() !== "approved") ? 0.5 : 1, // Mờ đi khi không phải pending/approved
                                 }}
-                                disabled={record.statusConnected.toLowerCase() !== "pending" && record.statusConnected.toLowerCase() !== "approved"} // Chỉ vô hiệu hóa nếu không phải pending hoặc approved
+                                disabled={record.statusConnected.toLowerCase() !== "pending" && record.statusConnected.toLowerCase() !== "approved"} // Vô hiệu hóa nếu không phải pending hoặc approved
                                 onClick={() => onReject(record)}
                             />
                         </Tooltip>
                     </>
                 </Space>
             ),
+
         },
 
     ];

@@ -31,8 +31,8 @@ const InstructionalEditModal = ({open, onClose, instructional, onSubmit}) => {
             instructionalImageId: null,
             universityId: instructional?.universityId || "",
         },
-        validationSchema: InstructionalValidation,
         enableReinitialize: true,
+        validationSchema: InstructionalValidation,
         onSubmit: async (values) => {
             Modal.confirm({
                 title: 'Xác nhận chỉnh sửa',
@@ -110,12 +110,16 @@ const InstructionalEditModal = ({open, onClose, instructional, onSubmit}) => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item
-                            label="Ngày sinh" required
-                            validateStatus={formik.errors.dateOfBirth && formik.touched.dateOfBirth ? 'error' : ''}
-                            help={formik.errors.dateOfBirth && formik.touched.dateOfBirth ? formik.errors.dateOfBirth : ''}
-                        >
-                            <Input onChange={formik.handleChange} value={formik.values.dateOfBirth} name="dateOfBirth"/>
+                        <Form.Item label="Ngày sinh" required={true}
+                                   validateStatus={formik.errors.dateOfBirth && formik.touched.dateOfBirth ? 'error' : ''}
+                                   help={formik.errors.dateOfBirth && formik.touched.dateOfBirth ? formik.errors.dateOfBirth : ''}>
+                            <Input
+                                id="dateOfBirth"
+                                type="date"
+                                className="form-control"
+                                value={formik.values.dateOfBirth}
+                                onChange={formik.handleChange}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>

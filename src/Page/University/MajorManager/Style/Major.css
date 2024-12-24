@@ -68,3 +68,10 @@
 .search-section > *:last-child {
     margin-right: 0; /* Đảm bảo phần tử cuối cùng không có khoảng cách ở bên phải */
 }
+.card-major{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+    font-size: 12px;
+}
+.modal-major h2{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+}

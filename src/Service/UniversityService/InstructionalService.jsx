@@ -33,7 +33,9 @@ export class InstructionalService extends baseService {
     set_start_instructional_by_id = (id)=>{
         return this.post(`api/instructional/active/${id}`)
     }
-
+    get_total_instructional = ()=>{
+        return this.get(`api/instructional/count-total`)
+    }
 }
 
 export const instructionalService = new InstructionalService();

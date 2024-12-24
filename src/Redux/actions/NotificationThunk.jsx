@@ -93,7 +93,6 @@ export const get_all_paging_notifications = (pageNo, pageSize) => {
     return async (dispatch) => {
         try {
             const res = await notificationService.get_all_paging_notifications(pageNo, pageSize);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 await dispatch({
                     type: GET_NOTIFICATIONS,

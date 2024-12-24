@@ -6,8 +6,12 @@ export class JobService extends baseService {
         super();
     }
 
-    get_all_job_of_business_paging = (page, size, keyword = '') => {
-        return this.get(`api/job/get-all-job-of-business-paging?page=${page}&size=${size}&keyword=${keyword}`);
+    get_all_job_of_business_paging = (page, size, keyword = '', statusBrowse = null, industryId = null) => {
+        return this.get(
+            `api/job/get-all-job-of-business-paging?page=${page}&size=${size}&keyword=${keyword}`
+            + (statusBrowse ? `&statusBrowse=${statusBrowse}` : '')
+            + (industryId ? `&industryId=${industryId}` : '')
+        );
     };
     get_job_by_id = (id) => {
         return this.get(`api/job/get-detail?id=${id}`);
@@ -20,9 +24,6 @@ export class JobService extends baseService {
     };
     inactive_job = (jobId) => {
         return this.put(`api/job/inactive-job?jobId=${jobId}`);
-    };
-    check_delete_permission = (id) => {
-        return this.get(`api/job/check-inactive-permission?jobId=${id}`);
     };
 }
 

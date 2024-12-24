@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     delete_section,
@@ -47,7 +47,7 @@ const SectionManager = () => {
             setUniversityId(userData["university"].id);
         }
     }, [userData]);
-    useEffect(() => {
+    useMemo(() => {
         const filtered = sections.filter((section) => {
             const matchesStatus = selectedStatus ? section.status.toLowerCase().trim() === selectedStatus.toLowerCase().trim() : true;
             const matchesSearch = section.name.toLowerCase().includes(searchText.toLowerCase());
@@ -56,6 +56,7 @@ const SectionManager = () => {
         setFilteredData(filtered);
         setCurrentPage(1); // Reset lại trang khi thay đổi tìm kiếm hoặc trạng thái
     }, [sections, searchText, selectedStatus]);
+
 
     const handleDelete = async () => {
         if (selectedRowKeys.length === 0) {
@@ -93,12 +94,12 @@ const SectionManager = () => {
         setOpenEdit(true);
     };
     const handleSearch = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.trimStart(); // Loại bỏ khoảng trắng thừa
         setSearchText(value);
 
         // Lọc các section theo name và status
         const filtered = sections.filter((section) => {
-            const matchesSearch = section.name.toLowerCase().includes(value.toLowerCase()); // Lọc theo name
+            const matchesSearch = section.name.toLowerCase().trim().includes(value.toLowerCase().trim()); // Lọc theo name
             const matchesStatus = selectedStatus ? section.status.toLowerCase().trim() === selectedStatus.toLowerCase().trim() : true; // Lọc theo status nếu có
 
             return matchesSearch && matchesStatus; // Phải thỏa mãn cả 2 điều kiện
@@ -165,31 +166,31 @@ const SectionManager = () => {
 
     return (
         <>
-            <section>
+            <section className='test'>
                 <div className="m-5 mt-5">
                     <div className="row ">
                         <div className="section-form col-md-4 mb-3">
                             <SectionForm universityId={universityId}/>
                         </div>
                         <div className="section-table col-md-8 mb-3">
-                            <Card style={{textAlign: 'center'}} title="Danh sách khoa">
+                            <Card className='card-section' title="Danh sách khoa">
                                 <div className="table-responsive">
                                     <div className="d-flex justify-content-between mb-3">
-                                        <div className="d-flex justify-content-start">
-                                            <Select
-                                                style={{marginRight: '10px'}}
-                                                placeholder="Trạng thái"
-                                                value={selectedStatus}
-                                                onChange={handleStatusChange}
-                                            >
-                                                <Select.Option value="">Tất cả</Select.Option>
-                                                <Select.Option value="active">Hoạt động</Select.Option>
-                                                <Select.Option value="inactive">Tạm ngưng</Select.Option>
-                                            </Select>
-                                            <Input placeholder="Tìm kiếm..." value={searchText}
-                                                   onChange={handleSearch} prefix={<SearchOutlined/>}
-                                                   style={{width: 200}}/>
-                                        </div>
+                                        <Input placeholder="Tìm kiếm..." value={searchText} style={{marginRight:'10px'}}
+                                               onChange={handleSearch} prefix={<SearchOutlined/>}/>
+                                        <Select
+                                            style={{marginRight: '10px', width: '150px'}}
+                                            placeholder="Trạng thái"
+                                            value={selectedStatus}
+                                            onChange={handleStatusChange}
+
+                                        >
+                                            <Select.Option value="">Tất cả</Select.Option>
+                                            <Select.Option value="active">Hoạt động</Select.Option>
+                                            <Select.Option value="inactive">Tạm ngưng</Select.Option>
+                                        </Select>
+
+
                                         <div className="d-flex justify-content-end">
 
                                             <Button
@@ -215,7 +216,7 @@ const SectionManager = () => {
                                                     filename={"DanhSachKhoa.csv"}
                                                     style={{color: 'inherit', textDecoration: 'none'}}
                                                 >
-                                                    Export excel
+                                                    Xuất excel
                                                 </CSVLink>
                                             </Button>
                                         </div>
@@ -227,7 +228,8 @@ const SectionManager = () => {
                                         onRefund={handleRefundSection}
                                         selectedRowKeys={selectedRowKeys}
                                         setSelectedRowKeys={setSelectedRowKeys}/>
-                                    <ResultSummary totalElements={filteredData.length}/>
+                                    <ResultSummary
+                                        totalElements={filteredData.length > 0 || searchText || selectedStatus ? filteredData.length : sections.length}/>
                                     <div
                                         style={{
                                             display: "flex",
@@ -240,7 +242,7 @@ const SectionManager = () => {
                                             current={currentPage}
                                             pageSize={pageSize}
                                             onChange={handlePageChange}
-                                            total={searchText ? filteredData.length : sections.length}
+                                            total={filteredData.length > 0 || searchText || selectedStatus ? filteredData.length : sections.length}
                                             showSizeChanger={false}
                                         />
                                     </div>

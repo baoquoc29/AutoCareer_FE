@@ -4,10 +4,11 @@ import { delete_work_shop, get_all_workshop_by_university } from "../../../Redux
 import WorkShopTable from "./WorkShopTable";
 import AddWorkShop from "./AddWorkShop";
 import WorkShopDetails from "./WorkShopDetails";
-import {Button, Card, Input, Modal, Pagination} from "antd";
+import { Button, Card, Input, Modal, Pagination, Select } from "antd";
 import EditWorkShop from "./EditWorkShop";
-import {PlusOutlined} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 
+const { Option } = Select;
 
 const WorkShopManager = () => {
     const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const WorkShopManager = () => {
     const totalRecords = useSelector((state) => state.WorkShopReducer.totalRecords);
     const [isAdding, setIsAdding] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
+    const [filterStatus, setFilterStatus] = useState(""); // Trạng thái lọc mới
     const [selectedWorkshop, setSelectedWorkshop] = useState(null);
     const [viewMode, setViewMode] = useState(null);
     const [page, setPage] = useState(1);
@@ -37,14 +39,18 @@ const WorkShopManager = () => {
         fetchWorkshops();
     }, [dispatch, idUniversity, page, size]);
 
-    // Filter workshops by search keyword
+    // Filter workshops by search keyword and status
     const filteredWorkshops = useMemo(() => {
         return workshops.filter((workshop) => {
-            // Kiểm tra xem workshop.title có phải là chuỗi hợp lệ không
-            return workshop.title && typeof workshop.title === 'string' &&
+            const matchesKeyword =
+                workshop.title &&
+                typeof workshop.title === "string" &&
                 workshop.title.toLowerCase().includes(searchKeyword.toLowerCase());
+            const matchesStatus =
+                !filterStatus || workshop.statusBrowse === filterStatus; // Lọc theo trạng thái
+            return matchesKeyword && matchesStatus;
         });
-    }, [workshops, searchKeyword]);
+    }, [workshops, searchKeyword, filterStatus]);
 
     const handleViewDetails = (workshop) => {
         setSelectedWorkshop(workshop);
@@ -60,11 +66,16 @@ const WorkShopManager = () => {
         setSearchKeyword(e.target.value);
         setPage(1); // Reset to page 1 when searching
     };
-    const handleDelete = async (id,title) => {
-        Modal.confirm({
 
+    const handleStatusChange = (value) => {
+        setFilterStatus(value);
+        setPage(1); // Reset trang về 1 khi thay đổi trạng thái
+    };
+
+    const handleDelete = async (id, title) => {
+        Modal.confirm({
             title: "Xác nhận xóa",
-            content: "Bạn có chắc chắn muốn xóa " + title +  "?",
+            content: "Bạn có chắc chắn muốn xóa " + title + "?",
             okText: "Xóa",
             cancelText: "Hủy",
             centered: true,
@@ -88,7 +99,6 @@ const WorkShopManager = () => {
         await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size));
     };
 
-
     const handlePageChange = async (newPage, newSize) => {
         setPage(newPage);
         setSize(newSize);
@@ -100,7 +110,7 @@ const WorkShopManager = () => {
     };
 
     // Calculate the total records based on whether a search term is applied
-    const totalItems = searchKeyword ? filteredWorkshops.length : totalRecords;
+    const totalItems = searchKeyword || filterStatus ? filteredWorkshops.length : totalRecords;
 
     return (
         <Card title="Quản lý hội thảo">
@@ -117,15 +127,25 @@ const WorkShopManager = () => {
                 <>
                     {!isAdding ? (
                         <>
-                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-                                <div style={{ display: "flex", gap: 8 }}>
+                            <div style={{display: "flex", justifyContent: "space-between", marginBottom: 16}}>
+                                <div style={{display: "flex", gap: 8}}>
                                     <Input
                                         placeholder="Tìm kiếm theo tiêu đề"
                                         onChange={handleSearch}
-                                        style={{ width: 200 }}
+                                        style={{width: 200}}
                                     />
+                                    <Select
+                                        placeholder="Chọn trạng thái"
+                                        style={{width: 150}}
+                                        onChange={handleStatusChange}
+                                        allowClear
+                                    >
+                                        <Option value="REJECTED">Từ chối</Option>
+                                        <Option value="APPROVED">Chấp nhận</Option>
+                                        <Option value="PENDING">Chờ duyệt</Option>
+                                    </Select>
                                 </div>
-                                <Button  icon={<PlusOutlined/>}  type="primary" onClick={() => setIsAdding(true)}>
+                                <Button icon={<PlusOutlined/>} type="primary" onClick={() => setIsAdding(true)}>
                                     Thêm hội thảo
                                 </Button>
                             </div>
@@ -137,34 +157,36 @@ const WorkShopManager = () => {
                                 page={page}
                                 size={size}
                             />
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    marginTop: 16,
+                                }}
+                            >
+                                <div style={{flex: 1, display: "flex", justifyContent: "center"}}>
+                                    <Pagination
+                                        current={page}
+                                        pageSize={size}
+                                        total={totalItems}
+                                        onChange={handlePageChange}
+                                        pageSizeOptions={[7, 10, 20, 50, 100]}
+                                        showSizeChanger={true}
+                                    />
+                                </div>
 
-                            {/* Container for pagination and results label */}
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
-                                {/* Pagination */}
-                                <Pagination
-                                    current={page}
-                                    pageSize={size}
-                                    total={totalItems} // Adjust total records based on search or not
-                                    onChange={handlePageChange}
-                                    pageSizeOptions={[7, 10, 20, 50, 100]}
-                                    showSizeChanger={true}
-                                />
-                                {/* Label showing total results at the bottom right */}
-                                {searchKeyword && (
-                                    <div style={{ marginLeft: 16, marginTop: 12 }}>
-                                        <p>
-                                            Có {filteredWorkshops.length} kết quả được tìm thấy.
-                                        </p>
-                                    </div>
-                                )}
+                                <div style={{marginLeft: 16, marginTop: 16}}>
+                                    <p>
+                                        Có <strong>{filteredWorkshops.length || totalItems}</strong> kết quả được tìm
+                                        thấy.
+                                    </p>
+                                </div>
                             </div>
+
                         </>
                     ) : (
-                        <AddWorkShop
-                            visible={isAdding}
-                            onFinish={resetView}
-                            onCancel={resetView}
-                        />
+                        <AddWorkShop visible={isAdding} onFinish={resetView} onCancel={resetView}/>
                     )}
                 </>
             )}

@@ -1,5 +1,12 @@
 import {employeeService} from "../../Service/BusinessService/EmployeeService";
-import {CREATE_EMPLOYEE, DELETE_EMPLOYEE, SET_EMPLOYEE, SET_EMPLOYEE_ID, UPDATE_EMPLOYEE} from "../types/EmployeeType";
+import {
+    CREATE_EMPLOYEE,
+    DELETE_EMPLOYEE,
+    RESTORE_EMPLOYEE,
+    SET_EMPLOYEE,
+    SET_EMPLOYEE_ID,
+    UPDATE_EMPLOYEE
+} from "../types/EmployeeType";
 import {toast} from "react-toastify";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 
@@ -33,7 +40,6 @@ export const delete_employee_id = (employeeId) => {
     return async (dispatch) => {
         try {
             const res = await employeeService.delete_employee(employeeId);
-            console.log(res.data)
             dispatch({
                 type: DELETE_EMPLOYEE,
                 payload: res.data
@@ -43,6 +49,20 @@ export const delete_employee_id = (employeeId) => {
         }
     }
 }
+export const restore_employee_id = (employeeId) => {
+    return async (dispatch) => {
+        try {
+            const res = await employeeService.restore_employee(employeeId);
+            dispatch({
+                type: RESTORE_EMPLOYEE,
+                payload: res.data
+            })
+        }catch(error) {
+            toast.error(error.data.message)
+        }
+    }
+}
+
 export const create_employee = (formData) => {
     return async (dispatch) => {
         try {
@@ -68,11 +88,6 @@ export const create_employee = (formData) => {
                 console.error("BAD_REQUEST:", res);
                 return false; // Indicating failure
             }
-            // } else {
-            //     toast.error("Chưa có ảnh");
-            //     console.warn("Unhandled response code:", res);
-            //     return false; // Indicating failure
-            // }
         } catch (error) {
             // Bắt lỗi trong quá trình gọi API
             console.error("Lỗi khi tạo nhân viên:", error);
@@ -103,16 +118,17 @@ export const update_employee = (employeeId, formData) => {
         } catch (error) {
             // Bắt lỗi trong quá trình gọi API
             console.error("Lỗi khi chỉnh sửa nhân viên:", error);
-            toast.error(error.data.response.message || "Đã xảy ra lỗi khi chỉnh sửa nhân viên.");
+            toast.error(error.message || "Đã xảy ra lỗi khi chỉnh sửa nhân viên.");
             return {success: false, error};
 
         }
     };
 };
-export const get_all_employees_of_business_page = (page = 1, size = 7, keyword = '') => {
+
+export const get_all_employees_of_business_page = (page = 1, size = 7, keyword = '', status= '') => {
     return async dispatch => {
         try {
-            const res = await employeeService.get_all_employees_of_business(page, size, keyword);
+            const res = await employeeService.get_all_employees_of_business(page, size, keyword, status|| '');
             const {content, totalElements, pageSize, currentPage} = res.data;
             if (Array.isArray(res.data.content)) {
                 if (content.length === 0) {
@@ -125,6 +141,7 @@ export const get_all_employees_of_business_page = (page = 1, size = 7, keyword =
                             pageSize: size,    // Giữ nguyên số bản ghi mỗi trang
                             currentPage: page, // Giữ nguyên trang hiện tại
                             keyword,
+                            status,
                         },
                     });
                     console.warn("Không có dữ liệu ngành nghề nào được tìm thấy.");

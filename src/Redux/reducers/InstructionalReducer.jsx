@@ -1,4 +1,4 @@
-import {SET_INSTRUCTIONAL, UPDATE_INSTRUCTIONAL} from "../types/InstructionalType";
+import {SET_INSTRUCTIONAL, TOTAL_INSTRUCTIONAL, UPDATE_INSTRUCTIONAL} from "../types/InstructionalType";
 
 const initialState = {
     instructional: [],
@@ -7,6 +7,7 @@ const initialState = {
     currentPage: 1,
     selectedIds: [], // Thêm trường selectedIds
     instructionalId: null,
+    totalInstruction: 0,
 }
 export const InstructionalReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -22,6 +23,11 @@ export const InstructionalReducer = (state = initialState, action) => {
             return {
                 ...state,
                 instructionalId: action.payload,
+            }
+        case TOTAL_INSTRUCTIONAL:
+            return {
+                ...state,
+                totalInstruction: action.payload,
             }
         default:
             return {...state}

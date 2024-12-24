@@ -185,7 +185,6 @@ export class baseService {
 
         try {
             const response = await axios(config);
-            console.log(response.data)
             return response.data; // Trả về data từ response
         } catch (error) {
             if (error.response) {
