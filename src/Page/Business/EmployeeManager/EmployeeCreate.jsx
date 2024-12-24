@@ -40,8 +40,8 @@ const EmployeeCreate = () => {
                 break;
             case "phone":
                 if (!value) return "Số điện thoại là bắt buộc.";
-                const phoneRegex = /^(\+84|0)[3-9]\d{8}$/;
-                if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0 theo sau là số từ 3-9.";
+                const phoneRegex = /^(\+84|0)[1-9]\d{8}$/;
+                if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0.";
                 break;
             default:
                 break;

@@ -116,10 +116,16 @@ export const PasswordReminder = () => {
                                 >
                                     <Form.Item
                                         name="email"
-                                        rules={[{ required: true, type: "email", message: "Vui lòng nhập email hợp lệ!" }]}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập email hợp lệ!" },
+                                            { type: "email", message: "Định dạng email không hợp lệ!" },
+                                            { pattern: /^[^\s].*$/, message: "Email không được có dấu cách ở đầu." },
+                                            { min: 5,max:50, message: 'Email không hợp lệ!' },
+                                        ]}
                                     >
-                                        <Input placeholder="Email" autoFocus />
+                                        <Input placeholder="Nhập email" autoFocus/>
                                     </Form.Item>
+
                                     <Form.Item>
                                         <Button type="primary" htmlType="submit" block>
                                             Đặt lại mật khẩu
@@ -127,7 +133,7 @@ export const PasswordReminder = () => {
                                     </Form.Item>
                                 </Form>
                                 <div className="text-center mt-3">
-                                    <NavLink to={"/"} className="btn-link text-decoration-none">
+                                    <NavLink to={"/login"} className="btn-link text-decoration-none">
                                         Quay lại đăng nhập
                                     </NavLink>
                                 </div>

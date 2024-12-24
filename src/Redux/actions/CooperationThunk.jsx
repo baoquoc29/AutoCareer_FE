@@ -1,129 +1,25 @@
 import {toast} from "react-toastify";
 import cooperationService from "../../Service/UniversityService/CooperationService";
-import {SET_COOPERATION, TOTAL_COOPERATION} from "../types/CooperationType";
+import {APPROVE_COOPERATION, REJECT_COOPERATION, SET_COOPERATION, TOTAL_COOPERATION} from "../types/CooperationType";
+import {STATUS_CODE} from "../../Utils/Setting/Config";
 
-
-// export const get_all_employees = () => {
-//     return async dispatch => {
-//         try {
-//             const res = await employeeService.get_all_employee_by_id_business();
-//             dispatch({
-//                 type: SET_EMPLOYEE,
-//                 payload: res.data
-//             })
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     }
-// }
-// export const get_employee_by_id = (employeeId) => {
-//     return async (dispatch) => {
-//         try {
-//             const res = await employeeService.get_employee_by_id(employeeId);
-//             dispatch({
-//                 type: SET_EMPLOYEE_ID,
-//                 payload: res.data
-//             })
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     }
-// }
-// export const delete_employee_id = (employeeId) => {
-//     return async (dispatch) => {
-//         try {
-//             const res = await employeeService.delete_employee(employeeId);
-//             console.log(res.data)
-//             dispatch({
-//                 type: DELETE_EMPLOYEE,
-//                 payload: res.data
-//             })
-//         } catch (error) {
-//             toast.error(error.data.message)
-//         }
-//     }
-// }
-// export const create_employee = (formData) => {
-//     return async (dispatch) => {
-//         try {
-//             // Gửi request đến API qua service
-//             const res = await employeeService.employee_create(formData);
-//
-//             // Kiểm tra mã phản hồi từ server
-//             if (res.code === STATUS_CODE.SUCCESS) {
-//                 // Dispatch action để cập nhật trạng thái Redux
-//                 dispatch({
-//                     type: CREATE_EMPLOYEE,
-//                     payload: res,
-//                 });
-//
-//                 // Hiển thị thông báo thành công và lấy lại danh sách nhân viên
-//                 toast.success("Nhân viên được thêm mới thành công!");
-//
-//
-//                 return true;
-//             } else if (res.code === STATUS_CODE.BAD_REQUEST) {
-//                 // Hiển thị thông báo lỗi từ server (nếu có)
-//                 toast.error(res.message || "Dữ liệu không hợp lệ.");
-//                 console.error("BAD_REQUEST:", res);
-//                 return false; // Indicating failure
-//             }
-//             // } else {
-//             //     toast.error("Chưa có ảnh");
-//             //     console.warn("Unhandled response code:", res);
-//             //     return false; // Indicating failure
-//             // }
-//         } catch (error) {
-//             // Bắt lỗi trong quá trình gọi API
-//             console.error("Lỗi khi tạo nhân viên:", error);
-//             toast.error(error.message || "Đã xảy ra lỗi khi thêm mới nhân viên.");
-//             return false; // Indicating failure
-//         }
-//     };
-// };
-//
-// export const update_employee = (employeeId, formData) => {
-//     return async (dispatch) => {
-//         try {
-//             // Gửi request đến API qua service
-//             const res = await employeeService.update_employee(employeeId, formData);
-//
-//             // Kiểm tra mã phản hồi từ server
-//
-//             // Dispatch action để cập nhật trạng thái Redux
-//             dispatch({
-//                 type: UPDATE_EMPLOYEE,
-//                 payload: res,
-//             });
-//             // Hiển thị thông báo thành công và lấy lại danh sách nhân viên
-//             toast.success("Nhân viên được cập nhật thành công!");
-//
-//             // Hiển thị thông báo lỗi từ server (nếu có)
-//             return {success: true, data: res.data};
-//         } catch (error) {
-//             // Bắt lỗi trong quá trình gọi API
-//             console.error("Lỗi khi chỉnh sửa nhân viên:", error);
-//             toast.error(error.data.response.message || "Đã xảy ra lỗi khi chỉnh sửa nhân viên.");
-//             return {success: false, error};
-//
-//         }
-//     };
-// };
-export const get_all_cooperation_of_university_page = (page = 1, size = 7, keyword = '') => {
+export const get_all_cooperation_of_university_page = (page = 1, size = 7, keyword = '',statusConnected= '') => {
     return async dispatch => {
         try {
-            const res = await cooperationService.get_all_cooperation_of_university(page, size, keyword);
+            const res = await cooperationService.get_all_cooperation_of_university(page, size, keyword, statusConnected|| '');
             const {content, totalElements, pageSize, currentPage} = res.data;
             if (Array.isArray(res.data.content)) {
                 if (content.length === 0) {
                     // Không có dữ liệu
                     dispatch({
-                        type: SET_COOPERATION, payload: {
+                        type: SET_COOPERATION,
+                        payload: {
                             content: [],       // Danh sách ngành nghề rỗng
                             totalElements: 0,  // Tổng số bản ghi là 0
                             pageSize: size,    // Giữ nguyên số bản ghi mỗi trang
                             currentPage: page, // Giữ nguyên trang hiện tại
                             keyword,
+                            statusConnected,
                         },
                     });
                     console.warn("Không có dữ liệu hợp tác nào được tìm thấy.");
@@ -144,6 +40,36 @@ export const get_all_cooperation_of_university_page = (page = 1, size = 7, keywo
             console.log(error);
         }
     };
+}
+export const approved_cooperation = (formData)=>{
+    return async (dispatch) => {
+        try {
+            const res = await cooperationService.approve_cooperation_of_university(formData);
+            if(res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: APPROVE_COOPERATION,
+                    payload: res.data
+                })
+            }
+        }catch(error){
+            toast.error(error.response.data.message);
+        }
+    }
+}
+export const reject_cooperation = (formData)=>{
+    return async (dispatch) => {
+        try {
+            const res = await cooperationService.reject_cooperation_of_university(formData);
+            if(res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: REJECT_COOPERATION,
+                    payload: res.data
+                })
+            }
+        }catch(error){
+            toast.error(error.response.data.message);
+        }
+    }
 }
 export const get_total_cooperation = () => {
     return async dispatch => {

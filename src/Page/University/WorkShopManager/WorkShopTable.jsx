@@ -11,11 +11,14 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
         {
             title: "STT",
             key: "stt",
+            align: "center",
             render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
             sorter: (a, b) => a.id - b.id,
+            width: 80, // Adjust the width as needed
+            ellipsis: true, // Optional: Adds ellipsis if the content overflows
         },
         {
-            title: "Tiêu đề",
+            title: <div style={{ textAlign: 'center' }}>Tiêu đề</div>, // Center the column header
             dataIndex: "title",
             key: "title",
             sorter: (a, b) => a.title.localeCompare(b.title), // Sắp xếp chuỗi
@@ -24,12 +27,17 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
                     {text}
                 </div>
             ),
+            width: 280,
             ellipsis: true, // Tự động cắt và thêm dấu ba chấm
-        },
+            align: "left", // Keep the content aligned to the left (or you can use "center" if needed)
+        }
+,
         {
             title: "Ngày bắt đầu",
             dataIndex: "startDate",
             key: "startDate",
+            align: "center",
+            width: 150,
             sorter: (a, b) =>
                 dayjs(a.startDate, "DD/MM/YYYY HH:mm").unix() -
                 dayjs(b.startDate, "DD/MM/YYYY HH:mm").unix(),
@@ -42,6 +50,8 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
         {
             title: "Ngày kết thúc",
             dataIndex: "endDate",
+            width: 150,
+            align: "center",
             key: "endDate",
             sorter: (a, b) =>
                 dayjs(a.endDate, "DD/MM/YYYY HH:mm").unix() -
@@ -55,6 +65,8 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
             title: "Ngày hết hạn",
             dataIndex: "expireDate",
             key: "expireDate",
+            width: 150,
+            align: "center",
             sorter: (a, b) =>
                 dayjs(a.expireDate, "DD/MM/YYYY").unix() -
                 dayjs(b.expireDate, "DD/MM/YYYY").unix(),
@@ -66,6 +78,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
         {
             title: "Địa điểm",
             dataIndex: "location",
+            align: "center",
             key: "location",
             render: (location) => (
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -77,9 +90,12 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
         {
             title: "Trạng thái",
             dataIndex: "statusBrowse",
+            align: "center",
             key: "statusBrowse",
+            width: 170,
             sorter: (a, b) => a.statusBrowse.localeCompare(b.statusBrowse),
             render: (status) => {
+
                 const statusMap = {
                     approved: { color: "green", label: "Đã duyệt" },
                     pending: { color: "orange", label: "Chờ duyệt" },
@@ -97,10 +113,11 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
         },
         {
             title: "Hành động",
+            align: "center",
             key: "action",
             render: (_, record) => {
-                const isFutureStartDate = record.startDate
-                    ? dayjs(record.startDate, "DD/MM/YYYY HH:mm").isBefore(dayjs())
+                const isFutureStartDate = record.endDate
+                    ? dayjs(record.endDate, "DD/MM/YYYY HH:mm").isBefore(dayjs())
                     : false;
 
                 return (

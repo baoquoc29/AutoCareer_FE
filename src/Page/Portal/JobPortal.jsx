@@ -39,9 +39,10 @@ const undergraduateStudent = [
 ];
 
 const JobPortal = () => {
+
     const response = useSelector((state) => state.PortalReducer || []);
-    const industries = useSelector((state) => state.IndustryReducer.industriesNoPag || []);
-    const totalElements = useSelector((state) => state.PortalReducer.totalElements || 0);
+    const industries = useSelector((state) => state.IndustryReducer.industriesAll || []);
+    const totalElements = useSelector((state) => state.PortalReducer.totalJobFeatures || 0);
     const [filter, setFilter] = useState("location");
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredOptions, setFilteredOptions] = useState([]);
@@ -52,12 +53,13 @@ const JobPortal = () => {
 
     const dispatch = useDispatch();
 
-    // Fetch dữ liệu ban đầu
     useEffect(() => {
         dispatch(get_all_job(0, size));
         dispatch(get_all_industry());
     }, [dispatch, size]);
-
+    useEffect(() => {
+        localStorage.setItem('totalJobElements', totalElements);
+    }, [totalElements]); // Dễ dàng theo dõi thay đổi của totalElements
     // Cập nhật các option lọc khi filter thay đổi
     useEffect(() => {
         switch (filter) {
@@ -258,7 +260,7 @@ const JobPortal = () => {
 
 
     return (
-        <div className="job-portal-container">
+        <div className="job-portal-container" data-aos="fade-up">
             <p className="title-job-portal">Việc làm tốt nhất</p>
             <Card className="search-bar">
                 <div className="filter-location-container">

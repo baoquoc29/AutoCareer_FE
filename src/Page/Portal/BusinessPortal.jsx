@@ -5,21 +5,22 @@ import { get_all_industry } from "../../Redux/actions/IndustryThunk";
 import { get_all_business_feature } from "../../Redux/actions/PortalThunk";
 import { DOMAIN } from "../../Utils/Setting/Config";
 import "../Portal/StylePortal/BusinessPortal.css";
-
 const BusinessPortal = () => {
-    const [selectedIndustryId, setSelectedIndustryId] = useState(); // Lưu ID ngành đã chọn
+    const [selectedIndustryId, setSelectedIndustryId] = useState(0); // Mặc định chọn "Tất cả" (id = 0)
     const locationListRef = useRef(null);
     const dispatch = useDispatch();
 
-    const industries = useSelector((state) => state.IndustryReducer.industriesNoPag || []);
+    const industries = useSelector((state) => state.IndustryReducer.industriesAll || []);
     const businesses = useSelector((state) => state.PortalReducer.businessFeatures || []);
-
+    const totalBusinessElements = useSelector((state) => state.PortalReducer.totalBusinessFeatures || 0);
     // Thêm "Tất cả" vào danh sách ngành
     const updatedIndustries = useMemo(() =>
             [{ id: 0, name: "Tất cả" }, ...industries.map((industry) => ({ id: industry.id, name: industry.name }))],
         [industries]
     );
-
+    useEffect(() => {
+        localStorage.setItem('totalBusinessElements', totalBusinessElements);
+    }, [totalBusinessElements]); // Dễ dàng theo dõi thay đổi của totalElements
     // Gọi API để lấy danh sách ngành và doanh nghiệp
     useEffect(() => {
         if (!industries.length) {
@@ -57,20 +58,19 @@ const BusinessPortal = () => {
     // Thay đổi ngành được chọn
     const onChangeIndustry = useCallback((industryId) => {
         setSelectedIndustryId(industryId);
-        console.log(industryId);
         dispatch(get_all_business_feature(industryId));
     }, [dispatch]);
 
     // Lọc doanh nghiệp dựa trên ngành đã chọn
     const filteredBusiness = useMemo(() =>
-        selectedIndustryId === 0
-            ? businesses
-            : businesses.filter((business) => business.industryId === Number(selectedIndustryId))
-
+            selectedIndustryId === 0
+                ? businesses
+                : businesses.filter((business) => business.industryId === selectedIndustryId),
+        [selectedIndustryId, businesses]
     );
 
     return (
-        <Card className="business-portal-card-container">
+        <Card data-aos="fade-up" className="business-portal-card-container"  >
             <div className="business-portal-header">
                 Doanh nghiệp tiêu biểu
             </div>
@@ -83,7 +83,7 @@ const BusinessPortal = () => {
                         <div
                             key={industry.id}
                             className={`industry-item ${selectedIndustryId === industry.id ? "active" : ""}`}
-                            onClick={() => onChangeIndustry(industry.id)}
+                            onClick={() => onChangeIndustry(industry.id)} // Dùng industry.id thay vì industry.name
                         >
                             {industry.name}
                         </div>

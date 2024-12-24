@@ -7,10 +7,12 @@ import {ToastContainer} from "react-toastify";
 
 
 function App() {
+
     return (
         <>
             <Loading />
             <AppRouter/>
+
             <ToastContainer />
         </>
     );

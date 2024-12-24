@@ -318,11 +318,18 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
         <Container>
             <Title>Chỉnh sửa hội thảo</Title>
             <Form form={form} layout="vertical" autocomplete="off">
-                <FormItem    rules={[{required: true, message: 'Vui lòng nhập tiêu đề'}]} label="Tiêu đề" name="title">
-                    <Input
-                    rules
-                    />
-                </FormItem>
+                <Form.Item
+                    rules={[
+                        { required: true, message: 'Vui lòng nhập tiêu đề.' },
+                        { min: 10, message: 'Tiêu đề phải có ít nhất 10 ký tự.' },
+                        { max: 256, message: 'Tiêu đề không được vượt quá 256 ký tự.' }
+                    ]}
+                    label="Tiêu đề"
+                    name="title"
+                >
+                    <Input placeholder="Nhập tiêu đề"/>
+                </Form.Item>
+
 
                 <Row gutter={16}>
                     <Col span={8}>
@@ -414,18 +421,16 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                     </Col>
                 </Row>
 
-                <FormItem label="Địa chỉ chi tiết" name="detailAddress">
-                    <Input
-                        style={{
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                            minHeight: '30px',
-                            maxHeight: '30px',
-                            overflowY: 'auto',
-                        }}
-                        rows={2} // Số dòng mặc định
-                    />
-                </FormItem>
+                <Form.Item
+                    label="Địa chỉ chi tiết"
+                    name="detailAddress"
+                    rules={[
+                        { pattern: /^[^\s].*$/, message: 'Địa chỉ chi tiết không được có dấu cách ở đầu.' }
+                    ]}
+                >
+                    <Input.TextArea placeholder="Nhập địa chỉ chi tiết" />
+                </Form.Item>
+
 
                 <FormItem label="Mô tả" name="description">
                     <StyledQuill

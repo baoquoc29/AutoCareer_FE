@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Button, Card, Col, Divider, Row, Space, Typography} from "antd";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {get_job_detail} from "../../../Redux/actions/JobThunk";
 import {
@@ -16,9 +16,8 @@ const {Text, Title} = Typography;
 
 const JobDetailPage = () => {
     const dispatch = useDispatch();
-    const location = useLocation();
     const jobData = useSelector((state) => state.JobReducer.selectedJobDetail); // assuming job data is stored here
-    const {jobId} = location.state || {}; // Lấy jobId từ state
+    const jobId = localStorage.getItem("jobId");
     const navigate = useNavigate();
 
     const userLogin = JSON.parse(localStorage.getItem("USER_LOGIN"));

@@ -1,7 +1,7 @@
 .home-screen-workshop {
     padding: 20px;
     margin-top: 30px;
-    background-color: #f9f9f9;
+    background-color: #FFFFFF;
     margin-left: 109px;
     margin-right: 109px;
 }
@@ -14,6 +14,10 @@
 }
 .workshop-header-title{
     display: flex;
+}
+.workshop-header-title .workshop-portal-title{
+    margin-top: 10px;
+    color: #3E7494;
 }
 .workshop-actions{
     margin-left: 20px;
@@ -52,9 +56,9 @@
     background-color: #ffffff; /* Nền trắng */
 }
 
-.workshop-image {
+.workshop-image-portal {
     height: 200px;
-    object-fit: cover;
+    object-fit: scale-down;
     border-radius: 8px 8px 0 0;
 }
 
@@ -84,7 +88,8 @@
 }
 
 .workshop-price {
-    color: #52c41a;
+    color: #c41a1a;
     font-weight: bold;
     margin: 0; /* Không cần margin bên dưới, vì đây là thành phần cuối */
 }
+

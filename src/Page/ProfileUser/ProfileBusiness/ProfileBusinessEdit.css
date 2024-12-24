@@ -111,5 +111,15 @@
     object-fit: cover; /* Đảm bảo ảnh không bị méo */
     border-radius: 10px; /* Bo góc cho ảnh */
 }
+.title__Business__edit {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    margin-bottom: 5px;
+
+}
+.line__Business__edit {
+    border: none;
+    border-top: 2px solid #eeeeee;
+    margin: 15px 0 15px 0;
+}
 
 
