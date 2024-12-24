@@ -54,14 +54,18 @@ export function BusinessTemplate() {
                 {label: "Công ty chờ duyệt", link: "/major-manager", icon: ""},
             ],
         },
-        {
-            label: "Thống kê",
-            icon: "fa-duotone fa-solid fa-chart-line",
-            subMenu: [
-                {label: "Thống kê ngành nghề", link: "/dashboard-industry", icon: ""},
-                {label: "Thống kê công việc", link: "/dashboard-job", icon: ""},
-            ],
-        },
+        ...(user?.role?.name === "BUSINESS"
+            ? [
+                {
+                    label: "Thống kê",
+                    icon: "fa-duotone fa-solid fa-chart-line",
+                    subMenu: [
+                        {label: "Thống kê ngành nghề", link: "/dashboard-industry", icon: ""},
+                        {label: "Thống kê công việc", link: "/dashboard-job", icon: ""},
+                    ],
+                },
+            ]
+            : []),
     ];
     return (
         <>

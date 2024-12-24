@@ -32,7 +32,7 @@ const HeaderPortal = () => {
     };
     const handleToManagerClick = () => {
         if(userData?.role?.name === "BUSINESS") {
-            window.open('/business', '_blank');
+            window.open('/dashboard-industry', '_blank');
         }
         else if(userData?.role?.name === "UNIVERSITY") {
             window.open('/university', '_blank');
@@ -41,10 +41,10 @@ const HeaderPortal = () => {
             window.open('/admin', '_blank');
         }
         else if(userData?.role?.name === "BUSINESS") {
-            window.open('/business', '_blank');
+            window.open('/dashboard-industry', '_blank');
         }
         else if(userData?.role?.name === "EMPLOYEE") {
-            window.open('/business', '_blank');
+            window.open('/job-manager', '_blank');
         }
     }
 
