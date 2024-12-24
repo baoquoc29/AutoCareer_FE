@@ -50,7 +50,7 @@ const WorkshopDetailsScreen = () => {
         return { backgroundColor: '#bcb9b9', color: '#FFFFFF' }; // Màu cam
       case "APPROVED":
         return { backgroundColor: '#4CAF50', color: '#FFFFFF' }; // Màu xanh lá
-      case "REJECT":
+      case "REJECTED":
         return { backgroundColor: '#F44336', color: '#FFFFFF' }; // Màu đỏ
       default:
         return { backgroundColor: '#1890ff', color: '#FFFFFF' }; // Màu xanh dương mặc định
@@ -80,17 +80,18 @@ const WorkshopDetailsScreen = () => {
         return "Đang chờ duyệt";
       case "APPROVED":
         return "Đã phê duyệt";
-      case "REJECT":
+      case "REJECTED":
         return "Từ chối";
       default:
         return "Đăng ký tham gia";
     }
   };
+
   const showConfirmModal = () => {
     setIsModalVisible(true);
   };
   const isButtonDisabled = () => {
-    return localStatus === "PENDING" || localStatus === "APPROVED";
+    return localStatus === "PENDING" || localStatus === "APPROVED" || localStatus === "REJECTED";
   };
   const handleCancel = () => {
     setIsModalVisible(false);
