@@ -33,7 +33,7 @@ const IndustryForm = ({selectData, load}) => {
                                 toast.info(`Ngành "${industry.name}" đã có trong doanh nghiệp.`);
                             } else {
                                 // Nếu ngành chưa có, thêm ngành vào doanh nghiệp
-                                await industryService.create_industry(industry.id);
+                                await industryService.create_industry_to_business(industry.id);
                                 toast.success(`Ngành "${industry.name}" đã được thêm thành công!`);
                             }
                         } catch (error) {

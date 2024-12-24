@@ -1,0 +1,83 @@
+/* WorkshopListPortal.css */
+.portal-list-work-shop-container {
+    margin-top: 20px;
+    min-height: 100vh;
+    margin-left: 109px;
+    margin-right: 109px;
+}
+
+.page-title {
+    text-align: center;
+    padding: 16px 0;
+}
+
+.card-container {
+    margin-top: 10px;
+}
+.pagination-container p {
+    margin-right: 10px;
+    font-size: 14px;
+    align-self: center;
+
+}
+.total-results{
+    padding: 20px;
+}
+.pagination-container{
+    margin-bottom: 100px;
+}
+.workshop-listPortal{
+    background: #fff;
+}
+/* Thiết kế bao bọc các phần tử */
+.filter-container-workshop-list {
+    background-color: #ffffff; /* Màu nền trắng */
+    padding: 24px;
+    border-radius: 12px; /* Bo góc nhẹ */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* Cải thiện bố cục */
+.filter-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Hiệu ứng hover */
+.filter-date:hover,
+.filter-select:hover,
+.filter-input:hover {
+    border-color: #40a9ff; /* Đổi màu khi hover */
+    box-shadow: 0 0 6px rgba(64, 169, 255, 0.3); /* Hiệu ứng ánh sáng nhẹ */
+}
+
+/* Đặt chiều rộng cho các thành phần */
+.filter-date,
+.filter-select,
+.filter-input {
+    width: 300px;
+}
+
+/* Định dạng select */
+.filter-select .ant-select-selector {
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f7f8fa; /* Nền sáng cho select */
+}
+
+/* Thêm hiệu ứng khi hover vào select */
+.filter-select:hover .ant-select-selector {
+    border-color: #40a9ff;
+}
+
+/* Thêm bóng mờ cho các input và select */
+.filter-date, .filter-select, .filter-input {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+

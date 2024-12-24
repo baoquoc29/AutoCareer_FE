@@ -1,93 +1,95 @@
-import React from "react";
-import { Card, Button, Row, Col, Typography,Select } from "antd";
-import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
-import "./StylePortal/WorkshopPortal.css"
-
-
+import React, { useEffect } from "react";
+import { Card, Button, Row, Col, Typography } from "antd";
+import { CalendarOutlined } from "@ant-design/icons";
+import "./StylePortal/WorkshopPortal.css";
+import { useDispatch, useSelector } from "react-redux";
+import { get_work_shop_feature } from "../../Redux/actions/PortalThunk";
+import { DOMAIN } from "../../Utils/Setting/Config";
+import { encryptId } from '../../Component/SecurityComponent/cryptoUtils';
 const { Text } = Typography;
 
-const workshops = [
-    {
-        id: 1,
-        title: "Kết bạn & Giao lưu ngôn ngữ BlaBla tại Hà Nội",
-        host: "Kết bạn & Giao lưu ngôn ngữ BlaBla tại Hà Nội",
-        date: "Thứ Năm, 12 Tháng 12 · 7:30 PM",
-        attendees: 45,
-        price: "Miễn phí",
-        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=400&q=60",
-    },
-    {
-        id: 2,
-        title: "Câu lạc bộ Tiếng Anh Hà Nội",
-        host: "Câu lạc bộ Tiếng Anh Hà Nội",
-        date: "Thứ Sáu, 13 Tháng 12 · 7:30 PM",
-        attendees: 4,
-        price: "Miễn phí",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60",
-    },
-    {
-        id: 3,
-        title: "Kết bạn & Giao lưu ngôn ngữ BlaBla tại Hà Nội #2",
-        host: "Kết bạn Hà Nội 2",
-        date: "Thứ Sáu, 20 Tháng 12 · 8:00 PM",
-        attendees: 18,
-        price: "Miễn phí",
-        image: "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?auto=format&fit=crop&w=400&q=60",
-    },
-    {
-        id: 4,
-        title: "Kết bạn & Giao lưu ngôn ngữ BlaBla - Bí mật tặng quà Noel tại Hà Nội",
-        host: "Kết bạn & Giao lưu ngôn ngữ BlaBla",
-        date: "Thứ Năm, 19 Tháng 12 · 7:30 PM ",
-        attendees: 27,
-        price: "Miễn phí",
-        image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=400&q=60",
-    },
-];
-
-
 export default function WorkshopPortal() {
+    const dispatch = useDispatch();
+    const workshops = useSelector((state) => state.PortalReducer.workShopFeatures || []);
+    const totalWorkshops = useSelector((state) => state.PortalReducer.totalWorkShopFeatures || 0);
+
+    useEffect(() => {
+        localStorage.setItem("totalWorkshopElements", totalWorkshops);
+    }, [totalWorkshops]);
+
+    useEffect(() => {
+        dispatch(
+            get_work_shop_feature({
+                page: 0,
+                size: 4,
+                startDate: "",
+                endDate: "",
+                provinceId: "",
+                keyword: "",
+            })
+        );
+    }, [dispatch]);
+
+    const handleOpenNewTab = () => {
+        window.open("/work-shop-all", "_blank");
+    };
+
+    const handleDetailsWorkShop = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/workshop-details/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
+    };
+
     return (
-        <div className="home-screen-workshop">
+        <div className="home-screen-workshop" data-aos="fade-up">
             <header className="workshop-header">
                 <h2 className={"workshop-header-title"}>
-                    <Typography.Title level={3}>
-                        Hội thảo tại
-
+                    <Typography.Title level={3} className={"workshop-portal-title"}>
+                        Hội thảo gần đây
                     </Typography.Title>
-                    <div className="workshop-actions">
-                        <Select
-                            defaultValue="Tất cả"
-                            style={{width: 150, marginRight: '10px'}}
-                            className="region-select"
-                        >
-                            <Select.Option value="Tất cả">Tất cả</Select.Option>
-                            <Select.Option value="Miền Bắc">Miền Bắc</Select.Option>
-                            <Select.Option value="Miền Trung">Miền Trung</Select.Option>
-                            <Select.Option value="Miền Nam">Miền Nam</Select.Option>
-                        </Select>
-                    </div>
                 </h2>
-                <Button type="link" className="see-all-button">Xem tất cả</Button>
+                <Button
+                    type="link"
+                    className="see-all-button"
+                    onClick={handleOpenNewTab}
+                >
+                    Xem tất cả
+                </Button>
             </header>
             <Row gutter={[16, 16]} className="workshop-container">
-                {workshops.map((workshop) => (
+                {workshops.map((workshop, index) => (
                     <Col key={workshop.id} xs={24} sm={12} md={6}>
                         <Card
                             hoverable
-                            cover={<img alt={workshop.title} src={workshop.image} className="workshop-image"/>}
-                            className="workshop-card"
+                            onClick={() => handleDetailsWorkShop(workshop.id)} // Đặt onClick ở đây
+                            cover={
+                                <img
+                                    className="workshop-image-portal"
+                                    src={`${DOMAIN}/api/v1/image/resource?imageId=${workshop.imageId}`}
+                                    alt={workshop.title}
+                                />
+                            }
+                            className={`workshop-card`}
+                            data-index={index}
+                            style={{
+                                "--delay": `${index * 0.2}s`, // Tạo độ trễ 0.2 giây cho từng card
+                            }}
                         >
                             <h3 className="workshop-title">{workshop.title}</h3>
-                            <Text type="secondary" className="workshop-host">Hosted by: {workshop.host}</Text>
+                            <Text type="secondary" className="workshop-host">
+                                {workshop.hostWorkshop}
+                            </Text>
                             <div className="workshop-info">
-                                <CalendarOutlined/> <span>{workshop.date}</span>
+                                <CalendarOutlined /> <span>{workshop.startDate}</span>
                             </div>
                             <div className="workshop-info">
-                                <UserOutlined/> <span>{workshop.attendees} going</span>
+                                <CalendarOutlined /> <span>{workshop.endDate}</span>
                             </div>
                             <div className="workshop-info">
-                                <span className="workshop-price">{workshop.price}</span>
+                                <span className="workshop-price">Hạn đăng ký: {workshop.expireDate}</span>
+                            </div>
+                            <div className="workshop-info">
+                                <span className="workshop-company">Số công ty tham gia: {workshop.totalCompany}</span>
                             </div>
                         </Card>
                     </Col>

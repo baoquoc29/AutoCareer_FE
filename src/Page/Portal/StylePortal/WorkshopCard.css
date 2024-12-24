@@ -1,0 +1,78 @@
+.card-workshop-list {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-workshop-list:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.header-workshop-list {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.host {
+    font-size: 14px;
+    color: #888;
+    margin-left: 30px;
+}
+
+.details {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.6;
+
+}
+
+.details span {
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 5px;
+}
+.details span:nth-child(1),
+.details span:nth-child(2),
+.details span:nth-child(3),
+.details span:nth-child(4),
+.details span:nth-child(5){
+    flex: 1;
+}
+
+/* Icon colors for different statuses */
+.upcoming {
+    color: #3E7494;
+}
+
+.ongoing {
+    color: #FFA500;
+}
+
+.expired {
+    color: #FF4500;
+}
+
+/* Workshop image */
+.workshop-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: scale-down;
+}

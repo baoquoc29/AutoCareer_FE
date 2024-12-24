@@ -1,129 +1,216 @@
-import React from "react";
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaCheckCircle } from "react-icons/fa";
-import { Card, Button, Typography, Image, Col, Row } from "antd";
+import React, { useEffect, useState } from "react";
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt } from "react-icons/fa";
+import {Card, Button, Typography, Image, Col, Row, Modal} from "antd";
 import "./StylePortal/WorkshopDetails.css";
-import {NavLink} from "react-router-dom";
+import HeaderPortal from "../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
+import FooterPortal from "./FooterPortal";
+import { DOMAIN } from "../../Utils/Setting/Config";
+import dayjs from "dayjs";
+import {useParams, NavLink, useNavigate, useLocation} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {get_work_shop_by_id, request_work_shop, status_work_shop} from "../../Redux/actions/PortalThunk";
+import { decryptId } from '../../Component/SecurityComponent/cryptoUtils';
+import PageError from "../PageError404/PageError"
 
 const { Title, Text } = Typography;
 
 const WorkshopDetailsScreen = () => {
-  const defaultLogo = "https://via.placeholder.com/80";
-  const workshopData = {
-    title: "Kỹ năng phỏng vấn và viết CV cho sinh viên IT",
-    university: "Đại học Bách Khoa Hà Nội",
-    date: "15/6/2024",
-    time: "09:00 - 17:00",
-    location: "Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội",
-    status: "Sắp diễn ra",
-    description: "Workshop này sẽ cung cấp cho sinh viên IT những kỹ năng cần thiết để chuẩn bị CV ấn tượng và thành công trong các buổi phỏng vấn việc làm.",
-    agenda: [
-      "09:00 - Khai mạc",
-      "10:00 - Kỹ năng viết CV",
-      "13:00 - Nghỉ trưa",
-      "14:00 - Kỹ năng phỏng vấn"
-    ],
-    universityInfo: {
-      logo: "https://example.com/university-logo.png", // Đường dẫn logo của trường
-      name: "Đại học Bách Khoa Hà Nội",
-      address: "Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội",
-    },
-    generalInfo: {
-      companyCount: 20,
-      creationDate: "1/5/2024",
-      lastUpdate: "10/5/2024"
+  const { id } = useParams();
+  const workshop = useSelector((state) => state.PortalReducer.workShopDetails);
+  const status = useSelector((state) => state.PortalReducer.statusWorkshop);
+  const {isAuthenticated, userData} = useSelector(state => state.UserReducer);
+  const dispatch = useDispatch();
+  const [encryptedId, setEncryptedId] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [localStatus, setLocalStatus] = useState(status);
+
+  useEffect(() => {
+    setEncryptedId(id);
+  }, [id]);
+  useEffect(() => {
+    if (encryptedId) {
+      try {
+        dispatch(get_work_shop_by_id(decryptId(encryptedId)));
+        dispatch(status_work_shop(decryptId(encryptedId),userData.business.id));
+      } catch (error) {
+        return <PageError></PageError>
+      }
+    }
+  }, [dispatch, encryptedId]);
+  useEffect(() => {
+    setLocalStatus(status); // Cập nhật localStatus khi status từ Redux store thay đổi
+  }, [status]);
+
+  if (!workshop) {
+      return <PageError></PageError>
+  }
+  const getButtonStyle = () => {
+    switch (localStatus) {
+      case "PENDING":
+        return { backgroundColor: '#bcb9b9', color: '#FFFFFF' }; // Màu cam
+      case "APPROVED":
+        return { backgroundColor: '#4CAF50', color: '#FFFFFF' }; // Màu xanh lá
+      case "REJECT":
+        return { backgroundColor: '#F44336', color: '#FFFFFF' }; // Màu đỏ
+      default:
+        return { backgroundColor: '#1890ff', color: '#FFFFFF' }; // Màu xanh dương mặc định
     }
   };
 
+  const handleRegister =  async () => {
+    if (userData) {
+      const body = {
+        businessID: userData.business.id,
+        workshopID: workshop.id,
+      };
+      await dispatch(request_work_shop(body));
+      setLocalStatus("PENDING");
+      Modal.success({
+        title: "Đăng ký thành công",
+        content: "Bạn đã đăng ký tham gia workshop thành công, vui lòng chờ duyệt!",
+      });
+    } else {
+      window.location.href = "/login";
+    }
+    setIsModalVisible(false);
+  };
+  const getButtonContent = () => {
+    switch (localStatus) {
+      case "PENDING":
+        return "Đang chờ duyệt";
+      case "APPROVED":
+        return "Đã phê duyệt";
+      case "REJECT":
+        return "Từ chối";
+      default:
+        return "Đăng ký tham gia";
+    }
+  };
+  const showConfirmModal = () => {
+    setIsModalVisible(true);
+  };
+  const isButtonDisabled = () => {
+    return localStatus === "PENDING" || localStatus === "APPROVED";
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   return (
-      <div className="app-container-workshop-details">
-        <div className="content-wrapper-workshop-details">
-          {/* Main Content */}
-          <div className="main-content-workshop-details">
-            {/* Workshop Title Section */}
-            <Card className="card-workshop-details">
-              <div className="image-section-workshop-details">
-                <img
-                    src={workshopData.image || '/assets/img/megamenu/img-4.jpg'}
-                    alt="Workshop Image"
-                    className="workshop-image"
-                />
-              </div>
-              <div className="title-section-workshop-details">
-                <Title level={3}>{workshopData.title}</Title>
-                <Text className="university-text">{workshopData.university}</Text>
-                <Button type="primary" className="register-btn-workshop-details">
-                  Đăng ký tham gia
-                </Button>
-              </div>
-              <div className="details-section-workshop-details">
-                <div className="details-item-workshop-details">
-                  <FaCalendarAlt /> <Text>{workshopData.date}</Text>
-                </div>
-                <div className="details-item-workshop-details">
-                  <FaClock /> <Text>{workshopData.time}</Text>
-                </div>
-                <div className="details-item-workshop-details">
-                  <FaMapMarkerAlt /> <Text>{workshopData.location}</Text>
-                </div>
-                <div className="details-item-workshop-details">
-                  <FaCheckCircle className="upcoming-icon" />
-                  <Text type="success">{workshopData.status}</Text>
-                </div>
-              </div>
-            </Card>
-
-
-            {/* Workshop Description */}
-            <Card className="card-workshop-details">
-              <Title level={3}>Mô tả</Title>
-              <Text>{workshopData.description}</Text>
-            </Card>
-          </div>
-
-          {/* Sidebar Content */}
-          <div className="sidebar-info-workshop-details">
-            {/* University Info */}
-            <Card className="card-workshop-details">
-              {/* Ảnh và tên trường song song */}
-              <Row align="middle" gutter={[16, 16]}>
-                <Row>
+      <div className={"app-container-workshop-details-root"}>
+        <HeaderPortal />
+        <div className="app-container-workshop-details">
+          <div className="content-wrapper-workshop-details">
+            {/* Main Content */}
+            <div className="main-content-workshop-details">
+              <Card className="card-workshop-details">
+                <div className="image-section-workshop-details">
                   <Image
-                      src={workshopData.universityInfo.logo || defaultLogo}
-                      width={80}
-                      height={80}
-                      className="university-logo"
+                      src={`${DOMAIN}/api/v1/image/resource?imageId=${workshop.imageId}`}
+                      alt="Workshop Image"
+                      className="workshop-image"
                   />
-                  <Title level={4} className="university-name">
-                    {workshopData.universityInfo.name}
-                  </Title>
-                </Row>
-              </Row>
-              <div className="info-item-workshop-details">
-                <Text>Địa chỉ: {workshopData.universityInfo.address}</Text>
-              </div>
-              <div className="info-item-workshop-details">
-                <NavLink>Xem chi tiết</NavLink>
-              </div>
-            </Card>
+                </div>
+                <div className="title-section-workshop-details">
+                  <Title level={3}>{workshop.title}</Title>
+                  <Button
+                      type="primary"
+                      style={getButtonStyle()}
+                      className="register-btn-workshop-details"
+                      onClick={showConfirmModal}
+                      disabled={isButtonDisabled()}
+                  >
+                    {getButtonContent()}
+                  </Button>
+                  <Modal
+                      title="Xác nhận đăng ký"
+                      open={isModalVisible}
+                      onOk={handleRegister}
+                      onCancel={handleCancel}
+                      okText="Đồng ý"
+                      cancelText="Hủy bỏ"
+                  >
+                    <p>Bạn có chắc chắn muốn đăng ký tham gia workshop này không?</p>
+                  </Modal>
+                </div>
+                <div className="details-section-workshop-details">
+                  <div className="details-item-workshop-details">
+                    <FaCalendarAlt /> <Text>{dayjs(workshop.startDate, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')}</Text>
+                  </div>
+                  <div className="details-item-workshop-details">
+                    <FaCalendarAlt /> <Text>{dayjs(workshop.endDate, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')}</Text>
+                  </div>
+                  <div className="details-item-workshop-details">
+                    <FaClock /> <Text>{dayjs(workshop.startDate, 'DD/MM/YYYY HH:mm').format('HH:mm')} : {dayjs(workshop.endDate, 'DD/MM/YYYY HH:mm').format('HH:mm')}</Text>
+                  </div>
+                  <div className="details-item-workshop-details">
+                    <FaMapMarkerAlt /> <Text>{workshop.address ?? ''}, {workshop.ward ?? ''}, {workshop.district ?? ''}, {workshop.province ?? ''}</Text>
+                  </div>
+                </div>
+              </Card>
 
-            {/* General Info */}
-            <Card className="card-workshop-details">
-              <Title level={3}>Thông tin chung</Title>
-              <div className="info-item-workshop-details">
-                <Text>Số lượng công ty dự kiến: {workshopData.generalInfo.companyCount} công ty</Text>
-              </div>
-              <div className="info-item-workshop-details">
-                <Text>Trạng thái: {workshopData.status}</Text>
-              </div>
-              <div className="info-item-workshop-details">
-                <Text>Ngày tạo: {workshopData.generalInfo.creationDate}</Text>
-              </div>
-              <div className="info-item-workshop-details">
-                <Text>Cập nhật lần cuối: {workshopData.generalInfo.lastUpdate}</Text>
-              </div>
-            </Card>
+              {/* Workshop Description */}
+              <Card className="card-workshop-details">
+                <Title level={3}>Mô tả</Title>
+                <div
+                    dangerouslySetInnerHTML={{
+                      __html: workshop.description,
+                    }}
+                />
+              </Card>
+            </div>
+
+            {/* Sidebar Content */}
+            <div className="sidebar-info-workshop-details">
+              <Card className="card-workshop-details" hoverable>
+                <Row gutter={[16, 16]} align="middle">
+                  <Col span={6}>
+                    <Image
+                        src={`${DOMAIN}/api/v1/image/resource?imageId=${workshop.imageUniversity}`}
+                        width={80}
+                        height={80}
+                        className="university-logo"
+                        style={{ borderRadius: '8px', objectFit: 'cover' }}
+                    />
+                  </Col>
+                  <Col span={18}>
+                    <Title level={5} className="university-name" style={{ paddingTop: 50 }}>
+                      {workshop.hostWorkshop}
+                    </Title>
+                    <div className="info-item-workshop-details">
+                      <NavLink to={`/workshop/${workshop.id}`} style={{ fontWeight: 'bold', justifyContent: "center", marginLeft: "50px", color: '#1890ff' }}>
+                        Xem chi tiết
+                      </NavLink>
+                    </div>
+                  </Col>
+                </Row>
+              </Card>
+
+              {/* General Info */}
+              <Card className="card-workshop-details">
+                <Title level={3}>Thông tin chung</Title>
+                <div className="info-item-workshop-details">
+                  <Text>Số lượng công ty dự kiến: {workshop.totalCompany} công ty</Text>
+                </div>
+                <div className="info-item-workshop-details">
+                  <Text>Trạng thái: Sẵn sàng </Text>
+                </div>
+                <div className="info-item-workshop-details">
+                  <Text>Ngày tạo: {dayjs(workshop.createdAt).format('DD/MM/YYYY HH:mm')}</Text>
+                </div>
+                <div className="info-item-workshop-details">
+                  <Text>
+                    Cập nhật lần cuối: {
+                    workshop.updatedAt && dayjs(workshop.updatedAt).isValid()
+                        ? dayjs(workshop.updatedAt).format('DD/MM/YYYY HH:mm')
+                        : (workshop.createdAt && dayjs(workshop.createdAt).isValid() ? dayjs(workshop.createdAt).format('DD/MM/YYYY HH:mm') : 'Không có thông tin')
+                  }
+                  </Text>
+                </div>
+              </Card>
+            </div>
           </div>
         </div>
+        <FooterPortal />
       </div>
   );
 };

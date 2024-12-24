@@ -10,17 +10,16 @@ import {Button, Card, Input, Pagination} from "antd";
 import IndustryTable from "./IndustryTable";
 import IndustryForm from "./IndustryForm";
 import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
-import {FileExcelOutlined, SearchOutlined,} from "@ant-design/icons";
+import {DownloadOutlined, SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
-import {toast} from "react-toastify";
 import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton";
 
 const IndustryManager = () => {
     const dispatch = useDispatch();
     const industryTable = useSelector((state) => state.IndustryReducer.industries); // Cho Table
     const selectedIndustry = useSelector((state) => state.IndustryReducer.industryDetail);
-    const industryOptions = useSelector((state) => state.IndustryReducer.industriesNoPag); // Cho Select
+    const industryOptions = useSelector((state) => state.IndustryReducer.industriesAll); // Cho Select
     const totalElements = useSelector((state) => state.IndustryReducer.totalElements); // Tổng số bản ghi
     const currentPage = useSelector((state) => state.IndustryReducer.currentPage); // Trang hiện tại
     const pageSize = useSelector((state) => state.IndustryReducer.pageSize); // Số bản ghi 1 trang
@@ -57,11 +56,11 @@ const IndustryManager = () => {
 
         // Sử dụng Promise.all để xóa song song
         try {
-            await Promise.all(idsToDelete.map(id => dispatch(delete_industry_by_id(id))));
+            dispatch(delete_industry_by_id(idsToDelete));
             setSelectedRows([]);
+            //toast.success(`Xóa ${records.length} ngành nghề thành công`);
         } catch (error) {
             console.error("Lỗi khi xóa các bản ghi:", error);
-            toast.error("Xảy ra lỗi khi xóa một số bản ghi!");
         }
     };
 
@@ -145,8 +144,13 @@ const IndustryManager = () => {
                                                     onDeleteMultiple={handleDeleteMultiple}
                                                 />
                                                 <Button
-                                                    icon={<FileExcelOutlined/>}
+                                                    icon={<DownloadOutlined/>}
                                                     onClick={exportToExcel}
+                                                    style={{
+                                                        backgroundColor: '#1d8f29',  // Màu xanh lá đậm (Excel)
+                                                        borderColor: '#1d8f29',      // Màu viền
+                                                        color: 'white',              // Màu chữ
+                                                    }}
                                                 >
                                                     Xuất Excel
                                                 </Button>
@@ -156,7 +160,6 @@ const IndustryManager = () => {
                                             data={data}
                                             onInfo={handleInfo}
                                             onDelete={handleDelete}
-                                            onDeleteMultiple={handleDeleteMultiple} // Thêm xử lý xóa nhiều
                                             selectedRows={selectedRows}
                                             onSelectChange={handleSelectChange}/>
                                         <ResultsSummary

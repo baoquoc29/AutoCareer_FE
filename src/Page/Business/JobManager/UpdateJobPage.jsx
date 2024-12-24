@@ -2,12 +2,13 @@ import React, {useEffect, useState} from "react";
 import {Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {get_job_detail, update_job} from "../../../Redux/actions/JobThunk";
-import {get_all_industry_no_pag} from "../../../Redux/actions/IndustryThunk";
-import {useLocation, useNavigate} from "react-router-dom";
+import {get_all_industry_business_no_pag} from "../../../Redux/actions/IndustryThunk";
+import {useNavigate} from "react-router-dom";
 import dayjs from 'dayjs';
 import utc from 'dayjs-plugin-utc';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import {toast} from "react-toastify";
 
 const JobUpdatePage = () => {
     const dispatch = useDispatch();
@@ -15,8 +16,7 @@ const JobUpdatePage = () => {
     const industryOptions = useSelector((state) => state.IndustryReducer.industriesNoPag);
     const jobData = useSelector((state) => state.JobReducer.selectedJobDetail); // assuming job data is stored here
     const navigate = useNavigate();
-    const location = useLocation();
-    const { jobId } = location.state || {}; // Lấy jobId từ state
+    const jobId = localStorage.getItem("jobId");
     const [date, setDate] = useState(null);
     const [jobDescription, setJobDescription] = useState("");
     const [requirement, setRequirement] = useState("");
@@ -26,7 +26,7 @@ const JobUpdatePage = () => {
 
     // Load job data and industries
     useEffect(() => {
-        dispatch(get_all_industry_no_pag());
+        dispatch(get_all_industry_business_no_pag());
         dispatch(get_job_detail(jobId)); // Action to fetch job details
     }, [dispatch, jobId]);
 
@@ -48,16 +48,24 @@ const JobUpdatePage = () => {
 
 
     // Handle form submission
-    const handleSubmit = (values) => {
+    const handleSubmit = async (values) => {
         Modal.confirm({
             title: 'Bạn có chắc chắn muốn cập nhật công việc này?',
             content: 'Các thay đổi sẽ được lưu lại.',
             okText: 'Có',
             cancelText: 'Không',
-            onOk: () => {
-                const formattedValues = { ...values };
-                dispatch(update_job(jobId, formattedValues)); // Dispatch update action
-                navigate("/job-manager"); // Navigate back to job manager
+            onOk: async () => {
+                try {
+                    const formattedValues = { ...values };
+                    const response = await dispatch(update_job(jobId, formattedValues)); // Assuming Redux Toolkit's createAsyncThunk
+                    if (response.success) { // Kiểm tra kết quả trả về từ API
+                        navigate("/job-manager"); // Chỉ chuyển trang khi thành công
+                    }
+                } catch (error) {
+                    // Set the error message if the job creation fails
+                    const errorMsg = error.response?.data?.message || "Đã xảy ra lỗi!";
+                    toast.error(errorMsg);
+                }
             },
             onCancel: () => {
                 // Do nothing if canceled
@@ -206,6 +214,7 @@ const JobUpdatePage = () => {
                                             <Form.Item
                                                 label="Phúc lợi"
                                                 name="benefit"
+                                                rules={[{required: true, message: "Vui lòng nhập phúc lợi"}]}
                                             >
                                                 <ReactQuill
                                                     theme="snow"

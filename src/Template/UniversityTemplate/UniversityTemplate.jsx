@@ -16,7 +16,8 @@ export function UniversityTemplate() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(get_university_id(universityId));
-    }, [dispatch]);
+        console.log(universityId);
+    }, [dispatch,universityId]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {userData} = useSelector((state) => state.UserReducer);
     const toggleSidebar = () => {
