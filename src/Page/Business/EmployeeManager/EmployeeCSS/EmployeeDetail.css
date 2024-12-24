@@ -1,0 +1,67 @@
+.employee-detail-modal .modal-content {
+    padding: 20px;
+}
+
+.employee-detail-modal .ant-card-head-title {
+    text-align: center;
+    flex: 1;
+}
+
+.employee-detail-modal .ant-card-head {
+    display: flex;
+    justify-content: center;
+}
+
+
+.employee-detail-modal .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.employee-detail-modal .detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.employee-detail-modal .detail-label {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+.employee-detail-modal .detail-label > svg {
+    margin-right: 5px;
+}
+
+.employee-detail-modal .detail-value {
+    color: #555;
+    flex: 1;
+    overflow-wrap: break-word; /* Hoặc word-break: break-all; hoặc kết hợp cách 3 */
+    white-space: normal;
+}
+
+.employee-detail-modal .modal-footer-right {
+    text-align: right;
+    margin-bottom: -25px;
+}
+.model-detail{
+    padding: 0 !important;
+}
+.employee-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.employee-avatar {
+}
+.ed-body{
+    padding-bottom: -10px;
+}
+.employee-detail-modal{
+}

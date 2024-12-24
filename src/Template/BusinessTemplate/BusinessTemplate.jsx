@@ -42,7 +42,9 @@ export function BusinessTemplate() {
                     link: "/job-manager",
                     icon: "",
                 },
-                {label: "Danh sách nhân viên", link: "/employee-manager", icon: ""},
+                {label: "Danh sách nhân viên",
+                    link: "/employee-manager",
+                    icon: ""},
             ],
         },
         {
