@@ -58,7 +58,7 @@ const BusinessDetail = ({open, onClose}) => {
             <div className="row mb-4">
                 <div className="col-md-3 text-center">
                     <img
-                        src={business?.businessImageId ? `${GET_IMAGE_URI}${business?.businessImageId}` : "/placeholder-logo.png"}
+                        src={business?.businessImageId ? `${GET_IMAGE_URI}${business?.businessImageId}` : "placeholder-avatar.jpg"}
                         alt="Logo Doanh Nghiệp"
                         className="img-fluid logo-image rounded"
                         style={{maxHeight: "150px"}}
