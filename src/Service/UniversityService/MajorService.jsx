@@ -16,19 +16,25 @@ export class MajorService extends baseService {
         return this.post(`api/major/create`, formData)
     }
     delete_major = (ids) => {
-        return this.deleteData(`api/major/delete`,ids)
+        return this.deleteData(`api/major/delete`, ids)
     }
-    update_major = (id,formData) => {
+    update_major = (id, formData) => {
         return this.post(`api/major/update/${id}`, formData)
     }
-    set_stop_major_by_id = (id)=>{
+    set_stop_major_by_id = (id) => {
         return this.post(`api/major/inactive/${id}`)
     }
-    set_start_major_by_id = (id)=>{
+    set_start_major_by_id = (id) => {
         return this.post(`api/major/active/${id}`)
     }
-    get_total_major=()=>{
+    get_total_major = () => {
         return this.get('api/major/count-total')
+    }
+    get_total_students = () => {
+        return this.get('api/major/count-total-student')
+    }
+    get_student_major=()=>{
+        return this.get('api/major/count-student')
     }
 }
 

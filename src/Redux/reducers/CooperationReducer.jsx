@@ -1,8 +1,9 @@
-import {APPROVE_COOPERATION, REJECT_COOPERATION, SET_COOPERATION} from "../types/CooperationType";
+import {APPROVE_COOPERATION, REJECT_COOPERATION, SET_COOPERATION, TOTAL_COOPERATION} from "../types/CooperationType";
 
 const initialState = {
     cooperation: [],
     cooperationId: null,
+    totalCooperation:0
 }
 
 export const CooperationReducer = (state = initialState, action) => {
@@ -26,6 +27,11 @@ export const CooperationReducer = (state = initialState, action) => {
                 ...state,
             };
 
+        case TOTAL_COOPERATION:
+            return {
+                ...state,
+                totalCooperation: action.payload,
+            };
         default:
             return {...state}
     }

@@ -1,24 +1,22 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import { Input, Pagination, Card, Select} from "antd";
-import { SearchOutlined} from "@ant-design/icons";
+import {SearchOutlined} from "@ant-design/icons";
 import {
-    get_all_jobs,
-    get_approved_jobs,
-    get_pending_jobs,
-    get_rejected_jobs
-} from "../../../Redux/actions/AdminJobThunk";
-import {doc as XLSX} from "prettier";
-import {toast} from "react-toastify";
+    approved_workshop,
+    get_all_workshops,
+    get_approved_workshops, get_detail_workshop,
+    get_pending_workshops,
+    get_rejected_workshops, rejected_workshop,
+} from "../../../Redux/actions/AdminWorkshopThunk";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
-import JobTable from "./JobTable";
+import WorkshopTable from "./WorkshopTable";
 import {useNavigate} from "react-router-dom";
-import {get_job_detail} from "../../../Redux/actions/JobThunk";
 
-const AdminJobManager = () => {
+const AdminWorkshopManager = () => {
     const dispatch = useDispatch();
-    const jobs = useSelector((state) => state.AdminJobReducer.jobs);
-    const totalElements = useSelector((state) => state.AdminJobReducer.totalElements); // Tổng số bản ghi
+    const workshops = useSelector((state) => state.AdminWorkshopReducer.workshops);
+    const totalElements = useSelector((state) => state.AdminWorkshopReducer.totalElements); // Tổng số bản ghi
     const [pageNo, setPageNo] = useState(1); // Trang hiện tại
     const [pageSize, setPageSize] = useState(10);
     const [filteredData, setFilteredData] = useState([]);
@@ -36,77 +34,66 @@ const AdminJobManager = () => {
         return new Intl.DateTimeFormat('vi-VN', options).format(date); // Định dạng theo tiếng Việt
     };
 
-    const fetchJobs = async (currentTab) => {
+    const fetchWorkshops = async (currentTab) => {
         switch (currentTab) {
             case "ALL":
-                await dispatch(get_all_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
+                await dispatch(get_all_workshops(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
             case "PENDING":
-                await dispatch(get_pending_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
+                await dispatch(get_pending_workshops(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
             case "APPROVED":
-                await dispatch(get_approved_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
+                await dispatch(get_approved_workshops(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
             case "REJECTED":
-                await dispatch(get_rejected_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
+                await dispatch(get_rejected_workshops(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
             default:
                 break;
         }
-        console.log(jobs)
+        console.log(workshops)
     };
     useEffect(() => {
-        setFilteredData(jobs)
-    }, [jobs])
+        setFilteredData(workshops)
+    }, [workshops])
 
     useEffect(() => {
-        fetchJobs(currentTab);
+        fetchWorkshops(currentTab);
     }, [currentTab]);
 
     const handlePageChange = async (page, pageSize) => {
         setPageNo(page);
         setPageSize(pageSize);
-        await fetchJobs(page, pageSize, keyword);
+        await fetchWorkshops(page, pageSize, keyword);
     };
 
     const handleSearch = async (e) => {
         const value = e.target.value;
         setKeyword(value);
-        await fetchJobs();
+        await fetchWorkshops();
     };
 
     // Dữ liệu hiển thị theo tab
-    const data = Array.isArray(filteredData) ? filteredData.map((job, index) => ({
-        key: job.id || "",
+    const data = Array.isArray(filteredData) ? filteredData.map((workshop, index) => ({
+        key: workshop.id || "",
         stt: (pageNo - 1) * pageSize + index + 1,
-        title: job.title || "",
-        createdAt: formatDate(job.createdAt) || "",
-        state: job.statusBrowse || "",
-        expireDate: job.expireDate || "",
-        industryName: job.industryName || "",
-        businessName: job.businessName || "",
+        title: workshop.title || "",
+        description: workshop.description || "",
+        university: workshop.university || "",
+        location: workshop.location|| "",
+        state: workshop.statusBrowse || "",
+        expireDate: workshop.expireDate || "",
+        createdAt: formatDate(workshop.createdAt) || "",
+        createdBy: workshop.createdBy || "",
+        updatedAt: formatDate(workshop.updatedAt) || "",
+        updatedBy: workshop.updatedBy || "",
+        status: workshop.status || ""
     })) : [];
 
-    const handleViewDetails = (record) => {
-        // setSelectedJob(record);
-        console.log(record)
-        dispatch(get_job_detail(record.key));
-        navigate("/admin-job-detail");
-    };
-
-    const exportToExcel = () => {
-        if (filteredData && filteredData.length > 0) {
-            // Chuyển dữ liệu thành bảng tính Excel
-            const worksheet = XLSX.utils.json_to_sheet(filteredData);
-            const adminJobs = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(adminJobs, worksheet, 'Danh sách jobs');
-
-            // Xuất file Excel
-            XLSX.writeFile(adminJobs, 'Danh sách doanh nghiệp.xlsx');
-        } else {
-            // Nếu không có dữ liệu, hiển thị thông báo lỗi
-            toast.error("Không có dữ liệu để xuất");
-        }
+    const handleViewDetails = async (record) => {
+        // setSelectedWorkshop(record);
+        await dispatch(get_detail_workshop(record.key))
+        navigate("/admin-workshop-detail");
     };
 
 
@@ -117,15 +104,13 @@ const AdminJobManager = () => {
                     <div className="content__wrap">
                         <div className="mt-auto">
                             <div className="row">
-
                                 <div className={"col-md-12 mb-3 mt-3"}>
-                                    <Card title="Danh sách tin tuyển dụng">
+                                    <Card title="Danh sách hội thảo">
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between mb-3">
-
                                                 <div style={{display: 'flex', gap: '10px'}}>
                                                     <Input
-                                                        placeholder="Nhập tiêu đề... "
+                                                        placeholder="Nhập tên hội thảo... "
                                                         value={keyword}
                                                         onChange={handleSearch}
                                                         prefix={<SearchOutlined/>}
@@ -148,25 +133,9 @@ const AdminJobManager = () => {
                                                         <Option value="REJECTED">Bị từ chối</Option>
                                                     </Select>
                                                 </div>
-                                                {/*<div style={{display: "flex", gap: "10px"}}>*/}
-                                                {/*    <Button type="default" icon={<FileExcelOutlined/>} style={{*/}
-                                                {/*        backgroundColor: '#107C41',*/}
-                                                {/*        color: '#FFFFFF',*/}
-                                                {/*        marginLeft: '10px'*/}
-                                                {/*    }}>*/}
-                                                {/*        <CSVLink*/}
-                                                {/*            data={""}*/}
-                                                {/*            headers={""}*/}
-                                                {/*            filename={"DanhSachKhoa.csv"}*/}
-                                                {/*            style={{color: 'inherit', textDecoration: 'none'}}*/}
-                                                {/*        >*/}
-                                                {/*            Export excel*/}
-                                                {/*        </CSVLink>*/}
-                                                {/*    </Button>*/}
-                                                {/*</div>*/}
                                             </div>
 
-                                            <JobTable data={data} onDetail={handleViewDetails}></JobTable>
+                                            <WorkshopTable data={data} onDetail={handleViewDetails}></WorkshopTable>
                                             <ResultSummary totalElements={totalElements}></ResultSummary>
                                         </div>
                                         <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
@@ -193,4 +162,4 @@ const AdminJobManager = () => {
     )
 };
 
-export default AdminJobManager;
+export default AdminWorkshopManager;

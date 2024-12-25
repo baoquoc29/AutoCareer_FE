@@ -28,7 +28,6 @@ const ProfileUniversity = () => {
     // Lấy thông tin trường đại học từ Redux store
     const university = useSelector(state => state.UserReducer.userData?.university);
     const universityDetails = useSelector(state => state.UniversityReducer.university);
-
     // Dispatch các action để lấy thông tin khoa và ngành
     useEffect(() => {
         dispatch(get_all_sections());
@@ -129,7 +128,9 @@ const ProfileUniversity = () => {
                                                         Địa chỉ:
                                                     </Text>
                                                     <Text>
-                                                        {universityDetails.locationId}
+                                                        {universityDetails.location?.province?.fullName},
+                                                        {universityDetails.location?.district?.fullName},
+                                                        {universityDetails.location?.ward?.fullName}.
                                                     </Text>
                                                 </Space>
                                             </Col>

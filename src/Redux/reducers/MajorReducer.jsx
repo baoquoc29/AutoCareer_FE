@@ -1,10 +1,21 @@
-import {CREATE_MAJOR, DELETE_MAJOR_ID, SET_MAJOR, SET_MAJOR_ID, TOTAL_MAJOR, UPDATE_MAJOR_ID} from "../types/MajorType";
+import {
+    COUNT_STUDENT_MAJOR,
+    CREATE_MAJOR,
+    DELETE_MAJOR_ID,
+    SET_MAJOR,
+    SET_MAJOR_ID,
+    TOTAL_MAJOR,
+    TOTAL_STUDENT,
+    UPDATE_MAJOR_ID
+} from "../types/MajorType";
 
 
 const initialState = {
     majors: [],
     majorId: null,
-    totalMajor: 0
+    totalMajor: 0,
+    totalStudent: 0,
+    countStudentMajor: {}
 }
 
 export const MajorReducer = (state = initialState, action) => {
@@ -34,6 +45,14 @@ export const MajorReducer = (state = initialState, action) => {
                 ...state,
                 totalMajor: action.payload,
             }
+        case TOTAL_STUDENT:
+            return {
+                ...state,
+                totalStudent: action.payload,
+            };
+        case COUNT_STUDENT_MAJOR:
+            state.countStudentMajor = action.payload;
+            return {...state};
         default:
             return {...state}
     }

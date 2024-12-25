@@ -41,13 +41,10 @@ export function AdminTemplate() {
         }, {
             label: 'Quản lý hội thảo',
             icon: 'fa-solid fa-briefcase',
-            subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''},]
-        }, {
-            subMenu: [{label: 'Danh sách hội thảo', link: '/workshop-manager', icon: ''}, {
-                label: 'Yêu cầu chờ duyệt',
-                link: '/section-manager',
-                icon: ''
-            },]
+            subMenu: [{
+                label: 'Danh sách hội thảo',
+                link: '/admin-workshop-manager',
+                icon: ''},]
         },
         {
             label: 'Quản lý ngành nghề',

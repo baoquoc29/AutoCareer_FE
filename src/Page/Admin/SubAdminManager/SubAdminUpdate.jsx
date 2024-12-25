@@ -1,14 +1,24 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
-import {Modal, Form, Input, Upload, Button, Row, Col, Select} from "antd";
-import {get_all_sub_admin, get_detail_sub_admin, update_sub_admin} from "../../../Redux/actions/SubAdminThunk";
+import {Modal, Form, Input, Upload, Button, Row, Col, Select, Space, Typography, Divider} from "antd";
+import {
+    get_all_paging_sub_admin,
+    get_detail_sub_admin,
+    update_sub_admin
+} from "../../../Redux/actions/SubAdminThunk";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './SubAdminUpdate.css';
 import SubAdminValidation from "../../../Utils/Validation/University/SubAdminValidation";
+import * as state from "../../../Redux/reducers/SubAdminReducer";
+
+const {Title, Text} = Typography;
+
 
 const SubAdminUpdate = ({open, onClose, subAdminData}) => {
+    const pageNo = useState(() => state.SubAdminReducer.pageNo);
+    const pageSize = useState(() => state.SubAdminReducer.pageSize);
     const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: {
@@ -44,7 +54,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
             .then(async () => {
                 onClose();
                 await dispatch(get_detail_sub_admin(subAdminData.id));
-                await dispatch(get_all_sub_admin());
+                await dispatch(get_all_paging_sub_admin(pageNo, pageSize));
             })
             .catch((error) => {
                 toast.error(error.messages);
@@ -67,8 +77,9 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
 
     return (
         <Modal open={open} onCancel={onClose} footer={null} width={700}>
-            <h2 className="modal-sub-admin-title">Chỉnh sửa quản trị viên</h2>
-
+            {/*<h2 className="modal-sub-admin-title">Chỉnh sửa quản trị viên</h2>*/}
+            <Title level={4}>Chỉnh sửa quản trị viên</Title>
+            <Divider style={{marginTop: 1}}/>
             <Form layout="vertical" onFinish={formik.handleSubmit}>
                 <Row gutter={[16, 16]}>
                     <Col span={12}>
@@ -79,8 +90,8 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
                                 justifyContent: "center"
                             }}
                             validateStatus={formik.errors.subAdminImage && formik.touched.subAdminImage ? 'error' : ''}
-                            help={formik.errors.subAdminImage && formik.touched.subAdminImage ? formik.errors.subAdminImage : ''}
-                        >
+                            help={formik.errors.subAdminImage && formik.touched.subAdminImage ? formik.errors.subAdminImage : ''
+                        }>
 
                             <div className="image-sub-admin-container">
                                 {formik.values.subAdminImage ? (
@@ -127,7 +138,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
                         <Form.Item label="Họ tên"
                                    validateStatus={formik.errors.name && formik.touched.name ? 'error' : ''}
                                    help={formik.errors.name && formik.touched.name ? formik.errors.name : ''}
-                                   >
+                        >
                             <Input name="name" value={formik.values.name} onChange={formik.handleChange}/>
                         </Form.Item>
                     </Col>
@@ -135,7 +146,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
                         <Form.Item label="Giới tính"
                                    validateStatus={formik.errors.gender && formik.touched.gender ? 'error' : ''}
                                    help={formik.errors.gender && formik.touched.gender ? formik.errors.gender : ''}
-                                   >
+                        >
                             <Select
                                 name="gender"
                                 value={formik.values.gender}
@@ -168,14 +179,15 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
                     </Col>
                 </Row>
                 <Form.Item>
-
-                    <div className="action-buttons">
-                        <Button type="primary" htmlType="submit">
-                            Lưu
-                        </Button>
-                        <Button type="default" onClick={onClose}>
-                            Hủy
-                        </Button>
+                    <div style={{textAlign: "right", marginTop: "16px"}}>
+                        <Space>
+                            <Button danger onClick={onClose}>
+                                Hủy
+                            </Button>
+                            <Button type="primary" htmlType="submit">
+                                Lưu
+                            </Button>
+                        </Space>
                     </div>
                 </Form.Item>
             </Form>
