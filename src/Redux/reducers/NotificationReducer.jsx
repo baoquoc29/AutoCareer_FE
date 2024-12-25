@@ -23,9 +23,17 @@ export const NotificationReducer = (state = initialState, action) => {
         case GET_NOTIFICATIONS:
             return {
                 ...state,
-                notifications: [...state.notifications, ...action.payload.content],
+                notifications: [
+                    ...state.notifications,
+                    ...action.payload.content.filter(
+                        (newNotification) =>
+                            !state.notifications.some(
+                                (existingNotification) => existingNotification.id === newNotification.id
+                            )
+                    )
+                ],
                 totalElements: action.payload.totalElements,
-            }
+            };
         case MARK_ALL_AS_READ:
             return {
                 ...state,

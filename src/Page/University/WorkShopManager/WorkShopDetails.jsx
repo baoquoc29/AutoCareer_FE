@@ -51,6 +51,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                 try {
                     await dispatch(accept_company_work_shop(body));
                     await dispatch(get_all_company_pending(idWorkShop));
+                    await dispatch(get_all_company_accept(idWorkShop));
                     setIsModalPendingCompaniesVisible(false);
                     toast.success("Doanh nghiệp đã được chấp nhận");
                 } catch (error) {

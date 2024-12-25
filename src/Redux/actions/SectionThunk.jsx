@@ -1,5 +1,12 @@
 import {sectionService} from "../../Service/UniversityService/SectionService";
-import {CREATE_SECTION, DELETE_SECTION, SET_SECTIONS, TOTAL_SECTION, UPDATE_SECTION_ID} from "../types/SectionType";
+import {
+    COUNT_SECTION_MAJOR,
+    CREATE_SECTION,
+    DELETE_SECTION,
+    SET_SECTIONS,
+    TOTAL_SECTION,
+    UPDATE_SECTION_ID
+} from "../types/SectionType";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
@@ -95,6 +102,19 @@ export const get_total_section = () => {
             const res = await sectionService.get_total_section();
             dispatch({
                 type: TOTAL_SECTION,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_count_major_by_section = () => {
+    return async (dispatch) => {
+        try {
+            const res = await sectionService.get_major_section();
+            dispatch({
+                type: COUNT_SECTION_MAJOR,
                 payload: res
             })
         } catch (error) {

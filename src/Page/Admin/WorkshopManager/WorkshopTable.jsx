@@ -1,17 +1,27 @@
 import React from "react";
-import {Button, Space, Table, Tag, Tooltip} from "antd";
+import {Button, Modal, Space, Table, Tag, Tooltip} from "antd";
 import {EyeOutlined} from "@ant-design/icons";
 
-const BusinessTable = ({data, onDetail}) => {
+const WorkshopTable = ({data, onDetail}) => {
 
     const columns = [{
         title: "STT", dataIndex: "stt", key: "stt", align: "center",
     }, {
-        title: "Tên doanh nghiệp", dataIndex: "name", key: "name", align: "left",
+        title: "Tin hội thảo",
+        dataIndex: "title",
+        key: "title",
+        align: "left",
     }, {
-        title: "Mã doanh nghiệp", dataIndex: "taxCode", key: "taxCode", align: "left",
+        title: "Trường học",
+        dataIndex: "university",
+        key: "university",
+        align: "left",
+        render: (university) => {
+            return university.name;
+        }
     }, {
-        title: "Email", dataIndex: "email", key: "email", align: "left",
+        title: "Địa chỉ", dataIndex: "location", key: "location", align: "left",
+        render: (location) => {return `${location?.district?.name}, ${location?.province?.name}`}
     }, {
         title: "Thời gian tạo", dataIndex: "createdAt", key: "createdAt", align: "left",
     }, {
@@ -38,24 +48,23 @@ const BusinessTable = ({data, onDetail}) => {
             return <Tag color={color}>{stateText}</Tag>;
         },
     }, {
-        title: "Hành động", key: "action", align: "center", render: (_, record) => (
-            <Space>
-                <Tooltip title="Xem chi tiết">
-                    <Button type={"primary"} icon={<EyeOutlined />} onClick={() => onDetail(record)} />
-                </Tooltip>
-            </Space>),
+        title: "Hành động", key: "action", align: "center", render: (_, record) => (<Space>
+            <Tooltip title="Xem chi tiết">
+                <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onDetail(record)}/>
+            </Tooltip>
+        </Space>),
     },];
 
     return (<>
-            <Table
-                columns={columns}
-                dataSource={data}
-                pagination={false}
-                locale={{
-                    emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
-                }}
-            />
-        </>)
+        <Table
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            locale={{
+                emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
+            }}
+        />
+    </>)
 };
 
-export default BusinessTable;
+export default WorkshopTable;

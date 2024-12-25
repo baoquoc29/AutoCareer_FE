@@ -1,35 +1,29 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Tabs, Button, Input, Pagination, Card} from "antd";
-import {FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
-
-import {doc as XLSX} from "prettier";
-import {toast} from "react-toastify";
+import { Input, Pagination, Card, Select} from "antd";
+import { SearchOutlined} from "@ant-design/icons";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import UniversityTable from "./UniversityTable";
-import {CSVLink} from "react-csv";
 import UniversityDetail from "./UniversityDetail";
 import {
-    approved_university,
-    get_all_universities, get_approved_universities, get_pending_universities, get_rejected_universities,
-    rejected_university
+    get_all_universities,
+    get_approved_universities, 
+    get_detail_university,
+    get_pending_universities,
+    get_rejected_universities,
 } from "../../../Redux/actions/AdminUniversityThunk";
 
 const UniversityManager = () => {
     const dispatch = useDispatch();
     const universities = useSelector((state) => state.AdminUniversityReducer.universities);
     const totalElements = useSelector((state) => state.AdminUniversityReducer.totalElements); // Tổng số bản ghi
-    const totalPages = useSelector((state) => state.AdminUniversityReducer.totalPages);
-    const [pageNo, setPageNo] = useState(1); // Trang hiện tại
+    const [pageNo, setPageNo] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [filteredData, setFilteredData] = useState([]);
-    const [updatedData, setUpdatedData] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [load, setLoad] = useState(false);
-    const [selectedUniversity, setSelectedUniversity] = useState(null);
-    const [currentTab, setCurrentTab] = useState("Tất cả");
+    const [currentTab, setCurrentTab] = useState("ALL");
     const [keyword, setKeyword] = useState("");
-
+    const {Option} = Select;
+    const [open, setOpen] = useState(false);
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/A"; // Trả về "N/A" nếu không có ngày giờ
@@ -40,33 +34,26 @@ const UniversityManager = () => {
         return new Intl.DateTimeFormat('vi-VN', options).format(date); // Định dạng theo tiếng Việt
     };
 
-    // useEffect(() => {
-    //     setFilteredData(universityes || []);
-    // }, [universityes]);
-
     const fetchUniversities = (currentTab) => {
         switch (currentTab) {
-            case "Tất cả":
-                dispatch(get_all_universities(pageNo - 1, pageSize, keyword));
+            case "ALL":
+                dispatch(get_all_universities(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
-            case "Chờ duyệt":
-                dispatch(get_pending_universities(pageNo - 1, pageSize, keyword));
+            case "PENDING":
+                dispatch(get_pending_universities(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
-            case "Đã phê duyệt":
-                dispatch(get_approved_universities(pageNo - 1, pageSize, keyword));
+            case "APPROVED":
+                dispatch(get_approved_universities(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
-            case "Bị từ chối":
-                dispatch(get_rejected_universities(pageNo - 1, pageSize, keyword));
+            case "REJECTED":
+                dispatch(get_rejected_universities(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
             default:
                 break;
         }
         console.log(universities)
     };
-    // Fetch data khi thay đổi tab, trang, kích thước trang hoặc keyword
-    // useEffect(() => {
-    //     fetchUniversities();
-    // }, [fetchUniversities]);
+
     useEffect(() => {
         setFilteredData(universities)
     }, [universities])
@@ -97,44 +84,17 @@ const UniversityManager = () => {
         createdAt: formatDate(university.createdAt),
         universityImageId: university.logoImageId,
         location: university.location,
-        state: university.userAccount.state,
+        state: university?.userAccount?.state,
     })) : [];
 
     const handleViewDetails = (record) => {
-        setSelectedUniversity(record);
+        dispatch(get_detail_university(record.key))
+        setOpen(true);
     };
-    const handleReject = (req) => {
-        console.log(req);
-        dispatch(rejected_university(req));
-        fetchUniversities(currentTab);
-        handleViewDetails(selectedUniversity);
+    const handleCloseDetail = async () => {
+        setOpen(false);
+        await fetchUniversities(currentTab);
     };
-    const handleApprove = (req) => {
-        console.log(req);
-        dispatch(approved_university(req));
-    }
-    const handleCloseDetail = () => {
-        setSelectedUniversity(null); // Đóng chi tiết
-    };
-    const exportToExcel = () => {
-        if (filteredData && filteredData.length > 0) {
-            // Chuyển dữ liệu thành bảng tính Excel
-            const worksheet = XLSX.utils.json_to_sheet(filteredData);
-            const adminUniversities = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(adminUniversities, worksheet, 'Danh sách universityes');
-
-            // Xuất file Excel
-            XLSX.writeFile(adminUniversities, 'Danh sách doanh nghiệp.xlsx');
-        } else {
-            // Nếu không có dữ liệu, hiển thị thông báo lỗi
-            toast.error("Không có dữ liệu để xuất");
-        }
-    };
-
-    const tabs = [{label: "Tất cả", key: "Tất cả"}, {label: "Chờ duyệt", key: "Chờ duyệt"}, {
-        label: "Đã phê duyệt",
-        key: "Đã phê duyệt"
-    }, {label: "Bị từ chối", key: "Bị từ chối"},];
 
     return (
         <>
@@ -143,48 +103,38 @@ const UniversityManager = () => {
                     <div className="content__wrap">
                         <div className="mt-auto">
                             <div className="row">
-                                {selectedUniversity ? (
-                                    <div className="col-md-4 mb-3 border-5">
                                         <UniversityDetail
-                                            university={selectedUniversity}
-                                            onReject={handleReject}
-                                            onApprove={handleApprove}
+                                            open={open}
                                             onClose={handleCloseDetail}
                                         />
-                                    </div>
-                                ) : null}
-                                <div className={selectedUniversity ? "col-md-8 mb-3 mt-3" : "col-md-12 mb-3 mt-3"}>
+                                <div className={"col-md-12 mb-3 mt-3"}>
                                     <Card title="Danh sách tài khoản trường học">
-
-                                        <Tabs
-                                            defaultActiveKey="Tất cả"
-                                            onChange={(key) => setCurrentTab(key)}
-                                            items={tabs}
-                                        />
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between mb-3">
-                                                <Input
-                                                    placeholder="Nhập tên hoặc email... "
-                                                    value={keyword}
-                                                    onChange={handleSearch}
-                                                    prefix={<SearchOutlined/>}
-                                                    style={{width: 200}}
-                                                />
-                                                <div style={{display: "flex", gap: "10px"}}>
-                                                    <Button type="default" icon={<FileExcelOutlined/>} style={{
-                                                        backgroundColor: '#107C41',
-                                                        color: '#FFFFFF',
-                                                        marginLeft: '10px'
-                                                    }}>
-                                                        <CSVLink
-                                                            data={""}
-                                                            headers={""}
-                                                            filename={"DanhSachKhoa.csv"}
-                                                            style={{color: 'inherit', textDecoration: 'none'}}
-                                                        >
-                                                            Export excel
-                                                        </CSVLink>
-                                                    </Button>
+                                                <div style={{display: 'flex', gap: '10px'}}>
+                                                    <Input
+                                                        placeholder="Nhập tên hoặc email... "
+                                                        value={keyword}
+                                                        onChange={handleSearch}
+                                                        prefix={<SearchOutlined/>}
+                                                        style={{width: 200}}
+                                                    />
+                                                    <Select
+                                                        placeholder="Chọn trạng thái duyệt"
+                                                        value={currentTab}
+                                                        showSearch
+                                                        onChange={(value) => setCurrentTab(value)}
+                                                        style={{width: 200}}
+                                                        filterOption={(input, option) => {
+                                                            const childrenText = String(option.props.children || "");
+                                                            return childrenText.toLowerCase().includes(input.toLowerCase());
+                                                        }}
+                                                    >
+                                                        <Option value="ALL">Tất cả trạng thái</Option>
+                                                        <Option value="PENDING">Đang chờ duyệt</Option>
+                                                        <Option value="APPROVED">Đã chấp nhập</Option>
+                                                        <Option value="REJECTED">Bị từ chối</Option>
+                                                    </Select>
                                                 </div>
                                             </div>
 

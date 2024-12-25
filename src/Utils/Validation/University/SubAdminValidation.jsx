@@ -1,5 +1,8 @@
 import * as Yup from "yup";
 
+const FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
+
 const SubAdminValidation = (fields = []) => {
     const schema = {};
 
@@ -46,18 +49,16 @@ const SubAdminValidation = (fields = []) => {
 
     if (fields.includes("subAdminImage")) {
         schema.subAdminImage = Yup.mixed()
-            // .required("Ảnh không được để trống.")
-            .test(
-                "fileType",
-                "Chỉ được tải lên file ảnh (jpg, jpeg, png).",
-                (value) =>
-                    value &&
-                    ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
-            )
+            .nullable()
             .test(
                 "fileSize",
                 "Kích thước ảnh không được vượt quá 10MB.",
-                (value) => value && value.size <= 10 * 1024 * 1024
+                (value) => !value || (value && value.size <= FILE_SIZE)
+            )
+            .test(
+                "fileType",
+                "Định dạng ảnh không hợp lệ. Chỉ chấp nhận JPEG, PNG, JPG.",
+                (value) => !value || (value && SUPPORTED_FORMATS.includes(value.type))
             );
     }
 

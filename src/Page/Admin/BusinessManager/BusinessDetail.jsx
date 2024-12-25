@@ -1,14 +1,18 @@
-import React, { useState} from "react";
-import {Button, Modal, Space, Input, Image, Tag} from "antd";
+import React, {useState} from "react";
+import {Button, Modal, Space, Input, Image, Tag, Divider, Typography, Row, Col} from "antd";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
-import "./BusinessDetail.css";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import "./BusinessDetail.css";
+import {useDispatch, useSelector} from "react-redux";
+import {approved_business, rejected_business} from "../../../Redux/actions/AdminBusinessThunk";
+import {get_business_by_id} from "../../../Redux/actions/BusinessThunk";
+const {Title, Text} = Typography;
 
-const BusinessDetail = ({business, onApprove, onReject, onClose}) => {
-
+const BusinessDetail = ({open, onClose}) => {
+    const dispatch = useDispatch();
     const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
     const [message, setMessage] = useState(""); // Trạng thái lưu lý do từ chối
-
+    const business = useSelector(state => state.BusinessReducer.business);
     const handleReject = () => {
         setIsRejectModalVisible(true); // Hiển thị modal từ chối
     };
@@ -22,8 +26,10 @@ const BusinessDetail = ({business, onApprove, onReject, onClose}) => {
             cancelText: 'Hủy',
             onOk() {
                 console.log(`Rejected business: ${business.name}`);
-                let req = {id: business.key, message: message};
-                onReject(req); // Gửi lý do từ chối
+                let req = {id: business.id, message: message};
+                dispatch(rejected_business(req)).then(()=>{
+                    dispatch(get_business_by_id(business.id))
+                });
                 setMessage(""); // Reset lý do từ chối
                 setIsRejectModalVisible(false); // Đóng modal
             },
@@ -38,95 +44,88 @@ const BusinessDetail = ({business, onApprove, onReject, onClose}) => {
             cancelText: 'Hủy',
             onOk() {
                 console.log(`Approved business: ${business.name}`);
-                onApprove({id: business.key}); // Gửi lý do từ chối
+                dispatch(approved_business({id: business.key})).then(()=>{
+                    dispatch(get_business_by_id(business.id))
+                }); // Gửi lý do từ chối
             },
         });
     }
 
-    if (!business) {
-        return (
-            <div style={{textAlign: "center", padding: "20px"}}>
-                <p>Chọn doanh nghiệp để xem chi tiết.</p>
-            </div>
-        );
-    }
-
     return (
-        <section id="content" className="content">
-            <div className="content__wrap">
-                <div className="container">
-                    <div className="card card-profile-business ">
-                        <div className="row mb-4">
-                            <div className="col-md-3 text-center">
-                                <img
-                                    src={business.businessImageId ? `${GET_IMAGE_URI}${business.businessImageId}` : "/placeholder-logo.png"}
-                                    alt="Logo Doanh Nghiệp"
-                                    className="img-fluid logo-image rounded"
-                                    style={{maxHeight: "150px"}}
-                                />
-                            </div>
-                            <div className="col-md-9">
-                                <h1 className="business-name">{business.name || "Chưa cập nhật"}</h1>
-                                <p className="business-description">{business.description || "Mô tả chưa được cung cấp."}</p>
-                                <Tag
-                                    color={business.state === "APPROVED" ? "green" : business.state === "REJECTED" ? "red" : "orange"}>
-                                    {business.state === "APPROVED" ? "Đã phê duyệt" : business.state === "REJECTED" ? "Đã từ chối" : "Đang chờ duyệt"}
-                                </Tag>
-                            </div>
-                        </div>
-
-                        {/* General Information */}
-                        <div className="row mb-4">
-                            <p><strong>Tên Doanh Nghiệp:</strong> {business.name || "Chưa cập nhật"}</p>
-                            <p><strong>Mã số thuế:</strong> {business.taxCode || "Chưa cập nhật"}</p>
-                            <p><strong>Website:</strong> <a href={business.website || "#"} target="_blank"
-                                                            rel="noopener noreferrer">{business.website || "Chưa cập nhật"}</a>
-                            </p>
-                            <p><strong>Năm thành lập:</strong> {business.foundYear || "Chưa cập nhật"}</p>
-                            <p><strong>Quy mô doanh nghiệp:</strong> {business.companySize || "Chưa cập nhật"}</p>
-                            <p><strong>Địa Chỉ:</strong> {business.location ? (
-                                `${business.location.province?.fullName || ""}, ${business.location.district?.fullName || ""}, ${business.location.ward?.fullName || ""}, ${business.location.description || ""}`
-                            ) : "Chưa cập nhật"}</p>
-                            <p><strong>Email:</strong> {business.email || "Chưa cập nhật"}</p>
-                            <p><strong>Điện Thoại:</strong> {business.phone || "Chưa cập nhật"}</p>
-                            <div className="row mb-4">
-                                <p><strong>Ảnh Giấy Phép Kinh Doanh:</strong></p>
-                                {business.licenseImageId ? (
-                                    <div className="text-center">
-                                        <Image
-                                            src={business.licenseImageId ? `${GET_IMAGE_URI}${business.licenseImageId}` : "/placeholder-logo.png"}
-                                            alt="Logo Doanh Nghiệp"
-                                            className="img-fluid logo-image rounded"
-                                            style={{maxHeight: "150px"}}
-                                            preview={true}
-                                        />
-                                    </div>
-                                ) : (
-                                    <p>Chưa có ảnh giấy phép kinh doanh.</p>
-                                )}
-                            </div>
-                        </div>
-                        {/* Action Buttons */}
-                        <div className="text-center mt-4">
-                            <Space>
-                                {business.state === "PENDING" && (
-                                    <>
-                                        <Button type="primary" onClick={() => handleApproved()}>
-                                            Duyệt
-                                        </Button>
-                                        <Button danger onClick={handleReject}>
-                                            Từ chối
-                                        </Button>
-                                    </>
-                                )}
-                                <Button onClick={onClose}>Đóng</Button>
-                            </Space>
-                        </div>
-                    </div>
+        <Modal open={open} onCancel={onClose} footer={null} width={700}>
+            <Title level={4}>Chi tiết tài khoản doanh nghiệp</Title>
+            <Divider style={{marginTop: 1}}/>
+            <div className="row mb-4">
+                <div className="col-md-3 text-center">
+                    <img
+                        src={business?.businessImageId ? `${GET_IMAGE_URI}${business?.businessImageId}` : "/placeholder-logo.png"}
+                        alt="Logo Doanh Nghiệp"
+                        className="img-fluid logo-image rounded"
+                        style={{maxHeight: "150px"}}
+                    />
+                </div>
+                <div className="col-md-9">
+                    <h1 className="business-name">{business?.name || "Chưa cập nhật"}</h1>
+                    <p className="business-description">{business?.description || "Mô tả chưa được cung cấp."}</p>
+                    <Tag
+                        color={business?.userAccount?.state === "APPROVED" ? "green" : business?.userAccount?.state === "REJECTED" ? "red" : "orange"}>
+                        {business?.userAccount?.state === "APPROVED" ? "Đã phê duyệt" : business?.userAccount?.state === "REJECTED" ? "Đã từ chối" : "Đang chờ duyệt"}
+                    </Tag>
                 </div>
             </div>
 
-            {/* Reject Modal */}
+            {/* General Information */}
+            <div className="row mb-4">
+                {/*<p><strong>Tên Doanh Nghiệp:</strong> {business?.name || "Chưa cập nhật"}</p>*/}
+                <p><strong>Mã số thuế:</strong> {business?.taxCode || "Chưa cập nhật"}</p>
+                <p><strong>Website:</strong> <a href={business?.website || "#"} target="_blank"
+                                                rel="noopener noreferrer">{business?.website || "Chưa cập nhật"}</a>
+                </p>
+                <p><strong>Năm thành lập:</strong> {business?.foundYear || "Chưa cập nhật"}</p>
+                <p><strong>Quy mô doanh nghiệp:</strong> {business?.companySize || "Chưa cập nhật"}</p>
+                <p><strong>Địa Chỉ:</strong> {business?.location ? (
+                    `${business.location.province?.fullName || ""}, ${business.location.district?.fullName || ""}, ${business.location.ward?.fullName || ""}, ${business.location.description || ""}`
+                ) : "Chưa cập nhật"}</p>
+                <p><strong>Email:</strong> {business?.email || "Chưa cập nhật"}</p>
+                <p><strong>Điện Thoại:</strong> {business?.phone || "Chưa cập nhật"}</p>
+                <div className="row mb-4">
+                    <p><strong>Ảnh Giấy Phép Kinh Doanh:</strong></p>
+                    {business?.licenseImageId ? (
+                        <div className="text-center">
+                            <Image
+                                src={business?.licenseImageId ? `${GET_IMAGE_URI}${business?.licenseImageId}` : "/placeholder-logo.png"}
+                                alt="Logo Doanh Nghiệp"
+                                className="img-fluid logo-image rounded"
+                                style={{maxHeight: "150px"}}
+                                preview={true}
+                            />
+                        </div>
+                    ) : (
+                        <p>Chưa có ảnh giấy phép kinh doanh.</p>
+                    )}
+                </div>
+            </div>
+            {/* Action Buttons */}
+            <div style={{textAlign: "right", marginTop: "16px"}}>
+                <Row justify="space-between" align="middle">
+                    <Col>
+                        <Button onClick={onClose}>Đóng</Button>
+                    </Col>
+                    <Col>
+                        <Space>
+                            <Button type="primary" onClick={() => handleApproved()}
+                                    disabled={business?.userAccount?.state !== "PENDING"}>
+                                Duyệt
+                            </Button>
+                            <Button danger onClick={handleReject}
+                                    disabled={business?.userAccount?.state !== "PENDING"}>
+                                Từ chối
+                            </Button>
+                        </Space>
+                    </Col>
+                </Row>
+            </div>
+
             <Modal
                 open={isRejectModalVisible}
                 onCancel={() => setIsRejectModalVisible(false)}
@@ -153,7 +152,7 @@ const BusinessDetail = ({business, onApprove, onReject, onClose}) => {
                     }}
                 />
             </Modal>
-        </section>
+        </Modal>
     );
 };
 

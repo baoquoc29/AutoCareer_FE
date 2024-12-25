@@ -7,17 +7,17 @@ export class AdminBusinessService extends baseService {
     };
 
     get_all_businesses = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/all-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-all-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
 
     get_pending_businesses = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/pending-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-pending-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_approved_businesses = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/approved-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-approved-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_rejected_businesses = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/rejected-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-rejected-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
 
 

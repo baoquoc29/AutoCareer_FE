@@ -3,8 +3,10 @@ import {
     APPROVED_UNIVERSITY,
     GET_ALL_UNIVERSITIES,
     GET_APPROVED_UNIVERSITIES,
+    GET_DETAIL_UNIVERSITY,
     GET_PENDING_UNIVERSITIES,
-    GET_REJECTED_UNIVERSITIES, REJECTED_UNIVERSITY,
+    GET_REJECTED_UNIVERSITIES,
+    REJECTED_UNIVERSITY,
 } from "../types/AdminUniversityType";
 import {toast} from "react-toastify";
 import {adminUniversityService} from "../../Service/AdminService/AdminUniversityService";
@@ -15,6 +17,7 @@ export const approved_university = (id) => {
             const res = await adminUniversityService.approved_university(id);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Phê duyệt thành công")
                 dispatch({
                     type: APPROVED_UNIVERSITY,
                     payload: res.data
@@ -32,6 +35,7 @@ export const rejected_university = (req) => {
             const res = await adminUniversityService.rejected_university(req);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Từ chối thành công")
                 dispatch({
                     type: REJECTED_UNIVERSITY,
                     payload: res.data
@@ -100,6 +104,23 @@ export const get_rejected_universities = (pageNo, pageSize, keyword) => {
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_REJECTED_UNIVERSITIES,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+
+export const get_detail_university = (id) => {
+    return async (dispatch) => {
+        try {
+            const res = await adminUniversityService.get_detail_university(id);
+            console.log(res)
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: GET_DETAIL_UNIVERSITY,
                     payload: res.data
                 })
             }
