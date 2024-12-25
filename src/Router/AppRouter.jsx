@@ -43,6 +43,7 @@ import UniversityManager from "../Page/Admin/UniversityManager/UniversityManager
 import AdminJobManager from "../Page/Admin/JobManager/AdminJobManager";
 import WorkshopListPortal from "../Page/Portal/WorkshopListPortal";
 import {DashboardJob} from "../Page/Business/DashboardJob";
+import JobDetailPortal from "../Page/Portal/Business/JobDetailPortal";
 
 export function AppRouter() {
     return (
@@ -59,6 +60,7 @@ export function AppRouter() {
                     <Route path={"/"} element={<HomeScreen/>}/>
                     <Route path={"/work-shop-all"} element={<WorkshopListPortal/>}/>
                     <Route path="/workshop-details/:id" element={<WorkshopDetailsScreen />} />
+                    <Route path={"/job-portal-detail/:id"} element={<JobDetailPortal/>}/>
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
@@ -84,7 +86,6 @@ export function AppRouter() {
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
-                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                     <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                     <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
 

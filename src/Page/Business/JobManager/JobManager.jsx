@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, Input, Modal, Pagination, Select} from "antd";
-import {DownloadOutlined, PlusOutlined, SearchOutlined,} from "@ant-design/icons";
+import {PlusOutlined, SearchOutlined,} from "@ant-design/icons";
 import JobTable from "./JobTable";
 import * as XLSX from "xlsx";
 import {get_all_job_of_business_paging, get_job_detail, inactive_job} from "../../../Redux/actions/JobThunk";

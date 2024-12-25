@@ -7,8 +7,8 @@ import {
     CheckCircleOutlined,
     ClockCircleOutlined,
     DollarOutlined,
-    ExclamationCircleOutlined,
-    QuestionCircleOutlined,
+    ExclamationCircleOutlined, FieldTimeOutlined, FormOutlined,
+    QuestionCircleOutlined, UserOutlined,
 } from "@ant-design/icons";
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
 
@@ -78,10 +78,11 @@ const JobDetailPage = () => {
                                     {/* Nội dung công việc */}
 
                                     <Space direction="vertical" size={4} style={{width: "100%"}}>
-                                        <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Chi tiết
+                                        <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Chi
+                                            tiết
                                             tuyển dụng</Divider>
                                         <Text strong style={{color: "#ffafcc"}}>
-                                            <ExclamationCircleOutlined  style={{color: "#ffafcc", marginRight: "8px"}}/>
+                                            <ExclamationCircleOutlined style={{color: "#ffafcc", marginRight: "8px"}}/>
                                             Mô tả công việc:
                                         </Text>
                                         <div style={{whiteSpace: "pre-wrap"}}>
@@ -141,32 +142,61 @@ const JobDetailPage = () => {
                                             <Row gutter={[16, 16]}>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#096dd9"}}>Tiêu đề:</Text>
+                                                        <Text strong style={{color: "#096dd9"}}>Tiêu đề</Text>
                                                         <Text>{jobData.title}</Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
                                                         <Text strong style={{color: "#ff70a6"}}>
-                                                            <DollarOutlined style={{color: "#ff70a6", marginRight: "8px"}}/>
-                                                            Mức lương:
+                                                            <DollarOutlined
+                                                                style={{color: "#ff70a6", marginRight: "8px"}}/>
+                                                            Mức lương
                                                         </Text>
                                                         <Text>
-                                                            {formatSalary(jobData.salary)}
+                                                            {jobData.fromSalary === 1 && jobData.toSalary === 1
+                                                                ? "Lương thỏa thuận"
+                                                                : `${formatSalary(jobData.fromSalary)} - ${formatSalary(jobData.toSalary)}`}
                                                         </Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
-                                                        <Text strong>Kinh nghiệm:</Text>
+                                                        <Text strong style={{color: "#ff70a6"}}>
+                                                            <UserOutlined
+                                                                style={{color: "#ff70a6", marginRight: "8px"}}/>
+                                                            Cấp bậc
+                                                        </Text>
+                                                        <Text>
+                                                            {jobData.rank}
+                                                        </Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Space>
+                                                            <FormOutlined
+                                                                style={{color: "#ff70a6", marginRight: "2px"}}/>
+                                                            <Text strong style={{color: "#ff70a6"}}>Hình thức làm
+                                                                việc</Text>
+                                                        </Space>
+                                                        <Text>
+                                                            {jobData.workForm}
+                                                        </Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Text strong>Kinh nghiệm</Text>
                                                         <Text>{jobData.level}</Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
                                                         <Text strong style={{color: "#722ed1"}}>
-                                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}}/>
-                                                            Ngày hết hạn:
+                                                            <ClockCircleOutlined
+                                                                style={{color: "#722ed1", marginRight: "8px"}}/>
+                                                            Ngày hết hạn
                                                         </Text>
                                                         <Text>
                                                             {formatDate(jobData.expireDate)}
@@ -179,12 +209,14 @@ const JobDetailPage = () => {
 
                                     <Col span={24}>
                                         <Card bordered={false}>
-                                            <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
-                                                tin khác</Divider>
+                                            <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông tin khác</Divider>
                                             <Row gutter={[16, 16]}>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
-                                                        <Text strong>Trạng thái:</Text>
+                                                        <Text strong>
+                                                            <FieldTimeOutlined style={{color: "#096dd9", marginRight: "8px"}} />
+                                                            Trạng thái:
+                                                        </Text>
                                                         <Text
                                                             style={{
                                                                 color: jobData.status === "ACTIVE" ? "green" : "red",
@@ -200,7 +232,10 @@ const JobDetailPage = () => {
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
-                                                        <Text strong>Trạng thái duyệt:</Text>
+                                                        <Text strong>
+                                                            <CheckCircleOutlined style={{color: "#096dd9", marginRight: "8px"}} />
+                                                            Trạng thái duyệt:
+                                                        </Text>
                                                         <Text
                                                             style={{
                                                                 color:
@@ -221,14 +256,17 @@ const JobDetailPage = () => {
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
-                                                        <Text strong>Người tạo:</Text>
+                                                        <Text strong>
+                                                            <UserOutlined style={{color: "#096dd9", marginRight: "8px"}} />
+                                                            Người tạo:
+                                                        </Text>
                                                         <Text>{jobData.createBy}</Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
                                                         <Text strong style={{color: "#722ed1"}}>
-                                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}}/>
+                                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}} />
                                                             Thời gian tạo:
                                                         </Text>
                                                         <Text>
@@ -238,18 +276,20 @@ const JobDetailPage = () => {
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
-                                                        <Text strong>Người cập nhật:</Text>
+                                                        <Text strong>
+                                                            <UserOutlined style={{color: "#096dd9", marginRight: "8px"}} />
+                                                            Người cập nhật:
+                                                        </Text>
                                                         <Text>{jobData.updateBy}</Text>
                                                     </Space>
                                                 </Col>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
                                                         <Text strong style={{color: "#722ed1"}}>
-                                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}}/>
+                                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}} />
                                                             Thời gian cập nhật:
                                                         </Text>
-                                                        <Text>{formatDate(jobData.updateAt)}
-                                                        </Text>
+                                                        <Text>{formatDate(jobData.updateAt)}</Text>
                                                     </Space>
                                                 </Col>
                                             </Row>
