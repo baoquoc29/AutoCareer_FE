@@ -50,7 +50,6 @@ export const delete_sub_admin = (id) => {
             const res = await subAdminService.delete_sub_admin(id);
             console.log(res.data)
             if (res.code === STATUS_CODE.SUCCESS) {
-                toast.success("Xóa thành công")
                 dispatch({
                     type: DELETE_SUB_ADMIN,
                     payload: res.data

@@ -42,6 +42,9 @@ import BusinessManager from "../Page/Admin/BusinessManager/BusinessManager";
 import UniversityManager from "../Page/Admin/UniversityManager/UniversityManager";
 import AdminJobManager from "../Page/Admin/JobManager/AdminJobManager";
 import WorkshopListPortal from "../Page/Portal/WorkshopListPortal";
+import AdminJobDetail from "../Page/Admin/JobManager/JobDetail";
+import AdminWorkshopManager from "../Page/Admin/WorkshopManager/AdminWorkshopManager";
+import AdminWorkshopDetail from "../Page/Admin/WorkshopManager/WorkshopDetail";
 
 export function AppRouter() {
     return (
@@ -95,6 +98,9 @@ export function AppRouter() {
                     <Route path={"/admin-business-manager"} element={<BusinessManager/>}/>
                     <Route path={"/admin-university-manager"} element={<UniversityManager/>}/>
                     <Route path={"/admin-job-manager"} element={<AdminJobManager/>}/>
+                    <Route path={"/admin-job-detail"} element={<AdminJobDetail/>}/>
+                    <Route path={"/admin-workshop-manager"} element={<AdminWorkshopManager/>}/>
+                    <Route path={"/admin-workshop-detail"} element={<AdminWorkshopDetail/>}/>
                 </Route>
             </Routes>
         </>

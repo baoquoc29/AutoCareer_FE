@@ -15,6 +15,7 @@ export const approved_business = (req) => {
             const res = await adminBusinessService.approved_business(req);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Phê duyệt thành công");
                 dispatch({
                     type: APPROVED_BUSINESS,
                     payload: res.data
@@ -32,6 +33,7 @@ export const rejected_business = (req) => {
             const res = await adminBusinessService.rejected_business(req);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Từ chối thành công")
                 dispatch({
                     type: REJECTED_BUSINESS,
                     payload: res.data

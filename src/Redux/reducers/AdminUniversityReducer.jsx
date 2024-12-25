@@ -1,6 +1,6 @@
 import {
     APPROVED_UNIVERSITY, GET_ALL_UNIVERSITIES,
-    GET_APPROVED_UNIVERSITIES,
+    GET_APPROVED_UNIVERSITIES, GET_DETAIL_UNIVERSITY,
     GET_PENDING_UNIVERSITIES,
     GET_REJECTED_UNIVERSITIES,
     REJECTED_UNIVERSITY
@@ -9,6 +9,7 @@ import {
 
 const initialState = {
     universities: [],
+    university: {},
 }
 
 export const AdminUniversityReducer = (state = initialState, action) => {
@@ -48,6 +49,11 @@ export const AdminUniversityReducer = (state = initialState, action) => {
                 totalPages: action.payload.totalPages,
                 pageSize: action.payload.pageSize,
                 pageNo: action.payload.currentPage,
+            }
+        case GET_DETAIL_UNIVERSITY:
+            return {
+                ...state,
+                university: action.payload,
             }
         case APPROVED_UNIVERSITY:
             return {
