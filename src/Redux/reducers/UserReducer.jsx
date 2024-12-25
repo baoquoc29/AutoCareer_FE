@@ -12,10 +12,11 @@ import {
     CLEAR_RESPONSE,
     SIGNUP_UNIVERSITY_SUCCESS,
     SEND_NEW_PASSWORD,
-    CLEAN_LOCAL_STORAGE,
+    CLEAN_LOCAL_STORAGE, CHANGE_PASS_WORD, LOGIN_FAILURE,
 } from "../../Utils/Setting/Config";
 import { jwtDecode } from 'jwt-decode';
 import {toast} from "react-toastify";
+import {change_password} from "../actions/UserThunk";
 
 const isTokenExpired = (token) => {
     if (!token) return true;
@@ -38,6 +39,7 @@ const initialState = {
     responseSendNewPassword : null,
     response : null,
     error: null,
+    change_password : null,
 }
 
 export const UserReducer = (state = initialState, action) => {
@@ -49,6 +51,13 @@ export const UserReducer = (state = initialState, action) => {
                 userData: action.payload.userData,
                 token: action.payload.token,
             };
+        case LOGIN_FAILURE:
+            return {
+                ...state,
+                isAuthenticated: false,
+                error: action.payload.error,
+            };
+
         case CLEAR_RESPONSE:
             return {
                 ...state,
@@ -66,6 +75,8 @@ export const UserReducer = (state = initialState, action) => {
                 ...state,
                 userData: null,
                 isAuthenticated: false,
+                token: null,
+                error: null
             }
 
         case LOGOUT_SUCCESS:
@@ -126,6 +137,11 @@ export const UserReducer = (state = initialState, action) => {
             return {
                 ...state,
                 error: action.payload,
+            };
+        case CHANGE_PASS_WORD:
+            return {
+                ...state,
+                change_password: action.payload,
             };
         default:
             // Kiểm tra xem token có hết hạn không mỗi lần state được cập nhật

@@ -5,6 +5,7 @@ import {
     SET_INDUSTRY_OPTIONS,
     SET_INDUSTRIES_NO_PAG,
     SET_INDUSTRIES_ALL, SET_INDUSTRIES_ALL_PAG, UPDATE_INDUSTRY_SUCCESS, SET_COUNT_INDUSTRY,
+    SET_AVG_SALARY_INDUSTRY
 } from "../types/IndustryType";
 
 const initialState = {
@@ -14,7 +15,8 @@ const initialState = {
     industriesCount: [],
     industriesAll: [],
     industryDetail: {},
-    industriesAllPag: []
+    industriesAllPag: [],
+    industriesAvgSalary: [],
 
 };
 
@@ -72,6 +74,11 @@ export const IndustryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 industriesCount: action.payload,
+            };
+        case SET_AVG_SALARY_INDUSTRY:
+            return {
+                ...state,
+                industriesAvgSalary: action.payload,
             };
         default:
             return {...state};

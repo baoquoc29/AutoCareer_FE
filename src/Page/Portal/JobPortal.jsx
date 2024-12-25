@@ -18,6 +18,7 @@ import {
     FaFileAlt,
     FaMapMarkerAlt,
 } from "react-icons/fa";
+import {encryptId} from "../../Component/SecurityComponent/cryptoUtils";
 
 const defaultLocations = [
     { id: 0, name: "Tất cả" },
@@ -52,6 +53,7 @@ const JobPortal = () => {
     const locationListRef = useRef(null);
 
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         dispatch(get_all_job(0, size));
@@ -101,6 +103,12 @@ const JobPortal = () => {
                 dispatch(get_all_job_by_industry(currentPage - 1, size, industryId));
             }
         }
+    };
+
+    const handleDetailsJob = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/job-portal-detail/${encodeURIComponent(encryptedId)}`; // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
     };
 
     // Lọc dữ liệu theo tỉnh thành hoặc vùng miền
@@ -246,12 +254,13 @@ const JobPortal = () => {
             </div>
             <div className="popover-footer">
                 <a
-                    href={`/job/${job.id}`}
+                    onClick={() => handleDetailsJob(job.jobId)}
                     className="view-details-link"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <FaExternalLinkAlt className="icon-link"/> Xem chi tiết
+                    <FaExternalLinkAlt className="icon-link"
+                    /> Xem chi tiết
                 </a>
             </div>
 

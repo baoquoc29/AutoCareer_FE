@@ -18,7 +18,7 @@ import {
     CustomerServiceOutlined,
     AppleOutlined,
     ShoppingOutlined,
-    GlobalOutlined,
+    GlobalOutlined, AppstoreOutlined,
 } from '@ant-design/icons';
 const { Text } = Typography;
 const industryIcons = {
@@ -57,31 +57,50 @@ const JobCategoryCard = ({ title, icon, jobs }) => (
 );
 
 const JobCategories = () => {
-
     const carouselRef = useRef(null); // Reference to the carousel
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 4; // Set number of items per slide
     const dispatch = useDispatch();
     const industriesTotalJob = useSelector((state) => state.PortalReducer.industryTotalJob || []);
+
+    // Tạo danh sách ngành "Khác" nếu ngành không khớp với `industryIcons`
+    const categorizedJobs = industriesTotalJob.reduce((acc, industry) => {
+        const { industryName, totalJobs } = industry;
+
+        if (industryIcons[industryName]) {
+            acc.valid.push(industry);
+        } else {
+            const otherCategory = acc.other.find((item) => item.industryName === "Khác");
+            if (otherCategory) {
+                otherCategory.totalJobs += totalJobs;
+            } else {
+                acc.other.push({ industryName: "Khác", totalJobs });
+            }
+        }
+        return acc;
+    }, { valid: [], other: [] });
+
+    // Gộp các ngành hợp lệ với ngành "Khác"
+    const finalCategories = [...categorizedJobs.valid, ...categorizedJobs.other];
+
     // Divide the job categories into chunks for each slide
     const paginatedCategories = [];
-    for (let i = 0; i < industriesTotalJob.length; i += pageSize) {
-        paginatedCategories.push(industriesTotalJob.slice(i, i + pageSize));
+    for (let i = 0; i < finalCategories.length; i += pageSize) {
+        paginatedCategories.push(finalCategories.slice(i, i + pageSize));
     }
 
-    // Move to the previous slide
     const goToPrevSlide = () => {
         if (carouselRef.current) {
             carouselRef.current.prev();
         }
     };
 
-    // Move to the next slide
     const goToNextSlide = () => {
         if (carouselRef.current) {
             carouselRef.current.next();
         }
     };
+
     useEffect(() => {
         dispatch(get_total_all_job());
     }, [dispatch]);
@@ -90,13 +109,12 @@ const JobCategories = () => {
         <div className="job-categories-container" data-aos="fade-up">
             <Row justify="space-between" align="middle" className="title-pagination-row">
                 <Col>
-                    <Typography.Title level={3} >
+                    <Typography.Title level={3}>
                         Top ngành nghề nổi bật
                     </Typography.Title>
                     <Text className="job-count-text">Tất cả các ngành nghề</Text>
                 </Col>
 
-                {/* Add the navigation buttons to go to previous/next slide */}
                 <Col>
                     <Button
                         icon={<span className="arrow-left">‹</span>}
@@ -120,24 +138,21 @@ const JobCategories = () => {
                 </Col>
             </Row>
 
-            {/* Carousel with dots and navigation arrows */}
             <Carousel
                 ref={carouselRef}
                 autoplay
-                dots={true}  // Enable dots for navigation
+                dots={true}
             >
                 {paginatedCategories.map((categoryGroup, index) => (
                     <div key={index}>
-                        {/* Row containing the cards, ensure it's a horizontal row */}
                         <Row gutter={[16, 16]} justify="center" style={{ display: 'flex', flexWrap: 'nowrap' }}>
                             {categoryGroup.map((category, index) => (
                                 <JobCategoryCard
                                     key={index}
                                     title={category.industryName}
-                                    icon={industryIcons[category.industryName]} // Lấy icon từ danh sách industryIcons
+                                    icon={industryIcons[category.industryName] || <AppstoreOutlined style={{ fontSize: '40px', color: '#1c1c23' }} />} // Biểu tượng mặc định cho "Khác"
                                     jobs={category.totalJobs}
                                 />
-
                             ))}
                         </Row>
                     </div>
