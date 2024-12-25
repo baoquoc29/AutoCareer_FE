@@ -2,6 +2,7 @@ import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB, INACTIVE_JOB} from "..
 
 const initialState = {
     jobs: [],
+    selectedJobDetail: {}
 };
 
 export const JobReducer = (state = initialState, action) => {

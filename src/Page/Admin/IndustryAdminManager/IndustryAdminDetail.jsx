@@ -3,7 +3,7 @@ import {Col, Divider, Modal, Row, Typography} from "antd";
 
 const { Title, Text } = Typography;
 
-const IndustryAdminDetail = ({ open, onClose, industry, onUpdate }) => {
+const IndustryAdminDetail = ({ open, onClose, industry}) => {
     if (!industry) return null; // Nếu không có ngành, không hiển thị gì cả
 
     const formatDateTime = (dateString) => {
