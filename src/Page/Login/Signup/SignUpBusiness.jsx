@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Input, Button, Upload, Modal, notification, Spin } from 'antd';
+import {Form, Input, Button, Upload, Modal, notification, Spin, Col, Row, Select} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import {clearResponseBusiness, sign_up_business, verify_account_business} from "../../../Redux/actions/UserThunk";
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
 import {toast} from "react-toastify";
+import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/WorkShopThunk";
 export function SignUpBusiness() {
     const [form] = Form.useForm();
     const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,9 @@ export function SignUpBusiness() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {provinces, districts, wards} = useSelector(state => state.WorkShopReducer);
+    const [selectedProvince, setSelectedProvince] = useState(null);
+    const [selectedDistrict, setSelectedDistrict] = useState(null);
 
     const [hasShownModal, setHasShownModal] = useState(false);
 
@@ -38,6 +42,23 @@ export function SignUpBusiness() {
         }
         return () => clearInterval(interval);
     }, [timer, canResend]);
+    useEffect(() => {
+        dispatch(get_all_provinces());
+    }, [dispatch]);
+    const handleProvinceChange = (value) => {
+        const provinceId = value;
+        setSelectedProvince(provinceId);  // Set the selected province
+        dispatch(get_all_district(provinceId));
+        form.setFieldsValue({district: null, ward: null});
+        setSelectedDistrict(null);  // Reset district and ward when province changes
+    };
+
+    const handleDistrictChange = (value) => {
+        const districtId = value;
+        setSelectedDistrict(districtId);  // Set the selected district
+        dispatch(get_all_ward(districtId));
+        form.setFieldsValue({ward: null});
+    };
 
     // Xử lý phản hồi từ API
     useEffect(() => {
@@ -95,7 +116,7 @@ export function SignUpBusiness() {
 
     // Gửi yêu cầu mã xác nhận
     const handleSendCode = (values) => {
-        const { companyName, taxCode, email, phone, password, confirmPassword } = values;
+        const { companyName, taxCode, email, phone, password, confirmPassword,province,district,ward } = values;
 
         if (password !== confirmPassword) {
             toast.error('Mật khẩu và xác nhận mật khẩu không khớp.' );
@@ -118,8 +139,11 @@ export function SignUpBusiness() {
         businessData.append('phone', phone);
         businessData.append('password', password);
         businessData.append('rePassword', confirmPassword);
+        businessData.append("provinceId", province);
+        businessData.append("districtId", district);
+        businessData.append("wardId", ward);
         businessData.append('verificationCode', 'business');
-        if (licenseImage) businessData.append('licenseImage', licenseImage);
+        if (licenseImage) businessData.append('logoImage', licenseImage);
 
         setIsLoading(true);
         dispatch(verify_account_business(businessData));
@@ -150,10 +174,13 @@ export function SignUpBusiness() {
             businessData.append("phone", formValues.phone);
             businessData.append("password", formValues.password);
             businessData.append("rePassword", formValues.confirmPassword);
+            businessData.append("provinceId", formValues.province);
+            businessData.append("districtId", formValues.district);
+            businessData.append("wardId", formValues.ward);
             // Kiểm tra nếu có file ảnh giấy phép và thêm vào FormData
             const licenseImage = validateImage(fileList);
             if (licenseImage) {
-                businessData.append("licenseImage", licenseImage);
+                businessData.append("logoImage", licenseImage);
             }
             dispatch(sign_up_business(businessData));
 
@@ -210,145 +237,237 @@ export function SignUpBusiness() {
     };
     return (
         <div className="signup-root">
-        <div className="signup-business">
-            <div className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-                <div className="card shadow-lg" style={{ width: '80%', maxWidth: 450 }}>
-                    <div className="card-body">
-                        <h1 className="h3 text-center">Đăng ký tài khoản doanh nghiệp</h1>
-                        <p className="text-center">Tham gia cộng đồng Auto Career!</p>
+            <div className="signup-business">
+                <div className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+                    <div
+                        className="card shadow-lg"
+                        style={{
+                            width: '90%',
+                            maxWidth: 650,
+                            padding: '20px',
+                            borderRadius: '10px',
+                            backgroundColor: '#f8f9fa',
+                        }}
+                    >
+                        <div className="card-body">
+                            <h1 className="h3 text-center mb-4" style={{color: '#333'}}>
+                                Đăng ký tài khoản doanh nghiệp
+                            </h1>
+                            <p className="text-center text-muted mb-4">Tham gia cộng đồng Auto Career!</p>
+                            <Form form={form} layout="vertical" onFinish={handleSendCode}>
+                                <Form.Item
+                                    label="Tên doanh nghiệp"
+                                    name="companyName"
+                                    rules={[
+                                        {required: true, message: ''},
+                                        {
+                                            validator: (_, value) =>
+                                                getValidationMessage('companyName', value)
+                                                    ? Promise.reject(getValidationMessage('companyName', value))
+                                                    : Promise.resolve(),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Nhập tên doanh nghiệp" size="large"/>
+                                </Form.Item>
 
-                        <Form form={form} layout="vertical" onFinish={handleSendCode}>
-                            <Form.Item
-                                label="Tên doanh nghiệp"
-                                name="companyName"
-                                rules={[
-                                    { required: true,message: ""  },
-                                    { validator: (_, value) => getValidationMessage('companyName', value) ? Promise.reject(getValidationMessage('companyName', value)) : Promise.resolve() }
+                                <Form.Item
+                                    label="Mã số thuế"
+                                    name="taxCode"
+                                    rules={[
+                                        {required: true, message: ''},
+                                        {
+                                            validator: (_, value) =>
+                                                getValidationMessage('taxCode', value)
+                                                    ? Promise.reject(getValidationMessage('taxCode', value))
+                                                    : Promise.resolve(),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Nhập mã số thuế" size="large"/>
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Email"
+                                    name="email"
+                                    rules={[
+                                        {required: true, message: ''},
+                                        {
+                                            validator: (_, value) =>
+                                                getValidationMessage('email', value)
+                                                    ? Promise.reject(getValidationMessage('email', value))
+                                                    : Promise.resolve(),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="Nhập email" size="large"/>
+                                </Form.Item>
+
+                                <Form.Item
+                                    rules={[{required: true, message: 'Ảnh là bắt buộc.'}]}
+                                    label="Ảnh thương hiệu"
+                                    name="image"
+                                >
+                                    <Upload
+                                        listType="picture"
+                                        fileList={fileList}
+                                        onChange={handleFileChange}
+                                        beforeUpload={() => false}
+                                        maxCount={1}
+                                        onPreview={handleImagePreview}
+                                    >
+                                        <Button icon={<UploadOutlined/>} size="large">
+                                            Chọn ảnh thương hiệu
+                                        </Button>
+                                    </Upload>
+                                </Form.Item>
+
+                                <Row gutter={16}>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            label="Tỉnh/Thành phố"
+                                            name="province"
+                                            rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố.'}]}
+                                        >
+                                            <Select placeholder="Chọn tỉnh/thành phố" onChange={handleProvinceChange}>
+                                                {provinces.map((province) => (
+                                                    <Select.Option key={province.id} value={province.id}>
+                                                        {province.name}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            label="Quận/Huyện"
+                                            name="district"
+                                            rules={[{required: true, message: 'Vui lòng chọn quận/huyện.'}]}
+                                        >
+                                            <Select
+                                                placeholder="Chọn quận/huyện"
+                                                onChange={handleDistrictChange}
+                                                disabled={!selectedProvince}
+                                            >
+                                                {districts.map((district) => (
+                                                    <Select.Option key={district.id} value={district.id}>
+                                                        {district.name}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            label="Xã/Phường"
+                                            name="ward"
+                                            rules={[{required: true, message: 'Vui lòng chọn xã/phường.'}]}
+                                        >
+                                            <Select placeholder="Chọn xã/phường" disabled={!selectedDistrict}>
+                                                {wards.map((ward) => (
+                                                    <Select.Option key={ward.id} value={ward.id}>
+                                                        {ward.name}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+
+                                <Form.Item
+                                    label="Mật khẩu"
+                                    name="password"
+                                    rules={[
+                                        {required: true, message: ''},
+                                        {
+                                            validator: (_, value) =>
+                                                getValidationMessage('password', value)
+                                                    ? Promise.reject(getValidationMessage('password', value))
+                                                    : Promise.resolve(),
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password placeholder="Nhập mật khẩu" size="large"/>
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Xác nhận mật khẩu"
+                                    name="confirmPassword"
+                                    rules={[
+                                        {required: true, message: 'Xác nhận mật khẩu là bắt buộc.'},
+                                        ({getFieldValue}) => ({
+                                            validator(_, value) {
+                                                if (!value || getFieldValue('password') === value) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(new Error('Xác nhận mật khẩu không trùng khớp!'));
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <Input.Password placeholder="Nhập lại mật khẩu" size="large"/>
+                                </Form.Item>
+
+                                <Button type="primary" htmlType="submit" block size="large" disabled={!canResend}>
+                                    {isLoading ? <Spin/> : 'Đăng ký tài khoản'}
+                                </Button>
+                            </Form>
+
+                            <Modal
+                                open={showModal}
+                                title="Nhập mã xác minh"
+                                onCancel={() => setShowModal(false)}
+                                footer={[
+                                    <Button key="cancel" onClick={() => setShowModal(false)}>
+                                        Hủy
+                                    </Button>,
+                                    <Button
+                                        key="submit"
+                                        type="primary"
+                                        onClick={handleVerifyCodeSubmit}
+                                        disabled={!code}
+                                    >
+                                        Xác nhận
+                                    </Button>
                                 ]}
                             >
-                                <Input placeholder="Nhập tên doanh nghiệp" />
-                            </Form.Item>
+                                <Input
+                                    placeholder="Nhập mã xác minh"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    style={{marginBottom: 10}}
+                                />
+                                <p>Thời gian còn lại: <b>{timer}s</b></p>
+                                {canResend && (
+                                    <Button
+                                        type="link"
+                                        onClick={handleResendCode}
+                                        style={{marginTop: 10}}
+                                        block
+                                    >
+                                        Gửi lại mã xác minh
+                                    </Button>
+                                )}
+                            </Modal>
 
-                            <Form.Item
-                                label="Mã số thuế"
-                                name="taxCode"
-                                rules={[
-                                    { required: true,message: ""  },
-                                    { validator: (_, value) => getValidationMessage('taxCode', value) ? Promise.reject(getValidationMessage('taxCode', value)) : Promise.resolve() }
-                                ]}
-                            >
-                                <Input placeholder="Nhập mã số thuế" />
-                            </Form.Item>
-
-
-                            <Form.Item label="Email" name="email"
-                                       rules={[
-                                           { required: true,message: ""  },
-                                           { validator: (_, value) => getValidationMessage('email', value) ? Promise.reject(getValidationMessage('email', value)) : Promise.resolve() }
-                                       ]}
-                            >
-                                <Input placeholder="Nhập email"/>
-                            </Form.Item>
-
-
-                            <Form.Item   rules={[{required: true, message: 'Ảnh là bắt buộc.'}]} label="Ảnh giấy phép" name="image">
-                                <Upload
-                                    listType="picture"
-                                    fileList={fileList}
-                                    onChange={handleFileChange}
-                                    beforeUpload={() => false}
-                                    maxCount={1}
-                                    onPreview={handleImagePreview}
+                            <Modal open={showImageModal} footer={null} onCancel={() => setShowImageModal(false)}>
+                                <img alt="preview" style={{width: '100%'}} src={imagePreview}/>
+                            </Modal>
+                            <div className="d-flex justify-content-end align-items-center gap-md-3 mt-4">
+                                <p className="mb-0 fs-6">Bạn đã có tài khoản?</p>
+                                <NavLink
+                                    to={"/login"}
+                                    className="btn-link text-decoration-none ms-1 fs-6"
                                 >
-                                    <Button icon={<UploadOutlined/>}>Chọn ảnh giấy phép</Button>
-                                </Upload>
-                            </Form.Item>
-
-                            <Form.Item label="Mật khẩu" name="password"
-                                       rules={[
-                                           { required: true,message: ""  },
-                                           { validator: (_, value) => getValidationMessage('password', value) ? Promise.reject(getValidationMessage('password', value)) : Promise.resolve() }
-                                       ]}
-                                       >
-                                <Input.Password placeholder="Nhập mật khẩu"/>
-                            </Form.Item>
-
-                            <Form.Item label="Xác nhận mật khẩu" name="confirmPassword"
-                                       rules={[
-                                           { required: true, message: 'Xác nhận mật khẩu là bắt buộc.' },
-                                           ({ getFieldValue }) => ({
-                                               validator(_, value) {
-                                                   if (!value || getFieldValue('password') === value) {
-                                                       return Promise.resolve();
-                                                   }
-                                                   return Promise.reject(new Error('Xác nhận mật khẩu không trùng khớp!'));
-                                               }
-                                           })
-                                       ]}>
-                                <Input.Password placeholder="Nhập lại mật khẩu"/>
-                            </Form.Item>
+                                    Đăng nhập
+                                </NavLink>
+                            </div>
 
 
-                            <Button type="primary" htmlType="submit" block disabled={!canResend}>
-                                {isLoading ? <Spin/> : 'Đăng ký tài khoản'}
-                            </Button>
-                        </Form>
-
-                        <Modal
-                            open={showModal}
-                            title="Nhập mã xác minh"
-                            onCancel={() => setShowModal(false)}
-                            footer={[
-                                <Button key="cancel" onClick={() => setShowModal(false)}>
-                                    Hủy
-                                </Button>,
-                                <Button
-                                    key="submit"
-                                    type="primary"
-                                    onClick={handleVerifyCodeSubmit}
-                                    disabled={!code}
-                                >
-                                    Xác nhận
-                                </Button>
-                            ]}
-                        >
-                            <Input
-                                placeholder="Nhập mã xác minh"
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
-                                style={{marginBottom: 10}}
-                            />
-                            <p>Thời gian còn lại: <b>{timer}s</b></p>
-                            {canResend && (
-                                <Button
-                                    type="link"
-                                    onClick={handleResendCode}
-                                    style={{marginTop: 10}}
-                                    block
-                                >
-                                    Gửi lại mã xác minh
-                                </Button>
-                            )}
-                        </Modal>
-
-                        <Modal open={showImageModal} footer={null} onCancel={() => setShowImageModal(false)}>
-                            <img alt="preview" style={{width: '100%'}} src={imagePreview}/>
-                        </Modal>
-                        <div className="d-flex justify-content-end align-items-center gap-md-3 mt-4">
-                            <p className="mb-0 fs-6">Bạn đã có tài khoản?</p>
-                            <NavLink
-                                to={"/login"}
-                                className="btn-link text-decoration-none ms-1 fs-6"
-                            >
-                                Đăng nhập
-                            </NavLink>
                         </div>
-
-
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }

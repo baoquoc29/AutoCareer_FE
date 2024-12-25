@@ -27,7 +27,7 @@ export class UserService extends baseService {
         return this.postResponse('api/accounts/forgot-code',email)
     }
     change_password = (formData)=>{
-        return this.postResponse('api/accounts/change-password',formData)
+        return this.put('api/accounts/change-password',formData)
     }
     send_new_password = (formData)=>{
         return this.postResponse('api/accounts/forgot-pass',formData)

@@ -31,14 +31,16 @@ export default function WorkshopPortal() {
     }, [dispatch]);
 
     const handleOpenNewTab = () => {
-        window.open("/work-shop-all", "_blank");
+        window.open("/work-shop-all", "_blank");  // Opens in a new tab
     };
+
 
     const handleDetailsWorkShop = (id) => {
         const encryptedId = encryptId(id);  // Encrypt the ID first
         const url = `/workshop-details/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
-        window.open(url, "_blank");  // Open in a new tab
+        window.location.href = url;  // Navigate to the new URL in the current tab
     };
+
 
     return (
         <div className="home-screen-workshop" data-aos="fade-up">

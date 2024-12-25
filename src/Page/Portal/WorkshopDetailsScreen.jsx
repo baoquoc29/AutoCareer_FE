@@ -23,17 +23,21 @@ const WorkshopDetailsScreen = () => {
   const [encryptedId, setEncryptedId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [localStatus, setLocalStatus] = useState(status);
-
+  const navigate = useNavigate();
   useEffect(() => {
     setEncryptedId(id);
   }, [id]);
   useEffect(() => {
     if (encryptedId) {
-      try {
         dispatch(get_work_shop_by_id(decryptId(encryptedId)));
-        dispatch(status_work_shop(decryptId(encryptedId),userData.business.id));
-      } catch (error) {
-        return <PageError></PageError>
+      if (userData) {
+        if(userData?.business?.id !== undefined){
+          dispatch(status_work_shop(decryptId(encryptedId), userData.business.id));
+        }
+        else{
+          console.log("Người dùng không phải doanh nghiệp");
+          navigate('/');
+        }
       }
     }
   }, [dispatch, encryptedId]);
@@ -57,7 +61,7 @@ const WorkshopDetailsScreen = () => {
     }
   };
 
-  const handleRegister =  async () => {
+  const handleRegister = async () => {
     if (userData) {
       const body = {
         businessID: userData.business.id,
@@ -70,7 +74,8 @@ const WorkshopDetailsScreen = () => {
         content: "Bạn đã đăng ký tham gia workshop thành công, vui lòng chờ duyệt!",
       });
     } else {
-      window.location.href = "/login";
+      const currentUrl = window.location.pathname; // Lấy URL hiện tại
+      window.location.href = `/login?redirect=${encodeURIComponent(currentUrl)}`; // Lưu URL vào query param
     }
     setIsModalVisible(false);
   };
