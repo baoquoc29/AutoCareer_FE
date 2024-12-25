@@ -1,8 +1,9 @@
 import {
+    CHANGE_PASS_WORD,
     CLEAN_LOCAL_STORAGE,
     CLEAR_RESPONSE,
     DISPLAY_LOADING,
-    HIDE_LOADING,
+    HIDE_LOADING, LOGIN_FAILURE,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
     SEND_CODE_BUSINESS_SUCCESS,
@@ -16,6 +17,7 @@ import {
 } from "../../Utils/Setting/Config";
 import {userService} from "../../Service/UserService/UserService";
 import {toast} from "react-toastify";
+import * as logger from "react-dom/test-utils";
 
 
 
@@ -38,13 +40,21 @@ export const loginUser = (username, password) => async (dispatch) => {
         } else {
             console.log("Login failed, no token returned");
         }
-    } catch (error) {
+    }
+    catch (error) {
         toast.error(error.response.data.message)
+        console.log(error.response.data.message)
+        dispatch({
+            type: LOGIN_FAILURE,
+            payload: {
+                error: error.response ? error.response.data.message : "Đã có lỗi xảy ra",
+            },
+        });
     }
 };
 export const logoutUser = (token) => async (dispatch) => {
     dispatch({type: DISPLAY_LOADING})
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     try {
         const res = await userService.logout(token);
         if (res === STATUS_CODE.SUCCESS) {
@@ -59,6 +69,29 @@ export const logoutUser = (token) => async (dispatch) => {
     }
     dispatch({type: HIDE_LOADING})
 }
+export const change_password = (formData) => {
+    return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
+        try {
+            const res = await userService.change_password(formData);
+
+            // Dispatch action thành công
+            dispatch({
+                type: CHANGE_PASS_WORD,
+                payload: res,
+            });
+
+            toast.success('Thay đổi mật khẩu thành công!'
+            );
+
+        } catch (error) {
+            console.log('change error:', error);
+            toast.error('Đã xảy ra lỗi khi thay đổi mật khẩu. Vui lòng thử lại.!');
+        } finally {
+            dispatch({ type: HIDE_LOADING });
+        }
+    };
+};
 export const sign_up_university = (formData) => {
     return async (dispatch) => {
         dispatch({ type: DISPLAY_LOADING });  // Show loading state
