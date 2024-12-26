@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    get_all_workshop_by_business,
+    cancel_work_shop,
+    delete_work_shop,
+    get_all_workshop_by_business, get_all_workshop_by_university,
 } from "../../../Redux/actions/WorkShopThunk";
-import { Card, Input, Pagination, Select } from "antd";
-import WorkshopBusinessDetail from "./WorkshopBusinessDetail";
+import {Card, Input, Modal, Pagination, Select} from "antd";
 import WorkShopBusinessTable from "./WorkshopBusinessTable";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 import {useNavigate} from "react-router-dom";
@@ -42,7 +43,30 @@ const WorkshopBusinessManager = () => {
 
     const workshopsData = useSelector((state) => state.WorkShopReducer.workshopsBusiness || []);
     const totalItems = useSelector((state) => state.WorkShopReducer.totalRecords || 0);
-
+    const handleDelete = async (id, title) => {
+        Modal.confirm({
+            title: "Xác nhận xóa",
+            content: "Bạn có chắc chắn muốn huỷ hợp tác với " + title + "?",
+            okText: "Xóa",
+            cancelText: "Hủy",
+            centered: true,
+            okButtonProps: { danger: true },
+            onOk: async () => {
+                try {
+                    await dispatch(cancel_work_shop({businessId: idBusiness ,workshopId: id}));
+                    await dispatch(get_all_workshop_by_business(idBusiness, {
+                        page: currentPage - 1,
+                        size: pageSize,
+                        keyword: "",
+                        state: "",
+                    }));
+                } catch (error) {
+                    console.error("Error deleting workshop:", error);
+                    Modal.error({ title: "Xóa thất bại", content: "Đã xảy ra lỗi khi xóa hội thảo." });
+                }
+            },
+        });
+    };
     useEffect(() => {
         if (!idBusiness) return;
 
@@ -52,7 +76,7 @@ const WorkshopBusinessManager = () => {
                 page: currentPage - 1,
                 size: pageSize,
                 keyword: searchTerm || "",
-                state: state || "APPROVED",
+                state: state || "",
             })
         );
     }, [dispatch, currentPage, pageSize, filters, idBusiness]);
@@ -77,7 +101,6 @@ const WorkshopBusinessManager = () => {
         setCurrentPage(page);
         setPageSize(size);
     };
-
     return (
         <section id="content" className="content">
             <div className="content__header content__boxed rounded-0">
@@ -105,7 +128,9 @@ const WorkshopBusinessManager = () => {
                                                     style={{ width: 150 }}
                                                     onChange={handleStatusChange}
                                                     allowClear
+                                                    value=""
                                                 >
+                                                    <Option value="">Tất cả trạng thái</Option>
                                                     <Option value="REJECTED">Từ chối</Option>
                                                     <Option value="APPROVED">Chấp nhận</Option>
                                                     <Option value="PENDING">Chờ duyệt</Option>
@@ -117,6 +142,7 @@ const WorkshopBusinessManager = () => {
                                             workshops={workshopsData || []}
                                             page={currentPage}
                                             size={pageSize}
+                                            onDelete={handleDelete}
                                             onView={handleViewDetails}
                                         />
 

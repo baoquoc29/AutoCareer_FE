@@ -86,7 +86,6 @@ export function AppRouter() {
                 <Route element={<PrivateRoute>{" "}<BusinessTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
                     <Route path={"/dashboard-job"} element={<DashboardJob/>}/>
-                    <Route path={"/business"} element={<Business/>}/>
                     <Route path={"/business-workshop"} element={<WorkshopBusinessManager/>}/>
                     <Route path={"/industry-manager"} element={<IndustryManager/>}/>
                     <Route path={"/employee-manager"} element={<EmployeeManager />} />

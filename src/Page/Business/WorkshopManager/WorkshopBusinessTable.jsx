@@ -116,27 +116,31 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                 align: "center",
                 key: "action",
                 render: (_, record) => {
+                    const isApproved = record.statusBusiness.toLowerCase() === "approved"; // Kiểm tra nếu trạng thái là "approved"
                     return (
                         <Space size="middle" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <Tooltip title="Xem chi tiết">
                                 <Button
                                     type="primary"
-                                    icon={<EyeOutlined/>}
+                                    icon={<EyeOutlined />}
                                     onClick={() => onView(record)}
                                 />
                             </Tooltip>
-                            <Tooltip title="Xóa">
+                            <Tooltip title={isApproved ? "Huỷ hợp tác" : "Không thể huỷ khi chưa được duyệt"}>
                                 <Button
                                     variant="solid"
                                     color="danger"
-                                    icon={<DeleteOutlined/>}
+                                    icon={<DeleteOutlined />}
                                     onClick={() => onDelete(record.id, record.title)}
+                                    disabled={!isApproved} // Vô hiệu hoá nếu trạng thái không phải "approved"
                                 />
                             </Tooltip>
+
                         </Space>
                     );
                 },
             }
+
 
         ];
 

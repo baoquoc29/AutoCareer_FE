@@ -56,6 +56,10 @@ export class WorkShopService extends baseService {
     get_status_workshop=()=>{
         return this.get('api/work-shop/business-details')
     }
+    business_cancel_workshop = (param) => {
+        const queryParams = new URLSearchParams(param).toString();
+        return this.put(`api/work-shop/business/cancel?${queryParams}`);
+    };
 }
 
 // Instantiate WorkShopService

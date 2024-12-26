@@ -1,11 +1,15 @@
-import React, { useState } from "react";
-import {Card, Typography, Button, Row, Col, Modal, List, Space, Divider} from "antd";
-import { DOMAIN } from "../../../Utils/Setting/Config";
-import { useDispatch, useSelector } from "react-redux";
-import {ClockCircleOutlined, ExclamationCircleOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import React  from "react";
+import {Card, Typography, Button, Row, Col, Space, Divider} from "antd";
+import {
+    ClockCircleOutlined, EnvironmentOutlined,
+    ExclamationCircleOutlined, LinkOutlined,
+    MailOutlined,
+    PhoneOutlined,
+    QuestionCircleOutlined
+} from "@ant-design/icons";
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
-import RejectModal from "../../Modal/RejectModal";
 import {useLocation, useNavigate} from "react-router-dom";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
 const {Text, Title} = Typography;
 
@@ -95,20 +99,60 @@ const WorkshopBusinessDetail = () => {
                                         <Card bordered={false}>
                                             <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
                                                 tin trường học</Divider>
-                                            <Row gutter={[16, 16]}>
-                                                <Col span={24}>
+                                            {workshopData ? (
+                                                <Row gutter={[16, 16]}>
+                                                    <Col span={24}>
+                                                        <Row>
+                                                            <Col>
+                                                                <img
+                                                                    src={workshopData.logoImageUniversityId ? `${GET_IMAGE_URI}${workshopData.logoImageUniversityId}` : "placeholder-avatar.jpg"}
+                                                                    alt="Logo trờng học"
+                                                                    className="img-fluid logo-image rounded"
+                                                                    style={{
+                                                                        width: "80px",
+                                                                        height: "80px",
+                                                                        objectFit: "cover",
+                                                                    }}
+                                                                />
+                                                            </Col>
+                                                            <Col style={{marginLeft: "10px"}}>
+                                                                <Text
+                                                                    strong> {workshopData.nameUniversity || "Không xác định"}</Text>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
 
-                                                </Col>
-                                                <Col span={24}>
-
-                                                </Col>
-                                                <Col span={24}>
-
-                                                </Col>
-                                                <Col span={12}>
-
-                                                </Col>
-                                            </Row>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <MailOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Email:</Text>
+                                                        <Text> {workshopData.email || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <PhoneOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Số điện thoại:</Text>
+                                                        <Text> {workshopData.phoneNumber || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <LinkOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Website:</Text>
+                                                        <Text> {workshopData.website || "Không xác định"}</Text>
+                                                    </Col>
+                                                </Row>
+                                            ) : (
+                                                <Text>Không có thông tin doanh nghiệp.</Text>
+                                            )}
                                         </Card>
                                     </Col>
 

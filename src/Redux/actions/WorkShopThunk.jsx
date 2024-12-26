@@ -9,6 +9,7 @@ import {
     UPDATE_WORK_SHOP,
 } from "../types/WorkShopType";
 import {CLEAR_RESPONSE} from "../../Utils/Setting/Config";
+import {toast} from "react-toastify";
 
 // Action to fetch all workshops for a specific university
 export const get_all_workshop_by_university = (idUniversity, page, size) => {
@@ -92,6 +93,26 @@ export const delete_work_shop = (id) => {
             type: DELETE_WORK_SHOP,
             payload: res.data,
         })
+    }
+}
+export const cancel_work_shop = (param) => {
+    return async (dispatch) => {
+        try {
+            // Gọi API để hủy workshop
+            const res = await workShopService.business_cancel_workshop(param);
+
+            // Dispatch hành động khi hủy thành công
+            dispatch({
+                type: DELETE_WORK_SHOP,
+                payload: res.data,
+            });
+            toast.success("Huỷ hợp tác thành công!");
+
+        } catch (error) {
+            // Hiển thị thông báo lỗi nếu có lỗi
+            toast.error("Không thể huỷ hợp tác vì nó sắp diễn ra!");
+
+        }
     }
 }
 export const update_work_shop = (id, formData) => {
