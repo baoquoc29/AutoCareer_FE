@@ -113,85 +113,102 @@ const WorkShopManager = () => {
     const totalItems = searchKeyword || filterStatus ? filteredWorkshops.length : totalRecords;
 
     return (
-        <Card title="Quản lý hội thảo">
-            {viewMode === "details" && selectedWorkshop ? (
-                <WorkShopDetails workshop={selectedWorkshop} onBack={resetView} />
-            ) : viewMode === "edit" && selectedWorkshop ? (
-                <EditWorkShop
-                    visible={true}
-                    workshop={selectedWorkshop}
-                    onCancel={resetView}
-                    onFinish={resetView}
-                />
-            ) : (
-                <>
-                    {!isAdding ? (
-                        <>
-                            <div style={{display: "flex", justifyContent: "space-between", marginBottom: 16}}>
-                                <div style={{display: "flex", gap: 8}}>
-                                    <Input
-                                        placeholder="Tìm kiếm theo tiêu đề"
-                                        onChange={handleSearch}
-                                        style={{width: 200}}
+        <section id="content" className="content">
+            <div className="content__header content__boxed rounded-0">
+                <div className="content__wrap">
+                    <div className="mt-auto">
+                        <div className="row">
+                            <Card title="Quản lý hội thảo">
+                                {viewMode === "details" && selectedWorkshop ? (
+                                    <WorkShopDetails workshop={selectedWorkshop} onBack={resetView}/>
+                                ) : viewMode === "edit" && selectedWorkshop ? (
+                                    <EditWorkShop
+                                        visible={true}
+                                        workshop={selectedWorkshop}
+                                        onCancel={resetView}
+                                        onFinish={resetView}
                                     />
-                                    <Select
-                                        placeholder="Chọn trạng thái"
-                                        style={{width: 150}}
-                                        onChange={handleStatusChange}
-                                        allowClear
-                                    >
-                                        <Option value="REJECTED">Từ chối</Option>
-                                        <Option value="APPROVED">Chấp nhận</Option>
-                                        <Option value="PENDING">Chờ duyệt</Option>
-                                    </Select>
-                                </div>
-                                <Button icon={<PlusOutlined/>} type="primary" onClick={() => setIsAdding(true)}>
-                                    Thêm hội thảo
-                                </Button>
-                            </div>
-                            <WorkShopTable
-                                workshops={filteredWorkshops}
-                                onEdit={handleViewEdit}
-                                onDelete={handleDelete}
-                                onView={handleViewDetails}
-                                page={page}
-                                size={size}
-                            />
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    marginTop: 16,
-                                }}
-                            >
-                                <div style={{flex: 1, display: "flex", justifyContent: "center"}}>
-                                    <Pagination
-                                        current={page}
-                                        pageSize={size}
-                                        total={totalItems}
-                                        onChange={handlePageChange}
-                                        pageSizeOptions={[7, 10, 20, 50, 100]}
-                                        showSizeChanger={true}
-                                    />
-                                </div>
+                                ) : (
+                                    <>
+                                        {!isAdding ? (
+                                            <>
+                                                <div style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    marginBottom: 16
+                                                }}>
+                                                    <div style={{display: "flex", gap: 8}}>
+                                                        <Input
+                                                            placeholder="Tìm kiếm theo tiêu đề"
+                                                            onChange={handleSearch}
+                                                            style={{width: 200}}
+                                                        />
+                                                        <Select
+                                                            placeholder="Chọn trạng thái"
+                                                            style={{width: 150}}
+                                                            onChange={handleStatusChange}
+                                                            allowClear
+                                                        >
+                                                            <Option value="REJECTED">Từ chối</Option>
+                                                            <Option value="APPROVED">Chấp nhận</Option>
+                                                            <Option value="PENDING">Chờ duyệt</Option>
+                                                        </Select>
+                                                    </div>
+                                                    <Button icon={<PlusOutlined/>} type="primary"
+                                                            onClick={() => setIsAdding(true)}>
+                                                        Thêm hội thảo
+                                                    </Button>
+                                                </div>
+                                                <WorkShopTable
+                                                    workshops={filteredWorkshops}
+                                                    onEdit={handleViewEdit}
+                                                    onDelete={handleDelete}
+                                                    onView={handleViewDetails}
+                                                    page={page}
+                                                    size={size}
+                                                />
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                        marginTop: 16,
+                                                    }}
+                                                >
+                                                    <div style={{flex: 1, display: "flex", justifyContent: "center"}}>
+                                                        <Pagination
+                                                            current={page}
+                                                            pageSize={size}
+                                                            total={totalItems}
+                                                            onChange={handlePageChange}
+                                                            pageSizeOptions={[7, 10, 20, 50, 100]}
+                                                            showSizeChanger={true}
+                                                        />
+                                                    </div>
 
-                                <div style={{marginLeft: 16, marginTop: 16}}>
-                                    <p>
-                                        Có <strong>{filteredWorkshops.length || totalItems}</strong> kết quả được tìm
-                                        thấy.
-                                    </p>
-                                </div>
-                            </div>
+                                                    <div style={{marginLeft: 16, marginTop: 16}}>
+                                                        <p>
+                                                            Có <strong>{filteredWorkshops.length || totalItems}</strong> kết
+                                                            quả được tìm
+                                                            thấy.
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-                        </>
-                    ) : (
-                        <AddWorkShop visible={isAdding} onFinish={resetView} onCancel={resetView}/>
-                    )}
-                </>
-            )}
-        </Card>
-    );
-};
+                                            </>
+                                        ) : (
+                                            <AddWorkShop visible={isAdding} onFinish={resetView} onCancel={resetView}/>
+                                        )}
+                                    </>
+                                )}
+                            </Card>
 
-export default WorkShopManager;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+                            );
+                            };
+
+                            export default WorkShopManager;

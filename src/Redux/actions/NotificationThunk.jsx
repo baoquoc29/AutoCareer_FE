@@ -13,7 +13,6 @@ import {BellOutlined} from "@ant-design/icons";
 
 export const listen_for_notifications = (userId) => {
     return (dispatch) => {
-        console.log("Begin connecting")
         const eventSource = new EventSource(notificationService.stream_notifications(userId));
 
         eventSource.addEventListener('notification', (event) => {

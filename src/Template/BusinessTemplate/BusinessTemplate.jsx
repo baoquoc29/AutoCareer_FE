@@ -70,6 +70,13 @@ export function BusinessTemplate() {
                 {label: "Danh sách yêu cầu", link: "/cooperation-business-manager", icon: ""},
             ],
         },
+        {
+            label: "Sự kiện",
+            icon: "fa-solid fa-store",
+            subMenu: [
+                {label: "Danh sách hội thảo", link: "/business-workshop", icon: ""},
+            ],
+        },
     ];
     return (
         <>

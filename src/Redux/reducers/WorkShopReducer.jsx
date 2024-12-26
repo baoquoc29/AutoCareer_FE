@@ -6,12 +6,13 @@ import {
     GET_ALL_WARD_BY_ID_DISTRICT,
     DELETE_WORK_SHOP,
     UPDATE_WORK_SHOP,
-    GET_ALL_COMPANY_PENDING, GET_ALL_COMPANY_ACCEPT, GET_TOTAL_WORK_SHOP, GET_STATUS_WORK_SHOP
+    GET_ALL_COMPANY_PENDING, GET_ALL_COMPANY_ACCEPT, GET_TOTAL_WORK_SHOP, GET_STATUS_WORK_SHOP, GET_WORK_SHOP_BUSINESS
 } from "../types/WorkShopType";
 import {CLEAR_RESPONSE} from "../../Utils/Setting/Config";
 
 const initialState = {
     workshops: [],
+    workshopsBusiness: [],
     provinces: [],
     districts: [],
     wards: [],
@@ -33,6 +34,14 @@ export const WorkShopReducer = (state = initialState, action) => {
 
                 totalRecords: action.payload.totalRecords,
             };
+        case GET_WORK_SHOP_BUSINESS:
+            return {
+                ...state,
+                workshopsBusiness: action.payload.content,
+
+                totalRecords: action.payload.totalElements,
+            };
+
         case CREATE_WORK_SHOP:
             return {
                 ...state,
