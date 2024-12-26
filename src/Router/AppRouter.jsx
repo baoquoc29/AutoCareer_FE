@@ -49,6 +49,8 @@ import {DashboardJob} from "../Page/Business/DashboardJob";
 import JobDetailPortal from "../Page/Portal/Business/JobDetailPortal";
 import HomeBusinessPortal from "../Page/Portal/BusinessPortal/HomeBusinessPortal";
 import HomeSearchBusiness from "../Page/Portal/BusinessPortal/HomeSearchBusiness";
+import CooperationBusinessManager from "../Page/Business/CooperationBusinessManager/CooperationBusinessManager";
+import CooperationBusinessDetail from "../Page/Business/CooperationBusinessManager/CooperationBusinessDetail";
 
 export function AppRouter() {
     return (
@@ -80,10 +82,11 @@ export function AppRouter() {
                     <Route path={"/workshop-manager"} element={<WorkShopManager/>}/>
                     <Route path={"/cooperation-manager"} element={<CooperationManager/>}/>
                     <Route path={"/cooperation-detail"} element={<CooperationDetail/>}/>
+
                 </Route>
                 <Route element={<PrivateRoute>{" "}<BusinessTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
-                    <Route path={"/dashboard-job"} element={<DashboardJob/>}/>
+                    {/*<Route path={"/dashboard-job"} element={<DashboardJob/>}/>*/}
                     <Route path={"/industry-manager"} element={<IndustryManager/>}/>
                     <Route path={"/employee-manager"} element={<EmployeeManager />} />
                     <Route path={"/employee-create"} element={<EmployeeCreate />} />
@@ -96,6 +99,8 @@ export function AppRouter() {
                     <Route path={"/job-detail"} element={<JobDetail />} />
                     <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                     <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
+                    <Route path={"/cooperation-business-manager"} element={<CooperationBusinessManager/>}/>
+                    <Route path={"/cooperation-business-detail"} element={<CooperationBusinessDetail/>}/>
 
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>

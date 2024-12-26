@@ -11,12 +11,13 @@ import PageError from "../../PageError404/PageError"
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
 import {
     AppstoreAddOutlined,
-    ClockCircleOutlined,
-    EnvironmentOutlined, HomeOutlined, RestOutlined,
-    TeamOutlined, TrophyOutlined,
+    EnvironmentOutlined,
+    HomeOutlined,
+    TeamOutlined,
+    TrophyOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {DOMAIN} from "../../../Utils/Setting/Config";
 
 const {Title, Text} = Typography;
 
@@ -95,9 +96,7 @@ const JobDetailPortal = () => {
                                                         Địa điểm
                                                     </Text>
                                                     <Text>
-                                                        {job.fromSalary === 1 && job.toSalary === 1
-                                                            ? "Lương thỏa thuận"
-                                                            : `${formatSalary(job.fromSalary)} - ${formatSalary(job.toSalary)}`}
+
                                                     </Text> </Space>
                                             </Col>
                                             <Col span={6}>

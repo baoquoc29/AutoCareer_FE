@@ -22,5 +22,12 @@ export class CooperationService extends baseService{
     reject_cooperation_of_university = (formData) =>{
         return this.post('api/cooperation/reject-request', formData)
     }
+    get_all_cooperation_business = (page, size, keyword='', statusConnected = null) =>{
+        return this.get(`api/cooperation/get-request?page=${page}&size=${size}&keyword=${keyword}`
+            + (statusConnected ? `&statusConnected=${statusConnected}` : ''))
+    }
+    cancel_request = (universityId) =>{
+        return this.put(`api/cooperation/cancel-request?universityId=${universityId}`)
+    }
 }
 export default CooperationService = new CooperationService();
