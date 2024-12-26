@@ -47,6 +47,8 @@ import AdminWorkshopManager from "../Page/Admin/WorkshopManager/AdminWorkshopMan
 import AdminWorkshopDetail from "../Page/Admin/WorkshopManager/WorkshopDetail";
 import {DashboardJob} from "../Page/Business/DashboardJob";
 import JobDetailPortal from "../Page/Portal/Business/JobDetailPortal";
+import HomeBusinessPortal from "../Page/Portal/BusinessPortal/HomeBusinessPortal";
+import HomeSearchBusiness from "../Page/Portal/BusinessPortal/HomeSearchBusiness";
 
 export function AppRouter() {
     return (
@@ -64,6 +66,9 @@ export function AppRouter() {
                     <Route path={"/work-shop-all"} element={<WorkshopListPortal/>}/>
                     <Route path="/workshop-details/:id" element={<WorkshopDetailsScreen />} />
                     <Route path={"/job-portal-detail/:id"} element={<JobDetailPortal/>}/>
+                    <Route path={"/business-section"} element={<HomeBusinessPortal/>}/>
+                    <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
+
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/university"} element={<University/>}/>
