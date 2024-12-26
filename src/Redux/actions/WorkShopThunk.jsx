@@ -4,7 +4,7 @@ import {
     CREATE_WORK_SHOP, DELETE_WORK_SHOP, GET_ALL_COMPANY, GET_ALL_COMPANY_ACCEPT, GET_ALL_COMPANY_PENDING,
     GET_ALL_DISTRICT_BY_ID,
     GET_ALL_LOCATION,
-    GET_ALL_WARD_BY_ID_DISTRICT, GET_STATUS_WORK_SHOP, GET_TOTAL_WORK_SHOP, REJECT_WORK_SHOP,
+    GET_ALL_WARD_BY_ID_DISTRICT, GET_STATUS_WORK_SHOP, GET_TOTAL_WORK_SHOP, GET_WORK_SHOP_BUSINESS, REJECT_WORK_SHOP,
     SET_WORK_SHOP,
     UPDATE_WORK_SHOP,
 } from "../types/WorkShopType";
@@ -22,6 +22,20 @@ export const get_all_workshop_by_university = (idUniversity, page, size) => {
                     payload: res.data,  // Update the state with the fetched workshops list
                 });
             }
+        } catch (error) {
+            console.error("Error fetching workshops:", error);
+            // Optionally, you can dispatch an error action or show a notification
+        }
+    };
+};
+export const get_all_workshop_by_business = (idBusiness,param) => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_workshop_all_by_business(idBusiness, param);
+                dispatch({
+                    type: GET_WORK_SHOP_BUSINESS,
+                    payload: res.data,  // Update the state with the fetched workshops list
+                });
         } catch (error) {
             console.error("Error fetching workshops:", error);
             // Optionally, you can dispatch an error action or show a notification

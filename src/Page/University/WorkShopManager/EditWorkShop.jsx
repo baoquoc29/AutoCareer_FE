@@ -31,7 +31,8 @@ dayjs.extend(localeData)
 dayjs.extend(weekOfYear)
 dayjs.extend(weekYear)
 const { Option } = Select;
-
+const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
+const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
 // Styled Components
 const Container = styled.div`
     border: 1px solid #d9d9d9;
@@ -320,9 +321,9 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
             <Form form={form} layout="vertical" autocomplete="off">
                 <Form.Item
                     rules={[
-                        { required: true, message: 'Vui lòng nhập tiêu đề.' },
-                        { min: 10, message: 'Tiêu đề phải có ít nhất 10 ký tự.' },
-                        { max: 256, message: 'Tiêu đề không được vượt quá 256 ký tự.' }
+                        {required: true, message: 'Vui lòng nhập tiêu đề.'},
+                        {min: 10, message: 'Tiêu đề phải có ít nhất 10 ký tự.'},
+                        {max: 256, message: 'Tiêu đề không được vượt quá 256 ký tự.'}
                     ]}
                     label="Tiêu đề"
                     name="title"
@@ -336,11 +337,11 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         <FormItem
                             label="Ngày bắt đầu"
                             name="startDate"
-                            rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu' }]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày bắt đầu'}]}
                         >
                             <DatePicker
                                 format="YYYY-MM-DD HH:mm"
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 placeholder="Chọn ngày bắt đầu"
                                 showTime
                                 disabledDate={disablePastDates}
@@ -352,11 +353,11 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         <FormItem
                             label="Ngày kết thúc"
                             name="endDate"
-                            rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc' }]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày kết thúc'}]}
                         >
                             <DatePicker
                                 format="YYYY-MM-DD HH:mm"
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 placeholder="Chọn ngày kết thúc"
                                 showTime
                                 disabledDate={disableEndDate}
@@ -368,10 +369,10 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         <FormItem
                             label="Ngày hết hạn"
                             name="expirationDate"
-                            rules={[{ required: true, message: 'Vui lòng chọn ngày hết hạn' }]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}
                         >
                             <DatePicker
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 placeholder="Chọn ngày hết hạn"
                                 disabledDate={disableExpirationDate}
                             />
@@ -398,7 +399,8 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem   rules={[{required: true, message: 'Vui lòng chọn quận/huyện'}]} label="Quận/Huyện" name="district">
+                        <FormItem rules={[{required: true, message: 'Vui lòng chọn quận/huyện'}]} label="Quận/Huyện"
+                                  name="district">
                             <Select onChange={handleDistrictChange} value={selectedDistrict}>
                                 {districts.map(district => (
                                     <Option key={district.id} value={district.id}>
@@ -409,7 +411,8 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem  rules={[{required: true, message: 'Vui lòng chọn phường/xã'}]} label="Phường/Xã" name="ward">
+                        <FormItem rules={[{required: true, message: 'Vui lòng chọn phường/xã'}]} label="Phường/Xã"
+                                  name="ward">
                             <Select>
                                 {wards.map(ward => (
                                     <Option key={ward.id} value={ward.id}>
@@ -425,10 +428,10 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                     label="Địa chỉ chi tiết"
                     name="detailAddress"
                     rules={[
-                        { pattern: /^[^\s].*$/, message: 'Địa chỉ chi tiết không được có dấu cách ở đầu.' }
+                        {pattern: /^[^\s].*$/, message: 'Địa chỉ chi tiết không được có dấu cách ở đầu.'}
                     ]}
                 >
-                    <Input.TextArea placeholder="Nhập địa chỉ chi tiết" />
+                    <Input.TextArea placeholder="Nhập địa chỉ chi tiết"/>
                 </Form.Item>
 
 
@@ -439,7 +442,6 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         theme="snow"
                     />
                 </FormItem>
-
 
 
                 <FormItem label="Ảnh" name="image">
@@ -455,7 +457,7 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                             showUploadList={false}
                         >
                             <div className="ant-upload-drag-icon">
-                                <UploadOutlined />
+                                <UploadOutlined/>
                             </div>
                             <p className="ant-upload-text">Kéo và thả hình ảnh vào đây</p>
                         </Upload.Dragger>
@@ -481,16 +483,58 @@ const EditWorkShop = ({ visible, onCancel, onFinish, workshop }) => {
                         onCancel={() => setPreviewVisible(false)}
                         width={600}
                     >
-                        <img alt="preview" style={{ width: '100%' }} src={previewImage} />
+                        <img alt="preview" style={{width: '100%'}} src={previewImage}/>
                     </Modal>
                 </FormItem>
 
             </Form>
+            <div className="col-12 text-end">
+                <button
+                    type="button"
+                    className="btn btn-outline-danger mt-3 mx-3"
+                    onClick={onCancel}
+                    style={{
+                        borderColor: dangerColor,
+                        color: dangerColor,
+                        transition: 'background-color 0.3s ease, color 0.3s ease'
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = dangerColor;
+                        e.target.style.color = 'white';
+                        e.target.style.transform = 'scale(1.05)';
 
-            <ButtonGroup>
-                <Button onClick={onCancel}>Hủy</Button>
-                <Button type="primary" onClick={handleOk}>Cập nhật</Button>
-            </ButtonGroup>
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.backgroundColor = '';
+                        e.target.style.color = dangerColor;
+                        e.target.style.transform = 'scale(1)';
+
+                    }}
+                >
+                    Hủy bỏ
+                </button>
+                <button
+                    type="submit"
+                    className="btn btn-outline-primary mt-3 "
+                    onClick={handleOk}
+                    style={{
+                        borderColor: primaryColor,
+                        backgroundColor: primaryColor,
+                        color: 'white',
+                        transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
+                    }}
+                    onMouseOver={(e) => {
+                        e.target.style.backgroundColor = primaryColor;
+                        e.target.style.color = 'white';
+                        e.target.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseOut={(e) => {
+                        e.target.style.transform = 'scale(1)';
+                    }}
+                >
+                    Cập nhật
+                </button>
+            </div>
         </Container>
     );
 };
