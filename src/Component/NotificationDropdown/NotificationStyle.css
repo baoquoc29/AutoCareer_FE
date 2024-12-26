@@ -29,14 +29,17 @@
 }
 .notification-item:hover {
     background-color: #e0f2fe; /* Hover màu xanh nhạt */
+    cursor: pointer;
 }
 
 .notification-new {
     font-weight: bold;
     color: #1e3a8a; /* Màu chữ xanh đậm cho thông báo mới */
 }
-
-.notification-badge {
-    background-color: #ef4444 !important; /* Màu đỏ cho badge */
-    color: #fff;
+.notification-icon-wrapper{
+    cursor: pointer;
 }
+/*.notification-badge {*/
+/*    background-color: green !important; !* Màu đỏ cho badge *!*/
+/*    color: #fff;*/
+/*}*/

@@ -22,6 +22,9 @@ export const GET_IMAGE_URI = `${DOMAIN}/api/v1/image/resource?imageId=`
 // export const GET_IMAGE_URI = `http://192.168.0.152:8081/auto-career/api/v1/image/resource?imageId=`
 
 
+//domain firebase
+
+
 export const TOKEN = 'accessToken'
 
 export const USER_LOGIN = 'USER_LOGIN';

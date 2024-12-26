@@ -25,7 +25,7 @@ export function University() {
     const university = useSelector(state => state.UserReducer.userData?.university);
     const universityDetails = useSelector(state => state.UniversityReducer.university);
     const totalInstruction = useSelector(state => state.InstructionalReducer.totalInstruction)
-    const {totalSections, countMajor} = useSelector(state => state.SectionReducer)
+    const {totalSections} = useSelector(state => state.SectionReducer)
     const {totalStudent, totalMajor, countStudentMajor} = useSelector(state => state.MajorReducer)
     const {totalWorkShop, statusWorkShop} = useSelector(state => state.WorkShopReducer)
     const totalCooperation = useSelector(state => state.CooperationReducer.totalCooperation)
@@ -49,9 +49,6 @@ export function University() {
     const formattedDate = new Date().toLocaleDateString();
 
 
-    // Dữ liệu cho Bar Chart từ countMajor
-    const chartBarData = Object.values(countMajor);
-    const chartLabelsBar = Object.keys(countMajor);
 
 
     // Dữ liệu cho Bar Chart từ countStudentMajor
@@ -116,8 +113,8 @@ export function University() {
                     <div className="row g-4 card-container">
                         <div className="col-md-2">
                             <Card className="card-total-instructional">
-                                <div className="card-header">Tổng giáo vụ</div>
-                                <div className="card-body">
+                                <h4 >Tổng giáo vụ</h4>
+                                <div className="card-body-header">
                                     <FaChalkboardTeacher className="icon"/>
                                     <p className="card-title">
                                         <CountUp end={totalInstruction} duration={5}/>
@@ -127,8 +124,8 @@ export function University() {
                         </div>
                         <div className="col-md-2">
                             <Card className="card-total-section">
-                                <div className="card-header">Tổng khoa</div>
-                                <div className="card-body">
+                                <h4>Tổng khoa</h4>
+                                <div className="card-body-header">
                                     <FaSchool className="icon" />
                                     <p className="card-title">
                                         <CountUp end={totalSections} duration={5}/>
@@ -138,8 +135,8 @@ export function University() {
                         </div>
                         <div className="col-md-2">
                             <Card className="card-total-major">
-                                <div className="card-header">Tổng chuyên ngành</div>
-                                <div className="card-body">
+                                <h4>Tổng chuyên ngành</h4>
+                                <div className="card-body-header">
                                     <FaLaptop className="icon" />
                                     <h2 className="card-title">
                                         <CountUp end={totalMajor} duration={5}/>
@@ -149,8 +146,8 @@ export function University() {
                         </div>
                         <div className="col-md-2">
                             <Card className="card-total-student">
-                                <div className="card-header">Tổng số sinh viên</div>
-                                <div className="card-body">
+                                <h4 >Tổng số sinh viên</h4>
+                                <div className="card-body-header">
                                     <FaUsers className="icon" />
                                     <h2 className="card-title">
                                         <CountUp end={totalStudent} duration={5}/>
@@ -160,8 +157,8 @@ export function University() {
                         </div>
                         <div className="col-md-2">
                             <Card className="card-total-workshop">
-                                <div className="card-header">Tổng số sự kiện</div>
-                                <div className="card-body">
+                                <h4>Tổng số sự kiện</h4>
+                                <div className="card-body-header">
                                     <FaCalendarAlt className="icon" />
                                     <h2 className="card-title">
                                         <CountUp end={totalWorkShop} duration={5}/>
@@ -171,8 +168,8 @@ export function University() {
                         </div>
                         <div className="col-md-2">
                             <Card className="card-total-cooperation">
-                                <div className="card-header">Tổng số hợp tác</div>
-                                <div className="card-body">
+                                <h4 >Tổng số hợp tác</h4>
+                                <div className="card-body-header">
                                     <FaHandshake className="icon" />
                                     <h2 className="card-title">
                                         <CountUp end={totalCooperation} duration={5}/>
