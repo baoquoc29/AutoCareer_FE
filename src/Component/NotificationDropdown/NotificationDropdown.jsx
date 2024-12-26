@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Dropdown, List, Avatar, Badge, Button, Spin} from 'antd';
+import {Dropdown, List, Avatar, Badge, Button, Spin, Modal} from 'antd';
 import {BellOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -14,6 +14,7 @@ import {formatDistanceToNow} from "date-fns";
 const NotificationDropdown = () => {
         const dispatch = useDispatch();
         const notifications = useSelector((state) => state.NotificationReducer?.notifications);
+        const [allNotification, setAllNotification] = useState({});
         const unreadAmount = useSelector((state) => state.NotificationReducer?.unreadCount);
         const totalElements = useSelector((state) => state.NotificationReducer?.totalElements);
         const userId = useSelector((state) => state.UserReducer.userData?.id);
@@ -23,18 +24,17 @@ const NotificationDropdown = () => {
         const [loading, setLoading] = useState(false);
         const [hasMore, setHasMore] = useState(true); // Kiểm tra còn dữ liệu hay không
         const [allNotifications, setAllNotifications] = useState([]);
-        const [isModalVisible, setIsModalVisible] = useState(false);
-        const [selectedNotification, setSelectedNotification] = useState(null);
         const observer = useRef();
 
-        useEffect(() => {
+        useEffect( () => {
             console.log(hasMore)
             if (userId) {
                 dispatch(listen_for_notifications(userId))
-                dispatch(get_all_paging_notifications(pageNo - 1, pageSize))
                 dispatch(count_unread_notifications());
+                dispatch(get_all_paging_notifications(pageNo -1, pageSize))
+                setAllNotifications(notifications);
             }
-        }, [userId]);
+        }, [userId, unreadAmount]);
         useEffect(() => {
             console.log("totalElements", totalElements);
             console.log("no*size", pageNo * pageSize);
@@ -80,25 +80,31 @@ const NotificationDropdown = () => {
         // Đánh dấu tất cả là đã đọc
         const markAllAsRead = () => {
             dispatch(mask_read_all_notifications())
-                .then(() => {
+                .then( () => {
                     dispatch(count_unread_notifications());
+
                 })
                 .catch((err) => {
                     console.error(err);
                 });
         };
         const markAsRead = (data) => {
-            dispatch(mask_read_notification(data))
-                .then(() => {
-                    dispatch(count_unread_notifications());
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-        };
-
-        const showModal = (notification) => {
-            markAsRead({id: notification.id})
+            Modal.confirm({
+                title: data.title,
+                content: data.message,
+                cancelButtonProps: { style: { display: 'none' } },
+                onOk() {
+                    if (data.statusRead === "UNREAD") {
+                        dispatch(mask_read_notification({id: data.id}))
+                            .then(() => {
+                                dispatch(count_unread_notifications());
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+                    }
+                },
+            });
         };
 
         const menu = (
@@ -122,19 +128,19 @@ const NotificationDropdown = () => {
                                     className="notification-item"
                                     ref={isLastItem ? lastNotificationRef : null}
                                     key={item.id}
-                                    onClick={() => showModal(item)}
+                                    onClick={() => markAsRead(item)}
                                 >
                                     <List.Item.Meta
-                                        // avatar={
-                                        //     <Avatar
-                                        //         icon={<BellOutlined/>}
-                                        //         style={{
-                                        //             color:
-                                        //                 item.statusRead === "UNREAD" ? '#ff4d4f' : '#a8a7a7',
-                                        //             backgroundColor: "#fff"
-                                        //         }}
-                                        //     />
-                                        // }
+                                        avatar={
+                                            <Avatar
+                                                icon={<BellOutlined/>}
+                                                style={{
+                                                    color:
+                                                        item.statusRead === "UNREAD" ? '#ff4d4f' : '#a8a7a7',
+                                                    backgroundColor: "#fff"
+                                                }}
+                                            />
+                                        }
                                         title={<span>{item.title}</span>}
                                         description={
                                             <div>
@@ -147,7 +153,7 @@ const NotificationDropdown = () => {
                                                 </div>
                                             </div>
                                         }
-                                        onClick={(item) => showModal(item)}
+
                                     />
                                 </List.Item>
                             );

@@ -9,6 +9,7 @@ import {
     get_detail_university,
     rejected_university
 } from "../../../Redux/actions/AdminUniversityThunk";
+
 const {Title, Text} = Typography;
 
 const UniversityDetail = ({open, onClose}) => {
@@ -71,15 +72,19 @@ const UniversityDetail = ({open, onClose}) => {
 
     return (
         <Modal open={open} onCancel={onClose} footer={null} width={700}>
-            <Title level={4} >Chi tiết tài khoản trường học</Title>
+            <Title level={4}>Chi tiết tài khoản trường học</Title>
             <Divider style={{marginTop: 1}}/>
             <div className="row mb-4">
                 <div className="col-md-3 text-center">
                     <img
-                        src={university.universityImageId ? `${GET_IMAGE_URI}${university.universityImageId}` : "/placeholder-logo.png"}
+                        src={university.universityImageId ? `${GET_IMAGE_URI}${university.universityImageId}` : "placeholder-avatar.jpg"}
                         alt="Logo Doanh Nghiệp"
                         className="img-fluid logo-image rounded"
-                        style={{maxHeight: "150px"}}
+                        style={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "cover",
+                        }}
                     />
                 </div>
                 <div className="col-md-9">

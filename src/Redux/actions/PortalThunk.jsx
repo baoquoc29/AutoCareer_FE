@@ -2,7 +2,7 @@ import {portalService} from "../../Service/PortalService/PortalService";
 import {
     CHECK_STATUS_REQUEST,
     ERROR_PAGE,
-    GET_ALL_BUSINESS_FEATURE,
+    GET_ALL_BUSINESS_FEATURE, GET_ALL_BUSINESS_HOME,
     GET_ALL_JOB_LIST,
     GET_TOTAL_JOB_INDUSTRY,
     GET_UNIVERSITY_TOTAL,
@@ -136,6 +136,19 @@ export const get_all_job_by_industry = (page,size,industryId) => {
             const res = await portalService.get_job_by_industry(page,size,industryId)
             dispatch({
                 type: GET_ALL_JOB_LIST,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_all_business_home_portal = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_list_business_home_portal()
+            dispatch({
+                type: GET_ALL_BUSINESS_HOME,
                 payload: res
             })
         } catch (error) {

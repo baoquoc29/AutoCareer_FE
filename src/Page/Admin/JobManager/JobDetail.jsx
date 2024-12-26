@@ -1,11 +1,11 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {Button, Modal, Space, Row, Col, Card, Divider, Typography} from "antd";
 
 import {
     CheckCircleOutlined,
-    ClockCircleOutlined, DollarOutlined,
-    ExclamationCircleOutlined,
-    QuestionCircleOutlined,
+    ClockCircleOutlined, DollarOutlined, EnvironmentOutlined,
+    ExclamationCircleOutlined, FieldTimeOutlined, LinkOutlined, MailOutlined, PhoneOutlined,
+    QuestionCircleOutlined, SolutionOutlined,
 } from "@ant-design/icons";
 import "./JobDetail.css";
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
@@ -14,6 +14,7 @@ import {useNavigate} from "react-router-dom";
 import {get_job_detail} from "../../../Redux/actions/JobThunk";
 import {approved_job, rejected_job} from "../../../Redux/actions/AdminJobThunk";
 import RejectModal from "../../Modal/RejectModal";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
 const {Text, Title} = Typography;
 
@@ -68,7 +69,7 @@ const AdminJobDetail = () => {
             onOk() {
                 console.log(`Rejected business: ${jobData.title}`);
                 let req = {id: jobData.jobId, message: message};
-                dispatch(rejected_job(req)).then(() =>{
+                dispatch(rejected_job(req)).then(() => {
                     dispatch(get_job_detail(jobData.jobId));
                 })
                 setIsRejectModalVisible(false); // Đóng modal
@@ -114,47 +115,93 @@ const AdminJobDetail = () => {
                         <Row gutter={[16, 16]}>
                             {/* Job Content Card */}
                             <Col span={24} md={16}>
-                                <Card bordered={false}>
+                                <Card bordered={false} className={"container"}>
                                     <Title level={2} style={{textAlign: "center"}}>{jobData.title}</Title>
-
-                                    {/* Nội dung công việc */}
+                                    <Divider style={{marginTop: 1}}/>
 
                                     <Space direction="vertical" size={4} style={{width: "100%"}}>
-                                        <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Chi
-                                            tiết
-                                            tuyển dụng</Divider>
-                                        <Text strong style={{color: "#ffafcc"}}>
-                                            <ExclamationCircleOutlined style={{color: "#ffafcc", marginRight: "8px"}}/>
-                                            Mô tả công việc:
-                                        </Text>
-                                        <div style={{whiteSpace: "pre-wrap"}}>
-                                            <DisplayRichText content={jobData.jobDescription}/>
-                                        </div>
-
-                                        <Text strong style={{color: "#52c41a"}}>
-                                            <QuestionCircleOutlined style={{color: "#52c41a", marginRight: "8px"}}/>
-                                            Yêu cầu ứng viên:
-                                        </Text>
-                                        <div style={{whiteSpace: "pre-wrap"}}>
-                                            <DisplayRichText content={jobData.requirement}/>
-                                        </div>
-
-                                        <Text strong style={{color: "#1890ff"}}>
-                                            <CheckCircleOutlined style={{color: "#1890ff", marginRight: "8px"}}/>
-                                            Quyền lợi:
-                                        </Text>
-                                        <div style={{whiteSpace: "pre-wrap"}}>
-                                            <DisplayRichText content={jobData.benefit}/>
-                                        </div>
-
-                                        {/* Thời gian làm việc */}
-                                        <Text strong style={{color: "#722ed1"}}>
-                                            <ClockCircleOutlined style={{color: "#722ed1", marginRight: "8px"}}/>
-                                            Thời gian làm việc:
-                                        </Text>
-                                        <Text>
-                                            {jobData.workingTime ? jobData.workingTime : "Không xác định"}
-                                        </Text>
+                                        <Row gutter={[16, 16]}>
+                                            <Col span={24}>
+                                                <Text strong>
+                                                    <DollarOutlined
+                                                        style={{
+                                                            color: "#ff70a6",
+                                                            marginRight: "8px"
+                                                        }}/>
+                                                    Mức lương:
+                                                </Text>
+                                                <Text> {formatSalary(jobData.salary)}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>
+                                                    <SolutionOutlined style={{
+                                                        color: "#223eef",
+                                                        marginRight: "8px"
+                                                    }}/>
+                                                    Kinh nghiệm:</Text>
+                                                <Text> {jobData.level}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>
+                                                    <FieldTimeOutlined
+                                                        style={{
+                                                            color: "#722ed1",
+                                                            marginRight: "8px"
+                                                        }}/>
+                                                    Thời gian làm việc:
+                                                </Text>
+                                                <Text> {jobData.workingTime ? jobData.workingTime : "Không xác định"}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>
+                                                    <ClockCircleOutlined
+                                                        style={{
+                                                            color: "#722ed1",
+                                                            marginRight: "8px"
+                                                        }}/>
+                                                    Ngày hết hạn:
+                                                </Text> {formatDate(jobData.expireDate) || "N/A"}
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong style={{color: "#ffafcc"}}>
+                                                    <ExclamationCircleOutlined
+                                                        style={{
+                                                            color: "#ffafcc",
+                                                            marginRight: "8px"
+                                                        }}/>
+                                                    Mô tả công việc:
+                                                </Text>
+                                                <div style={{whiteSpace: "pre-wrap"}}>
+                                                    <DisplayRichText content={jobData.jobDescription}/>
+                                                </div>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>
+                                                    <QuestionCircleOutlined
+                                                        style={{
+                                                            color: "#52c41a",
+                                                            marginRight: "8px"
+                                                        }}/>
+                                                    Yêu cầu ứng viên:
+                                                </Text>
+                                                <div style={{whiteSpace: "pre-wrap"}}>
+                                                    <DisplayRichText content={jobData.requirement}/>
+                                                </div>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>
+                                                    <CheckCircleOutlined
+                                                        style={{
+                                                            color: "#1890ff",
+                                                            marginRight: "8px"
+                                                        }}/>
+                                                    Quyền lợi:
+                                                </Text>
+                                                <div style={{whiteSpace: "pre-wrap"}}>
+                                                    <DisplayRichText content={jobData.benefit}/>
+                                                </div>
+                                            </Col>
+                                        </Row>
                                     </Space>
 
                                     <Divider/>
@@ -184,57 +231,82 @@ const AdminJobDetail = () => {
                                 </Card>
                             </Col>
                             <Col span={24} md={8}>
-                                {/* Additional Info Card */}
                                 <Row gutter={[16, 16]}>
                                     <Col span={24}>
-                                        <Card bordered={false}>
-                                            <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
-                                                tin cơ bản</Divider>
-                                            <Row gutter={[16, 16]}>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#096dd9"}}>Tiêu đề:</Text>
-                                                        <Text>{jobData.title}</Text>
-                                                    </Space>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#ff70a6"}}>
-                                                            <DollarOutlined
-                                                                style={{color: "#ff70a6", marginRight: "8px"}}/>
-                                                            Mức lương:
-                                                        </Text>
-                                                        <Text>
-                                                            {formatSalary(jobData.salary)}
-                                                        </Text>
-                                                    </Space>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong>Kinh nghiệm:</Text>
-                                                        <Text>{jobData.level}</Text>
-                                                    </Space>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Space direction="vertical" size={4}>
-                                                        <Text strong style={{color: "#722ed1"}}>
-                                                            <ClockCircleOutlined
-                                                                style={{color: "#722ed1", marginRight: "8px"}}/>
-                                                            Ngày hết hạn:
-                                                        </Text>
-                                                        <Text>
-                                                            {formatDate(jobData.expireDate)}
-                                                        </Text>
-                                                    </Space>
-                                                </Col>
-                                            </Row>
+                                        <Card bordered={false} style={{padding: "10px"}}>
+                                            <Divider orientation="left"
+                                                     style={{fontSize: "18px", color: "#096dd9"}}>
+                                                Thông tin doanh nghiệp
+                                            </Divider>
+                                            {jobData.business ? (
+                                                <Row gutter={[16, 16]}>
+
+                                                    <Col span={24}>
+                                                        <Row>
+                                                            <Col>
+                                                                <img
+                                                                    src={jobData.business.businessImageId ? `${GET_IMAGE_URI}${jobData.business.businessImageId}` : "placeholder-avatar.jpg"}
+                                                                    alt="Logo Doanh Nghiệp"
+                                                                    className="img-fluid logo-image rounded"
+                                                                    style={{width: "80px", height: "80px", objectFit: "cover",}}
+                                                                />
+                                                            </Col>
+                                                            <Col style={{marginLeft: "10px"}}>
+                                                                <Text
+                                                                    strong> {jobData.business.name || "Không xác định"}</Text>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <MailOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Email:</Text>
+                                                        <Text> {jobData.business.email || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <PhoneOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Số điện thoại:</Text>
+                                                        <Text> {jobData.business.phone || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <LinkOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Website:</Text>
+                                                        <Text> {jobData.business.website || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <EnvironmentOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Địa chỉ:</Text>
+                                                        <Text> {jobData.business.location || "Không xác định"}</Text>
+                                                    </Col>
+
+                                                </Row>
+                                            ) : (
+                                                <Text>Không có thông tin doanh nghiệp.</Text>
+                                            )}
                                         </Card>
                                     </Col>
 
                                     <Col span={24}>
-                                        <Card bordered={false}>
-                                            <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
-                                                tin khác</Divider>
+                                        <Card bordered={false} style={{padding: "10px"}}>
+                                            <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>
+                                                Thông tin khác
+                                            </Divider>
                                             <Row gutter={[16, 16]}>
                                                 <Col span={12}>
                                                     <Space direction="vertical" size={4}>
