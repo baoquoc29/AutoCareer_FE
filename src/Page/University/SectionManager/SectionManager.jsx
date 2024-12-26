@@ -179,7 +179,7 @@ const SectionManager = () => {
                                         <Input placeholder="Tìm kiếm..." value={searchText} style={{marginRight:'10px'}}
                                                onChange={handleSearch} prefix={<SearchOutlined/>}/>
                                         <Select
-                                            style={{marginRight: '10px', width: '150px'}}
+                                            style={{marginRight: '10px', width: '200px'}}
                                             placeholder="Trạng thái"
                                             value={selectedStatus}
                                             onChange={handleStatusChange}
