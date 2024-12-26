@@ -4,8 +4,8 @@ import {Button, Modal, Space, Row, Col, Card, Divider, Typography} from "antd";
 import {
     CheckCircleOutlined,
     ClockCircleOutlined, DollarOutlined, EnvironmentOutlined,
-    ExclamationCircleOutlined, FieldTimeOutlined, LinkOutlined, MailOutlined, PhoneOutlined,
-    QuestionCircleOutlined, SolutionOutlined,
+    ExclamationCircleOutlined, FieldTimeOutlined, FormOutlined, LinkOutlined, MailOutlined, PhoneOutlined,
+    QuestionCircleOutlined, SolutionOutlined, UserOutlined,
 } from "@ant-design/icons";
 import "./JobDetail.css";
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
@@ -122,15 +122,16 @@ const AdminJobDetail = () => {
                                     <Space direction="vertical" size={4} style={{width: "100%"}}>
                                         <Row gutter={[16, 16]}>
                                             <Col span={24}>
-                                                <Text strong>
-                                                    <DollarOutlined
-                                                        style={{
-                                                            color: "#ff70a6",
-                                                            marginRight: "8px"
-                                                        }}/>
-                                                    Mức lương:
-                                                </Text>
-                                                <Text> {formatSalary(jobData.salary)}</Text>
+                                                    <Text strong style={{color: "#ff70a6"}}>
+                                                        <DollarOutlined
+                                                            style={{color: "#ff70a6", marginRight: "8px"}}/>
+                                                        Mức lương:
+                                                    </Text>
+                                                    <Text>
+                                                        {jobData.fromSalary === 1 && jobData.toSalary === 1
+                                                            ? " Lương thỏa thuận"
+                                                            : ` ${formatSalary(jobData?.fromSalary)} - ${formatSalary(jobData?.toSalary)}`}
+                                                    </Text>
                                             </Col>
                                             <Col span={24}>
                                                 <Text strong>
@@ -161,6 +162,25 @@ const AdminJobDetail = () => {
                                                         }}/>
                                                     Ngày hết hạn:
                                                 </Text> {formatDate(jobData.expireDate) || "N/A"}
+                                            </Col>
+                                            <Col span={24}>
+                                                <FormOutlined
+                                                    style={{color: "#ff70a6", marginRight: "2px"}}/>
+                                                <Text strong style={{color: "#ff70a6"}}>Hình thức làm
+                                                    việc</Text>
+                                                <Text>
+                                                    {jobData.workForm}
+                                                </Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong style={{color: "#ff70a6"}}>
+                                                    <UserOutlined
+                                                        style={{color: "#ff70a6", marginRight: "8px"}}/>
+                                                    Cấp bậc
+                                                </Text>
+                                                <Text>
+                                                    {jobData.rank}
+                                                </Text>
                                             </Col>
                                             <Col span={24}>
                                                 <Text strong style={{color: "#ffafcc"}}>
@@ -248,7 +268,11 @@ const AdminJobDetail = () => {
                                                                     src={jobData.business.businessImageId ? `${GET_IMAGE_URI}${jobData.business.businessImageId}` : "placeholder-avatar.jpg"}
                                                                     alt="Logo Doanh Nghiệp"
                                                                     className="img-fluid logo-image rounded"
-                                                                    style={{width: "80px", height: "80px", objectFit: "cover",}}
+                                                                    style={{
+                                                                        width: "80px",
+                                                                        height: "80px",
+                                                                        objectFit: "cover",
+                                                                    }}
                                                                 />
                                                             </Col>
                                                             <Col style={{marginLeft: "10px"}}>
@@ -301,7 +325,77 @@ const AdminJobDetail = () => {
                                             )}
                                         </Card>
                                     </Col>
-
+                                    <Col span={24}>
+                                        <Card bordered={false}>
+                                            <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
+                                                tin cơ bản</Divider>
+                                            <Row gutter={[16, 16]}>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Text strong style={{color: "#096dd9"}}>Tiêu đề</Text>
+                                                        <Text>{jobData.title}</Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Text strong style={{color: "#ff70a6"}}>
+                                                            <DollarOutlined
+                                                                style={{color: "#ff70a6", marginRight: "8px"}}/>
+                                                            Mức lương
+                                                        </Text>
+                                                        <Text>
+                                                            {jobData.fromSalary === 1 && jobData.toSalary === 1
+                                                                ? "Lương thỏa thuận"
+                                                                : `${formatSalary(jobData.fromSalary)} - ${formatSalary(jobData.toSalary)}`}
+                                                        </Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Text strong style={{color: "#ff70a6"}}>
+                                                            <UserOutlined
+                                                                style={{color: "#ff70a6", marginRight: "8px"}}/>
+                                                            Cấp bậc
+                                                        </Text>
+                                                        <Text>
+                                                            {jobData.rank}
+                                                        </Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Space>
+                                                            <FormOutlined
+                                                                style={{color: "#ff70a6", marginRight: "2px"}}/>
+                                                            <Text strong style={{color: "#ff70a6"}}>Hình thức làm
+                                                                việc</Text>
+                                                        </Space>
+                                                        <Text>
+                                                            {jobData.workForm}
+                                                        </Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Text strong>Kinh nghiệm</Text>
+                                                        <Text>{jobData.level}</Text>
+                                                    </Space>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Space direction="vertical" size={4}>
+                                                        <Text strong style={{color: "#722ed1"}}>
+                                                            <ClockCircleOutlined
+                                                                style={{color: "#722ed1", marginRight: "8px"}}/>
+                                                            Ngày hết hạn
+                                                        </Text>
+                                                        <Text>
+                                                            {formatDate(jobData.expireDate)}
+                                                        </Text>
+                                                    </Space>
+                                                </Col>
+                                            </Row>
+                                        </Card>
+                                    </Col>
                                     <Col span={24}>
                                         <Card bordered={false} style={{padding: "10px"}}>
                                             <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>
