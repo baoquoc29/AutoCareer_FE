@@ -45,6 +45,8 @@ import WorkshopListPortal from "../Page/Portal/WorkshopListPortal";
 import AdminJobDetail from "../Page/Admin/JobManager/JobDetail";
 import AdminWorkshopManager from "../Page/Admin/WorkshopManager/AdminWorkshopManager";
 import AdminWorkshopDetail from "../Page/Admin/WorkshopManager/WorkshopDetail";
+import WorkshopBusinessManager from "../Page/Business/WorkshopManager/WorkshopBusinessManager";
+import WorkshopBusinessDetail from "../Page/Business/WorkshopManager/WorkshopBusinessDetail";
 import {DashboardJob} from "../Page/Business/DashboardJob";
 import JobDetailPortal from "../Page/Portal/Business/JobDetailPortal";
 import HomeBusinessPortal from "../Page/Portal/BusinessPortal/HomeBusinessPortal";
@@ -84,6 +86,7 @@ export function AppRouter() {
                 <Route element={<PrivateRoute>{" "}<BusinessTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
                     <Route path={"/dashboard-job"} element={<DashboardJob/>}/>
+                    <Route path={"/business-workshop"} element={<WorkshopBusinessManager/>}/>
                     <Route path={"/industry-manager"} element={<IndustryManager/>}/>
                     <Route path={"/employee-manager"} element={<EmployeeManager />} />
                     <Route path={"/employee-create"} element={<EmployeeCreate />} />
@@ -96,6 +99,7 @@ export function AppRouter() {
                     <Route path={"/job-detail"} element={<JobDetail />} />
                     <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                     <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
+                    <Route path={"/business-workshop-detail"} element={<WorkshopBusinessDetail/>}/>
 
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>

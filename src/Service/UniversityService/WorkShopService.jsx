@@ -10,7 +10,10 @@ export class WorkShopService extends baseService {
     get_workshop_all = (idUniversity, page, size) => {
         return this.get(`api/work-shop/university/${idUniversity}?page=${page}&size=${size}`);
     };
-
+    get_workshop_all_by_business = (businessId,param) => {
+        const queryParams = new URLSearchParams(param).toString();
+        return this.get(`api/work-shop/business/${businessId}?${queryParams}`);
+    };
 
     create_work_shop = (formData) => {
         return this.postFormData(`api/work-shop`, formData);
@@ -53,6 +56,10 @@ export class WorkShopService extends baseService {
     get_status_workshop=()=>{
         return this.get('api/work-shop/business-details')
     }
+    business_cancel_workshop = (param) => {
+        const queryParams = new URLSearchParams(param).toString();
+        return this.put(`api/work-shop/business/cancel?${queryParams}`);
+    };
 }
 
 // Instantiate WorkShopService

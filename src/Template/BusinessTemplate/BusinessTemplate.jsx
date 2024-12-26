@@ -51,9 +51,7 @@ export function BusinessTemplate() {
             label: "Sự kiện",
             icon: "fa-solid fa-store",
             subMenu: [
-                {label: "Danh sách sự kiện", link: "/workshop-manager", icon: ""},
-                {label: "Công ty tham gia", link: "/section-manager", icon: ""},
-                {label: "Công ty chờ duyệt", link: "/major-manager", icon: ""},
+                {label: "Danh sách hội thảo", link: "/business-workshop", icon: ""},
             ],
         },
         ...(user?.role?.name === "BUSINESS"
