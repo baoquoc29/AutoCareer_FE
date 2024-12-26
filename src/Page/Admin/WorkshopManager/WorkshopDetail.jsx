@@ -3,8 +3,8 @@ import {Button, Modal, Space, Row, Col, Card, Divider, Typography} from "antd";
 
 import {
     CheckCircleOutlined,
-    ClockCircleOutlined, DollarOutlined,
-    ExclamationCircleOutlined,
+    ClockCircleOutlined, DollarOutlined, EnvironmentOutlined,
+    ExclamationCircleOutlined, LinkOutlined, MailOutlined, PhoneOutlined,
     QuestionCircleOutlined,
 } from "@ant-design/icons";
 import "./WorkshopDetail.css";
@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {approved_workshop, get_detail_workshop, rejected_workshop} from "../../../Redux/actions/AdminWorkshopThunk";
 import RejectModal from "../../Modal/RejectModal";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
 const {Text, Title} = Typography;
 
@@ -22,7 +23,12 @@ const AdminWorkshopDetail = () => {
     const navigate = useNavigate();
     const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
     const [message, setMessage] = useState("");
-
+    const [locationUniversity, setLocationUniversity] = useState("");
+    const [locationWorkshop, setLocationWorkshop] = useState("");
+    useEffect(() => {
+        setLocationUniversity(`${workshopData?.university?.location?.description}, ${workshopData?.university.location?.ward?.name}, ${workshopData?.university?.location?.district?.name}, ${workshopData?.university?.location?.province?.name}`)
+        setLocationWorkshop(`${workshopData?.location?.description}, ${workshopData?.location?.ward?.fullName}, ${workshopData?.location?.district?.fullName}, ${workshopData?.location?.province?.fullName}`)
+    }, [workshopData]);
 
     const formatSalary = (salary) => {
         if (!salary) return "Không xác định";
@@ -123,7 +129,7 @@ const AdminWorkshopDetail = () => {
                         <Row gutter={[16, 16]}>
                             {/* Workshop Content Card */}
                             <Col span={24} md={16}>
-                                <Card bordered={false}>
+                                <Card bordered={false} style={{padding: "10px"}}>
                                     <Title level={2} style={{textAlign: "center"}}>{workshopData?.title}</Title>
 
                                     <Space direction="vertical" size={4} style={{width: "100%"}}>
@@ -159,7 +165,7 @@ const AdminWorkshopDetail = () => {
                                         </Text>
                                         <span style={{whiteSpace: "pre-wrap"}}>
                                             <DisplayRichText
-                                                content={`${workshopData?.location?.description}, ${workshopData?.location?.ward?.fullName}, ${workshopData?.location?.district?.fullName}, ${workshopData?.location?.province?.fullName}`}/>
+                                                content={locationWorkshop}/>
                                         </span>
 
                                         <Text strong style={{color: "#ffafcc"}}>
@@ -201,28 +207,78 @@ const AdminWorkshopDetail = () => {
                                 {/* Additional Info Card */}
                                 <Row gutter={[16, 16]}>
                                     <Col span={24}>
-                                        <Card bordered={false}>
+                                        <Card bordered={false} style={{padding: "10px"}}>
                                             <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
                                                 tin trường học</Divider>
-                                            <Row gutter={[16, 16]}>
-                                                <Col span={24}>
+                                            {workshopData.university ? (
+                                                <Row gutter={[16, 16]}>
+                                                    <Col span={24}>
+                                                        <Row>
+                                                            <Col>
+                                                                <img
+                                                                    src={workshopData.university.universityImageId ? `${GET_IMAGE_URI}${workshopData.university.universityImageId}` : "placeholder-avatar.jpg"}
+                                                                    alt="Logo trờng học"
+                                                                    className="img-fluid logo-image rounded"
+                                                                    style={{
+                                                                        width: "80px",
+                                                                        height: "80px",
+                                                                        objectFit: "cover",
+                                                                    }}
+                                                                />
+                                                            </Col>
+                                                            <Col style={{marginLeft: "10px"}}>
+                                                                <Text
+                                                                    strong> {workshopData.university.name || "Không xác định"}</Text>
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
 
-                                                </Col>
-                                                <Col span={24}>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <MailOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Email:</Text>
+                                                        <Text> {workshopData.university.email || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <PhoneOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Số điện thoại:</Text>
+                                                        <Text> {workshopData.university.phone || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <LinkOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Website:</Text>
+                                                        <Text> {workshopData.university.website || "Không xác định"}</Text>
+                                                    </Col>
+                                                    <Col span={24}>
+                                                        <Text strong>
+                                                            <EnvironmentOutlined style={{
+                                                                color: "blue",
+                                                                marginRight: "8px"
+                                                            }}/>
+                                                            Địa chỉ:</Text>
+                                                        <Text> {workshopData.university.location ? locationUniversity : "Không xác định"}</Text>
+                                                    </Col>
 
-                                                </Col>
-                                                <Col span={24}>
-
-                                                </Col>
-                                                <Col span={12}>
-
-                                                </Col>
-                                            </Row>
+                                                </Row>
+                                            ) : (
+                                                <Text>Không có thông tin doanh nghiệp.</Text>
+                                            )}
                                         </Card>
                                     </Col>
 
                                     <Col span={24}>
-                                        <Card bordered={false}>
+                                        <Card bordered={false} style={{padding: "10px"}}>
                                             <Divider orientation="left" style={{fontSize: "18px", color: "#096dd9"}}>Thông
                                                 tin khác</Divider>
                                             <Row gutter={[16, 16]}>
