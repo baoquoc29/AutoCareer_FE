@@ -11,16 +11,15 @@ const SubAdminCreateForm = ({open, onClose}) => {
     const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: {
-            subAdminCode: "",
             name: "",
             gender: "",
             email: "",
             phone: "",
             address: "",
-            subAdminImage: "",
+            subAdminImage: null,
         },
         enableReinitialize: true,
-        validationSchema: SubAdminValidation(["subAdminCode", "name", "gender", "email", "phone", "address", "subAdminImage"],),
+        validationSchema: SubAdminValidation([ "name", "gender", "email", "phone", "address"]),
         onSubmit: (values) => {
             handleSubmit(values); // Gọi hàm handleSubmit
         },
@@ -28,7 +27,7 @@ const SubAdminCreateForm = ({open, onClose}) => {
     const handleSubmit = async (values) => {
         // Chuẩn bị dữ liệu gửi đi
         const formData = new FormData();
-        formData.append("subAdminCode", values.subAdminCode);
+        // formData.append("subAdminCode", values.subAdminCode);
         formData.append("name", values.name);
         formData.append("gender", values.gender);
         formData.append("email", values.email);
@@ -41,14 +40,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
 
         // Gửi dữ liệu tới API
         dispatch(create_sub_admin(formData))
-            .then((response) => {
-                dispatch(get_all_sub_admin())
+            .then(() => {
+                // dispatch(get_all_sub_admin())
                 handleClose();
-            })
-            .catch((error) => {
-                toast.error(error.messages)
             });
-
     };
     const handleClose = () => {
         formik.resetForm(); // Xóa toàn bộ dữ liệu form
@@ -174,19 +169,6 @@ const SubAdminCreateForm = ({open, onClose}) => {
 
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Mã quản trị viên"
-                                   validateStatus={formik.errors.subAdminCode && formik.touched.subAdminCode ? 'error' : ''}
-                                   help={formik.errors.subAdminCode && formik.touched.subAdminCode ? formik.errors.subAdminCode : ''}
-                                   required>
-                            <Input
-                                name="subAdminCode"
-                                placeholder="Nhập mã quản trị viên"
-                                onChange={formik.handleChange}
-                                value={formik.values.subAdminCode}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
                         <Form.Item label="Email"
                                    validateStatus={formik.errors.email && formik.touched.email ? 'error' : ''}
                                    help={formik.errors.email && formik.touched.email ? formik.errors.email : ''}
@@ -199,9 +181,6 @@ const SubAdminCreateForm = ({open, onClose}) => {
                             />
                         </Form.Item>
                     </Col>
-                </Row>
-
-                <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="Số điện thoại"
                                    validateStatus={formik.errors.phone && formik.touched.phone ? 'error' : ''}
@@ -215,16 +194,22 @@ const SubAdminCreateForm = ({open, onClose}) => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
-                        <Form.Item label="Địa chỉ"
-                                   validateStatus={formik.errors.address && formik.touched.address ? 'error' : ''}
-                                   help={formik.errors.address && formik.touched.address ? formik.errors.address : ''}
-                                   required>
-                            <Input
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={24}>
+                        <Form.Item
+                            label="Địa chỉ"
+                            validateStatus={formik.errors.address && formik.touched.address ? 'error' : ''}
+                            help={formik.errors.address && formik.touched.address ? formik.errors.address : ''}
+                            required>
+                            <Input.TextArea
                                 name="address"
                                 placeholder="Nhập địa chỉ"
                                 onChange={formik.handleChange}
                                 value={formik.values.address}
+                                rows={4}
+                                autoSize={{ minRows: 2, maxRows: 6 }}
                             />
                         </Form.Item>
                     </Col>

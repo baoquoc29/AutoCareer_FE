@@ -61,10 +61,18 @@ const IndustryForm = ({selectData, load}) => {
     return (
         <Card title="Thêm ngành mới">
             <form onSubmit={formik.handleSubmit}>
+                <div style={{ marginBottom: "8px" }}>
+                    <label htmlFor="industries" style={{ fontWeight: "bold" }}>
+                        Tên ngành <span style={{ color: "red" }}>*</span>
+                    </label>
+                </div>
                 <Form.Item
-                    label="Tên ngành"
+                    name="industries" // Xác định tên của trường
                     help={formik.errors.industries && formik.touched.industries ? formik.errors.industries : null}
                     validateStatus={formik.errors.industries && formik.touched.industries ? "error" : ""}
+                    rules={[
+                        { required: true, message: "Vui lòng chọn ít nhất một ngành nghề!" }
+                    ]}
                 >
                     <Select
                         mode="multiple" // Cho phép chọn nhiều ngành nghề
@@ -79,25 +87,25 @@ const IndustryForm = ({selectData, load}) => {
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item style={{textAlign: "right"}}>
+                <Form.Item style={{ textAlign: "right" }}>
                     <Button
                         type="primary"
-                        icon={<PlusOutlined/>}
+                        icon={<PlusOutlined />}
                         htmlType="submit"
-                        className="mt-3">
+                        className="mt-3"
+                    >
                         Thêm
                     </Button>
                     <Button
                         type="default"
                         onClick={handleClear}
                         className="mt-3 ml-3"
-                        icon={<ReloadOutlined/>}
+                        icon={<ReloadOutlined />}
                         style={{ marginLeft: "10px" }}
                     >
                         Làm mới
                     </Button>
                 </Form.Item>
-
             </form>
         </Card>
     );

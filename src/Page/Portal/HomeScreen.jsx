@@ -9,10 +9,12 @@ import IndustryPortal from "./IndustryPortal";
 import BannerPortal from "./BannerPortal";
 import {USER_LOGIN} from "../../Utils/Setting/Config";
 import {useSelector} from "react-redux";
-
+import "./StylePortal/HomeScreen.css";
+import {CloseOutlined} from "@ant-design/icons";
 const HomeScreen = () => {
     const {isAuthenticated} = useSelector(state => state.UserReducer);
     const [userRole, setUserRole] = useState("");
+    const [showChatBox, setShowChatBox] = useState(false);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -22,6 +24,10 @@ const HomeScreen = () => {
             }
         }
     }, [isAuthenticated]);
+
+    const toggleChatBox = () => {
+        setShowChatBox(!showChatBox);
+    };
 
     return (
         <div className="home-screen-container">
@@ -67,6 +73,31 @@ const HomeScreen = () => {
                 <IndustryPortal/>
             </div>
             <FooterPortal/>
+
+            {/* Biểu tượng nhắn tin */}
+            <div className="chat-icon" onClick={toggleChatBox}>
+                <img src="/kh.png" alt="Chat Icon"/>
+            </div>
+
+            {/* Hộp thoại nhắn tin */}
+            {showChatBox && (
+                <div className="chat-box">
+                    <div className="chat-header">
+                        <span>Trò chuyện với hỗ trợ viên</span>
+                        <button onClick={toggleChatBox}>
+                            <CloseOutlined/>
+                        </button>
+                    </div>
+                    <div className="chat-content">
+                        <p>Chào bạn! Tôi có thể giúp gì?</p>
+                    </div>
+                    <div className="chat-input">
+                        <input type="text" placeholder="Nhập tin nhắn..."/>
+                        <button>Gửi</button>
+                    </div>
+                </div>
+
+            )}
         </div>
     );
 };

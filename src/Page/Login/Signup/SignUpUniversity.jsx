@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Input, Button, Modal, notification, Spin } from 'antd';
+import {Form, Input, Button, Modal, notification, Spin, Row, Col, Select} from 'antd';
 import {
     clearResponseBusiness,
     sign_up_university,
@@ -9,6 +9,7 @@ import {
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
 import {toast} from "react-toastify";
+import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/WorkShopThunk";
 
 export function SignUpUniversity() {
     const [form] = Form.useForm();
@@ -21,7 +22,9 @@ export function SignUpUniversity() {
     const navigate = useNavigate();
 
     const [hasShownModal, setHasShownModal] = useState(false);
-
+    const {provinces, districts, wards} = useSelector(state => state.WorkShopReducer);
+    const [selectedProvince, setSelectedProvince] = useState(null);
+    const [selectedDistrict, setSelectedDistrict] = useState(null);
     const response = useSelector((state) => state.UserReducer?.responseUniversity);
     const responseSignUpUniversity = useSelector((state) => state.UserReducer?.responseSignUpUniversity);
     useEffect(() => {
@@ -49,6 +52,23 @@ export function SignUpUniversity() {
         }
         return () => clearInterval(interval);
     }, [timer, canResend]);
+    useEffect(() => {
+        dispatch(get_all_provinces());
+    }, [dispatch]);
+    const handleProvinceChange = (value) => {
+        const provinceId = value;
+        setSelectedProvince(provinceId);  // Set the selected province
+        dispatch(get_all_district(provinceId));
+        form.setFieldsValue({district: null, ward: null});
+        setSelectedDistrict(null);  // Reset district and ward when province changes
+    };
+
+    const handleDistrictChange = (value) => {
+        const districtId = value;
+        setSelectedDistrict(districtId);  // Set the selected district
+        dispatch(get_all_ward(districtId));
+        form.setFieldsValue({ward: null});
+    };
 
     // Xử lý phản hồi từ API
     useEffect(() => {
@@ -77,7 +97,7 @@ export function SignUpUniversity() {
     // Gửi yêu cầu mã xác nhận
     const handleSendCode = (values) => {
 
-        const { universityName, numberPhone, password, confirmPassword,email } = values;
+        const { universityName, numberPhone, password, confirmPassword,email,province,district,ward } = values;
         if (password !== confirmPassword) {
             toast.error('Mật khẩu và xác nhận mật khẩu không khớp.' );
             return;
@@ -95,7 +115,10 @@ export function SignUpUniversity() {
             phone: numberPhone,
             password: password,
             rePassword: confirmPassword,
-            verificationCode: 'university'
+            verificationCode: 'university',
+            provinceId : province,
+            districtId : district,
+            wardId : ward,
         };
 
         setIsLoading(true);
@@ -124,7 +147,10 @@ export function SignUpUniversity() {
                 name: formValues.universityName,
                 phone: formValues.numberPhone,
                 password: formValues.password,
-                rePassword: formValues.confirmPassword
+                rePassword: formValues.confirmPassword,
+                provinceId : formValues.province,
+                districtId : formValues.district,
+                wardId : formValues.ward,
             };
 
             dispatch(sign_up_university(requestBody));
@@ -163,8 +189,8 @@ export function SignUpUniversity() {
         <div className="signup-root">
             <div className="signup-business">
                 <div className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-                    <div className="card shadow-lg" style={{ width: '80%', maxWidth: 450 }}>
-                        <div className="card-body">
+                    <div className="card shadow-lg" style={{ width: '80%', maxWidth: 650 }}>
+                        <div className="card-body" >
                             <h1 className="h3 text-center">Đăng ký tài khoản trường đại học</h1>
                             <p className="text-center">Tham gia cộng đồng Auto Career!</p>
 
@@ -194,7 +220,60 @@ export function SignUpUniversity() {
                                            ]}
                                 >
                                     <Input placeholder="Nhập email"/>
+
                                 </Form.Item>
+                                    <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' ,marginTop: '20px'}}>
+                                        <Col span={8}>
+                                            <Form.Item
+                                                label="Tỉnh/Thành phố"
+                                                name="province"
+                                                rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố.' }]}
+                                            >
+                                                <Select placeholder="Chọn tỉnh/thành phố" onChange={handleProvinceChange}>
+                                                    {provinces.map((province) => (
+                                                        <Select.Option key={province.id} value={province.id}>
+                                                            {province.name}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item
+                                                label="Quận/Huyện"
+                                                name="district"
+                                                rules={[{ required: true, message: 'Vui lòng chọn quận/huyện.' }]}
+                                            >
+                                                <Select
+                                                    placeholder="Chọn quận/huyện"
+                                                    onChange={handleDistrictChange}
+                                                    disabled={!selectedProvince}
+                                                >
+                                                    {districts.map((district) => (
+                                                        <Select.Option key={district.id} value={district.id}>
+                                                            {district.name}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item
+                                                label="Xã/Phường"
+                                                name="ward"
+                                                rules={[{ required: true, message: 'Vui lòng chọn xã/phường.' }]}
+                                            >
+                                                <Select placeholder="Chọn xã/phường" disabled={!selectedDistrict}>
+                                                    {wards.map((ward) => (
+                                                        <Select.Option key={ward.id} value={ward.id}>
+                                                            {ward.name}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+
                                 <Form.Item label="Mật khẩu" name="password"
                                            rules={[
                                                { required: true,message: ""  },

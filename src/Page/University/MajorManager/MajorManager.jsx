@@ -46,7 +46,7 @@ const MajorManager = () => {
         setCurrentPage(1); // Reset to first page when section changes
     };
     const handleSearchChange = (e) => {
-        setSearchKeyword(e.target.value.trim());
+        setSearchKeyword(e.target.value.trimStart());
         setCurrentPage(1); // Reset to first page when search keyword changes
     };
     const handleStatusChange = (value) => {

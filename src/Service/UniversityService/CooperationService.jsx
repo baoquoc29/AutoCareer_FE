@@ -11,6 +11,9 @@ export class CooperationService extends baseService{
             + (statusConnected ? `&statusConnected=${statusConnected}` : '')
         );
     };
+    get_total_cooperation=()=>{
+        return this.get('api/cooperation/count-total')
+    }
 
     approve_cooperation_of_university = (formData) =>{
         return this.post('api/cooperation/approve-request', formData)

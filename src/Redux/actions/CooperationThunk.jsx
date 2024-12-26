@@ -1,6 +1,6 @@
 import {toast} from "react-toastify";
 import cooperationService from "../../Service/UniversityService/CooperationService";
-import {APPROVE_COOPERATION, REJECT_COOPERATION, SET_COOPERATION} from "../types/CooperationType";
+import {APPROVE_COOPERATION, REJECT_COOPERATION, SET_COOPERATION, TOTAL_COOPERATION} from "../types/CooperationType";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 
 export const get_all_cooperation_of_university_page = (page = 1, size = 7, keyword = '',statusConnected= '') => {
@@ -26,8 +26,7 @@ export const get_all_cooperation_of_university_page = (page = 1, size = 7, keywo
                 } else {
                     // Có dữ liệu
                     dispatch({
-                        type: SET_COOPERATION,
-                        payload: {
+                        type: SET_COOPERATION, payload: {
                             content,       // Dữ liệu ngành nghề
                             totalElements, // Tổng số bản ghi
                             pageSize,      // Số bản ghi mỗi trang
@@ -71,4 +70,16 @@ export const reject_cooperation = (formData)=>{
             toast.error(error.response.data.message);
         }
     }
+}
+export const get_total_cooperation = () => {
+    return async dispatch => {
+        try {
+            const res = await cooperationService.get_total_cooperation();
+            dispatch({
+                type: TOTAL_COOPERATION, payload: res,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 }

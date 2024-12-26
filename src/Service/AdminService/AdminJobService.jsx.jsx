@@ -6,16 +6,16 @@ export class AdminJobService extends baseService {
         super();
     };
     get_all_jobs = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/all-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-all-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_pending_jobs = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/pending-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-pending-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_approved_jobs = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/approved-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-approved-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_rejected_jobs = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/rejected-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-rejected-jobs?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
 
     approved_job = (id)=>{

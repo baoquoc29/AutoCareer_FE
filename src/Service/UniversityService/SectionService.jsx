@@ -31,6 +31,9 @@ export class SectionService extends baseService {
     get_total_section = () => {
        return this.get('api/section/count-total')
     }
+    get_major_section=()=>{
+        return this.get('api/section/count-majors')
+    }
 }
 
 export const sectionService = new SectionService();

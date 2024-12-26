@@ -7,24 +7,28 @@ export class AdminUniversityService extends baseService {
     };
 
     get_all_universities = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/all-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-all-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
 
     get_pending_universities = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/pending-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-pending-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_approved_universities = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/approved-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-approved-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
     get_rejected_universities = (pageNo, pageSize, keyword) => {
-        return this.get(`api/admin/rejected-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+        return this.get(`api/admin/get-rejected-universities?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
 
-    approved_university = (id)=>{
-        return this.post('api/admin/approved-university', id);
+    get_detail_university = (id)=>{
+        return this.get(`api/admin/get-detail-university?id=${id}`);
     }
-    rejected_university = (id)=>{
-        return this.post('api/admin/rejected-university', id);
+
+    approved_university = (req)=>{
+        return this.post('api/admin/approved-university', req);
+    }
+    rejected_university = (req)=>{
+        return this.post('api/admin/rejected-university', req);
     }
 
 }

@@ -1,31 +1,21 @@
 import React from "react";
-import {Button, Modal, Space, Table, Tag} from "antd";
+import {Button, Space, Table, Tag, Tooltip} from "antd";
 import {EyeOutlined} from "@ant-design/icons";
 
 const JobTable = ({data, onDetail}) => {
-    const confirmDelete = (record) => {
-        Modal.confirm({
-            title: 'Xác nhận xóa',
-            content: `Bạn có chắc chắn muốn xóa doanh nghiệp "${record.name}"?`,
-            okText: 'Xóa',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            onOk() {
-                console.log(`Deleted business: ${record.name}`);
-            },
-        });
-    };
 
     const columns = [{
         title: "STT", dataIndex: "stt", key: "stt", align: "center",
     }, {
-        title: "Tin tuyển dụng", dataIndex: "title", key: "title", align: "center",
+        title: "Tin tuyển dụng", dataIndex: "title", key: "title", align: "left",
     }, {
-        title: "Doanh nghiệp", dataIndex: "", key: "", align: "center",
+        title: "Doanh nghiệp", dataIndex: "businessName", key: "businessName", align: "left",
+    },{
+        title: "Lĩnh vực", dataIndex: "industryName", key: "industryName", align: "left",
     }, {
-        title: "Lĩnh vực", dataIndex: "industry", key: "industry", align: "center",
+        title: "Thời gian hết hạn", dataIndex: "expireDate", key: "expireDate", align: "left",
     }, {
-        title: "Thời gian tạo", dataIndex: "createdAt", key: "createdAt", align: "center",
+        title: "Thời gian tạo", dataIndex: "createdAt", key: "createdAt", align: "left",
     }, {
         title: "Trạng thái", dataIndex: "state", key: "state", align: "center", render: (state) => {
             let color = "";
@@ -51,20 +41,22 @@ const JobTable = ({data, onDetail}) => {
         },
     }, {
         title: "Hành động", key: "action", align: "center", render: (_, record) => (<Space>
-                <Button type="link" icon={<EyeOutlined/>} title="Xem chi tiết" onClick={() => onDetail(record)}/>
-            </Space>),
+            <Tooltip title="Xem chi tiết">
+                <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onDetail(record)}/>
+            </Tooltip>
+        </Space>),
     },];
 
     return (<>
-            <Table
-                columns={columns}
-                dataSource={data}
-                pagination={false}
-                locale={{
-                    emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
-                }}
-            />
-        </>)
+        <Table
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            locale={{
+                emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
+            }}
+        />
+    </>)
 };
 
 export default JobTable;

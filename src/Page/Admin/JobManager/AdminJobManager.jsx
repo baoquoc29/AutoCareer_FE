@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Tabs, Button, Input, Pagination, Card} from "antd";
-import {FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
+import { Input, Pagination, Card, Select} from "antd";
+import { SearchOutlined} from "@ant-design/icons";
 import {
-    approved_job,
     get_all_jobs,
     get_approved_jobs,
     get_pending_jobs,
-    get_rejected_jobs, rejected_job,
+    get_rejected_jobs
 } from "../../../Redux/actions/AdminJobThunk";
 import {doc as XLSX} from "prettier";
 import {toast} from "react-toastify";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
-import {CSVLink} from "react-csv";
-import JobDetail from "./JobDetail";
 import JobTable from "./JobTable";
+import {useNavigate} from "react-router-dom";
+import {get_job_detail} from "../../../Redux/actions/JobThunk";
 
 const AdminJobManager = () => {
     const dispatch = useDispatch();
@@ -23,10 +22,10 @@ const AdminJobManager = () => {
     const [pageNo, setPageNo] = useState(1); // Trang hiện tại
     const [pageSize, setPageSize] = useState(10);
     const [filteredData, setFilteredData] = useState([]);
-    const [selectedJob, setSelectedJob] = useState(null);
-    const [currentTab, setCurrentTab] = useState("Tất cả");
+    const [currentTab, setCurrentTab] = useState("ALL");
     const [keyword, setKeyword] = useState("");
-
+    const navigate = useNavigate();
+    const {Option} = Select;
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/A"; // Trả về "N/A" nếu không có ngày giờ
@@ -37,33 +36,25 @@ const AdminJobManager = () => {
         return new Intl.DateTimeFormat('vi-VN', options).format(date); // Định dạng theo tiếng Việt
     };
 
-    // useEffect(() => {
-    //     setFilteredData(jobs || []);
-    // }, [jobs]);
-
     const fetchJobs = async (currentTab) => {
         switch (currentTab) {
-            case "Tất cả":
-                await dispatch(get_all_jobs(pageNo - 1, pageSize, keyword));
+            case "ALL":
+                await dispatch(get_all_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
-            case "Chờ duyệt":
-                await dispatch(get_pending_jobs(pageNo - 1, pageSize, keyword));
+            case "PENDING":
+                await dispatch(get_pending_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
-            case "Đã phê duyệt":
-                await dispatch(get_approved_jobs(pageNo - 1, pageSize, keyword));
+            case "APPROVED":
+                await dispatch(get_approved_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
-            case "Bị từ chối":
-                await dispatch(get_rejected_jobs(pageNo - 1, pageSize, keyword));
+            case "REJECTED":
+                await dispatch(get_rejected_jobs(pageNo - 1, pageSize, encodeURIComponent(keyword)));
                 break;
             default:
                 break;
         }
         console.log(jobs)
     };
-    // Fetch data khi thay đổi tab, trang, kích thước trang hoặc keyword
-    // useEffect(() => {
-    //     fetchJobs();
-    // }, [fetchJobs]);
     useEffect(() => {
         setFilteredData(jobs)
     }, [jobs])
@@ -86,50 +77,23 @@ const AdminJobManager = () => {
 
     // Dữ liệu hiển thị theo tab
     const data = Array.isArray(filteredData) ? filteredData.map((job, index) => ({
-        key: job.jobId || "",
+        key: job.id || "",
         stt: (pageNo - 1) * pageSize + index + 1,
         title: job.title || "",
-        level: job.level || "",
-        salary: job.salary || "",
         createdAt: formatDate(job.createdAt) || "",
-        createdBy: job.createdBy || "",
-        updatedAt: job.updatedAt || "",
-        updatedBy: job.updatedBy || "",
-        // location: job.workLocation|| "",
         state: job.statusBrowse || "",
-        workingTime: job.workingTime || "",
         expireDate: job.expireDate || "",
-        benefit: job.benefit || "",
-        jobDescription: job.jobDescription || "",
-        requirement: job.requirement || "",
-        industry: job.industry || "",
-        employee: job.employee || "",
-        business: job.business || "",
+        industryName: job.industryName || "",
+        businessName: job.businessName || "",
     })) : [];
 
     const handleViewDetails = (record) => {
-        setSelectedJob(record);
+        // setSelectedJob(record);
+        console.log(record)
+        dispatch(get_job_detail(record.key));
+        navigate("/admin-job-detail");
     };
-    const handleReject = async (req) => {
-        console.log(req);
-        dispatch(rejected_job(req));
-        await fetchJobs(currentTab);
-        handleViewDetails(selectedJob);
-    };
-    const handleApprove = async (req) => {
-        console.log(req);
-        dispatch(approved_job(req));
-        await fetchJobs(currentTab);
-        for (let b of filteredData) {
-            if (b.key === selectedJob.key) {
-                setSelectedJob(b);
-            }
-        }
-        handleViewDetails(selectedJob);
-    }
-    const handleCloseDetail = () => {
-        setSelectedJob(null); // Đóng chi tiết
-    };
+
     const exportToExcel = () => {
         if (filteredData && filteredData.length > 0) {
             // Chuyển dữ liệu thành bảng tính Excel
@@ -145,10 +109,6 @@ const AdminJobManager = () => {
         }
     };
 
-    const tabs = [{label: "Tất cả", key: "Tất cả"}, {label: "Chờ duyệt", key: "Chờ duyệt"}, {
-        label: "Đã phê duyệt",
-        key: "Đã phê duyệt"
-    }, {label: "Bị từ chối", key: "Bị từ chối"},];
 
     return (
         <>
@@ -157,49 +117,53 @@ const AdminJobManager = () => {
                     <div className="content__wrap">
                         <div className="mt-auto">
                             <div className="row">
-                                {selectedJob ? (
-                                    <div className="col-md-4 mb-3 border-5">
-                                        <JobDetail
-                                            job={selectedJob}
-                                            onReject={handleReject}
-                                            onApprove={handleApprove}
-                                            onClose={handleCloseDetail}
-                                        />
-                                    </div>
-                                ) : null}
-                                <div className={selectedJob ? "col-md-8 mb-3 mt-3" : "col-md-12 mb-3 mt-3"}>
-                                    <Card title="Danh sách tài khoản doanh nghiệp">
 
-                                        <Tabs
-                                            defaultActiveKey="Tất cả"
-                                            onChange={(key) => setCurrentTab(key)}
-                                            items={tabs}
-                                        />
+                                <div className={"col-md-12 mb-3 mt-3"}>
+                                    <Card title="Danh sách tin tuyển dụng">
                                         <div className="table-responsive">
                                             <div className="d-flex justify-content-between mb-3">
-                                                <Input
-                                                    placeholder="Nhập tên hoặc email... "
-                                                    value={keyword}
-                                                    onChange={handleSearch}
-                                                    prefix={<SearchOutlined/>}
-                                                    style={{width: 200}}
-                                                />
-                                                <div style={{display: "flex", gap: "10px"}}>
-                                                    <Button type="default" icon={<FileExcelOutlined/>} style={{
-                                                        backgroundColor: '#107C41',
-                                                        color: '#FFFFFF',
-                                                        marginLeft: '10px'
-                                                    }}>
-                                                        <CSVLink
-                                                            data={""}
-                                                            headers={""}
-                                                            filename={"DanhSachKhoa.csv"}
-                                                            style={{color: 'inherit', textDecoration: 'none'}}
-                                                        >
-                                                            Export excel
-                                                        </CSVLink>
-                                                    </Button>
+
+                                                <div style={{display: 'flex', gap: '10px'}}>
+                                                    <Input
+                                                        placeholder="Nhập tiêu đề... "
+                                                        value={keyword}
+                                                        onChange={handleSearch}
+                                                        prefix={<SearchOutlined/>}
+                                                        style={{width: 200}}
+                                                    />
+                                                    <Select
+                                                        placeholder="Chọn trạng thái duyệt"
+                                                        value={currentTab}
+                                                        showSearch
+                                                        onChange={(value) => setCurrentTab(value)}
+                                                        style={{width: 200}}
+                                                        filterOption={(input, option) => {
+                                                            const childrenText = String(option.props.children || "");
+                                                            return childrenText.toLowerCase().includes(input.toLowerCase());
+                                                        }}
+                                                    >
+                                                        <Option value="ALL">Tất cả trạng thái</Option>
+                                                        <Option value="PENDING">Đang chờ duyệt</Option>
+                                                        <Option value="APPROVED">Đã chấp nhập</Option>
+                                                        <Option value="REJECTED">Bị từ chối</Option>
+                                                    </Select>
                                                 </div>
+                                                {/*<div style={{display: "flex", gap: "10px"}}>*/}
+                                                {/*    <Button type="default" icon={<FileExcelOutlined/>} style={{*/}
+                                                {/*        backgroundColor: '#107C41',*/}
+                                                {/*        color: '#FFFFFF',*/}
+                                                {/*        marginLeft: '10px'*/}
+                                                {/*    }}>*/}
+                                                {/*        <CSVLink*/}
+                                                {/*            data={""}*/}
+                                                {/*            headers={""}*/}
+                                                {/*            filename={"DanhSachKhoa.csv"}*/}
+                                                {/*            style={{color: 'inherit', textDecoration: 'none'}}*/}
+                                                {/*        >*/}
+                                                {/*            Export excel*/}
+                                                {/*        </CSVLink>*/}
+                                                {/*    </Button>*/}
+                                                {/*</div>*/}
                                             </div>
 
                                             <JobTable data={data} onDetail={handleViewDetails}></JobTable>

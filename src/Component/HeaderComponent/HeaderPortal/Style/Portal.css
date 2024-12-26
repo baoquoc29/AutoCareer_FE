@@ -10,6 +10,12 @@
     height: 60px; /* Chiều cao 60px */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
 }
+/* Tùy chỉnh màu sắc cho mục active */
+.ant-menu-item-selected {
+    background-color: #1890ff; /* Màu xanh */
+    color: white;
+}
+
 .home-screen-container{
     background: #ffffff;
 }

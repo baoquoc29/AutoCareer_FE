@@ -15,6 +15,7 @@ export const approved_job = (id) => {
             const res = await adminJobService.approved_job(id);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Phê duyệt thành công");
                 dispatch({
                     type: APPROVED_JOB,
                     payload: res.data
@@ -32,6 +33,7 @@ export const rejected_job = (id) => {
             const res = await adminJobService.rejected_job(id);
             console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
+                toast.success("Từ chối thành công");
                 dispatch({
                     type: REJECTED_JOB,
                     payload: res.data

@@ -116,8 +116,8 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
             align: "center",
             key: "action",
             render: (_, record) => {
-                const isFutureStartDate = record.startDate
-                    ? dayjs(record.startDate, "DD/MM/YYYY HH:mm").isBefore(dayjs())
+                const isFutureStartDate = record.endDate
+                    ? dayjs(record.endDate, "DD/MM/YYYY HH:mm").isBefore(dayjs())
                     : false;
 
                 return (

@@ -23,17 +23,21 @@ const WorkshopDetailsScreen = () => {
   const [encryptedId, setEncryptedId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [localStatus, setLocalStatus] = useState(status);
-
+  const navigate = useNavigate();
   useEffect(() => {
     setEncryptedId(id);
   }, [id]);
   useEffect(() => {
     if (encryptedId) {
-      try {
         dispatch(get_work_shop_by_id(decryptId(encryptedId)));
-        dispatch(status_work_shop(decryptId(encryptedId),userData.business.id));
-      } catch (error) {
-        return <PageError></PageError>
+      if (userData) {
+        if(userData?.business?.id !== undefined){
+          dispatch(status_work_shop(decryptId(encryptedId), userData.business.id));
+        }
+        else{
+          console.log("Người dùng không phải doanh nghiệp");
+          navigate('/');
+        }
       }
     }
   }, [dispatch, encryptedId]);
@@ -50,14 +54,14 @@ const WorkshopDetailsScreen = () => {
         return { backgroundColor: '#bcb9b9', color: '#FFFFFF' }; // Màu cam
       case "APPROVED":
         return { backgroundColor: '#4CAF50', color: '#FFFFFF' }; // Màu xanh lá
-      case "REJECT":
+      case "REJECTED":
         return { backgroundColor: '#F44336', color: '#FFFFFF' }; // Màu đỏ
       default:
         return { backgroundColor: '#1890ff', color: '#FFFFFF' }; // Màu xanh dương mặc định
     }
   };
 
-  const handleRegister =  async () => {
+  const handleRegister = async () => {
     if (userData) {
       const body = {
         businessID: userData.business.id,
@@ -70,7 +74,8 @@ const WorkshopDetailsScreen = () => {
         content: "Bạn đã đăng ký tham gia workshop thành công, vui lòng chờ duyệt!",
       });
     } else {
-      window.location.href = "/login";
+      const currentUrl = window.location.pathname; // Lấy URL hiện tại
+      window.location.href = `/login?redirect=${encodeURIComponent(currentUrl)}`; // Lưu URL vào query param
     }
     setIsModalVisible(false);
   };
@@ -80,17 +85,18 @@ const WorkshopDetailsScreen = () => {
         return "Đang chờ duyệt";
       case "APPROVED":
         return "Đã phê duyệt";
-      case "REJECT":
+      case "REJECTED":
         return "Từ chối";
       default:
         return "Đăng ký tham gia";
     }
   };
+
   const showConfirmModal = () => {
     setIsModalVisible(true);
   };
   const isButtonDisabled = () => {
-    return localStatus === "PENDING" || localStatus === "APPROVED";
+    return localStatus === "PENDING" || localStatus === "APPROVED" || localStatus === "REJECTED";
   };
   const handleCancel = () => {
     setIsModalVisible(false);

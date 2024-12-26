@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { DOMAIN } from "../../../Utils/Setting/Config";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    accept_company_work_shop,
+    accept_company_work_shop, get_all_company_accept,
     get_all_company_pending, reject_company_work_shop,
 } from "../../../Redux/actions/WorkShopThunk";
 import {toast} from "react-toastify";
@@ -34,6 +34,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
 
     useEffect(() => {
         dispatch(get_all_company_pending(workshop.id));
+         dispatch(get_all_company_accept(workshop.id));
     }, [dispatch, workshop.id]);
     const handleAccept = async (idWorkShop, idCompany) => {
 
@@ -50,6 +51,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                 try {
                     await dispatch(accept_company_work_shop(body));
                     await dispatch(get_all_company_pending(idWorkShop));
+                    await dispatch(get_all_company_accept(idWorkShop));
                     setIsModalPendingCompaniesVisible(false);
                     toast.success("Doanh nghiệp đã được chấp nhận");
                 } catch (error) {
@@ -216,7 +218,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                                        />,
                                    ]}
                         >
-                            <span>{item.id} - {item.name}</span>
+                            <span>{item.name}</span>
                         </List.Item>
 
                     )}
@@ -265,7 +267,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                                            />,
                                        ]}
                             >
-                                <span>{item.id} - {item.name}</span>
+                                <span>{item.name}</span>
                             </List.Item>
                         );
                     }}

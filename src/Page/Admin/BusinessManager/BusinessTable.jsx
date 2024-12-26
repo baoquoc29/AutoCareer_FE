@@ -1,31 +1,19 @@
 import React from "react";
-import {Button, Modal, Space, Table, Tag} from "antd";
+import {Button, Space, Table, Tag, Tooltip} from "antd";
 import {EyeOutlined} from "@ant-design/icons";
 
 const BusinessTable = ({data, onDetail}) => {
-    const confirmDelete = (record) => {
-        Modal.confirm({
-            title: 'Xác nhận xóa',
-            content: `Bạn có chắc chắn muốn xóa doanh nghiệp "${record.name}"?`,
-            okText: 'Xóa',
-            okType: 'danger',
-            cancelText: 'Hủy',
-            onOk() {
-                console.log(`Deleted business: ${record.name}`);
-            },
-        });
-    };
 
     const columns = [{
         title: "STT", dataIndex: "stt", key: "stt", align: "center",
     }, {
-        title: "Tên doanh nghiệp", dataIndex: "name", key: "name", align: "center",
+        title: "Tên doanh nghiệp", dataIndex: "name", key: "name", align: "left",
     }, {
-        title: "Mã doanh nghiệp", dataIndex: "taxCode", key: "taxCode", align: "center",
+        title: "Mã doanh nghiệp", dataIndex: "taxCode", key: "taxCode", align: "left",
     }, {
-        title: "Email", dataIndex: "email", key: "email", align: "center",
+        title: "Email", dataIndex: "email", key: "email", align: "left",
     }, {
-        title: "Thời gian tạo", dataIndex: "createdAt", key: "createdAt", align: "center",
+        title: "Thời gian tạo", dataIndex: "createdAt", key: "createdAt", align: "left",
     }, {
         title: "Trạng thái", dataIndex: "state", key: "state", align: "center", render: (state) => {
             let color = "";
@@ -50,14 +38,16 @@ const BusinessTable = ({data, onDetail}) => {
             return <Tag color={color}>{stateText}</Tag>;
         },
     }, {
-        title: "Hành động", key: "action", align: "center", render: (_, record) => (<Space>
-                <Button type="link" icon={<EyeOutlined/>} title="Xem chi tiết" onClick={() => onDetail(record)}/>
+        title: "Hành động", key: "action", align: "center", render: (_, record) => (
+            <Space>
+                <Tooltip title="Xem chi tiết">
+                    <Button type={"primary"} icon={<EyeOutlined />} onClick={() => onDetail(record)} />
+                </Tooltip>
             </Space>),
     },];
 
     return (<>
             <Table
-
                 columns={columns}
                 dataSource={data}
                 pagination={false}

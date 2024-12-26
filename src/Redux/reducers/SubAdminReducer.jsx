@@ -12,7 +12,9 @@ const initialState = {
     subAdmins: [],
     subAdminId: {},
     subAdmin: {},
-    admin:{}
+    admin:{},
+    pageNo: {},
+    pageSize: {},
 }
 
 export const SubAdminReducer = (state = initialState, action) => {
@@ -46,6 +48,8 @@ export const SubAdminReducer = (state = initialState, action) => {
                 ...state,
                 subAdmins: action.payload.content,
                 totalElements: action.payload.totalElements,
+                pageNo: action.payload.currentPage,
+                pageSize: action.payload.pageSize,
             }
         default:
             return {...state}

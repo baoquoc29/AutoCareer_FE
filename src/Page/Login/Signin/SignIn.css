@@ -2,18 +2,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Đảm bảo màn hình đăng nhập chiếm toàn bộ chiều cao viewport */
+    height: 100vh;
     background: url("background-1.jpg") fixed center;
+    background-size: cover;
+    padding: 0 20px; /* Padding for mobile responsiveness */
 }
 
-
 .signin-wrap {
-    padding: 1.5rem;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
 }
 
 .card {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card-body {
@@ -23,11 +27,35 @@
 .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
+    transition: background-color 0.3s ease;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.custom-btn {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.custom-btn:hover {
+    background-color: #e2e6ea;
+}
+
+.input-field {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .d-grid {
@@ -50,8 +78,20 @@
 .btn-link {
     color: #007bff;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .btn-link:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .signin-container {
+        padding: 0;
+    }
+
+    .signin-wrap {
+        padding: 1.5rem;
+        width: 100%;
+    }
 }

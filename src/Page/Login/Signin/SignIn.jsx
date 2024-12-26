@@ -4,13 +4,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../Redux/actions/UserThunk";
 import { useFormik } from "formik";
-import { USER_LOGIN } from "../../../Utils/Setting/Config";
 import SigninValidation from "../../../Utils/Validation/User/SigninValidation";
 import { Form, Input } from "antd";
 
 export const SignIn = () => {
     const dispatch = useDispatch();
-    const { isAuthenticated, userData } = useSelector(state => state.UserReducer);
+    const { isAuthenticated, userData } = useSelector(state => state.UserReducer); // Lấy lỗi từ Redux
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -24,11 +23,18 @@ export const SignIn = () => {
         }
     });
 
+
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/');
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect');
+            if (redirectUrl) {
+                navigate(redirectUrl);
+            } else {
+                navigate('/');
+            }
         }
-    }, [isAuthenticated, navigate, userData]);
+    }, [isAuthenticated, navigate]);
 
     return (
         <div className="signin-container">
@@ -52,6 +58,7 @@ export const SignIn = () => {
                                             value={formik.values.username}
                                             onChange={formik.handleChange}
                                             placeholder="Nhập email của bạn"
+                                            className="input-field"
                                         />
                                     </Form.Item>
                                     <Form.Item
@@ -64,6 +71,7 @@ export const SignIn = () => {
                                             value={formik.values.password}
                                             onChange={formik.handleChange}
                                             placeholder="Nhập mật khẩu của bạn"
+                                            className="input-field"
                                         />
                                     </Form.Item>
                                     <Form.Item>
@@ -76,7 +84,7 @@ export const SignIn = () => {
                                     <Form.Item>
                                         <div className="d-grid">
                                             <button
-                                                className="btn btn-secondary btn-lg"
+                                                className="btn custom-btn btn-lg shadow-sm"
                                                 onClick={() => navigate('/')}
                                                 type="button"
                                             >

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Button, Card, Input, Modal, Pagination, Select} from "antd";
 import {DeleteOutlined, FileExcelOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import {CSVLink} from "react-csv";
@@ -32,17 +32,15 @@ const InstructionalManager = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Lưu trữ ID các mục đã chọn
     const [selectedStatus, setSelectedStatus] = useState('');
     const [searchKeyword, setSearchKeyword] = useState('');
-    const [filteredInstructional, setFilteredInstructional] = useState(instructional);
-    useEffect(() => {
-        // Lọc dữ liệu khi từ khóa tìm kiếm thay đổi
-        const filtered = instructional.filter(item =>
-            item.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-            item.instructionalCode.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-            item.email.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+    // const [filteredInstructional, setFilteredInstructional] = useState(instructional);
+
+    const filteredInstructional = useMemo(() => {
+        return instructional.filter(item =>
+            item.name.toLowerCase().trimStart().includes(searchKeyword.toLowerCase().trimStart()) ||
+            item.instructionalCode.toLowerCase().trimStart().includes(searchKeyword.toLowerCase().trimStart()) ||
+            item.email.toLowerCase().trimStart().includes(searchKeyword.toLowerCase().trimStart()) ||
             item.phone.includes(searchKeyword)
         );
-        setFilteredInstructional(filtered);
-        console.log('data', filtered)
     }, [searchKeyword, instructional]);
     useEffect(() => {
         if (selectedStatus === "active") {
@@ -141,7 +139,11 @@ const InstructionalManager = () => {
         {label: "Trạng thái", key: "status"},
         {label: "Địa chỉ", key: "address"},
     ]
+    const handleSearch = (e) => {
+        const value = e.target.value.trimStart();
+        setSearchKeyword(value);
 
+    };
     return (
         <>
             <section>
@@ -150,25 +152,22 @@ const InstructionalManager = () => {
                         <div className="col-12 mb-3">
                             <Card style={{textAlign: 'center'}} title="Danh sách giáo vụ">
                                 <div className="table-responsive">
-                                    <div className="d-flex justify-content-between mb-3">
-                                        <div className="d-flex justify-content-start">
-                                            <Select
-                                                style={{width: 100, marginRight: '10px'}}
-                                                placeholder="Trạng thái"
-                                                onChange={handleStatusChange}
-                                                value={selectedStatus}
-                                            >
-                                                <Select.Option value="">Tất cả</Select.Option>
-                                                <Select.Option value="active">Hoạt động</Select.Option>
-                                                <Select.Option value="inactive">Tạm ngưng</Select.Option>
-                                            </Select>
-                                            <Input
-                                                placeholder="Tìm kiếm "
-                                                prefix={<SearchOutlined/>}
-                                                style={{width: 200}}
-                                                onChange={e => setSearchKeyword(e.target.value)}
-                                            />
-                                        </div>
+                                    <div className="d-flex mb-3">
+                                        <Input
+                                            placeholder="Tìm kiếm "
+                                            prefix={<SearchOutlined/>} style={{marginRight: '10px'}}
+                                            onChange={handleSearch}
+                                        />
+                                        <Select
+                                            style={{width: 180, marginRight: '10px'}}
+                                            placeholder="Trạng thái"
+                                            onChange={handleStatusChange}
+                                            value={selectedStatus}
+                                        >
+                                            <Select.Option value="">Tất cả</Select.Option>
+                                            <Select.Option value="active">Hoạt động</Select.Option>
+                                            <Select.Option value="inactive">Tạm ngưng</Select.Option>
+                                        </Select>
                                         <div className="d-flex justify-content-end">
 
                                             <Button

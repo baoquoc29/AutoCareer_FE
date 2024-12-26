@@ -4,12 +4,16 @@ import {useState} from "react";
 
 const RejectModal = ({open, onClose, handleReject}) => {
     const [message, setMessage] = useState("");
+    const handleClose = () => {
+        setMessage("");
+        onClose();
+    }
 
     return (
         <Modal
             open={open}
-            onCancel={onClose}
-            onOk={()=>handleReject(message)}
+            onCancel={handleClose}
+            onOk={() => handleReject(message)}
             okText="Từ chối"
             okType="danger"
             cancelText="Hủy"

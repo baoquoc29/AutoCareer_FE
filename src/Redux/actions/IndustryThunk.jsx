@@ -5,7 +5,9 @@ import {
     SET_INDUSTRIES_ALL,
     SET_INDUSTRIES_NO_PAG,
     SET_INDUSTRIES_ALL_PAG,
-    UPDATE_INDUSTRY_SUCCESS, SET_COUNT_INDUSTRY
+    UPDATE_INDUSTRY_SUCCESS,
+    SET_COUNT_INDUSTRY,
+    SET_AVG_SALARY_INDUSTRY
 } from "../types/IndustryType";
 import {toast} from "react-toastify";
 
@@ -207,6 +209,20 @@ export const get_count_used_industry = () => {
             const res = await industryService.get_count_used_industry();
             dispatch({
                 type: SET_COUNT_INDUSTRY,
+                payload: res.data,
+            });
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
+    };
+};
+
+export const get_avg_salary_industry = () => {
+    return async (dispatch) => {
+        try {
+            const res = await industryService.get_avg_salary_industry();
+            dispatch({
+                type: SET_AVG_SALARY_INDUSTRY,
                 payload: res.data,
             });
         } catch (error) {
