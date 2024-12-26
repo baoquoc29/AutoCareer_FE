@@ -19,6 +19,7 @@ const JobCreatePage = () => {
     const [jobDescription, setJobDescription] = useState("");
     const [requirement, setRequirement] = useState("");
     const [benefit, setBenefit] = useState("");
+    const [salaryType, setSalaryType] = useState("fixed");
     const [errorMessage, setErrorMessage] = useState("");
 
     dayjs.extend(utc);
@@ -33,8 +34,29 @@ const JobCreatePage = () => {
         setDate(formattedDate);
     };
 
+    const handleSalaryTypeChange = (value) => {
+        setSalaryType(value);
+        if (value === "NEGOTIABLE") {
+            // Set giá trị 1 cho "Lương thỏa thuận"
+            form.setFieldsValue({
+                fromSalary: 1,
+                toSalary: 1,
+            });
+        } else {
+            // Reset giá trị khi chọn "Lương cố định"
+            form.setFieldsValue({
+                fromSalary: undefined,
+                toSalary: undefined,
+            });
+        }
+    };
+
     const handleSubmit = async (values) => {
         try {
+            if (values.salaryType === "NEGOTIABLE") {
+                values.fromSalary = 1;
+                values.toSalary = 1;
+            }
             const formattedValues = {
                 ...values,
                 expireDate: date,
@@ -98,14 +120,13 @@ const JobCreatePage = () => {
                                                         rules={[{
                                                             required: true,
                                                             message: "Vui lòng chọn ngày hết hạn"
-                                                        }]}
-                                                    >
+                                                        }]}>
                                                         <DatePicker
                                                             placeholder="Chọn ngày hết hạn"
-                                                            format="DD-MM-YYYY" // Hiển thị theo định dạng dd-mm-yyyy
+                                                            format="DD-MM-YYYY"
                                                             style={{width: "100%"}}
                                                             disabledDate={(current) => current && current.isBefore(dayjs().startOf('day'), 'day')}
-                                                            value={date ? dayjs(date) : null} // Đảm bảo giá trị hiển thị đúng
+                                                            value={date ? dayjs(date) : null}
                                                             onChange={handleDateChange}
                                                         />
                                                     </Form.Item>
@@ -113,24 +134,21 @@ const JobCreatePage = () => {
 
                                                 <Col span={12}>
                                                     <Form.Item
-                                                        label="Cấp bậc"
+                                                        label="Kinh nghiệm"
                                                         name="level"
-                                                        rules={[{required: true, message: "Vui lòng chọn cấp bậc"}]}
+                                                        rules={[{required: true, message: "Vui lòng chọn kinh nghiệm"}]}
                                                     >
-                                                        <Select placeholder="Chọn cấp bậc">
+                                                        <Select placeholder="Chọn kinh nghiệm">
                                                             <Select.Option value="Không yêu cầu kinh nghiệm">Không yêu
                                                                 cầu kinh nghiệm</Select.Option>
-                                                            <Select.Option value="Thực tập sinh">Thực tập
-                                                                sinh</Select.Option>
-                                                            <Select.Option value="1 năm kinh
-                                                                nghiệm">1 năm kinh
+                                                            <Select.Option value="1 năm kinh nghiệm">1 năm kinh
                                                                 nghiệm</Select.Option>
-                                                            <Select.Option value="2 năm kinh
-                                                                nghiệm">2 năm kinh
+                                                            <Select.Option value="2 năm kinh nghiệm">2 năm kinh
                                                                 nghiệm</Select.Option>
-                                                            <Select.Option value="3 năm kinh
-                                                                nghiệm">3 năm kinh
+                                                            <Select.Option value="3 năm kinh nghiệm">3 năm kinh
                                                                 nghiệm</Select.Option>
+                                                            <Select.Option value="trên 5 năm kinh nghiệm">Trên 5 năm
+                                                                kinh nghiệm</Select.Option>
                                                         </Select>
                                                     </Form.Item>
                                                 </Col>
@@ -140,24 +158,77 @@ const JobCreatePage = () => {
                                                 <Col span={12}>
                                                     <Form.Item
                                                         label="Mức lương"
-                                                        name="salary"
-                                                        rules={[{required: true, message: "Vui lòng nhập mức lương"}]}
+                                                        name="salaryType"
+                                                        rules={[{ required: true, message: "Vui lòng chọn mức lương" }]}
+                                                    >
+                                                        <Select placeholder="Chọn mức lương" onChange={handleSalaryTypeChange}>
+                                                            <Select.Option value="FIXED">Lương cố định</Select.Option>
+                                                            <Select.Option value="NEGOTIABLE">Lương thỏa thuận</Select.Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Số lượng tuyển"
+                                                        name="quantity"
+                                                        rules={[{ required: true, message: "Vui lòng nhập số lượng tuyển" }]}
                                                     >
                                                         <InputNumber
-                                                            placeholder="Nhập mức lương (VND)"
-                                                            style={{width: "100%"}}
-                                                            formatter={(value) =>
-                                                                value
-                                                                    ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND"
-                                                                    : ""
-                                                            }
-                                                            parser={(value) =>
-                                                                value ? value.replace(/[VND,\s.]/g, "") : ""
-                                                            }
+                                                            placeholder="Số lượng tuyển"
+                                                            style={{ width: "100%" }}
+                                                            min={1}
                                                         />
                                                     </Form.Item>
                                                 </Col>
+                                            </Row>
 
+                                            {salaryType === "FIXED" && (
+                                                <Row gutter={16}>
+                                                    <Col span={12}>
+                                                        <Form.Item
+                                                            label="Mức lương từ"
+                                                            name="fromSalary"
+                                                            rules={[{ required: true, message: "Vui lòng nhập mức lương từ" }]}
+                                                        >
+                                                            <InputNumber
+                                                                placeholder="Nhập mức lương (VND)"
+                                                                style={{ width: "100%" }}
+                                                                formatter={(value) =>
+                                                                    value
+                                                                        ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND"
+                                                                        : ""
+                                                                }
+                                                                parser={(value) =>
+                                                                    value ? value.replace(/[VND,\s.]/g, "") : ""
+                                                                }
+                                                            />
+                                                        </Form.Item>
+                                                    </Col>
+
+                                                    <Col span={12}>
+                                                        <Form.Item
+                                                            label="Mức lương đến"
+                                                            name="toSalary"
+                                                            rules={[{ required: true, message: "Vui lòng nhập mức lương đến" }]}
+                                                        >
+                                                            <InputNumber
+                                                                placeholder="Nhập mức lương (VND)"
+                                                                style={{ width: "100%" }}
+                                                                formatter={(value) =>
+                                                                    value
+                                                                        ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND"
+                                                                        : ""
+                                                                }
+                                                                parser={(value) =>
+                                                                    value ? value.replace(/[VND,\s.]/g, "") : ""
+                                                                }
+                                                            />
+                                                        </Form.Item>
+                                                    </Col>
+                                                </Row>
+                                            )}
+
+                                            <Row gutter={16}>
                                                 <Col span={12}>
                                                     <Form.Item
                                                         label="Ngành nghề"
@@ -171,6 +242,54 @@ const JobCreatePage = () => {
                                                                     {industry.industryName}
                                                                 </Select.Option>
                                                             ))}
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Cấp bậc"
+                                                        name="rank"
+                                                        rules={[{required: true, message: "Vui lòng chọn cấp bậc"}]}
+                                                    >
+                                                        <Select placeholder="Chọn cấp bậc">
+                                                            <Select.Option value="Thực tập sinh">Thực tập sinh</Select.Option>
+                                                            <Select.Option value="Nhân viên">Nhân viên</Select.Option>
+                                                            <Select.Option value="Quản lý / Giám sát">Quản lý / Giám sát</Select.Option>
+                                                            <Select.Option value="Trưởng phòng / Phó phòng">Trưởng phòng / Phó phòng</Select.Option>
+                                                            <Select.Option value="Giám đốc">Giám đốc</Select.Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Hình thức làm việc"
+                                                        name="workForm"
+                                                        rules={[{
+                                                            required: true,
+                                                            message: "Vui lòng chọn hình thức làm việc"
+                                                        }]}
+                                                    >
+                                                        <Select placeholder="Chọn hình thức làm việc">
+                                                            <Select.Option value="Toàn thời gian">Toàn thời gian</Select.Option>
+                                                            <Select.Option value="Thực tập sinh">Thực tập sinh</Select.Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        label="Giới tính"
+                                                        name="gender"
+                                                        rules={[{required: true, message: "Vui lòng chọn giới tính"}]}
+                                                    >
+                                                        <Select placeholder="Chọn giới tính">
+                                                            <Select.Option value="Nam">Nam</Select.Option>
+                                                            <Select.Option value="Nữ">Nữ</Select.Option>
+                                                            <Select.Option value="Không yêu cầu">Không yêu cầu</Select.Option>
                                                         </Select>
                                                     </Form.Item>
                                                 </Col>

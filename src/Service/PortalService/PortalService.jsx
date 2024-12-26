@@ -5,22 +5,26 @@ export class PortalService extends baseService {
     constructor() {
         super();
     }
+
     get_job_all = (page, size) => {
         return this.getResponse(`api/job/job-all?page=${page}&size=${size}`);
     };
-    get_job_by_district = (page, size,districtId) => {
+    get_job_by_district = (page, size, districtId) => {
         return this.getResponse(`api/job/district/${districtId}?page=${page}&size=${size}`);
     }
-    get_job_by_region = (page, size,regionId) => {
+    get_job_by_region = (page, size, regionId) => {
         return this.getResponse(`api/job/district/${regionId}?page=${page}&size=${size}`);
     }
-    get_job_by_province = (page, size,provinceId) => {
+    get_job_by_province = (page, size, provinceId) => {
         return this.getResponse(`api/job/province/${provinceId}?page=${page}&size=${size}`);
     }
-    get_job_by_industry = (page, size,industryId) => {
+    get_job_by_industry = (page, size, industryId) => {
         return this.getResponse(`api/job/industry/${industryId}?page=${page}&size=${size}`);
     }
-    get_job_by_salary = (page, size,minSalary,maxSalary) => {
+    get_list_business_home_portal = () => {
+        return this.getResponse(`api/business/list-home`);
+    }
+    get_job_by_salary = (page, size, minSalary, maxSalary) => {
         return this.getResponse(`api/job/salary?page=${page}&size=${size}&minSalary=${minSalary}&maxSalary=${maxSalary}`);
     }
     get_business_by_feature = (industryId) => {
@@ -37,16 +41,15 @@ export class PortalService extends baseService {
     get_university_total = () => {
         return this.getResponse(`api/university/get-total`);
     }
-    get_workshop_by_id = (id) =>{
+    get_workshop_by_id = (id) => {
         return this.getResponse(`api/work-shop/display/${id}`);
     }
-    request_workshop_by_id = (body) =>{
-        return this.postResponse(`api/work-shop/request`,body);
+    request_workshop_by_id = (body) => {
+        return this.postResponse(`api/work-shop/request`, body);
     }
-    get_status_workshop_by_id = (id,businessId) =>{
+    get_status_workshop_by_id = (id, businessId) => {
         return this.getResponse(`api/work-shop/status?workShopId=${id}&businessId=${businessId}`);
     }
 
 }
-
 export const portalService = new PortalService();

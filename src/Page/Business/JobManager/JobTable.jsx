@@ -3,8 +3,7 @@ import {DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined} from "@ant-de
 import {useNavigate} from "react-router-dom";
 
 
-
-const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) => {
+const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange, page, size}) => {
     const navigate = useNavigate();
 
     const userLogin = JSON.parse(localStorage.getItem("USER_LOGIN"));
@@ -28,8 +27,6 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
         localStorage.setItem("jobId", id);
         navigate('/job-detail');
     };
-
-
 
     const handleEdit = (id) => {
         // Navigate to the JobUpdatePage and pass the job ID in the URL
@@ -60,7 +57,14 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
     };
 
     const columns = [
-        {title: 'STT', dataIndex: 'stt', align: 'center', key: 'stt', sorter: (a, b) => a.stt - b.stt},
+        {
+            title: 'STT',
+            dataIndex: 'stt',
+            align: 'center',
+            key: 'stt',
+            sorter: (a, b) => a.stt - b.stt,
+            render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
+        },
         {
             title: 'Tiêu đề',
             dataIndex: 'title',
@@ -89,42 +93,11 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
             title: 'Ngày hết hạn',
             dataIndex: 'expireDate',
             key: 'expireDate',
-            align: 'center',
+            align: 'left',
             sorter: (a, b) => a.expireDate.localeCompare(b.expireDate),
             render: (text) => formatDateTime(text), // Sử dụng hàm formatDate
 
         },
-        // {
-        //     title: "Trạng thái",
-        //     key: "status",
-        //     dataIndex: "status",
-        //     align: 'center',
-        //     render: (status) => {
-        //         // Gán màu dựa trên trạng thái
-        //         let color = "";
-        //         let statusText ;
-        //
-        //         switch (status.toLowerCase()) {
-        //             case "active":
-        //                 color = "green";
-        //                 statusText = "Hoạt động"; // Hiển thị "Hoạt động"
-        //                 break;
-        //             case "inactive":
-        //                 color = "volcano";
-        //                 statusText = "Không hoạt động"; // Hiển thị "Không hoạt động"
-        //                 break;
-        //             default:
-        //                 color = "geekblue"; // Mặc định cho các trạng thái khác
-        //                 statusText = status; // Giữ nguyên trạng thái nếu không phải "active" hoặc "inactive"
-        //         }
-        //
-        //         return (
-        //             <Tag color={color} key={status}>
-        //                 {statusText} {/* Hiển thị trạng thái với chữ được thay đổi */}
-        //             </Tag>
-        //         );
-        //     },
-        // },
         {
             title: 'Trạng thái duyệt',
             dataIndex: 'statusBrowse',
@@ -163,7 +136,6 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange }) =>
                     <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => handleInfo(record.key)}
                         // disabled={record.status !== 'ACTIVE'}
                     />
-
 
                     <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
                             onClick={() => handleEdit(record.key)}

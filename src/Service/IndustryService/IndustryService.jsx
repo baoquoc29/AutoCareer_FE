@@ -49,6 +49,9 @@ export class IndustryService extends baseService {
     get_count_used_industry = () => {
         return this.get("api/industry/get-used-industry");
     };
+    get_avg_salary_industry = () => {
+        return this.get("api/industry/get-average-salary");
+    };
 }
 
 export const industryService = new IndustryService();

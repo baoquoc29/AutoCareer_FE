@@ -13,6 +13,10 @@ export class BusinessService extends baseService {
     update_business_id = (id, formData) => {
         return this.postFormData(`api/business/${id}`, formData)
     }
+    get_all_search_business_page = (page, size, keyword='') =>{
+        return this.get
+        (`api/cooperation/get-all-cooperation-university?page=${page}&size=${size}&keyword=${keyword}`);
+    };
 }
 
 export const businessService = new BusinessService();

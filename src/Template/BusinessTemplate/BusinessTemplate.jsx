@@ -54,20 +54,18 @@ export function BusinessTemplate() {
                 {label: "Danh sách hội thảo", link: "/business-workshop", icon: ""},
             ],
         },
-        {
-            label: "Công việc",
-            icon: "fa-solid fa-briefcase",
-            subMenu: [
-                {label: "Danh sách công việc", link: "/workshop-manager", icon: ""},
-                {label: "Đề xuất công việc", link: "/section-manager", icon: ""},
-                {label: "Yêu cầu hợp tác", link: "/section-manager", icon: ""},
-            ],
-        },
-        {
-            label: "Thống kê",
-            icon: "home",
-            subMenu: [{label: "123", link: "", icon: ""}],
-        },
+        ...(user?.role?.name === "BUSINESS"
+            ? [
+                {
+                    label: "Thống kê",
+                    icon: "fa-duotone fa-solid fa-chart-line",
+                    subMenu: [
+                        {label: "Thống kê ngành nghề", link: "/dashboard-industry", icon: ""},
+                        {label: "Thống kê công việc", link: "/dashboard-job", icon: ""},
+                    ],
+                },
+            ]
+            : []),
     ];
     return (
         <>

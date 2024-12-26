@@ -71,6 +71,10 @@ const HeaderPortal = () => {
     };
 
     const handleToManagerClick = () => {
+        if(userData?.role?.name === "BUSINESS") {
+            window.open('/dashboard-industry', '_blank');
+        }
+        else if(userData?.role?.name === "UNIVERSITY") {
         const role = userData?.role?.name;
         if (role === "BUSINESS" || role === "EMPLOYEE") {
             window.open('/business', '_blank');
@@ -79,6 +83,14 @@ const HeaderPortal = () => {
         } else if (role === "ADMIN") {
             window.open('/admin', '_blank');
         }
+        else if(userData?.role?.name === "BUSINESS") {
+            window.open('/dashboard-industry', '_blank');
+        }
+        else if(userData?.role?.name === "EMPLOYEE") {
+            window.open('/job-manager', '_blank');
+        }
+    }
+
     };
 
     const handleLogout = async () => {

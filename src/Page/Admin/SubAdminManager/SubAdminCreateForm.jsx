@@ -11,16 +11,15 @@ const SubAdminCreateForm = ({open, onClose}) => {
     const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: {
-            subAdminCode: "",
             name: "",
             gender: "",
             email: "",
             phone: "",
             address: "",
-            subAdminImage: "",
+            subAdminImage: null,
         },
         enableReinitialize: true,
-        validationSchema: SubAdminValidation(["subAdminCode", "name", "gender", "email", "phone", "address", "subAdminImage"],),
+        validationSchema: SubAdminValidation([ "name", "gender", "email", "phone", "address"]),
         onSubmit: (values) => {
             handleSubmit(values); // Gọi hàm handleSubmit
         },
@@ -41,14 +40,10 @@ const SubAdminCreateForm = ({open, onClose}) => {
 
         // Gửi dữ liệu tới API
         dispatch(create_sub_admin(formData))
-            .then((response) => {
-                dispatch(get_all_sub_admin())
+            .then(() => {
+                // dispatch(get_all_sub_admin())
                 handleClose();
-            })
-            .catch((error) => {
-                toast.error(error.messages)
             });
-
     };
     const handleClose = () => {
         formik.resetForm(); // Xóa toàn bộ dữ liệu form
