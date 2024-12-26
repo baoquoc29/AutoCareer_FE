@@ -166,7 +166,7 @@ const MajorManager = () => {
                                                value={searchKeyword}
                                                onChange={handleSearchChange} prefix={<SearchOutlined/>}/>
                                         <Select
-                                            style={{width: 300}}
+                                            style={{width: 600}}
                                             autoFocus={true}
                                             placeholder="Tìm kiếm theo khoa"
                                             optionFilterProp="label"
