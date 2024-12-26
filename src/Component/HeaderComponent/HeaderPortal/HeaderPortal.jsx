@@ -130,9 +130,9 @@ const HeaderPortal = () => {
                         )}
                         {userData?.role?.name !== "BUSINESS" && (
                             <Menu.Item key="4">
-                                <Link to="business-section" smooth={true} duration={500}>
+                                <NavLink to="business-section" smooth={true} duration={500}>
                                     Công ty
-                                </Link>
+                                </NavLink>
                             </Menu.Item>
                         )}
                         <Menu.Item key="5">
