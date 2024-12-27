@@ -6,11 +6,11 @@ import {
     get_all_industry_business,
     get_industry_detail
 } from "../../../Redux/actions/IndustryThunk";
-import {Button, Card, Input, Pagination} from "antd";
+import {Card, Input, Pagination} from "antd";
 import IndustryTable from "./IndustryTable";
 import IndustryForm from "./IndustryForm";
 import IndustryDetailModal from "./IndustryDetailModel"; // Import Modal mới
-import {DownloadOutlined, SearchOutlined,} from "@ant-design/icons";
+import {SearchOutlined,} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 import DeleteSelectedButton from "../../../Component/DeleteSelectedButton/DeleteSelectedButton";
@@ -91,28 +91,29 @@ const IndustryManager = () => {
         updateBy: industry.updateBy
     })) : [];
 
-    const exportToExcel = () => {
-        if (filteredData.length === 0) {
-            alert("No data to export!");
-            return;
-        }
+    // const exportToExcel = () => {
+    //     if (filteredData.length === 0) {
+    //         alert("No data to export!");
+    //         return;
+    //     }
+    //
+    //     // Chuyển đổi dữ liệu thành định dạng Excel
+    //     const worksheet = XLSX.utils.json_to_sheet(
+    //         filteredData.map((industry) => ({
+    //             "Tên ngành nghề": industry.industryName,
+    //             "Mã ngành nghề": industry.industryCode,
+    //             "Trạng thái": industry.status,
+    //         }))
+    //     );
+    //
+    //     // Tạo workbook mới và thêm worksheet
+    //     const workbook = XLSX.utils.book_new();
+    //     XLSX.utils.book_append_sheet(workbook, worksheet, "Industries");
+    //
+    //     // Xuất file Excel
+    //     XLSX.writeFile(workbook, "Industries.xlsx");
+    // }
 
-        // Chuyển đổi dữ liệu thành định dạng Excel
-        const worksheet = XLSX.utils.json_to_sheet(
-            filteredData.map((industry) => ({
-                "Tên ngành nghề": industry.industryName,
-                "Mã ngành nghề": industry.industryCode,
-                "Trạng thái": industry.status,
-            }))
-        );
-
-        // Tạo workbook mới và thêm worksheet
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Industries");
-
-        // Xuất file Excel
-        XLSX.writeFile(workbook, "Industries.xlsx");
-    }
     return (<>
         <section id="content" className="content">
             <div className="content__header content__boxed rounded-0">

@@ -61,18 +61,10 @@ const IndustryForm = ({selectData, load}) => {
     return (
         <Card title="Thêm ngành mới">
             <form onSubmit={formik.handleSubmit}>
-                <div style={{ marginBottom: "8px" }}>
-                    <label htmlFor="industries" style={{ fontWeight: "bold" }}>
-                        Tên ngành <span style={{ color: "red" }}>*</span>
-                    </label>
-                </div>
                 <Form.Item
-                    name="industries" // Xác định tên của trường
+                    label="Tên ngành"
                     help={formik.errors.industries && formik.touched.industries ? formik.errors.industries : null}
                     validateStatus={formik.errors.industries && formik.touched.industries ? "error" : ""}
-                    rules={[
-                        { required: true, message: "Vui lòng chọn ít nhất một ngành nghề!" }
-                    ]}
                 >
                     <Select
                         mode="multiple" // Cho phép chọn nhiều ngành nghề

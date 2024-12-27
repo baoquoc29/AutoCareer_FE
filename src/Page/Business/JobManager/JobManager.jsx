@@ -28,7 +28,7 @@ const JobManager = () => {
     const role = userLogin?.role.name; // Lấy role từ đối tượng USER_LOGIN
 
     useEffect(() => {
-        dispatch(get_all_job_of_business_paging(currentPage, pageSize, searchText, statusBrowse, industryId));
+        dispatch(get_all_job_of_business_paging(currentPage, pageSize, encodeURIComponent(searchText), statusBrowse, industryId));
         dispatch(get_all_industry_business_no_pag());
     }, [dispatch, currentPage, pageSize, searchText, statusBrowse, industryId]);
 
