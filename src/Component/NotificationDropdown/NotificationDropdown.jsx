@@ -24,13 +24,14 @@ const NotificationDropdown = () => {
         const [loading, setLoading] = useState(false);
         const [hasMore, setHasMore] = useState(true); // Kiểm tra còn dữ liệu hay không
         const [allNotifications, setAllNotifications] = useState([]);
+        const [unreadCount, setUnreadCount] = useState(0); // Thêm trạng thái để lưu số lượng thông báo chưa đọc
         const observer = useRef();
 
-        useEffect( () => {
+        useEffect(() => {
             if (userId) {
                 dispatch(listen_for_notifications(userId))
                 dispatch(count_unread_notifications());
-                dispatch(get_all_paging_notifications(pageNo -1, pageSize))
+                dispatch(get_all_paging_notifications(pageNo - 1, pageSize))
                 setAllNotifications(notifications);
             }
         }, [userId, unreadAmount]);
@@ -40,7 +41,9 @@ const NotificationDropdown = () => {
             }
 
         }, [totalElements, pageNo])
-
+        useEffect(() => {
+            setUnreadCount(unreadAmount); // Cập nhật số lượng thông báo chưa đọc
+        }, [unreadAmount]);
         useEffect(() => {
             if (notifications !== allNotifications) {
                 setAllNotifications(notifications);
@@ -73,7 +76,7 @@ const NotificationDropdown = () => {
         // Đánh dấu tất cả là đã đọc
         const markAllAsRead = () => {
             dispatch(mask_read_all_notifications())
-                .then( () => {
+                .then(() => {
                     dispatch(count_unread_notifications());
 
                 })
@@ -85,7 +88,7 @@ const NotificationDropdown = () => {
             Modal.confirm({
                 title: data.title,
                 content: data.message,
-                cancelButtonProps: { style: { display: 'none' } },
+                cancelButtonProps: {style: {display: 'none'}},
                 onOk() {
                     if (data.statusRead === "UNREAD") {
                         dispatch(mask_read_notification({id: data.id}))
@@ -166,7 +169,7 @@ const NotificationDropdown = () => {
 
         return (
             <Dropdown overlay={menu} trigger={['click']}>
-                <Badge dot offset={[-3,2]} // Điều chỉnh vị trí của số đếm
+                <Badge dot={unreadCount > 0} offset={[-3, 2]} // Điều chỉnh vị trí của số đếm
                        style={{
                            backgroundColor: '#ff4d4f',
                            height: '8px', // Giảm chiều cao của dấu chấm

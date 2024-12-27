@@ -47,8 +47,8 @@ export class WorkShopService extends baseService {
     get_wards = (districtId) => {
         return this.get(`api/administrative/get-all-wards?districtId=${districtId}`);
     };
-    get_total_workshop=()=>{
-        return this.get('api/work-shop/count-total')
+    get_total_workshop=(universityId)=>{
+        return this.get(`api/work-shop/count-total/${universityId}`)
     }
     get_status_workshop=()=>{
         return this.get('api/work-shop/business-details')

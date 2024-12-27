@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Button, Card, Input, Modal, Pagination, Select} from "antd";
-import {DeleteOutlined, FileExcelOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
-import {CSVLink} from "react-csv";
+import {DeleteOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import InstructionalTable from "./InstructionalTable";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -14,8 +13,7 @@ import InstructionalCreateModal from "./Modal/InstructionalCreateModal";
 import InstructionalDetailModal from "./Modal/InstructionalDetailModal";
 import {get_university_id} from "../../../Redux/actions/UniversityThunk";
 import InstructionalEditModal from "./Modal/InstructionalEditModal";
-import {toast} from "react-toastify";
-
+import './Css/style.css'
 const InstructionalManager = () => {
     const dispatch = useDispatch();
     const {
@@ -43,26 +41,27 @@ const InstructionalManager = () => {
         );
     }, [searchKeyword, instructional]);
     useEffect(() => {
+        if (university?.id) {
+            dispatch(get_university_id(university?.id, currentPage, pageSize));
+        }
+    }, [university, dispatch]);
+    useEffect(() => {
         if (selectedStatus === "active") {
             dispatch(get_all_active_ins(currentPage, pageSize));
         } else if (selectedStatus === "inactive") {
             dispatch(get_all_stop_ins(currentPage, pageSize));
         } else {
-            dispatch(get_all_instructional(currentPage, pageSize, selectedStatus, searchKeyword));
+            dispatch(get_all_instructional(university?.id, currentPage, pageSize, selectedStatus, searchKeyword));
         }
     }, [dispatch, currentPage, pageSize, selectedStatus, searchKeyword]);
-    useEffect(() => {
-        if (university?.id) {
-            dispatch(get_university_id(university.id));
-        }
-    }, [university, dispatch]);
+
 
     const handlePageChange = (page) => {
-        dispatch(get_all_instructional(page, pageSize));
+        dispatch(get_all_instructional(university?.id, page, pageSize));
     };
     const handleCreate = async (values) => {
         await dispatch(create_instructional(values));
-        await dispatch(get_all_instructional(currentPage, pageSize));
+        await dispatch(get_all_instructional(university?.id, currentPage, pageSize));
     };
     const handleStatusChange = (value) => {
         setSelectedStatus(value); // Lưu trạng thái được chọn
@@ -76,11 +75,11 @@ const InstructionalManager = () => {
     };
     const handleStopInstructional = async (id) => {
         await dispatch(stop_instructional(id));
-        dispatch(get_all_instructional(currentPage, pageSize));
+        dispatch(get_all_instructional(university?.id, currentPage, pageSize));
     };
     const handleRefundInstructional = async (id) => {
         await dispatch(refund_instructional(id))
-        dispatch(get_all_instructional(currentPage, pageSize));
+        dispatch(get_all_instructional(university?.id, currentPage, pageSize));
     }
     const handleDeleteSelected = async () => {
         if (selectedRowKeys.length === 0) {
@@ -102,7 +101,7 @@ const InstructionalManager = () => {
             onOk: async () => {
                 // Gọi API xóa với danh sách các ID đã chọn
                 await dispatch(delete_instructional(selectedRowKeys));
-                await dispatch(get_all_instructional(currentPage, pageSize)); // Lấy lại danh sách
+                await dispatch(get_all_instructional(university?.id, currentPage, pageSize)); // Lấy lại danh sách
                 setSelectedRowKeys([]); // Reset lại danh sách các ID đã chọn
             },
         });
@@ -120,25 +119,8 @@ const InstructionalManager = () => {
 
     const handleEditSubmit = async () => {
         // await dispatch(update_ins(instructional.id, values));
-        await dispatch(get_all_instructional(currentPage, pageSize));
+        await dispatch(get_all_instructional(university?.id, currentPage, pageSize));
     }
-    const handleExportClick = () => {
-        const dataExport = filteredInstructional.length > 0 ? filteredInstructional : instructional;
-        if (dataExport && dataExport.length < 0) {
-
-            toast.error('Không có dữ liệu để xuất');
-        } else {
-            toast.success('Tải xuống thành công');
-        }
-    };
-    const csvHeader = [
-        {label: "Tên", key: "name"},
-        {label: "Mã giáo vụ", key: "instructionalCode"},
-        {label: "Email", key: "email"},
-        {label: "Số điện thoại", key: "phone"},
-        {label: "Trạng thái", key: "status"},
-        {label: "Địa chỉ", key: "address"},
-    ]
     const handleSearch = (e) => {
         const value = e.target.value.trimStart();
         setSearchKeyword(value);
@@ -150,7 +132,7 @@ const InstructionalManager = () => {
                 <div className="m-5 mt-5">
                     <div className="row">
                         <div className="col-12 mb-3">
-                            <Card style={{textAlign: 'center'}} title="Danh sách giáo vụ">
+                            <Card className="card-instructional" title="Danh sách giáo vụ">
                                 <div className="table-responsive">
                                     <div className="d-flex mb-3">
                                         <Input
@@ -188,25 +170,6 @@ const InstructionalManager = () => {
                                                 style={{marginLeft: '10px'}}
                                             >
                                                 Thêm
-                                            </Button>
-                                            <Button
-                                                type="default"
-                                                icon={<FileExcelOutlined/>}
-                                                style={{
-                                                    backgroundColor: '#107C41',
-                                                    color: '#FFFFFF',
-                                                    marginLeft: '10px'
-                                                }}
-                                                onClick={handleExportClick}
-                                            >
-                                                <CSVLink
-                                                    data={filteredInstructional.length > 0 ? filteredInstructional : instructional}
-                                                    headers={csvHeader}
-                                                    filename={"DanhSachGiaoVu.csv"}
-                                                    style={{color: 'inherit', textDecoration: 'none'}}
-                                                >
-                                                    Export excel
-                                                </CSVLink>
                                             </Button>
                                         </div>
                                     </div>
