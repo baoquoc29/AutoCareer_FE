@@ -15,7 +15,7 @@ export class BusinessService extends baseService {
     }
     get_all_search_business_page = (page, size, keyword='') =>{
         return this.get
-        (`api/cooperation/get-all-cooperation-university?page=${page}&size=${size}&keyword=${keyword}`);
+        (`api/business/get-all-business-page?page=${page}&size=${size}&keyword=${keyword}`);
     };
 }
 

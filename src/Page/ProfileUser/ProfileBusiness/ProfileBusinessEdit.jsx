@@ -246,28 +246,33 @@ const ProfileBusinessEdit = () => {
                                                             rules={[
                                                                 {
                                                                     required: true,
-                                                                    message: "Vui lòng nhập mã số thuế"
+                                                                    message: "Vui lòng nhập mã số thuế",
                                                                 },
                                                                 {
                                                                     validator: (_, value) => {
+                                                                        // Kiểm tra dấu cách ở đầu
                                                                         if (value && value.startsWith(' ')) {
                                                                             return Promise.reject(new Error('Mã số thuế không được bắt đầu bằng dấu cách'));
                                                                         }
+
+                                                                        // Kiểm tra nếu có ký tự không phải số
+                                                                        if (value && !/^[0-9]*$/.test(value)) {
+                                                                            return Promise.reject(new Error('Mã số thuế chỉ được chứa số'));
+                                                                        }
+
+                                                                        // Kiểm tra chiều dài
+                                                                        if (value && value.length !== 10 && value.length !== 13) {
+                                                                            return Promise.reject(new Error('Mã số thuế phải có 10 hoặc 13 ký tự'));
+                                                                        }
+
+                                                                        // Nếu tất cả điều kiện đều hợp lệ
                                                                         return Promise.resolve();
                                                                     },
                                                                 },
-                                                                {
-                                                                    pattern: /^[0-9]+$/,
-                                                                    message: "Mã số thuế chỉ được chứa số"
-                                                                },
-                                                                {
-                                                                    min: 10,
-                                                                    max: 13,
-                                                                    message: "Mã số thuế phải từ 10 đến 13 ký tự"
-                                                                },
                                                             ]}
+                                                            style={{ marginBottom: '24px' }}
                                                         >
-                                                            <Input/>
+                                                            <Input />
                                                         </Form.Item>
 
                                                         <Form.Item
@@ -276,33 +281,34 @@ const ProfileBusinessEdit = () => {
                                                             rules={[
                                                                 {
                                                                     validator: (_, value) => {
+                                                                        // Kiểm tra dấu cách ở đầu
                                                                         if (value && value.startsWith(' ')) {
                                                                             return Promise.reject(new Error('Số lượng nhân viên không được bắt đầu bằng dấu cách'));
                                                                         }
-                                                                        return Promise.resolve();
-                                                                    },
-                                                                },
-                                                                {
-                                                                    pattern: /^[0-9]+$/,
-                                                                    message: "Số lượng nhân viên phải là một số"
-                                                                },
-                                                                {
-                                                                    validator: (_, value) => {
-                                                                        if(value){
+
+                                                                        // Kiểm tra nếu có ký tự không phải số
+                                                                        if (value && !/^[0-9]+$/.test(value)) {
+                                                                            return Promise.reject(new Error('Số lượng nhân viên phải là một số'));
+                                                                        }
+
+                                                                        // Kiểm tra giá trị nhập vào
+                                                                        if (value) {
                                                                             const numberValue = parseInt(value);
-                                                                            if(numberValue < 50){
+                                                                            if (numberValue < 50) {
                                                                                 return Promise.reject(new Error("Số lượng nhân viên phải lớn hơn hoặc bằng 50"));
                                                                             }
-                                                                            if(numberValue > 1000000){
+                                                                            if (numberValue > 1000000) {
                                                                                 return Promise.reject(new Error("Số lượng nhân viên phải nhỏ hơn hoặc bằng 1.000.000"));
                                                                             }
                                                                         }
+
+                                                                        // Nếu tất cả điều kiện đều hợp lệ
                                                                         return Promise.resolve();
-                                                                    }
+                                                                    },
                                                                 },
                                                             ]}
                                                         >
-                                                            <Input/>
+                                                            <Input />
                                                         </Form.Item>
 
                                                         <Form.Item
@@ -315,23 +321,28 @@ const ProfileBusinessEdit = () => {
                                                                 },
                                                                 {
                                                                     validator: (_, value) => {
+                                                                        // Kiểm tra dấu cách ở đầu
                                                                         if (value && value.startsWith(' ')) {
                                                                             return Promise.reject(new Error('Website không được bắt đầu bằng dấu cách'));
                                                                         }
+
+                                                                        // Kiểm tra định dạng URL
+                                                                        if (value && !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(value)) {
+                                                                            return Promise.reject(new Error("Vui lòng nhập đúng định dạng website"));
+                                                                        }
+
+                                                                        // Kiểm tra độ dài của website
+                                                                        if (value && value.length > 255) {
+                                                                            return Promise.reject(new Error("Website không được quá 255 ký tự"));
+                                                                        }
+
+                                                                        // Nếu tất cả điều kiện đều hợp lệ
                                                                         return Promise.resolve();
                                                                     },
                                                                 },
-                                                                {
-                                                                    type: 'url',
-                                                                    message: "Vui lòng nhập đúng định dạng website"
-                                                                },
-                                                                {
-                                                                    max: 255,
-                                                                    message: "Website không được quá 255 ký tự"
-                                                                },
                                                             ]}
                                                         >
-                                                            <Input/>
+                                                            <Input />
                                                         </Form.Item>
 
                                                         <Form.Item
@@ -344,19 +355,23 @@ const ProfileBusinessEdit = () => {
                                                                 },
                                                                 {
                                                                     validator: (_, value) => {
+                                                                        // Kiểm tra dấu cách ở đầu
                                                                         if (value && value.startsWith(' ')) {
                                                                             return Promise.reject(new Error('Số điện thoại không được bắt đầu bằng dấu cách'));
                                                                         }
+
+                                                                        // Kiểm tra định dạng số điện thoại (chỉ gồm 10 chữ số)
+                                                                        if (value && !/^[0-9]{10}$/.test(value)) {
+                                                                            return Promise.reject(new Error("Số điện thoại phải là 10 số"));
+                                                                        }
+
+                                                                        // Nếu tất cả điều kiện đều hợp lệ
                                                                         return Promise.resolve();
                                                                     },
                                                                 },
-                                                                {
-                                                                    pattern: /^[0-9]{10}$/,
-                                                                    message: "Số điện thoại phải là 10 số"
-                                                                }
                                                             ]}
                                                         >
-                                                            <Input/>
+                                                            <Input />
                                                         </Form.Item>
 
                                                         <Form.Item
@@ -369,34 +384,31 @@ const ProfileBusinessEdit = () => {
                                                                 },
                                                                 {
                                                                     validator: (_, value) => {
-                                                                        if(value && value.toString().startsWith(' ')) {
+                                                                        // Kiểm tra dấu cách ở đầu
+                                                                        if (value && value.toString().startsWith(' ')) {
                                                                             return Promise.reject(new Error('Năm thành lập không được bắt đầu bằng dấu cách'));
                                                                         }
-                                                                        return Promise.resolve();
-                                                                    },
-                                                                },
-                                                                {
-                                                                    validator: (_, value) => {
-                                                                        if(value && isNaN(value)){
+
+                                                                        // Kiểm tra nếu giá trị không phải là một số
+                                                                        if (value && isNaN(value)) {
                                                                             return Promise.reject(new Error('Năm thành lập phải là một số'));
                                                                         }
-                                                                        return Promise.resolve();
-                                                                    }
-                                                                },
-                                                                ({ getFieldValue }) => ({
-                                                                    validator(_, value) {
-                                                                        if(value){
+
+                                                                        // Kiểm tra nếu năm thành lập lớn hơn năm hiện tại
+                                                                        if (value) {
                                                                             const currentYear = new Date().getFullYear();
                                                                             if (parseInt(value) > currentYear) {
                                                                                 return Promise.reject(new Error(`Năm thành lập không được lớn hơn năm hiện tại (${currentYear})`));
                                                                             }
                                                                         }
+
+                                                                        // Nếu tất cả điều kiện đều hợp lệ
                                                                         return Promise.resolve();
                                                                     },
-                                                                }),
+                                                                },
                                                             ]}
                                                         >
-                                                            <Input/>
+                                                            <Input />
                                                         </Form.Item>
                                                     </Col>
                                                     <Col span={12}>
