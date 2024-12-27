@@ -72,6 +72,8 @@ export function AppRouter() {
                     <Route path={"/job-portal-detail/:id"} element={<JobDetailPortal/>}/>
                     <Route path={"/business-section"} element={<HomeBusinessPortal/>}/>
                     <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
+                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
+
 
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
@@ -101,7 +103,6 @@ export function AppRouter() {
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
-                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
                     <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
                     <Route path={"/cooperation-business-manager"} element={<CooperationBusinessManager/>}/>
                     <Route path={"/cooperation-business-detail"} element={<CooperationBusinessDetail/>}/>

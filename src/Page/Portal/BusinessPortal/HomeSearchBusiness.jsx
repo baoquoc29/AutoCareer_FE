@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderPortal from "../../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
 import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
@@ -18,6 +18,7 @@ const HomeSearchBusiness = () => {
     const [load, setLoad] = useState(false);
     const resultSearchBusiness = useSelector((state) => state.BusinessReducer.resultSearchBusiness);
     const businessTop= useSelector((state) => state.PortalReducer.businessListHome);
+    const navigate = useNavigate();
 
     console.log(resultSearchBusiness)
     useEffect(() => {
@@ -81,7 +82,7 @@ const HomeSearchBusiness = () => {
                         <div className="company-list">
                             {resultSearchBusiness.map((business) => (
                                 <div className="company-item company-item-hover">
-                                    <a href="" className="item-logo-business">
+                                    <a onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business.id } })} className="item-logo-business">
                                         <img className="item-logo-business-img"
                                              src={business.imageID ? `${GET_IMAGE_URI}${business.imageID}` : 'placeholder-avatar.jpg'}
                                              alt="FPT Shop"
@@ -91,7 +92,7 @@ const HomeSearchBusiness = () => {
                                         <div className="item-info-business-title">
                                             <strong>
                                                 <a className="item-info-business-company-name"
-                                                    // href=""
+                                                   onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business.id } })}
                                                    target="_blank">{business.name}
                                                 </a>
                                             </strong>
