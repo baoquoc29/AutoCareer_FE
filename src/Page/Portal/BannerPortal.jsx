@@ -1,13 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css"; // import stylesheet AOS
+import "aos/dist/aos.css"; // Import stylesheet AOS
 import "./StylePortal/BannerPortal.css";
-import {get_university_total} from "../../Redux/actions/PortalThunk";
+import { get_university_total } from "../../Redux/actions/PortalThunk";
 import { useDispatch, useSelector } from "react-redux";
+import CountUp from "react-countup";
 
 const BannerPortal = () => {
     const dispatch = useDispatch();
-    const {universities} = useSelector(state => state.PortalReducer);
+    const { totalUniversities } = useSelector(state => state.PortalReducer);
+    const { totalBusinessFeatures } = useSelector(state => state.PortalReducer);
+    const { totalWorkShopFeatures } = useSelector(state => state.PortalReducer);
+    const { totalJobFeatures } = useSelector(state => state.PortalReducer);
+
     useEffect(() => {
         AOS.init({
             duration: 1000, // Animation duration
@@ -19,20 +24,6 @@ const BannerPortal = () => {
     useEffect(() => {
         dispatch(get_university_total());
     }, [dispatch]);
-    const [totalJobElements, setTotalJobElements] = useState(0);
-    const [totalWorkShopElements, setTotalWorkShopElements] = useState(0);
-    const [totalBusinessElements, setTotalBusinessEmelemts] = useState(0);
-    // Lấy totalElements từ localStorage khi component được mount
-    useEffect(() => {
-        const storedJobTotalElements = localStorage.getItem('totalJobElements');
-        const storedTotalWorkShopElements = localStorage.getItem('totalWorkshopElements');
-        const storedTotalBusinessElements = localStorage.getItem('totalBusinessElements');
-        if (storedJobTotalElements && storedTotalWorkShopElements && storedTotalBusinessElements) {
-            setTotalJobElements(parseInt(storedJobTotalElements, 10));
-            setTotalBusinessEmelemts(parseInt(storedTotalBusinessElements, 10));
-            setTotalWorkShopElements(parseInt(storedTotalWorkShopElements, 10));
-        }
-    }, []); // Chạy 1 lần khi component mount
 
     return (
         <div className="banner-portal" data-aos="fade-up">
@@ -52,19 +43,27 @@ const BannerPortal = () => {
                 {/* Right content with statistics */}
                 <div className="right-stats-portal">
                     <div className="stat-item-portal" data-aos="fade-up">
-                        <h2>{universities?.length || 0}</h2>
+                        <h2>
+                            <CountUp start={0} end={totalUniversities || 0} duration={2.5} />
+                        </h2>
                         <p>Trường đại học</p>
                     </div>
                     <div className="stat-item-portal" data-aos="fade-up">
-                        <h2>{totalJobElements}</h2>
+                        <h2>
+                            <CountUp start={0} end={totalJobFeatures || 0} duration={2.5} />
+                        </h2>
                         <p>Việc làm</p>
                     </div>
                     <div className="stat-item-portal" data-aos="fade-up">
-                        <h2>{totalBusinessElements}</h2>
+                        <h2>
+                            <CountUp start={0} end={totalBusinessFeatures || 0} duration={2.5} />
+                        </h2>
                         <p>Doanh nghiệp</p>
                     </div>
                     <div className="stat-item-portal" data-aos="fade-up">
-                        <h2>{totalWorkShopElements}</h2>
+                        <h2>
+                            <CountUp start={0} end={totalWorkShopFeatures || 0} duration={2.5} />
+                        </h2>
                         <p>Hội thảo</p>
                     </div>
                 </div>
