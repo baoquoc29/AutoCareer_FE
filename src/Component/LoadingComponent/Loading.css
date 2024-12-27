@@ -1,15 +1,15 @@
 .bgLoading {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.8); /* Tăng độ mờ nếu cần */
     background-size: cover;
     background-repeat: no-repeat;
     position: fixed;
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
-    z-index: 1100;
+    width: 100vw; /* Đảm bảo phủ toàn bộ chiều rộng màn hình */
+    height: 100vh; /* Đảm bảo phủ toàn bộ chiều cao màn hình */
+    z-index: 9999999; /* Tăng z-index để chắc chắn đè lên mọi thứ */
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
+    pointer-events: none; /* Đảm bảo không cản trở thao tác */
+}

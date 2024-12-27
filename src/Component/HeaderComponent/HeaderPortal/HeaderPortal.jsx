@@ -153,7 +153,7 @@ const HeaderPortal = () => {
             <div className="header-container-portal">
                 <div className="header-brand-portal">
                     <NavLink to="/" className="brand-wrap-portal">
-                        <img src={"aotucareer-logo.svg"} alt="logo" className="logo-portal"/>
+                        <img src="/aotucareer-logo.svg" alt="logo" className="logo-portal"/>
                         <span className="brand-title-portal">Career Bridge</span>
                     </NavLink>
                 </div>
