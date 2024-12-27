@@ -1,5 +1,5 @@
 import {universityService} from "../../Service/UniversityService/UniversityService";
-import {SET_UNIVERSITY, UPDATE_UNIVERSITY} from "../types/UniversityType";
+import {SET_UNIVERSITY, SET_UNIVERSITY_DETAILS, UPDATE_UNIVERSITY} from "../types/UniversityType";
 import { STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
@@ -8,6 +8,7 @@ export const get_university_id = (id) => {
     return async (dispatch) => {
         try {
             const res = await universityService.get_university_id(id);
+
             dispatch({
                 type: SET_UNIVERSITY,
                 payload: res.data
@@ -17,6 +18,21 @@ export const get_university_id = (id) => {
         }
     }
 }
+
+export const get_university_details = (id) => {
+    return async (dispatch) => {
+        try {
+            const res = await universityService.get_university_details(id);
+            dispatch({
+                type: SET_UNIVERSITY_DETAILS,
+                payload: res.data
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 export const update_university = (id, formData) => {
     return async (dispatch) => {
         try {

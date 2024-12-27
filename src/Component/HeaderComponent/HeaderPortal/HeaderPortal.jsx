@@ -1,20 +1,21 @@
-import React, {useEffect} from 'react';
-import {Layout, Menu, Button, Dropdown, Avatar, Space, Modal, Form, Input, Typography, notification} from 'antd';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import {Avatar, Button, Dropdown, Form, Input, Layout, Menu, Modal, Space, Typography} from 'antd';
+import {NavLink, useLocation, useNavigate} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import './Style/Portal.css';
-import { useNavigate } from 'react-router-dom';
-import { DOMAIN, TOKEN, USER_LOGIN } from "../../../Utils/Setting/Config";
+import {DOMAIN, TOKEN, USER_LOGIN} from "../../../Utils/Setting/Config";
 import {change_password, clearLocalStorage, logoutUser} from "../../../Redux/actions/UserThunk";
 import {
     DownOutlined,
-    EditOutlined, LockOutlined,
-    LogoutOutlined, ProjectOutlined,
+    EditOutlined,
+    LockOutlined,
+    LogoutOutlined,
+    ProjectOutlined,
     SettingOutlined,
     UsergroupDeleteOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import {toast} from "react-toastify";
+
 const { Header: AntHeader } = Layout;
 
 const HeaderPortal = () => {
@@ -81,6 +82,7 @@ const HeaderPortal = () => {
             window.open('/job-manager', '_blank');
         }
         else if (userData?.role?.name === "SUB-ADMIN") {
+        } else if (userData?.role?.name === "EMPLOYEE") {
             window.open('/job-manager', '_blank');
         }
     };

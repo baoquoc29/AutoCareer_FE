@@ -11,12 +11,13 @@ import PageError from "../../PageError404/PageError"
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
 import {
     AppstoreAddOutlined,
-    ClockCircleOutlined,
-    EnvironmentOutlined, HomeOutlined, RestOutlined,
-    TeamOutlined, TrophyOutlined,
+    EnvironmentOutlined,
+    HomeOutlined,
+    TeamOutlined,
+    TrophyOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {DOMAIN} from "../../../Utils/Setting/Config";
 
 const {Title, Text} = Typography;
 
@@ -95,9 +96,7 @@ const JobDetailPortal = () => {
                                                         Địa điểm
                                                     </Text>
                                                     <Text>
-                                                        {job.fromSalary === 1 && job.toSalary === 1
-                                                            ? "Lương thỏa thuận"
-                                                            : `${formatSalary(job.fromSalary)} - ${formatSalary(job.toSalary)}`}
+
                                                     </Text> </Space>
                                             </Col>
                                             <Col span={6}>
@@ -237,7 +236,7 @@ const JobDetailPortal = () => {
                             <Col span={24}>
                                 <Space direction="vertical"
                                        size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
+                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
                                         <UserOutlined  style={{marginRight: "8px"}}/>Kinh nghiệm</Text>
                                     <Text><strong>{job.level}</strong></Text>
                                 </Space>
@@ -246,7 +245,7 @@ const JobDetailPortal = () => {
                             <Col span={24}>
                                 <Space direction="vertical"
                                        size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
+                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
                                         <TrophyOutlined  style={{marginRight: "8px"}}/>Cấp bậc</Text>
                                     <Text><strong>{job.rank}</strong></Text>
                                 </Space>
@@ -254,7 +253,7 @@ const JobDetailPortal = () => {
                             <Col span={24}>
                                 <Space direction="vertical"
                                        size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
+                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
                                         <EnvironmentOutlined style={{marginRight: "8px"}}/>Số lượng tuyển</Text>
                                     <Text><strong>{job.quantity} người </strong></Text>
                                 </Space>
@@ -262,7 +261,7 @@ const JobDetailPortal = () => {
                             <Col span={24}>
                                 <Space direction="vertical"
                                        size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
+                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
                                         <HomeOutlined  style={{marginRight: "8px"}}/>Hình thức làm việc</Text>
                                     <Text><strong>{job.workForm} </strong></Text>
                                 </Space>
@@ -270,7 +269,7 @@ const JobDetailPortal = () => {
                             <Col span={24}>
                                 <Space direction="vertical"
                                        size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
+                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
                                         <UserOutlined  style={{marginRight: "8px"}}/>Giới tính</Text>
                                     <Text><strong>{job.gender} </strong></Text>
                                 </Space>
