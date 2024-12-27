@@ -92,7 +92,7 @@
 .details-section-workshop-details {
     display: flex;
     gap: 20px;
-
+    white-space: nowrap;
     margin-top: 12px;
 }
 

@@ -40,7 +40,7 @@ const WorkshopCard = ({ workshop }) => {
                 </div>
             </div>
             <div className="details">
-                <span className={isUpcoming ? 'upcoming' : ''}><i className="fa fa-calendar" aria-hidden="true"></i> Ngày bắt đầu: {workshop.startDate}</span>
+                <span className={isUpcoming ? 'upcoming1' : ''}><i className="fa fa-calendar" aria-hidden="true"></i> Ngày bắt đầu: {workshop.startDate}</span>
                 <span className={isOngoing ? 'ongoing' : ''}><i className="fa fa-calendar" aria-hidden="true"></i> Ngày kết thúc: {workshop.endDate}</span>
                 <span className={isExpired ? 'expired' : ''}><i className="fa fa-calendar-times-o" aria-hidden="true"></i> Ngày hết hạn: {workshop.expireDate}</span>
                 <span><i className="fa fa-building" aria-hidden="true"></i> Số công ty tham gia: {workshop.totalCompany}</span>
