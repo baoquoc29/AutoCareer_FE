@@ -13,7 +13,6 @@ export const approved_business = (req) => {
     return async (dispatch) => {
         try {
             const res = await adminBusinessService.approved_business(req);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Phê duyệt thành công");
                 dispatch({
@@ -31,7 +30,6 @@ export const rejected_business = (req) => {
     return async (dispatch) => {
         try {
             const res = await adminBusinessService.rejected_business(req);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Từ chối thành công")
                 dispatch({
@@ -49,7 +47,6 @@ export const get_all_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminBusinessService.get_all_businesses(pageNo, pageSize, keyword);
-            console.log(res.data.content);
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_ALL_BUSINESSES,
@@ -66,7 +63,6 @@ export const get_approved_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminBusinessService.get_approved_businesses(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_APPROVED_BUSINESSES,
@@ -82,7 +78,6 @@ export const get_pending_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminBusinessService.get_pending_businesses(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_PENDING_BUSINESSES,
@@ -98,7 +93,6 @@ export const get_rejected_businesses = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminBusinessService.get_rejected_businesses(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_REJECTED_BUSINESSES,

@@ -18,7 +18,7 @@ const AdminWorkshopManager = () => {
     const workshops = useSelector((state) => state.AdminWorkshopReducer.workshops);
     const totalElements = useSelector((state) => state.AdminWorkshopReducer.totalElements); // Tổng số bản ghi
     const [pageNo, setPageNo] = useState(1); // Trang hiện tại
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(1);
     const [filteredData, setFilteredData] = useState([]);
     const [currentTab, setCurrentTab] = useState("ALL");
     const [keyword, setKeyword] = useState("");
@@ -59,7 +59,7 @@ const AdminWorkshopManager = () => {
 
     useEffect(() => {
         fetchWorkshops(currentTab);
-    }, [currentTab]);
+    }, [currentTab, pageNo, pageSize, keyword]);
 
     const handlePageChange = async (page, pageSize) => {
         setPageNo(page);
@@ -70,6 +70,7 @@ const AdminWorkshopManager = () => {
     const handleSearch = async (e) => {
         const value = e.target.value;
         setKeyword(value);
+        setPageNo(1)
         await fetchWorkshops();
     };
 
@@ -95,6 +96,10 @@ const AdminWorkshopManager = () => {
         await dispatch(get_detail_workshop(record.key))
         navigate("/admin-workshop-detail");
     };
+    const handleChangeTab = (tab) => {
+        setCurrentTab(tab);
+        setPageNo(1)
+    }
 
 
     return (
@@ -120,7 +125,7 @@ const AdminWorkshopManager = () => {
                                                         placeholder="Chọn trạng thái duyệt"
                                                         value={currentTab}
                                                         showSearch
-                                                        onChange={(value) => setCurrentTab(value)}
+                                                        onChange={(value) => handleChangeTab(value)}
                                                         style={{width: 200}}
                                                         filterOption={(input, option) => {
                                                             const childrenText = String(option.props.children || "");
