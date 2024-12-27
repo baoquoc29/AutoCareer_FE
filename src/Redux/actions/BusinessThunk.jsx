@@ -2,7 +2,6 @@ import {SET_BUSINESS, SET_BUSINESS_PAGE, UPDATE_BUSINESS} from "../types/Busines
 import { STATUS_CODE} from "../../Utils/Setting/Config";
 import {businessService} from "../../Service/BusinessService/BusinessService";
 import {toast} from "react-toastify";
-import {SET_COOPERATION} from "../types/CooperationType";
 
 
 export const get_business_by_id = (id) => {
@@ -52,10 +51,10 @@ export const get_all_result_search_business_page = (page = 1, size = 7, keyword 
                     dispatch({
                         type: SET_BUSINESS_PAGE,
                         payload: {
-                            content: [],       // Danh sách ngành nghề rỗng
-                            totalElements: 0,  // Tổng số bản ghi là 0
-                            pageSize: size,    // Giữ nguyên số bản ghi mỗi trang
-                            currentPage: page, // Giữ nguyên trang hiện tại
+                            content: [],
+                            totalElements: 0,
+                            pageSize: size,
+                            currentPage: page,
                             keyword,
                         },
                     });

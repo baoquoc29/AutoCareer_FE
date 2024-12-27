@@ -23,8 +23,8 @@ const CooperationManager = () => {
     const dispatch = useDispatch();
     const list_cooperation = useSelector(state => state.CooperationReducer.cooperation);
     const [selectedCooperation, setSelectedCooperation] = useState(null);
-    const currentPage = useSelector((state) => state.CooperationReducer.currentPage);
-    const pageSize = useSelector((state) => state.CooperationReducer.pageSize);
+    const [currentPage, setCurrenPage] = useState(1);
+    const [pageSize, setPageSize] = useState(7);
     const totalElements = useSelector((state) => state.CooperationReducer.totalElements);
     const [searchText, setSearchText] = useState("");
     const [statusConnected,setstatusConnected] = useState("");
@@ -32,8 +32,7 @@ const CooperationManager = () => {
     const [openRejectModal, setOpenRejectModal] = useState(false);
 
     useEffect(() => {
-        dispatch(get_all_cooperation_of_university_page(currentPage, pageSize, searchText, statusConnected));
-        console.log(list_cooperation)
+        dispatch(get_all_cooperation_of_university_page(currentPage, pageSize, encodeURIComponent(searchText), statusConnected));
         }, [dispatch, currentPage, searchText, pageSize, statusConnected, load]);
 
     //chinh xem chi tiết doanh nghiệp
@@ -44,13 +43,19 @@ const CooperationManager = () => {
     };
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_cooperation_of_university_page(page, pageSize, searchText, statusConnected)); // Gọi API với trang và kích thước mới
+        setCurrenPage(page);
+        setPageSize(pageSize);
     };
 
     const handleSearch = (e) => {
         const value = e.target.value;
-        setSearchText(value); // Cập nhật giá trị ô tìm kiếm
+        setSearchText(value);
+        setCurrenPage(1);
     };
+    const handleChangeStatusConnected = (value) => {
+        setstatusConnected(value);
+        setCurrenPage(1);
+    }
 
     //Chap thuan hop tac
     const handleApproveClick = (cooperation) => {
@@ -174,7 +179,7 @@ const CooperationManager = () => {
                                                         placeholder="Chọn trạng thái duyệt"
                                                         value={statusConnected}
                                                         showSearch
-                                                        onChange={(value) => setstatusConnected(value)}
+                                                        onChange={(value) => handleChangeStatusConnected(value)}
                                                         style={{width: 200}}
                                                         filterOption={(input, option) => {
                                                             const childrenText = String(option.props.children || ""); // Chuyển thành chuỗi nếu không phải

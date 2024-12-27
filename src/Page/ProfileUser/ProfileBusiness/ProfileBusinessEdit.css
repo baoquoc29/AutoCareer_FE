@@ -1,5 +1,8 @@
-.container__businessEdit{
-    
+.container__businessEdit {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /*ảnh */
@@ -26,7 +29,6 @@
     border-radius: 50%;
 }
 
-
 /* Form styling */
 .form__university__edit .form-group {
     margin-bottom: 1.5rem;
@@ -37,6 +39,7 @@
     font-weight: bold;
     color: #333;
 }
+
 .form__university__edit .form-group textarea {
     height: 147px; /* Chiều cao cố định cho textarea */
     resize: vertical; /* Cho phép người dùng chỉ thay đổi chiều cao của textarea */
@@ -54,11 +57,13 @@
     border-color: #007bff; /* Đổi màu viền khi focus */
     outline: none; /* Bỏ viền ngoài khi focus */
 }
+
 .form__university__edit input,
 .form__university__edit textarea {
     border-radius: 10px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .form__university__edit .form-control {
     padding: 12px 20px;
     font-size: 1rem;
@@ -111,15 +116,14 @@
     object-fit: cover; /* Đảm bảo ảnh không bị méo */
     border-radius: 10px; /* Bo góc cho ảnh */
 }
+
 .title__Business__edit {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     margin-bottom: 5px;
-
 }
+
 .line__Business__edit {
     border: none;
     border-top: 2px solid #eeeeee;
     margin: 15px 0 15px 0;
 }
-
-

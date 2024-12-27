@@ -21,8 +21,8 @@ const EmployeeManager = () => {
     const dispatch = useDispatch();
     const {employees} = useSelector(state => state.EmployeeReducer);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const currentPage = useSelector((state) => state.EmployeeReducer.currentPage);
-    const pageSize = useSelector((state) => state.EmployeeReducer.pageSize);
+    const [currentPage, setCurrenPage] = useState(1);
+    const [pageSize, setPageSize] = useState(7);
     const totalElements = useSelector((state) => state.EmployeeReducer.totalElements);
     const [status,setStatus] = useState("");
     const [searchText, setSearchText] = useState("");
@@ -30,7 +30,7 @@ const EmployeeManager = () => {
     const [load, setLoad] = useState(false);
 
     useEffect(() => {
-        dispatch(get_all_employees_of_business_page(currentPage, pageSize, searchText, status));
+        dispatch(get_all_employees_of_business_page(currentPage, pageSize, encodeURIComponent(searchText), status));
     }, [dispatch, currentPage, searchText, pageSize, status, load]);
 
     //xem chi tiet nhan vien
@@ -47,12 +47,14 @@ const EmployeeManager = () => {
     };
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_employees_of_business_page(page, pageSize, searchText, status)); // Gọi API với trang và kích thước mới
+        setCurrenPage(page);
+        setPageSize(pageSize);
     };
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
+        setCurrenPage(1);
     };
 
     const confirmDelete = (record) => {
@@ -104,6 +106,10 @@ const EmployeeManager = () => {
             .catch((error) => {
                 toast.success(error.messages)
             })
+    }
+    const handleChangeStatus = (value) => {
+        setStatus(value);
+        setCurrenPage(1);
     }
 
     const exportToExcel = () => {
@@ -175,7 +181,7 @@ const EmployeeManager = () => {
                                                         placeholder="Chọn trạng thái duyệt"
                                                         value={status}
                                                         showSearch
-                                                        onChange={(value) => setStatus(value)}
+                                                        onChange={(value) => handleChangeStatus(value)}
                                                         style={{width: 200}}
                                                         filterOption={(input, option) => {
                                                             const childrenText = String(option.props.children || ""); // Chuyển thành chuỗi nếu không phải

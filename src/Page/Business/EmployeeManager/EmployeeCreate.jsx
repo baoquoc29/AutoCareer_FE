@@ -11,6 +11,7 @@ const EmployeeCreate = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
     const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
+    const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
 
     const [formData, setFormData] = useState({
         email: "",
@@ -43,6 +44,15 @@ const EmployeeCreate = () => {
                 const phoneRegex = /^(\+84|0)[1-9]\d{8}$/;
                 if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0.";
                 break;
+            case "employeeImage":
+                if (!value) return null; // Không kiểm tra nếu không có file
+                if (value && !SUPPORTED_FORMATS.includes(value.type)) {
+                    return "Định dạng ảnh không hợp lệ. Chỉ chấp nhận JPEG, PNG, JPG.";
+                }
+                if (value && value.size > 2 * 1024 * 1024) {
+                    return "Kích thước tệp không được vượt quá 2MB.";
+                }
+                break;
             default:
                 break;
         }
@@ -51,6 +61,14 @@ const EmployeeCreate = () => {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
+        const error = validateField("employeeImage", file);
+        if (error) {
+            toast.error(error);
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                employeeImage: error,
+            }));
+        }
         if (file) {
             setFormData({...formData, employeeImage: file});
             const reader = new FileReader();
@@ -93,6 +111,13 @@ const EmployeeCreate = () => {
             const error = validateField(field, formData[field]);
             if (error) newErrors[field] = error;
         });
+
+        const error = validateField("employeeImage", formData.employeeImage);
+        if (error) {
+            toast.error(error);
+            newErrors["employeeImage"] = error;
+            return;
+        }
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
