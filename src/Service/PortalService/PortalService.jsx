@@ -50,6 +50,18 @@ export class PortalService extends baseService {
     get_status_workshop_by_id = (id, businessId) => {
         return this.getResponse(`api/work-shop/status?workShopId=${id}&businessId=${businessId}`);
     }
+    get_total_work_shop = () => {
+        return this.getResponse(`api/work-shop/countTotalWorkshop`);
+    }
+    get_total_business = () => {
+        return this.getResponse(`api/business/countTotalBusiness`);
+    }
+    get_total_university = () => {
+        return this.getResponse(`api/university/countTotalUniversity`);
+    }
+    get_total_job = () => {
+        return this.getResponse(`api/job/countTotalJob`);
+    }
 
 }
 export const portalService = new PortalService();

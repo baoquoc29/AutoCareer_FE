@@ -25,7 +25,6 @@ const WorkShopManager = () => {
 
     const userInfo = JSON.parse(localStorage.getItem("USER_LOGIN")) || {};
     const idUniversity = userInfo.university?.id || null;
-    const [content, setContent] = useState(""); // State để lưu giá trị content
     // Fetch workshops when dependencies change
     useEffect(() => {
         const fetchWorkshops = async () => {
@@ -94,15 +93,11 @@ const WorkShopManager = () => {
             centered: true,
             okButtonProps: { danger: true },
             onOk: async () => {
-                if (!reason.trim()) {
-                    Modal.warning({
-                        title: "Lý do xóa không được để trống",
-                    });
-                    return Promise.reject(); // Ngăn Modal đóng khi lý do bị trống
-                }
                 try {
-                    // Gửi yêu cầu xóa
-                    await dispatch(delete_work_shop(id, reason));
+                    const contentDeleteWorkShopRequest = {
+                        content: reason,  // The reason for deletion
+                    };
+                    await dispatch(delete_work_shop(id, contentDeleteWorkShopRequest));
                     // Làm mới danh sách sau khi xóa thành công
                     await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size));
                 } catch (error) {

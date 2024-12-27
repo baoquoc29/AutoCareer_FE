@@ -87,6 +87,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
             ),
             ellipsis: true, // Tự động cắt và thêm dấu ba chấm
         },
+
         {
             title: "Trạng thái",
             dataIndex: "statusBrowse",

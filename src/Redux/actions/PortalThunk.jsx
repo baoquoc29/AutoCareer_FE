@@ -8,7 +8,7 @@ import {
     GET_UNIVERSITY_TOTAL,
     GET_WORK_SHOP_BY_ID,
     GET_WORK_SHOP_FEATURE,
-    REQUEST_WORK_SHOP
+    REQUEST_WORK_SHOP, TOTAL_BUSINESS, TOTAL_JOB, TOTAL_UNIVERSITY, TOTAL_WORK_SHOP
 
 } from "../types/PortalType";
 
@@ -38,6 +38,59 @@ export const get_work_shop_feature = (param) => {
         }
     }
 }
+export const get_total_job = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_total_job();
+            dispatch({
+                type: TOTAL_JOB,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_total_work_shop = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_total_work_shop();
+            dispatch({
+                type: TOTAL_WORK_SHOP,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_total_university = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_university_total();
+            dispatch({
+                type: TOTAL_UNIVERSITY,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_total_business = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_total_business();
+            dispatch({
+                type: TOTAL_BUSINESS,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 export const get_work_shop_by_id = (id) => {
     return async (dispatch) => {
         try {
