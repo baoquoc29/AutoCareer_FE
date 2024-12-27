@@ -16,14 +16,14 @@ const CooperationBusinessManager = () => {
     const dispatch = useDispatch();
     const cooperationList = useSelector((state) => state.CooperationReducer.cooperationBusiness);
     const totalElements = useSelector((state) => state.CooperationReducer.totalElements);
-    const currentPage = useSelector((state) => state.CooperationReducer.currentPage);
-    const pageSize = useSelector((state) => state.CooperationReducer.pageSize);
+    const [currentPage,setCurentPage] = useState("1");
+    const [pageSize,setPageSize] = useState("7");
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [statusConnected, setStatusConnected] = useState();
 
     useEffect(() => {
-        dispatch(get_all_cooperation_of_business(currentPage, pageSize, searchText, statusConnected));
+        dispatch(get_all_cooperation_of_business(currentPage, pageSize, encodeURIComponent(searchText), statusConnected));
     }, [dispatch, currentPage, pageSize, searchText, statusConnected]);
 
     useEffect(() => {
@@ -31,14 +31,20 @@ const CooperationBusinessManager = () => {
     }, [cooperationList]);
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_cooperation_of_business(page, pageSize, searchText, statusConnected));
+        setPageSize(pageSize);
+        setCurentPage(page);
     };
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
+        setCurentPage(1)
     };
 
+    const handleChangeStatus = (value) =>{
+        setStatusConnected(value);
+        setCurentPage(1);
+    }
     const handleInfo = (id) => {
         // Lưu ID vào localStorage
         localStorage.setItem("universityId", id);
@@ -105,7 +111,7 @@ const CooperationBusinessManager = () => {
                                                     placeholder="Chọn trạng thái duyệt"
                                                     value={statusConnected}
                                                     showSearch
-                                                    onChange={(value) => setStatusConnected(value)}
+                                                    onChange={(value) => handleChangeStatus(value)}
                                                     style={{width: 200}}
                                                     filterOption={(input, option) => {
                                                         const childrenText = String(option.props.children || ""); // Chuyển thành chuỗi nếu không phải

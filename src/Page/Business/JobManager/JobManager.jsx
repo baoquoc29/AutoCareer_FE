@@ -16,8 +16,8 @@ const JobManager = () => {
     const dispatch = useDispatch();
     const jobTable = useSelector((state) => state.JobReducer.jobs);
     const totalElements = useSelector((state) => state.JobReducer.totalElements);
-    const currentPage = useSelector((state) => state.JobReducer.currentPage);
-    const pageSize = useSelector((state) => state.JobReducer.pageSize);
+    const [currentPage,setCurentPage] = useState("1");
+    const [pageSize,setPageSize] = useState("7");
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [industryId, setIndustryId] = useState('');
@@ -37,8 +37,14 @@ const JobManager = () => {
     }, [jobTable]);
 
     const handlePageChange = (page, pageSize) => {
-        dispatch(get_all_job_of_business_paging(page, pageSize, searchText, statusBrowse, industryId));
+        setPageSize(pageSize);
+        setCurentPage(page);
     };
+
+    const handleChangeStatus = (value) =>{
+        setStatusBrowse(value);
+        setCurentPage(1);
+    }
 
     const handleSelectChange = (selectedRowKeys, selectedRows) => {
         setSelectedRows(selectedRows); // Cập nhật danh sách bản ghi đã chọn
@@ -64,6 +70,7 @@ const JobManager = () => {
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchText(value); // Cập nhật giá trị ô tìm kiếm
+        setCurentPage(1)
     };
 
     const handleInfo = (record) => {
@@ -189,7 +196,7 @@ const JobManager = () => {
                                                     placeholder="Chọn trạng thái duyệt"
                                                     value={statusBrowse}
                                                     showSearch
-                                                    onChange={(value) => setStatusBrowse(value)}
+                                                    onChange={(value) => handleChangeStatus(value)}
                                                     style={{width: 200}}
                                                     filterOption={(input, option) => {
                                                         const childrenText = String(option.props.children || ""); // Chuyển thành chuỗi nếu không phải
