@@ -1,8 +1,8 @@
 import React from "react";
 import {Button, Modal, Space, Table, Tag, Tooltip} from "antd";
-import {EyeOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, EyeOutlined} from "@ant-design/icons";
 
-const WorkshopTable = ({data, onDetail}) => {
+const WorkshopTable = ({data, onDetail, onApprove, onReject}) => {
 
     const columns = [{
         title: "STT", dataIndex: "stt", key: "stt", align: "center",
@@ -51,6 +51,42 @@ const WorkshopTable = ({data, onDetail}) => {
         title: "Hành động", key: "action", align: "center", render: (_, record) => (<Space>
             <Tooltip title="Xem chi tiết">
                 <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onDetail(record)}/>
+            </Tooltip>
+            <Tooltip title="Chấp nhận">
+                <Button
+                    type="default"
+                    icon={<CheckOutlined/>}
+                    style={{
+                        backgroundColor: record?.state.toLowerCase() === "pending"
+                            ? 'rgb(31 211 72)' // Màu xanh lá cây nếu là pending
+                            : 'rgb(31 211 72)', // Giữ màu nếu không phải pending
+                        borderColor: record?.state.toLowerCase() === "pending"
+                            ? 'rgb(31 211 72)' // Viền xanh lá cây nếu là pending
+                            : 'rgb(31 211 72)', // Giữ viền nếu không phải pending
+                        color: 'white', // Chữ màu trắng
+                        opacity: record?.state.toLowerCase() !== "pending" ? 0.5 : 1, // Mờ đi khi không phải pending
+                    }}
+                    disabled={record?.state.toLowerCase() !== "pending"} // Vô hiệu hóa nếu không phải pending
+                    onClick={() => onApprove(record)}
+                />
+            </Tooltip>
+            <Tooltip title="Từ chối">
+                <Button
+                    type="default"
+                    icon={<CloseOutlined/>}
+                    style={{
+                        backgroundColor: (record?.state.toLowerCase() === "pending")
+                            ? 'rgb(255, 99, 71)' // Màu đỏ nếu là pending hoặc approved
+                            : 'rgb(255, 99, 71)', // Giữ màu nếu không phải pending/approved
+                        borderColor: (record?.state.toLowerCase() === "pending")
+                            ? 'rgb(255, 99, 71)' // Viền đỏ
+                            : 'rgb(255, 99, 71)', // Giữ viền nếu không phải pending/approved
+                        color: 'white', // Chữ màu trắng
+                        opacity: (record?.state.toLowerCase() !== "pending") ? 0.5 : 1, // Mờ đi khi không phải pending/approved
+                    }}
+                    disabled={record?.state.toLowerCase() !== "pending"} // Vô hiệu hóa nếu không phải pending hoặc approved
+                    onClick={() => onReject(record)}
+                />
             </Tooltip>
         </Space>),
     },];
