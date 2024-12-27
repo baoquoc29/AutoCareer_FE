@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { Input, Pagination, Card, Select} from "antd";
+import {Input, Pagination, Card, Select, Modal} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
 import {
     approved_workshop,
@@ -12,19 +12,21 @@ import {
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import WorkshopTable from "./WorkshopTable";
 import {useNavigate} from "react-router-dom";
+import RejectModal from "../../Modal/RejectModal";
 
 const AdminWorkshopManager = () => {
     const dispatch = useDispatch();
     const workshops = useSelector((state) => state.AdminWorkshopReducer.workshops);
     const totalElements = useSelector((state) => state.AdminWorkshopReducer.totalElements); // Tổng số bản ghi
     const [pageNo, setPageNo] = useState(1); // Trang hiện tại
-    const [pageSize, setPageSize] = useState(1);
+    const [pageSize, setPageSize] = useState(7);
     const [filteredData, setFilteredData] = useState([]);
     const [currentTab, setCurrentTab] = useState("ALL");
     const [keyword, setKeyword] = useState("");
     const navigate = useNavigate();
     const {Option} = Select;
-
+    const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
+    const [workshopData, setWorkshopData] = useState({});
     const formatDate = (dateString) => {
         if (!dateString) return "N/A"; // Trả về "N/A" nếu không có ngày giờ
         const date = new Date(dateString);
@@ -100,6 +102,50 @@ const AdminWorkshopManager = () => {
         setCurrentTab(tab);
         setPageNo(1)
     }
+    const handleApproved = (data) => {
+        Modal.confirm({
+            title: 'Xác nhận phê duyệt',
+            content: `Bạn có chắc chắn muốn phê duyệt tin hội thảo "${data.title}"?`,
+            okText: 'Phê duyệt',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Approved workshop: ${data.title}`);
+                dispatch(approved_workshop({id: data.key})).then(async () => {
+                    await fetchWorkshops(currentTab)
+                }); // Gửi lý do từ chối
+            },
+        });
+    }
+
+
+    // Trạng thái lưu lý do từ chối
+
+    const handleReject = (data) => {
+        setWorkshopData(data)
+        setIsRejectModalVisible(true); // Hiển thị modal từ chối
+    };
+    const closeModalReject = () => {
+        setIsRejectModalVisible(false);
+    }
+
+    const handleConfirmReject = (message) => {
+        Modal.confirm({
+            title: 'Xác nhận từ chối',
+            content: `Bạn có chắc chắn muốn từ chối tài khoản doanh nghiệp "${workshopData?.title}"?`,
+            okText: 'Từ chối',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Rejected business: ${workshopData?.title}`);
+                let req = {id: workshopData.key, message: message};
+                dispatch(rejected_workshop(req)).then(async () => {
+                    await fetchWorkshops(currentTab);
+                })
+                setIsRejectModalVisible(false); // Đóng modal
+            },
+        });
+    };
 
 
     return (
@@ -140,7 +186,7 @@ const AdminWorkshopManager = () => {
                                                 </div>
                                             </div>
 
-                                            <WorkshopTable data={data} onDetail={handleViewDetails}></WorkshopTable>
+                                            <WorkshopTable data={data} onDetail={handleViewDetails} onReject={handleReject} onApprove={handleApproved}></WorkshopTable>
                                             <ResultSummary totalElements={totalElements}></ResultSummary>
                                         </div>
                                         <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
@@ -163,6 +209,11 @@ const AdminWorkshopManager = () => {
                     </div>
                 </div>
             </section>
+            <RejectModal
+                open={isRejectModalVisible}
+                onClose={closeModalReject}
+                handleReject={handleConfirmReject}
+            ></RejectModal>
         </>
     )
 };

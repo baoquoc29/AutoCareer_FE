@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, Input, Modal, Pagination, Select} from "antd";
-import {DeleteOutlined, FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
+import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import {
     create_major, delete_major,
     get_all_majors, refund_major,
@@ -11,17 +11,16 @@ import {
 import MajorTable from "./MajorTable";
 import MajorForm from "./MajorForm";
 import MajorDetailModal from "./Modal/MajorDetailModal";
-import {toast} from "react-toastify";
 import MajorEditModal from "./Modal/MajorEditModal";
 import {get_all_sections} from "../../../Redux/actions/SectionThunk";
 import './Style/Major.css'
-import {CSVLink} from "react-csv";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 
 
 const MajorManager = () => {
     const dispatch = useDispatch();
     const {majors} = useSelector((state) => state.MajorReducer);// Lấy danh sách chuyên ngành từ Redux
+    const university = useSelector(state => state.UserReducer.userData?.university);
     const [searchKeyword, setSearchKeyword] = useState(''); // Từ khóa tìm kiếm
     const [open, setOpen] = useState(false);// Trạng thái mở modal chi tiết
     const [editOpen, setEditOpen] = useState(false);// Trạng thái mở modal chỉnh sửa
@@ -38,8 +37,10 @@ const MajorManager = () => {
         }
     }, [dispatch, sections.length]);
     useEffect(() => {
-        dispatch(get_all_majors());
-    }, [dispatch])
+        if (university) {
+            dispatch(get_all_majors(university.id)); // Pass universityId to get majors
+        }
+    }, [dispatch, university]);
 
     const handleSectionChange = (value) => {
         setSelectedSection(value);
@@ -61,7 +62,7 @@ const MajorManager = () => {
     const handleSubmit = (values) => {
         dispatch(create_major(values))
             .then(() => {
-                dispatch(get_all_majors());
+                dispatch(get_all_majors(university.id));
             })
     }
     const handleDelete = async () => {
@@ -84,7 +85,7 @@ const MajorManager = () => {
             onOk: async () => {
                 // Gọi API xóa với danh sách các ID đã chọn
                 await dispatch(delete_major(selectedRowKeys));
-                dispatch(get_all_majors(currentPage, pageSize)); // Lấy lại danh sách
+                dispatch(get_all_majors(university.id)); // Lấy lại danh sách
                 setSelectedRowKeys([]); // Reset lại danh sách các ID đã chọn
             },
         });
@@ -96,16 +97,9 @@ const MajorManager = () => {
     };
     const handleEditSubmit = async (values) => {
         await dispatch(update_major_id(selectedMajor.id, values));
-        await dispatch(get_all_majors());
+        await dispatch(get_all_majors(university.id));
         // setEditOpen(false);
     };
-    const headers = [
-        {label: 'STT', key: 'stt'},
-        {label: 'Tên chuyên ngành', key: 'name'},
-        {label: 'Mã chuyên ngành', key: 'code'},
-        {label: 'Số lượng sinh viên', key: 'numberStudent'},
-        {label: 'Mô tả', key: 'description'},
-    ];
     const data = majors.map((major, index) => ({
         id: major.id,
         stt: index + 1,
@@ -131,21 +125,13 @@ const MajorManager = () => {
     const endIndex = startIndex + pageSize;
     // Get paginated data
     const paginatedData = filteredData.slice(startIndex, endIndex);
-    const exportToExcel = () => {
-        const dataToExport = filteredData.length > 0 ? filteredData : sections;
-        if (dataToExport && dataToExport.length > 0) {
-            toast.success('Tải xuống thành công');
-        } else {
-            toast.error('Không có dữ liệu để xuất');
-        }
-    };
     const handleStopMajor = async (id) => {
         await dispatch(stop_major(id));
-        dispatch(get_all_majors(currentPage, pageSize));
+        dispatch(get_all_majors(university.id));
     };
     const handleRefundMajor = async (id) => {
         await dispatch(refund_major(id))
-        dispatch(get_all_majors(currentPage, pageSize));
+        dispatch(get_all_majors(university.id));
     }
 
     return (
@@ -205,17 +191,6 @@ const MajorManager = () => {
                                             disabled={selectedRowKeys.length === 0} // Vô hiệu hóa nút nếu không có ID nào được chọn
                                         >
                                             Xóa
-                                        </Button>
-                                        <Button type="default" icon={<FileExcelOutlined/>} onClick={exportToExcel}
-                                                style={{backgroundColor: '#107C41', color: '#FFFFFF'}}>
-                                            <CSVLink
-                                                data={filteredData}
-                                                headers={headers}
-                                                filename={'DanhSachChuyenNganh.csv'}
-                                                style={{color: 'inherit', textDecoration: 'none'}}
-                                            >
-                                               Xuất excel
-                                            </CSVLink>
                                         </Button>
                                     </div>
                                     <MajorTable data={paginatedData}

@@ -78,7 +78,7 @@ const SubAdminUpdate = ({open, onClose, subAdminData}) => {
     return (
         <Modal open={open} onCancel={onClose} footer={null} width={700}>
             {/*<h2 className="modal-sub-admin-title">Chỉnh sửa quản trị viên</h2>*/}
-            <Title level={4}>Chỉnh sửa quản trị viên</Title>
+            <Title level={4}style={{textAlign:"center"}}>Chỉnh sửa quản trị viên</Title>
             <Divider style={{marginTop: 1}}/>
             <Form layout="vertical" onFinish={formik.handleSubmit}>
                 <Row gutter={[16, 16]}>

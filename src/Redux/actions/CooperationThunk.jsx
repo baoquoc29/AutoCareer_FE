@@ -77,10 +77,10 @@ export const reject_cooperation = (formData) => {
         }
     }
 }
-export const get_total_cooperation = () => {
+export const get_total_cooperation = (universityId) => {
     return async dispatch => {
         try {
-            const res = await cooperationService.get_total_cooperation();
+            const res = await cooperationService.get_total_cooperation(universityId);
             dispatch({
                 type: TOTAL_COOPERATION, payload: res,
             });

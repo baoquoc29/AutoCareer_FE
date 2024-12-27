@@ -6,8 +6,8 @@ export class MajorService extends baseService {
         super();
     };
 
-    get_major_all = () => {
-        return this.get('api/major/get-all')
+    get_major_all = (universityId) => {
+        return this.get(`api/major/get-all/${universityId}`)
     };
     get_major_by_id = (id) => {
         return this.get(`api/major/getById/${id}`)
@@ -27,14 +27,14 @@ export class MajorService extends baseService {
     set_start_major_by_id = (id) => {
         return this.post(`api/major/active/${id}`)
     }
-    get_total_major = () => {
-        return this.get('api/major/count-total')
+    get_total_major = (universityId) => {
+        return this.get(`api/major/count-total/${universityId}`)
     }
-    get_total_students = () => {
-        return this.get('api/major/count-total-student')
+    get_total_students = (universityId) => {
+        return this.get(`api/major/count-total-student/${universityId}`)
     }
-    get_student_major=()=>{
-        return this.get('api/major/count-student')
+    get_student_major=(universityId)=>{
+        return this.get(`api/major/count-student/${universityId}`)
     }
 }
 

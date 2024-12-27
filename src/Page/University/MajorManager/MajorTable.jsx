@@ -27,7 +27,7 @@ const MajorTable = ({
             title: 'Khoa', // Cột cho tên khoa
             dataIndex: 'sectionName', // Sử dụng sectionName trong data
             key: 'sectionName',
-            align: 'center',
+            align: 'left',
             render: (text, record) => {
                 // Tìm tên khoa dựa trên sectionId
                 const section = sections.find(section => section.id === record.sectionId);
@@ -36,18 +36,11 @@ const MajorTable = ({
             ellipsis: true,
             width: 130,
         },
-        {title: 'Tên ngành', dataIndex: 'name', key: 'name', align: 'center', ellipsis: true,width: 160,},
-        {title: 'Mã ngành', dataIndex: 'code', key: 'code', align: 'center'},
+        {title: 'Tên ngành', dataIndex: 'name', key: 'name', align: 'left', ellipsis: true,width: 200,},
+        {title: 'Mã ngành', dataIndex: 'code', key: 'code', align: 'left',width: 80},
         {title: 'Sinh viên', dataIndex: 'numberStudent', key: 'numberStudent', align: 'center',width: 80,},
-        {
-            title: 'Trạng thái',
-            dataIndex: 'status',
-            key: 'status',
-            align: 'center',
-            render: statusRender,
-        },
-        {
-            title: 'Thao tác', key: 'actions', align: 'center', render: (text, record) => {
+        {title: 'Trạng thái', dataIndex: 'status', key: 'status', align: 'center',width: 80, render: statusRender},
+        {title: 'Thao tác', key: 'actions', align: 'center',width: 120, render: (text, record) => {
                 return (
                     <Space size="small">
                         <Tooltip title="Xem thông tin">
@@ -79,8 +72,7 @@ const MajorTable = ({
                         )}
                     </Space>
                 );
-            }
-        },
+            }},
     ];
     const rowSelection = {
         selectedRowKeys,

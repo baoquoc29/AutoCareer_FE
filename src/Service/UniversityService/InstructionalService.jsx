@@ -6,8 +6,8 @@ export class InstructionalService extends baseService {
         super();
     };
 
-    get_all_instructional = (page, size) => {
-        return this.get(`api/instructional/get-all?page=${page}&size=${size}`);
+    get_all_instructional = (universityId,page, size) => {
+        return this.get(`api/instructional/get-all?universityId=${universityId}&page=${page}&size=${size}`);
     }
     get_all_active_instructional = (page, size) => {
         return this.get(`api/instructional/get-all-active?page=${page}&size=${size}`);
@@ -33,8 +33,8 @@ export class InstructionalService extends baseService {
     set_start_instructional_by_id = (id)=>{
         return this.post(`api/instructional/active/${id}`)
     }
-    get_total_instructional = ()=>{
-        return this.get(`api/instructional/count-total`)
+    get_total_instructional = (universityId)=>{
+        return this.get(`api/instructional/count-total/${universityId}`)
     }
 }
 

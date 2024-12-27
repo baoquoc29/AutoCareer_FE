@@ -12,10 +12,10 @@ import {toast} from "react-toastify";
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 
 
-export const get_all_majors = () => {
+export const get_all_majors = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await majorService.get_major_all();
+            const res = await majorService.get_major_all(universityId);
             dispatch({
                 type: SET_MAJOR,
                 payload: res.data
@@ -111,10 +111,10 @@ export const refund_major = (id) => {
         }
     }
 }
-export const get_total_major = () => {
+export const get_total_major = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await majorService.get_total_major();
+            const res = await majorService.get_total_major(universityId);
             dispatch({
                 type: TOTAL_MAJOR,
                 payload: res,
@@ -137,10 +137,10 @@ export const get_total_student = () => {
         }
     }
 }
-export const count_student_major=() => {
+export const count_student_major=(universityId) => {
     return async (dispatch) => {
         try {
-            const res = await majorService.get_student_major();
+            const res = await majorService.get_student_major(universityId);
             dispatch({
                 type: COUNT_STUDENT_MAJOR,
                 payload: res,
