@@ -81,6 +81,11 @@ const HeaderPortal = () => {
         } else if (userData?.role?.name === "EMPLOYEE") {
             window.open('/job-manager', '_blank');
         }
+        else if (userData?.role?.name === "SUB-ADMIN") {
+            window.open('/admin', '_blank');
+        } else if (userData?.role?.name === "EMPLOYEE") {
+            window.open('/job-manager', '_blank');
+        }
     };
 
     const handleLogout = async () => {
