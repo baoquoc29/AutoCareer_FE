@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { update_employee} from "../../../Redux/actions/EmployeeThunk";
+import {update_employee} from "../../../Redux/actions/EmployeeThunk";
 import {useDispatch} from "react-redux";
 import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {toast} from "react-toastify";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import './EmployeeCSS/EmployeeCreateCSS.css';
+
 
 const EmployeeEdit = () => {
     const location = useLocation();
@@ -16,6 +17,7 @@ const EmployeeEdit = () => {
     const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
     const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
     const [errors, setErrors] = useState({});
+    const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/jpg"];
 
     const [formData, setFormData] = useState({
         email: '',
@@ -46,6 +48,15 @@ const EmployeeEdit = () => {
                 const phoneRegex = /^(\+84|0)[1-9]\d{8}$/;
                 if (!phoneRegex.test(value)) return "Số điện thoại gồm 10 số và bắt đầu bằng +84 hoặc 0.";
                 break;
+            case "employeeImage":
+                if (!value) return null; // Không kiểm tra nếu không có file
+                if (value && !SUPPORTED_FORMATS.includes(value.type)) {
+                    return "Định dạng ảnh không hợp lệ. Chỉ chấp nhận JPEG, PNG, JPG.";
+                }
+                if (value && value.size > 2 * 1024 * 1024) {
+                    return "Kích thước tệp không được vượt quá 2MB.";
+                }
+                break;
             default:
                 break;
         }
@@ -73,18 +84,29 @@ const EmployeeEdit = () => {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
+
+        const error = validateField("employeeImage", file);
+        if (error) {
+            toast.error(error);
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                employeeImage: error,
+            }));
+        }
+
         if (file) {
-            setFormData({ ...formData, employeeImage: file });
+            setFormData({...formData, employeeImage: file});
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
             };
             reader.readAsDataURL(file);
         }
+
     };
 
     const handleInputChange = (event) => {
-        const { id, value } = event.target;
+        const {id, value} = event.target;
         setFormData((prevData) => ({
             ...prevData,
             [id]: value,
@@ -106,7 +128,11 @@ const EmployeeEdit = () => {
 
     const handleSave = (event) => {
         event.preventDefault(); // Ngăn tải lại trang
-
+        // if(errors)
+        // {
+        //     console.log(errors);
+        //     return;
+        // }
         // Kiểm tra lỗi cho tất cả các trường
         const newErrors = {};
         Object.keys(formData).forEach((field) => {
@@ -114,15 +140,24 @@ const EmployeeEdit = () => {
             if (error) newErrors[field] = error;
         });
 
+        const error = validateField("employeeImage", formData.employeeImage);
+        if (error) {
+            toast.error(error);
+            newErrors["employeeImage"] = error;
+            return;
+        }
+
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
+
         dispatch(update_employee(employee.id, formData))
             .then((success) => {
                 if (success) {
-                     navigate(-1); // Điều hướng về EmployeeManager
+                    navigate(-1); // Điều hướng về EmployeeManager
                 }
             })
             .catch((error) => {
@@ -130,6 +165,7 @@ const EmployeeEdit = () => {
                 // Do not navigate, the form stays on the create employee screen
                 toast.error("Có lỗi xảy ra khi chỉnh sửa nhân viên. Vui lòng thử lại.");
             });
+        console.log(errors);
     };
 
     const handleCancel = () => {
@@ -149,210 +185,220 @@ const EmployeeEdit = () => {
         navigate('/employee-manager');
     };
     return (
-        <>
-            <section id="content" className="content">
-                <div className="content__header content__boxed rounded-0">
-                    <div className="content__wrap">
-                        <section>
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="row">
-                                        <div className="card h-100">
-                                            <div className="card-body">
-                                                <h1 className="card-title font_style_employee">Chỉnh sửa nhân viên</h1>
-                                                <form className="row g-3" onSubmit={handleSave}>
-                                                    <div className="col-md-6">
-                                                        <h4 className="font_style_employee_account" >Tài khoản</h4>
-                                                        <div className="mb-3">
-                                                            <label htmlFor="email" className="form-label-customer" style={{fontWeight: "bold"}}>
-                                                                <span className="required-label">*</span>Gmail
-                                                            </label>
-                                                            <input
-                                                                id="email"
-                                                                type="email"
-                                                                className="form-control"
-                                                                placeholder="Email"
-                                                                disabled={true}
-                                                                value={formData.email}
-                                                            />
-                                                        </div>
-                                                        <h4 className="font_style_employee_account">Hình ảnh</h4>
-                                                        <div className="mb-3 text-center">
-                                                            <label htmlFor="employeeImage" className="form-label" style={{fontWeight: "bold"}}>Ảnh
-                                                                đại diện</label>
-                                                            <div className="mb-3">
-                                                                <input
-                                                                    type="file"
-                                                                    className="form-control"
-                                                                    id="employeeImage"
-                                                                    onChange={handleImageChange}
-                                                                />
-                                                            </div>
-                                                            {imagePreview ? (
-                                                                <img
-                                                                    src={imagePreview}
-                                                                    alt="Ảnh đại diện"
-                                                                    className="img-thumbnail rounded-circle"
-                                                                    style={{
-                                                                        width: "200px",
-                                                                        height: "200px",
-                                                                        objectFit: "cover",
-                                                                    }}
-                                                                />
-                                                            ) : (
-                                                                <div
-                                                                    className="img-thumbnail rounded-circle d-flex justify-content-center align-items-center "
-                                                                    style={{
-                                                                        width: "200px",
-                                                                        height: "200px",
-                                                                        backgroundColor: "#f0f0f0",
-                                                                        color: "#aaa",
-                                                                    }}
-                                                                >
-                                                                    <span>Không có ảnh</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
+
+        <section id="content" className="content">
+            <div className="content__header content__boxed rounded-0">
+                <div className="content__wrap">
+                    <section>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <h1 className="card-title font_style_employee">Chỉnh sửa nhân viên</h1>
+                                            <form className="row g-3" onSubmit={handleSave}>
+                                                <div className="col-md-6">
+                                                    <h4 className="font_style_employee_account">Tài khoản</h4>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="email" className="form-label-customer"
+                                                               style={{fontWeight: "bold"}}>
+                                                            <span className="required-label">*</span>Gmail
+                                                        </label>
+                                                        <input
+                                                            id="email"
+                                                            type="email"
+                                                            className="form-control"
+                                                            placeholder="Email"
+                                                            disabled={true}
+                                                            value={formData.email}
+                                                        />
                                                     </div>
-                                                    <div className="col-md-6">
-                                                        <h4 className="font_style_employee_account">Thông tin cá
-                                                            nhân</h4>
+                                                    <h4 className="font_style_employee_account">Hình ảnh</h4>
+                                                    <div className="mb-3 text-center">
+                                                        <label htmlFor="employeeImage" className="form-label"
+                                                               style={{fontWeight: "bold"}}>Ảnh
+                                                            đại diện</label>
                                                         <div className="mb-3">
-                                                            <label htmlFor="name" className="form-label-customer"
-                                                                   style={{fontWeight: "bold"}}>
-                                                                <span className="required-label">*</span>Họ và tên
-                                                            </label>
                                                             <input
-                                                                id="name"
-                                                                type="text"
+                                                                type="file"
                                                                 className={`form-control ${
                                                                     errors.name ? "is-invalid" : ""
                                                                 }`}
-                                                                placeholder="Họ và tên"
-                                                                value={formData.name}
-                                                                onChange={handleInputChange}
+                                                                onChange={handleImageChange}
                                                             />
-                                                            {errors.name && (
-                                                                <div className="invalid-feedback">{errors.name}</div>
+                                                            {errors.employeeImage && (
+                                                                <div
+                                                                    className="invalid-feedback">{errors.employeeImage}</div>
                                                             )}
                                                         </div>
-                                                        <div className="mb-3">
-                                                            <label htmlFor="phone" className="form-label-customer"
-                                                                   style={{fontWeight: "bold"}}>
-                                                                <span className="required-label">*</span>Số điện thoại
-                                                            </label>
-                                                            <input
-                                                                id="phone"
-                                                                type="text"
-                                                                className={`form-control ${
-                                                                    errors.phone ? "is-invalid" : ""
-                                                                }`}
-                                                                placeholder="Số điện thoại"
-                                                                value={formData.phone}
-                                                                onChange={handleInputChange}
+                                                        {imagePreview ? (
+                                                            <img
+                                                                src={imagePreview}
+                                                                alt="Ảnh đại diện"
+                                                                className="img-thumbnail rounded-circle "
+                                                                style={{
+                                                                    width: "200px",
+                                                                    height: "200px",
+                                                                    objectFit: "cover",
+                                                                }}
                                                             />
-                                                            {errors.phone && (
-                                                                <div className="invalid-feedback">{errors.phone}</div>
-                                                            )}
-                                                        </div>
-                                                        <div className="mb-3">
-                                                            <label htmlFor="gender" className="form-label-customer"
-                                                                   style={{fontWeight: "bold"}}>
-                                                                <span className="required-label">*</span>Giới tính
-                                                            </label>
-                                                            <select
-                                                                id="gender"
-                                                                className="form-control"
-                                                                value={formData.gender}
-                                                                onChange={handleInputChange}
+                                                        ) : (
+                                                            <div
+                                                                className="img-thumbnail rounded-circle d-flex justify-content-center align-items-center "
+                                                                style={{
+                                                                    width: "200px",
+                                                                    height: "200px",
+                                                                    backgroundColor: "#f0f0f0",
+                                                                    color: "#aaa",
+                                                                }}
                                                             >
-                                                                <option value="">Chọn giới tính</option>
-                                                                <option value="Nam">Nam</option>
-                                                                <option value="Nữ">Nữ</option>
-                                                                <option value="Khác">Khác</option>
-                                                            </select>
-                                                        </div>
-                                                        <div className="mb-3">
-                                                            <label htmlFor="dateOfBirth" className="form-label" style={{fontWeight: "bold"}}>Ngày
-                                                                sinh</label>
-                                                            <input
-                                                                id="dateOfBirth"
-                                                                type="date"
-                                                                className="form-control"
-                                                                value={formData.dateOfBirth}
-                                                                onChange={handleInputChange}
-                                                            />
-                                                        </div>
-                                                        <div className="mb-3">
-                                                            <label htmlFor="address" className="form-label" style={{fontWeight: "bold"}}>Địa
-                                                                chỉ</label>
-                                                            <input
-                                                                id="address"
-                                                                type="text"
-                                                                className="form-control"
-                                                                placeholder="Địa chỉ"
-                                                                value={formData.address}
-                                                                onChange={handleInputChange}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 text-end">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-outline-danger mt-3 mx-3"
-                                                            onClick={handleCancel}
-                                                            style={{
-                                                                borderColor: dangerColor,
-                                                                color: dangerColor,
-                                                                transition: 'background-color 0.3s ease, color 0.3s ease'
-                                                            }}
-                                                            onMouseOver={(e) => {
-                                                                e.target.style.backgroundColor = dangerColor;
-                                                                e.target.style.color = 'white';
-                                                                e.target.style.transform = 'scale(1.05)';
+                                                                <span>Không có ảnh</span>
+                                                            </div>
+                                                        )}
 
-                                                            }}
-                                                            onMouseOut={(e) => {
-                                                                e.target.style.backgroundColor = '';
-                                                                e.target.style.color = dangerColor;
-                                                                e.target.style.transform = 'scale(1)';
-
-                                                            }}
-                                                        >
-                                                            Hủy bỏ
-                                                        </button>
-                                                        <button
-                                                            type="submit"
-                                                            className="btn btn-outline-primary mt-3 "
-                                                            style={{
-                                                                borderColor: primaryColor,
-                                                                backgroundColor: primaryColor,
-                                                                color: 'white',
-                                                                transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
-                                                            }}
-                                                            onMouseOver={(e) => {
-                                                                e.target.style.backgroundColor = primaryColor;
-                                                                e.target.style.color = 'white';
-                                                                e.target.style.transform = 'scale(1.05)';
-                                                            }}
-                                                            onMouseOut={(e) => {
-                                                                e.target.style.transform = 'scale(1)';
-                                                            }}
-                                                        >
-                                                            Lưu lại
-                                                        </button>
                                                     </div>
-                                                </form>
-                                            </div>
+
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <h4 className="font_style_employee_account">Thông tin cá
+                                                        nhân</h4>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="name" className="form-label-customer"
+                                                               style={{fontWeight: "bold"}}>
+                                                            <span className="required-label">*</span>Họ và tên
+                                                        </label>
+                                                        <input
+                                                            id="name"
+                                                            type="text"
+                                                            className={`form-control ${
+                                                                errors.name ? "is-invalid" : ""
+                                                            }`}
+                                                            placeholder="Họ và tên"
+                                                            value={formData.name}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                        {errors.name && (
+                                                            <div className="invalid-feedback">{errors.name}</div>
+                                                        )}
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="phone" className="form-label-customer"
+                                                               style={{fontWeight: "bold"}}>
+                                                            <span className="required-label">*</span>Số điện thoại
+                                                        </label>
+                                                        <input
+                                                            id="phone"
+                                                            type="text"
+                                                            className={`form-control ${
+                                                                errors.phone ? "is-invalid" : ""
+                                                            }`}
+                                                            placeholder="Số điện thoại"
+                                                            value={formData.phone}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                        {errors.phone && (
+                                                            <div className="invalid-feedback">{errors.phone}</div>
+                                                        )}
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="gender" className="form-label-customer"
+                                                               style={{fontWeight: "bold"}}>
+                                                            <span className="required-label">*</span>Giới tính
+                                                        </label>
+                                                        <select
+                                                            id="gender"
+                                                            className="form-control"
+                                                            value={formData.gender}
+                                                            onChange={handleInputChange}
+                                                        >
+                                                            <option value="">Chọn giới tính</option>
+                                                            <option value="Nam">Nam</option>
+                                                            <option value="Nữ">Nữ</option>
+                                                            <option value="Khác">Khác</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="dateOfBirth" className="form-label"
+                                                               style={{fontWeight: "bold"}}>Ngày
+                                                            sinh</label>
+                                                        <input
+                                                            id="dateOfBirth"
+                                                            type="date"
+                                                            className="form-control"
+                                                            value={formData.dateOfBirth}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                    </div>
+                                                    <div className="mb-3">
+                                                        <label htmlFor="address" className="form-label"
+                                                               style={{fontWeight: "bold"}}>Địa
+                                                            chỉ</label>
+                                                        <input
+                                                            id="address"
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="Địa chỉ"
+                                                            value={formData.address}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 text-end">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline-danger mt-3 mx-3"
+                                                        onClick={handleCancel}
+                                                        style={{
+                                                            borderColor: dangerColor,
+                                                            color: dangerColor,
+                                                            transition: 'background-color 0.3s ease, color 0.3s ease'
+                                                        }}
+                                                        onMouseOver={(e) => {
+                                                            e.target.style.backgroundColor = dangerColor;
+                                                            e.target.style.color = 'white';
+                                                            e.target.style.transform = 'scale(1.05)';
+
+                                                        }}
+                                                        onMouseOut={(e) => {
+                                                            e.target.style.backgroundColor = '';
+                                                            e.target.style.color = dangerColor;
+                                                            e.target.style.transform = 'scale(1)';
+
+                                                        }}
+                                                    >
+                                                        Hủy bỏ
+                                                    </button>
+                                                    <button
+                                                        type="submit"
+                                                        className="btn btn-outline-primary mt-3 "
+                                                        style={{
+                                                            borderColor: primaryColor,
+                                                            backgroundColor: primaryColor,
+                                                            color: 'white',
+                                                            transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
+                                                        }}
+                                                        onMouseOver={(e) => {
+                                                            e.target.style.backgroundColor = primaryColor;
+                                                            e.target.style.color = 'white';
+                                                            e.target.style.transform = 'scale(1.05)';
+                                                        }}
+                                                        onMouseOut={(e) => {
+                                                            e.target.style.transform = 'scale(1)';
+                                                        }}
+                                                    >
+                                                        Lưu lại
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-                    </div>
+                        </div>
+                    </section>
                 </div>
-            </section>
-        </>
+            </div>
+        </section>
     );
 }
 export default EmployeeEdit;

@@ -15,7 +15,6 @@ export const approved_university = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.approved_university(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Phê duyệt thành công")
                 dispatch({
@@ -33,7 +32,6 @@ export const rejected_university = (req) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.rejected_university(req);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Từ chối thành công")
                 dispatch({
@@ -50,7 +48,6 @@ export const get_all_universities = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.get_all_universities(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_ALL_UNIVERSITIES,
@@ -67,7 +64,6 @@ export const get_approved_universities = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.get_approved_universities(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_APPROVED_UNIVERSITIES,
@@ -84,7 +80,6 @@ export const get_pending_universities = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.get_pending_universities(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_PENDING_UNIVERSITIES,
@@ -100,7 +95,6 @@ export const get_rejected_universities = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.get_rejected_universities(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_REJECTED_UNIVERSITIES,
@@ -117,7 +111,6 @@ export const get_detail_university = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminUniversityService.get_detail_university(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_DETAIL_UNIVERSITY,

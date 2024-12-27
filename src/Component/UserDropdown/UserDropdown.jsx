@@ -7,6 +7,7 @@ import './style.css'
 
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
+    console.log(user.username)
     // Kiểm tra loại người dùng
     const isUniversityUser = user && user.role.name === 'UNIVERSITY';
     const isBusinessUser = user && user.role.name === 'BUSINESS';

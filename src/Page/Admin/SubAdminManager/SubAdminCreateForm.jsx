@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {useFormik} from "formik";
 import {Button, Col, Form, Input, Modal, Row, Select, Upload} from "antd";
 import {toast} from "react-toastify";
@@ -6,9 +6,12 @@ import {useDispatch} from "react-redux";
 import {create_sub_admin, get_all_sub_admin} from "../../../Redux/actions/SubAdminThunk";
 import {STATUS_CODE} from "../../../Utils/Setting/Config";
 import SubAdminValidation from "../../../Utils/Validation/University/SubAdminValidation";
+import * as state from "../../../Redux/reducers/SubAdminReducer";
 
 const SubAdminCreateForm = ({open, onClose}) => {
     const dispatch = useDispatch();
+    const pageNo = useState(() => state.SubAdminReducer.pageNo);
+    const pageSize = useState(() => state.SubAdminReducer.pageSize);
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -19,7 +22,7 @@ const SubAdminCreateForm = ({open, onClose}) => {
             subAdminImage: null,
         },
         enableReinitialize: true,
-        validationSchema: SubAdminValidation([ "name", "gender", "email", "phone", "address"]),
+        validationSchema: SubAdminValidation([ "name", "gender", "email", "phone", "address", "subAdminImage"]),
         onSubmit: (values) => {
             handleSubmit(values); // Gọi hàm handleSubmit
         },
@@ -41,7 +44,6 @@ const SubAdminCreateForm = ({open, onClose}) => {
         // Gửi dữ liệu tới API
         dispatch(create_sub_admin(formData))
             .then(() => {
-                // dispatch(get_all_sub_admin())
                 handleClose();
             });
     };

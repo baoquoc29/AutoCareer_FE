@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Modal, Space, Input, Image, Tag, Row, Col, Typography, Divider} from "antd";
+import {Button, Modal, Space, Input, Tag, Row, Col, Typography, Divider} from "antd";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
 import "./UniversityDetail.css";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
@@ -65,20 +65,20 @@ const UniversityDetail = ({open, onClose}) => {
     if (!university) {
         return (
             <div style={{textAlign: "center", padding: "20px"}}>
-                <p>Chọn doanh nghiệp để xem chi tiết.</p>
+                <p>Chọn trường học để xem chi tiết.</p>
             </div>
         );
     }
 
     return (
         <Modal open={open} onCancel={onClose} footer={null} width={700}>
-            <Title level={4}>Chi tiết tài khoản trường học</Title>
+            <Title level={4} style={{textAlign: "center"}}>Chi tiết tài khoản trường học</Title>
             <Divider style={{marginTop: 1}}/>
             <div className="row mb-4">
                 <div className="col-md-3 text-center">
                     <img
                         src={university.universityImageId ? `${GET_IMAGE_URI}${university.universityImageId}` : "placeholder-avatar.jpg"}
-                        alt="Logo Doanh Nghiệp"
+                        alt="Logo trường học"
                         className="img-fluid logo-image rounded"
                         style={{
                             width: "100px",
@@ -99,7 +99,7 @@ const UniversityDetail = ({open, onClose}) => {
 
             {/* General Information */}
             <div className="row mb-4">
-                <p><strong>Tên Doanh Nghiệp:</strong> {university.name || "Chưa cập nhật"}</p>
+                <p><strong>Tên trường học:</strong> {university.name || "Chưa cập nhật"}</p>
                 <p><strong>Website:</strong> <a href={university.website || "#"} target="_blank"
                                                 rel="noopener noreferrer">{university.website || "Chưa cập nhật"}</a>
                 </p>

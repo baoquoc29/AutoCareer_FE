@@ -53,7 +53,7 @@ const BusinessDetail = ({open, onClose}) => {
 
     return (
         <Modal open={open} onCancel={onClose} footer={null} width={700}>
-            <Title level={4}>Chi tiết tài khoản doanh nghiệp</Title>
+            <Title level={4} style={{textAlign: "center"}}>Chi tiết tài khoản doanh nghiệp</Title>
             <Divider style={{marginTop: 1}}/>
             <div className="row mb-4">
                 <div className="col-md-3 text-center">
