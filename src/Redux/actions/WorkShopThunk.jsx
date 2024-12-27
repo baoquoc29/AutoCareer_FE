@@ -242,10 +242,10 @@ export const get_all_ward = (districtId) => {
 export const clearResponseWorkshop = () => {
     return {type: CLEAR_RESPONSE};
 };
-export const get_total_workshop = () => {
+export const get_total_workshop = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await workShopService.get_total_workshop();
+            const res = await workShopService.get_total_workshop(universityId);
             dispatch({
                 type: GET_TOTAL_WORK_SHOP,
                 payload: res,

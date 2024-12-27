@@ -31,7 +31,7 @@ const SubAdminDetailModal = ({open, onClose}) => {
                    minWidth: "600px", // Đặt chiều rộng tối thiểu
                }}>
             {/*<Card title={"Thông tin chi tiết quản trị viên"}></Card>*/}
-            <Title level={4}>Thông tin chi tiết quản trị viên</Title>
+            <Title level={4} style={{textAlign: "center"}}>Thông tin chi tiết quản trị viên</Title>
             <Divider style={{marginTop: 1}}/>
             <Row gutter={[16, 16]}>
                 <Col span={8} style={{textAlign: "center"}}>

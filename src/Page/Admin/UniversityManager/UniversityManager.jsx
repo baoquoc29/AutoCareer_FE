@@ -1,17 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { Input, Pagination, Card, Select} from "antd";
-import { SearchOutlined} from "@ant-design/icons";
+import {Input, Pagination, Card, Select, Modal} from "antd";
+import {SearchOutlined} from "@ant-design/icons";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import UniversityTable from "./UniversityTable";
 import UniversityDetail from "./UniversityDetail";
 import {
+    approved_university,
     get_all_universities,
-    get_approved_universities, 
+    get_approved_universities,
     get_detail_university,
     get_pending_universities,
-    get_rejected_universities,
+    get_rejected_universities, rejected_university,
 } from "../../../Redux/actions/AdminUniversityThunk";
+import RejectModal from "../../Modal/RejectModal";
 
 const UniversityManager = () => {
     const dispatch = useDispatch();
@@ -24,7 +26,8 @@ const UniversityManager = () => {
     const [keyword, setKeyword] = useState("");
     const {Option} = Select;
     const [open, setOpen] = useState(false);
-
+    const [isRejectModalVisible, setIsRejectModalVisible] = useState(false);
+    const [university, setUniversity] = useState({});
     const formatDate = (dateString) => {
         if (!dateString) return "N/A"; // Trả về "N/A" nếu không có ngày giờ
         const date = new Date(dateString);
@@ -70,6 +73,7 @@ const UniversityManager = () => {
 
     const handleSearch = (e) => {
         const value = e.target.value;
+        setPageNo(1);
         setKeyword(value);
         fetchUniversities();
     };
@@ -95,6 +99,52 @@ const UniversityManager = () => {
         setOpen(false);
         await fetchUniversities(currentTab);
     };
+    const handleChangeTab = (tab) => {
+        setCurrentTab(tab);
+        setPageNo(1)
+    }
+
+    const handleReject = (data) => {
+        setUniversity(data)
+        setIsRejectModalVisible(true); // Hiển thị modal từ chối
+    };
+    const closeModalReject = () => {
+        setIsRejectModalVisible(false);
+    }
+
+    const handleConfirmReject = (message) => {
+        Modal.confirm({
+            title: 'Xác nhận từ chối',
+            content: `Bạn có chắc chắn muốn từ chối tài khoản trường học "${university.name}"?`,
+            okText: 'Từ chối',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Rejected university: ${university.name}`);
+                let req = {id: university.key, message: message};
+                dispatch(rejected_university(req)).then(async () => {
+                    await fetchUniversities(currentTab)
+                }) // Gửi lý do từ chối
+                setIsRejectModalVisible(false); // Đóng modal
+            },
+        });
+    };
+
+    const handleApproved = (university) => {
+        Modal.confirm({
+            title: 'Xác nhận phê duyệt',
+            content: `Bạn có chắc chắn muốn phê duyệt tài khoản trường học "${university.name}"?`,
+            okText: 'Phê duyệt',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Approved university: ${university.name}`);
+                dispatch(approved_university({id: university.key})).then(async () => {
+                    await fetchUniversities(currentTab)
+                });
+            },
+        });
+    }
 
     return (
         <>
@@ -103,10 +153,10 @@ const UniversityManager = () => {
                     <div className="content__wrap">
                         <div className="mt-auto">
                             <div className="row">
-                                        <UniversityDetail
-                                            open={open}
-                                            onClose={handleCloseDetail}
-                                        />
+                                <UniversityDetail
+                                    open={open}
+                                    onClose={handleCloseDetail}
+                                />
                                 <div className={"col-md-12 mb-3 mt-3"}>
                                     <Card title="Danh sách tài khoản trường học">
                                         <div className="table-responsive">
@@ -123,7 +173,7 @@ const UniversityManager = () => {
                                                         placeholder="Chọn trạng thái duyệt"
                                                         value={currentTab}
                                                         showSearch
-                                                        onChange={(value) => setCurrentTab(value)}
+                                                        onChange={(value) => handleChangeTab(value)}
                                                         style={{width: 200}}
                                                         filterOption={(input, option) => {
                                                             const childrenText = String(option.props.children || "");
@@ -138,7 +188,7 @@ const UniversityManager = () => {
                                                 </div>
                                             </div>
 
-                                            <UniversityTable data={data} onDetail={handleViewDetails}></UniversityTable>
+                                            <UniversityTable data={data} onDetail={handleViewDetails} onReject={handleReject} onApprove={handleApproved}></UniversityTable>
                                             <ResultSummary totalElements={totalElements}></ResultSummary>
                                         </div>
                                         <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
@@ -161,6 +211,11 @@ const UniversityManager = () => {
                     </div>
                 </div>
             </section>
+            <RejectModal
+                open={isRejectModalVisible}
+                onClose={closeModalReject}
+                handleReject={handleConfirmReject}
+            ></RejectModal>
         </>
     )
 };

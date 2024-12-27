@@ -3,10 +3,10 @@ import {SET_INSTRUCTIONAL, TOTAL_INSTRUCTIONAL, UPDATE_INSTRUCTIONAL} from "../t
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
-export const get_all_instructional = (page, size) => {
+export const get_all_instructional = (universityId, page, size) => {
     return async (dispatch) => {
         try {
-            const res = await instructionalService.get_all_instructional(page, size);
+            const res = await instructionalService.get_all_instructional(universityId, page, size);
             const {content, totalElements, pageSize, currentPage} = res.data
             dispatch({
                 type: SET_INSTRUCTIONAL,
@@ -134,14 +134,14 @@ export const get_all_stop_ins = (page, size) => {
         }
     }
 }
-export const get_total_ins = () => {
+export const get_total_ins = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await instructionalService.get_total_instructional();
-           dispatch({
+            const res = await instructionalService.get_total_instructional(universityId);
+            dispatch({
                 type: TOTAL_INSTRUCTIONAL,
                 payload: res,
-           })
+            })
         } catch (error) {
             console.log(error);
         }
