@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { delete_work_shop, get_all_workshop_by_university } from "../../../Redux/actions/WorkShopThunk";
 import WorkShopTable from "./WorkShopTable";
@@ -7,6 +7,7 @@ import WorkShopDetails from "./WorkShopDetails";
 import { Button, Card, Input, Modal, Pagination, Select } from "antd";
 import EditWorkShop from "./EditWorkShop";
 import { PlusOutlined } from "@ant-design/icons";
+import ResultsSummary from "../../../Component/Paging/ResultsSummary";
 
 const { Option } = Select;
 
@@ -24,7 +25,7 @@ const WorkShopManager = () => {
 
     const userInfo = JSON.parse(localStorage.getItem("USER_LOGIN")) || {};
     const idUniversity = userInfo.university?.id || null;
-
+    const [content, setContent] = useState(""); // State để lưu giá trị content
     // Fetch workshops when dependencies change
     useEffect(() => {
         const fetchWorkshops = async () => {
@@ -71,26 +72,51 @@ const WorkShopManager = () => {
         setFilterStatus(value);
         setPage(1); // Reset trang về 1 khi thay đổi trạng thái
     };
-
     const handleDelete = async (id, title) => {
+        let reason = ""; // Tạo biến nội bộ để quản lý lý do xóa
         Modal.confirm({
             title: "Xác nhận xóa",
-            content: "Bạn có chắc chắn muốn xóa " + title + "?",
+            content: (
+                <div>
+                    <p>
+                        Bạn có chắc chắn muốn xóa <strong>{title}</strong>?
+                    </p>
+                    <Input
+                        placeholder="Nhập lý do xóa"
+                        onChange={(e) => {
+                            reason = e.target.value; // Cập nhật giá trị lý do xóa
+                        }}
+                    />
+                </div>
+            ),
             okText: "Xóa",
             cancelText: "Hủy",
             centered: true,
             okButtonProps: { danger: true },
             onOk: async () => {
+                if (!reason.trim()) {
+                    Modal.warning({
+                        title: "Lý do xóa không được để trống",
+                    });
+                    return Promise.reject(); // Ngăn Modal đóng khi lý do bị trống
+                }
                 try {
-                    await dispatch(delete_work_shop(id));
-                    await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size)); // Refresh list after deletion
+                    // Gửi yêu cầu xóa
+                    await dispatch(delete_work_shop(id, reason));
+                    // Làm mới danh sách sau khi xóa thành công
+                    await dispatch(get_all_workshop_by_university(idUniversity, page - 1, size));
                 } catch (error) {
                     console.error("Error deleting workshop:", error);
-                    Modal.error({ title: "Xóa thất bại", content: "Đã xảy ra lỗi khi xóa hội thảo." });
+                    Modal.error({
+                        title: "Xóa thất bại",
+                        content: "Đã xảy ra lỗi khi xóa hội thảo.",
+                    });
                 }
             },
         });
     };
+
+
 
     const resetView = async () => {
         setSelectedWorkshop(null);
@@ -167,15 +193,15 @@ const WorkShopManager = () => {
                                                     page={page}
                                                     size={size}
                                                 />
+                                                <ResultsSummary totalElements={totalItems} />
                                                 <div
                                                     style={{
                                                         display: "flex",
-                                                        justifyContent: "space-between",
+                                                        justifyContent: "center",
                                                         alignItems: "center",
                                                         marginTop: 16,
                                                     }}
                                                 >
-                                                    <div style={{flex: 1, display: "flex", justifyContent: "center"}}>
                                                         <Pagination
                                                             current={page}
                                                             pageSize={size}
@@ -185,15 +211,6 @@ const WorkShopManager = () => {
                                                             showSizeChanger={true}
                                                         />
                                                     </div>
-
-                                                    <div style={{marginLeft: 16, marginTop: 16}}>
-                                                        <p>
-                                                            Có <strong>{filteredWorkshops.length || totalItems}</strong> kết
-                                                            quả được tìm
-                                                            thấy.
-                                                        </p>
-                                                    </div>
-                                                </div>
 
                                             </>
                                         ) : (

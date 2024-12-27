@@ -71,26 +71,18 @@ const HeaderPortal = () => {
     };
 
     const handleToManagerClick = () => {
-        if(userData?.role?.name === "BUSINESS") {
+        if (userData?.role?.name === "BUSINESS") {
             window.open('/dashboard-industry', '_blank');
-        }
-        else if(userData?.role?.name === "UNIVERSITY") {
-        const role = userData?.role?.name;
-        if (role === "BUSINESS" || role === "EMPLOYEE") {
-            window.open('/business', '_blank');
-        } else if (role === "UNIVERSITY") {
+        } else if (userData?.role?.name === "UNIVERSITY") {
             window.open('/university', '_blank');
-        } else if (role === "ADMIN") {
+        } else if (userData?.role?.name === "ADMIN") {
             window.open('/admin', '_blank');
-        }
-        else if(userData?.role?.name === "BUSINESS") {
-            window.open('/dashboard-industry', '_blank');
-        }
-        else if(userData?.role?.name === "EMPLOYEE") {
+        } else if (userData?.role?.name === "EMPLOYEE") {
             window.open('/job-manager', '_blank');
         }
-    }
-
+        else if (userData?.role?.name === "SUB-ADMIN") {
+            window.open('/job-manager', '_blank');
+        }
     };
 
     const handleLogout = async () => {
