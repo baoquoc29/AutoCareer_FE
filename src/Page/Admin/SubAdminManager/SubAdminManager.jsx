@@ -89,6 +89,7 @@ const SubAdminManager = () => {
     };
 
     const handleSearch = (e) => {
+        setPageNo(1);
         setKeyword(e.target.value);
     };
 
