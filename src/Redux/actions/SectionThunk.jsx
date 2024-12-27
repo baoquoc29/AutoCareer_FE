@@ -10,10 +10,10 @@ import {
 import {STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 
-export const get_all_sections = () => {
+export const get_all_sections = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await sectionService.get_section_all();
+            const res = await sectionService.get_section_all(universityId);
             dispatch({
                 type: SET_SECTIONS,
                 payload: res.data
@@ -96,10 +96,10 @@ export const refund_section = (id) => {
         }
     }
 }
-export const get_total_section = () => {
+export const get_total_section = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await sectionService.get_total_section();
+            const res = await sectionService.get_total_section(universityId);
             dispatch({
                 type: TOTAL_SECTION,
                 payload: res

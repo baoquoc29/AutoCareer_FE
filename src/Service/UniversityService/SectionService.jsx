@@ -19,8 +19,8 @@ export class SectionService extends baseService {
     get_section_id = (id) => {
         return this.post(`api/section/get/${id}`)
     }
-    get_section_all = () => {
-        return this.get('api/section/get-all')
+    get_section_all = (universityId) => {
+        return this.get(`api/section/get-all/${universityId}`)
     }
     set_stop_section_by_id = (id) => {
         return this.post(`api/section/inactive/${id}`)
@@ -28,8 +28,8 @@ export class SectionService extends baseService {
     set_start_section_by_id = (id) => {
         return this.post(`api/section/active/${id}`)
     }
-    get_total_section = () => {
-       return this.get('api/section/count-total')
+    get_total_section = (universityId) => {
+       return this.get(`api/section/count-total/${universityId}`)
     }
     get_major_section=()=>{
         return this.get('api/section/count-majors')

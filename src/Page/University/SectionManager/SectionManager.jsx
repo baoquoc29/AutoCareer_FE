@@ -8,14 +8,12 @@ import {
     update_section
 } from "../../../Redux/actions/SectionThunk";
 import {Button, Card, Input, Modal, Pagination, Select} from 'antd';
-import {DeleteOutlined, FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
+import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import {SectionForm} from "./SectionForm";
 import SectionTable from "./SectionTable";
 import SectionDetailModal from "./Modal/SectionDetailModal";
 import SectionEditModal from "./Modal/SectionEditModal";
-import {toast} from "react-toastify";
 import './Style/Section.css'
-import {CSVLink} from "react-csv";
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 
 
@@ -36,8 +34,10 @@ const SectionManager = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
 
     useEffect(() => {
-        dispatch(get_all_sections());
-    }, [dispatch]);
+        if (universityId) {
+            dispatch(get_all_sections(universityId)); // Fetch sections for the university
+        }
+    }, [dispatch, universityId]);
     useEffect(() => {
         const data = filteredData.length > 0 || searchText || selectedStatus ? filteredData : sections;
         handlePagination(currentPage, pageSize, data);
@@ -78,7 +78,7 @@ const SectionManager = () => {
             onOk: async () => {
                 // Gọi API xóa với danh sách các ID đã chọn
                 await dispatch(delete_section(selectedRowKeys));
-                dispatch(get_all_sections(currentPage, pageSize)); // Lấy lại danh sách
+                dispatch(get_all_sections(universityId)); // Lấy lại danh sách
                 setSelectedRowKeys([]); // Reset lại danh sách các ID đã chọn
             },
         });
@@ -130,19 +130,6 @@ const SectionManager = () => {
         // Đóng modal sau khi cập nhật thành công
         // setOpenEdit(false);
     }
-    const exportToExcel = () => {
-        const dataToExport = filteredData.length > 0 ? filteredData : sections;
-        if (dataToExport && dataToExport.length > 0) {
-            toast.success('Tải xuống thành công');
-        } else {
-            toast.error('Không có dữ liệu để xuất');
-        }
-    };
-    const csvHeaders = [
-        {label: "STT", key: "index"},
-        {label: "Tên khoa", key: "name"},
-        {label: "Mô tả", key: "description"}
-    ];
     const handlePagination = (page, size, data) => {
         const validData = Array.isArray(data) ? data : [];
         const startIndex = (page - 1) * size;
@@ -152,11 +139,11 @@ const SectionManager = () => {
     };
     const handleStopSection = async (id) => {
         await dispatch(stop_section(id));
-        dispatch(get_all_sections());
+        dispatch(get_all_sections(universityId));
     };
     const handleRefundSection = async (id) => {
         await dispatch(refund_section(id))
-        dispatch(get_all_sections());
+        dispatch(get_all_sections(universityId));
     }
     const handlePageChange = (page, size) => {
         setCurrentPage(page);
@@ -202,22 +189,6 @@ const SectionManager = () => {
                                                 disabled={selectedRowKeys.length === 0} // Vô hiệu hóa nút nếu không có ID nào được chọn
                                             >
                                                 Xóa
-                                            </Button>
-                                            <Button type="default" icon={<FileExcelOutlined/>}
-                                                    style={{
-                                                        backgroundColor: '#107C41',
-                                                        color: '#FFFFFF',
-                                                        marginLeft: '10px'
-                                                    }}
-                                                    onClick={exportToExcel}>
-                                                <CSVLink
-                                                    data={filteredData.length > 0 ? filteredData : sections}
-                                                    headers={csvHeaders}
-                                                    filename={"DanhSachKhoa.csv"}
-                                                    style={{color: 'inherit', textDecoration: 'none'}}
-                                                >
-                                                    Xuất excel
-                                                </CSVLink>
                                             </Button>
                                         </div>
                                     </div>
