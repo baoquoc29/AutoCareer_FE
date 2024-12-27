@@ -53,14 +53,12 @@ export function AdminTemplate() {
                 label: 'Danh sách ngành nghề',
                 link: '/industry-admin-manager',
                 icon: ''
-            }, {label: 'Tài khoản doanh nghiệp', link: '/section-manager', icon: ''}, {
-                label: 'Tài khoản trường học',
-                link: '/major-manager',
-                icon: ''
-            },]
-        },{
-            label: 'Thống kê', icon: 'home', subMenu: [{label: '123', link: '', icon: ''},]
-        }];
+            }]
+        },
+        // {
+        //     label: 'Thống kê', icon: 'home', subMenu: [{label: '123', link: '', icon: ''},]
+        // }
+        ];
     const filteredMenuItems = menuItems.map(item => {
         if (item.label === 'Quản lý tài khoản' && userData.role.name === 'SUB_ADMIN') {
             return {
