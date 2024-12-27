@@ -6,7 +6,7 @@ import {
     GET_TOTAL_JOB_INDUSTRY,
     GET_UNIVERSITY_TOTAL,
     GET_WORK_SHOP_BY_ID,
-    GET_WORK_SHOP_FEATURE, REQUEST_WORK_SHOP
+    GET_WORK_SHOP_FEATURE, REQUEST_WORK_SHOP, TOTAL_BUSINESS, TOTAL_JOB, TOTAL_UNIVERSITY, TOTAL_WORK_SHOP
 } from "../types/PortalType";
 
 const initialState = {
@@ -25,6 +25,7 @@ const initialState = {
     error : null,
     statusWorkshop: null,
     requestSuccess: null,
+
 };
 
 export const PortalReducer = (state = initialState, action) => {
@@ -35,6 +36,26 @@ export const PortalReducer = (state = initialState, action) => {
                 jobList: [],
                 totalElements: 0,
                 businessFeatures: [],
+            };
+        case TOTAL_UNIVERSITY:
+            return {
+                ...state,
+                totalUniversities: action.payload,
+            };
+        case TOTAL_BUSINESS:
+            return {
+                ...state,
+                totalBusinessFeatures: action.payload,
+            };
+        case TOTAL_JOB:
+            return {
+                ...state,
+                totalJobFeatures: action.payload,
+            };
+        case TOTAL_WORK_SHOP:
+            return {
+                ...state,
+                totalWorkShopFeatures: action.payload,
             };
 
         case GET_ALL_JOB_LIST:

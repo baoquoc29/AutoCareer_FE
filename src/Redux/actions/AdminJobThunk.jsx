@@ -13,7 +13,6 @@ export const approved_job = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminJobService.approved_job(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Phê duyệt thành công");
                 dispatch({
@@ -31,7 +30,6 @@ export const rejected_job = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminJobService.rejected_job(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Từ chối thành công");
                 dispatch({
@@ -49,7 +47,6 @@ export const get_all_jobs = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminJobService.get_all_jobs(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_APPROVED_JOBS,
@@ -65,7 +62,6 @@ export const get_approved_jobs = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminJobService.get_approved_jobs(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_APPROVED_JOBS,
@@ -81,7 +77,6 @@ export const get_pending_jobs = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminJobService.get_pending_jobs(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_PENDING_JOBS,
@@ -97,7 +92,6 @@ export const get_rejected_jobs = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminJobService.get_rejected_jobs(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_REJECTED_JOBS,

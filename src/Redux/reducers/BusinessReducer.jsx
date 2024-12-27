@@ -20,7 +20,7 @@ export const BusinessReducer = (state = initialState, action) => {
         case SET_BUSINESS_PAGE:
             return {
                 ...state,
-                resultSearchBusiness: action.payload, // Lưu dữ liệu vào `businesses` trong state
+                resultSearchBusiness: action.payload.content, // Lưu dữ liệu vào `resultSearchBusiness` trong state
                 totalElements: action.payload.totalElements,
                 pageSize: action.payload.pageSize,
                 currentPage: action.payload.currentPage,

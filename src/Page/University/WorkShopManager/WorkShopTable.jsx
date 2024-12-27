@@ -27,7 +27,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
                     {text}
                 </div>
             ),
-            width: 280,
+            width: 230,
             ellipsis: true, // Tự động cắt và thêm dấu ba chấm
             align: "left", // Keep the content aligned to the left (or you can use "center" if needed)
         }
@@ -87,6 +87,7 @@ const WorkShopTable = ({ workshops, onEdit, onDelete, onView,page,size }) => {
             ),
             ellipsis: true, // Tự động cắt và thêm dấu ba chấm
         },
+
         {
             title: "Trạng thái",
             dataIndex: "statusBrowse",

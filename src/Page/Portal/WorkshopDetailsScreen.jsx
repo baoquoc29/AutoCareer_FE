@@ -140,18 +140,25 @@ const WorkshopDetailsScreen = () => {
                 </div>
                 <div className="details-section-workshop-details">
                   <div className="details-item-workshop-details">
-                    <FaCalendarAlt /> <Text>{dayjs(workshop.startDate, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')}</Text>
+                    <FaCalendarAlt/> <Text>{dayjs(workshop.startDate, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')}</Text>
                   </div>
                   <div className="details-item-workshop-details">
-                    <FaCalendarAlt /> <Text>{dayjs(workshop.endDate, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')}</Text>
+                    <FaCalendarAlt/> <Text>{dayjs(workshop.endDate, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')}</Text>
                   </div>
                   <div className="details-item-workshop-details">
-                    <FaClock /> <Text>{dayjs(workshop.startDate, 'DD/MM/YYYY HH:mm').format('HH:mm')} : {dayjs(workshop.endDate, 'DD/MM/YYYY HH:mm').format('HH:mm')}</Text>
+                    <FaClock/>
+                    <Text>{dayjs(workshop.startDate, 'DD/MM/YYYY HH:mm').format('HH:mm')} : {dayjs(workshop.endDate, 'DD/MM/YYYY HH:mm').format('HH:mm')}</Text>
                   </div>
                   <div className="details-item-workshop-details">
-                    <FaMapMarkerAlt /> <Text>{workshop.address ?? ''}, {workshop.ward ?? ''}, {workshop.district ?? ''}, {workshop.province ?? ''}</Text>
+                    <FaMapMarkerAlt/> <Text className="address-text">
+                    {workshop.address && `${workshop.address}, `}
+                    {workshop.ward && `${workshop.ward}, `}
+                    {workshop.district && `${workshop.district}, `}
+                    {workshop.province && `${workshop.province}`}
+                  </Text>
                   </div>
                 </div>
+
               </Card>
 
               {/* Workshop Description */}
@@ -175,7 +182,7 @@ const WorkshopDetailsScreen = () => {
                         width={80}
                         height={80}
                         className="university-logo"
-                        style={{ borderRadius: '8px', objectFit: 'cover' }}
+                        style={{borderRadius: '8px', objectFit: 'cover'}}
                     />
                   </Col>
                   <Col span={18}>
@@ -195,7 +202,7 @@ const WorkshopDetailsScreen = () => {
               <Card className="card-workshop-details">
                 <Title level={3}>Thông tin chung</Title>
                 <div className="info-item-workshop-details">
-                  <Text>Số lượng công ty dự kiến: {workshop.totalCompany} công ty</Text>
+                  <Text>Số lượng công ty đã đăng kí: {workshop.totalCompany} công ty</Text>
                 </div>
                 <div className="info-item-workshop-details">
                   <Text>Trạng thái: Sẵn sàng </Text>

@@ -81,6 +81,11 @@ const HeaderPortal = () => {
         } else if (userData?.role?.name === "EMPLOYEE") {
             window.open('/job-manager', '_blank');
         }
+        else if (userData?.role?.name === "SUB-ADMIN") {
+            window.open('/admin', '_blank');
+        } else if (userData?.role?.name === "EMPLOYEE") {
+            window.open('/job-manager', '_blank');
+        }
     };
 
     const handleLogout = async () => {
@@ -148,7 +153,7 @@ const HeaderPortal = () => {
             <div className="header-container-portal">
                 <div className="header-brand-portal">
                     <NavLink to="/" className="brand-wrap-portal">
-                        <img src={"aotucareer-logo.svg"} alt="logo" className="logo-portal"/>
+                        <img src="/aotucareer-logo.svg" alt="logo" className="logo-portal"/>
                         <span className="brand-title-portal">Career Bridge</span>
                     </NavLink>
                 </div>

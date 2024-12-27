@@ -14,7 +14,6 @@ export const approved_workshop = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.approved_workshop(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Phê duyệt thành công");
                 dispatch({
@@ -32,7 +31,6 @@ export const rejected_workshop = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.rejected_workshop(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Từ chối thành công");
                 dispatch({
@@ -49,7 +47,6 @@ export const get_all_workshops = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.get_all_workshops(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_ALL_WORKSHOPS,
@@ -65,7 +62,6 @@ export const get_approved_workshops = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.get_approved_workshops(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_APPROVED_WORKSHOPS,
@@ -81,7 +77,6 @@ export const get_pending_workshops = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.get_pending_workshops(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_PENDING_WORKSHOPS,
@@ -97,7 +92,6 @@ export const get_rejected_workshops = (pageNo, pageSize, keyword) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.get_rejected_workshops(pageNo, pageSize, keyword);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_REJECTED_WORKSHOPS,
@@ -114,7 +108,6 @@ export const get_detail_workshop = (id) => {
     return async (dispatch) => {
         try {
             const res = await adminWorkshopService.get_detail_workshop(id);
-            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_DETAIL_WORKSHOP,

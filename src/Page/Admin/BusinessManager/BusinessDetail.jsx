@@ -26,9 +26,9 @@ const BusinessDetail = ({open, onClose}) => {
             cancelText: 'Hủy',
             onOk() {
                 console.log(`Rejected business: ${business.name}`);
-                let req = {id: business.id, message: message};
+                let req = {id: business.key, message: message};
                 dispatch(rejected_business(req)).then(()=>{
-                    dispatch(get_business_by_id(business.id))
+                    dispatch(get_business_by_id(business.key))
                 });
                 setMessage(""); // Reset lý do từ chối
                 setIsRejectModalVisible(false); // Đóng modal
@@ -53,7 +53,7 @@ const BusinessDetail = ({open, onClose}) => {
 
     return (
         <Modal open={open} onCancel={onClose} footer={null} width={700}>
-            <Title level={4}>Chi tiết tài khoản doanh nghiệp</Title>
+            <Title level={4} style={{textAlign: "center"}}>Chi tiết tài khoản doanh nghiệp</Title>
             <Divider style={{marginTop: 1}}/>
             <div className="row mb-4">
                 <div className="col-md-3 text-center">

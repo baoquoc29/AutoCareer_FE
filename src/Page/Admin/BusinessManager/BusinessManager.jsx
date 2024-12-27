@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Tabs, Button, Input, Pagination, Card, Select} from "antd";
+import {Tabs, Button, Input, Pagination, Card, Select, Modal} from "antd";
 import {FileExcelOutlined, SearchOutlined} from "@ant-design/icons";
 import {
+    approved_business,
     get_all_businesses,
     get_approved_businesses,
     get_pending_businesses,
-    get_rejected_businesses,
+    get_rejected_businesses, rejected_business,
 } from "../../../Redux/actions/AdminBusinessThunk";
 
 import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import BusinessTable from "./BusinessTable";
 import BusinessDetail from "./BusinessDetail";
 import {get_business_by_id} from "../../../Redux/actions/BusinessThunk";
+import RejectModal from "../../Modal/RejectModal";
 
 const BusinessManager = () => {
     const dispatch = useDispatch();
@@ -25,7 +27,8 @@ const BusinessManager = () => {
     const [keyword, setKeyword] = useState("");
     const {Option} = Select;
     const [open, setOpen] = useState(false);
-
+    const [business, setBusiness] = useState({});
+    const [isRejectModalVisible,setIsRejectModalVisible] = useState(false);
     const formatDate = (dateString) => {
         if (!dateString) return "N/A"; // Trả về "N/A" nếu không có ngày giờ
         const date = new Date(dateString);
@@ -65,13 +68,12 @@ const BusinessManager = () => {
     const handlePageChange = async (page, pageSize) => {
         setPageNo(page);
         setPageSize(pageSize);
-        await fetchBusinesses(page, pageSize, keyword);
     };
 
     const handleSearch = async (e) => {
         const value = e.target.value;
+        setPageNo(1)
         setKeyword(value);
-        await fetchBusinesses();
     };
 
     // Dữ liệu hiển thị theo tab
@@ -97,6 +99,50 @@ const BusinessManager = () => {
         setOpen(false);
         await fetchBusinesses(currentTab);
     };
+    const handleChangeTab = (tab) => {
+        setCurrentTab(tab);
+        setPageNo(1)
+    }
+    const handleReject = (data) => {
+        setBusiness(data)
+        setIsRejectModalVisible(true); // Hiển thị modal từ chối
+    };
+    const closeModalReject = () => {
+        setIsRejectModalVisible(false);
+    }
+
+    const handleConfirmReject = (message) => {
+        Modal.confirm({
+            title: 'Xác nhận từ chối',
+            content: `Bạn có chắc chắn muốn từ chối tài khoản doanh nghiệp "${business.name}"?`,
+            okText: 'Từ chối',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Rejected business: ${business.name}`);
+                let req = {id: business.key, message: message};
+                dispatch(rejected_business(req)).then(async ()=>{
+                    await fetchBusinesses(currentTab)
+                });
+                setIsRejectModalVisible(false); // Đóng modal
+            },
+        });
+    };
+    const handleApproved = (data) => {
+        Modal.confirm({
+            title: 'Xác nhận phê duyệt',
+            content: `Bạn có chắc chắn muốn phê duyệt tài khoản doanh nghiệp "${data.name}"?`,
+            okText: 'Phê duyệt',
+            okType: 'danger',
+            cancelText: 'Hủy',
+            onOk() {
+                console.log(`Approved business: ${data.name}`);
+                dispatch(approved_business({id: data.key})).then(async ()=>{
+                    await fetchBusinesses(currentTab)
+                }); // Gửi lý do từ chối
+            },
+        });
+    }
 
     return (
         <>
@@ -129,7 +175,7 @@ const BusinessManager = () => {
                                                         placeholder="Chọn trạng thái duyệt"
                                                         value={currentTab}
                                                         showSearch
-                                                        onChange={(value) => setCurrentTab(value)}
+                                                        onChange={(value) => handleChangeTab(value)}
                                                         style={{width: 200}}
                                                         filterOption={(input, option) => {
                                                             const childrenText = String(option.props.children || "");
@@ -160,7 +206,7 @@ const BusinessManager = () => {
                                                 {/*</div>*/}
                                             </div>
 
-                                            <BusinessTable data={data} onDetail={handleViewDetails}></BusinessTable>
+                                            <BusinessTable data={data} onDetail={handleViewDetails} onApprove={handleApproved} onReject={handleReject}></BusinessTable>
                                             <ResultSummary totalElements={totalElements}></ResultSummary>
                                         </div>
                                         <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
@@ -183,6 +229,11 @@ const BusinessManager = () => {
                     </div>
                 </div>
             </section>
+            <RejectModal
+                open={isRejectModalVisible}
+                onClose={closeModalReject}
+                handleReject={handleConfirmReject}
+            ></RejectModal>
         </>
     )
 };

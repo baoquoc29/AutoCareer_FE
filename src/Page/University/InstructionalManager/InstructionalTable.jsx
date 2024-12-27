@@ -26,7 +26,7 @@ const InstructionalTable = ({
     };
     const columns = [
         {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center'},
-        {title: 'Mã giáo vụ', dataIndex: 'instructionalCode', key: 'instructionalCode', align: 'center'},
+        {title: 'Mã giáo vụ', dataIndex: 'instructionalCode', key: 'instructionalCode', align: 'left'},
         {
             title: 'Ảnh',
             dataIndex: 'instructionalImageId',
@@ -51,9 +51,9 @@ const InstructionalTable = ({
                 />
             ),
         },
-        {title: 'Họ và tên', dataIndex: 'name', key: 'name', align: 'center'},
-        {title: 'Email', dataIndex: 'email', key: 'email', align: 'center'},
-        {title: 'Số điện thoại', dataIndex: 'phone', key: 'phone', align: 'center'},
+        {title: 'Họ và tên', dataIndex: 'name', key: 'name', align: 'left'},
+        {title: 'Email', dataIndex: 'email', key: 'email', align: 'left'},
+        {title: 'Số điện thoại', dataIndex: 'phone', key: 'phone', align: 'left'},
         {
             title: 'Trạng thái',
             dataIndex: 'status',

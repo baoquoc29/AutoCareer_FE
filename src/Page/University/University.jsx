@@ -31,14 +31,14 @@ export function University() {
     const totalCooperation = useSelector(state => state.CooperationReducer.totalCooperation)
 
     useEffect(() => {
-        dispatch(get_total_ins())
-        dispatch(get_total_section())
-        dispatch(get_total_major())
-        dispatch(get_total_workshop())
-        dispatch(get_total_student())
-        dispatch(get_total_cooperation())
+        dispatch(get_total_ins(university?.id))
+        dispatch(get_total_section(university?.id))
+        dispatch(get_total_major(university?.id))
+        dispatch(get_total_workshop(university?.id))
+        dispatch(get_total_student(university?.id))
+        dispatch(get_total_cooperation(university?.id))
         dispatch(get_count_major_by_section())
-        dispatch(count_student_major())
+        dispatch(count_student_major(university?.id))
         dispatch(get_status_workShop())
     }, [dispatch]);
     useEffect(() => {

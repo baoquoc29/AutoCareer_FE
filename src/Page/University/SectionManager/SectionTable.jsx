@@ -24,11 +24,11 @@ const SectionTable = ({
         });
     };
     const columns = [
-        {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center', sorter: (a, b) => a.stt - b.stt},
+        {title: 'STT', dataIndex: 'stt', key: 'stt', align: 'center',width: 50 },
         {
-            title: 'Tên khoa', dataIndex: 'name', key: 'name', align: 'center', render: (text) => {
-                if (text && text.length > 30) {
-                    return text.slice(0, 30) + '...';  // Cắt tên nếu dài hơn 15 ký tự và thêm "..."
+            title: 'Tên khoa', dataIndex: 'name', key: 'name', align: 'left', render: (text) => {
+                if (text && text.length > 50) {
+                    return text.slice(0, 50) + '...';  // Cắt tên nếu dài hơn 15 ký tự và thêm "..."
                 }
                 return text;
             },

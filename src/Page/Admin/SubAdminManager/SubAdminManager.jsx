@@ -89,8 +89,14 @@ const SubAdminManager = () => {
     };
 
     const handleSearch = (e) => {
+        setPageNo(1);
         setKeyword(e.target.value);
     };
+
+    const closeCreateModal = async () => {
+        setIsCreateModalOpen(false);
+        await dispatch(get_all_paging_sub_admin(pageNo - 1, pageSize, keyword));
+    }
 
     return (
         <>
@@ -140,7 +146,7 @@ const SubAdminManager = () => {
 
                                 <SubAdminCreateForm
                                     open={isCreateModalOpen}
-                                    onClose={() => setIsCreateModalOpen(false)}
+                                    onClose={closeCreateModal}
                                 />
 
                                 <SubAdminUpdate
