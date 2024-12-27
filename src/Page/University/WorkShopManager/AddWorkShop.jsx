@@ -347,13 +347,13 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                     </Col>
                     <Col span={8}>
                         <FormItem
-                            label="Ngày hết hạn"
+                            label="Ngày hết hạn đăng ký"
                             name="expirationDate"
-                            rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn đăng ký'}]}
                         >
                             <DatePicker
                                 style={{width: "100%"}}
-                                placeholder="Chọn ngày hết hạn"
+                                placeholder="Chọn ngày hết hạn đăng ký"
                                 disabledDate={disableExpirationDate}
                             />
                         </FormItem>
