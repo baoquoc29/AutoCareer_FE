@@ -1,12 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
 import {clearLocalStorage, logoutUser} from "../../Redux/actions/UserThunk";
-import {Button} from "antd";
 import {NavLink} from "react-router-dom";
 import {useEffect} from "react";
+import './style.css'
 
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
+    console.log(user.username)
     // Kiểm tra loại người dùng
     const isUniversityUser = user && user.role.name === 'UNIVERSITY';
     const isBusinessUser = user && user.role.name === 'BUSINESS';
@@ -33,6 +34,23 @@ export const UserDropdown = ({navigate}) => {
             }, 2000);
         } else {
             console.log('No token found');
+        }
+    };
+    // Hàm chuyển đổi tên vai trò
+    const getRoleDisplayName = (roleName) => {
+        switch (roleName) {
+            case 'UNIVERSITY':
+                return 'Trường đại học';
+            case 'BUSINESS':
+                return 'Doanh nghiệp';
+            case 'ADMIN':
+                return 'Quản trị viên ';
+            case 'SUB_ADMIN':
+                return 'Phó quản trị';
+            case 'EMPLOYEE':
+                return 'Nhân viên quèn';
+            default:
+                return roleName; // Trả về tên gốc nếu không có chuyển đổi
         }
     };
     const getUserImage = () => {
@@ -71,7 +89,7 @@ export const UserDropdown = ({navigate}) => {
                 >
                     <i className="demo-psi-male"></i>
                 </button>
-                <div className="dropdown-menu dropdown-menu-end w-md-200px">
+                <div className="dropdown-menu dropdown-menu-end w-md-250px">
                     <div className="d-flex align-items-center border-bottom px-3 py-2">
                         <div className="flex-shrink-0">
                             <img
@@ -87,24 +105,26 @@ export const UserDropdown = ({navigate}) => {
                         </div>
                         <div className="flex-grow-1 ms-3">
                             <h5 className="mb-0">
-                                {user.username.length > 20 ? user.username.slice(0, 14) + "..." : user.username}
+                                {user.username.length > 10 ? user.username.slice(0, 18) + "..." : user.username}
                             </h5>
-                            <span className="text-body-secondary fst-italic">Vai trò: {user.role.name}</span>
+                            <span className="text-body-secondary role-name">Vai trò:{getRoleDisplayName(user.role.name)}</span>
                         </div>
                     </div>
                     <div>
                         <div className="list-group list-group-borderless h-100 py-3">
                             {getUserProfileLink() && (
-                                <NavLink to={getUserProfileLink()} className="list-group-item list-group-item-action">
+                                <NavLink to={getUserProfileLink()} className="list-group-item list-group-item-action profile-link">
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}
                             <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
                                 <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
                             </NavLink>
-                            <Button onClick={handleLogout} className={"list-group-item list-group-item-action"}>
+
+                            <NavLink to={''} onClick={handleLogout} className={"list-group-item list-group-item-action"}>
+                                <i className="demo-pli-unlock fs-5 me-2"></i>
                                 Đăng xuất
-                            </Button>
+                            </NavLink>
                         </div>
                     </div>
                 </div>

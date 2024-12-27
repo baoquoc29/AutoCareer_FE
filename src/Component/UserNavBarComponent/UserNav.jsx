@@ -1,11 +1,44 @@
- import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {NavLink, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {logoutUser} from "../../Redux/actions/UserThunk";
+import {TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
 
 const UserNav = ({profileImg, userName, userRole}) => {
+    const dispatch = useDispatch();
 
     const {userData} = useSelector((state) => state.UserReducer);
     const isUniversityUser = userData && userData.role.name === 'UNIVERSITY';
     const isBusinessUser = userData && userData.role.name === 'BUSINESS';
+    const navigate = useNavigate();
+    const handleLogout = async () => {
+        const token = localStorage.getItem(TOKEN);
+        if (token) {
+            dispatch(logoutUser(token));
+            localStorage.removeItem(TOKEN);
+            localStorage.removeItem(USER_LOGIN);
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+        } else {
+            console.log('No token found');
+        }
+    };
+    const getRoleDisplayName = (roleName) => {
+        switch (roleName) {
+            case 'UNIVERSITY':
+                return 'Trường đại học';
+            case 'BUSINESS':
+                return 'Doanh nghiệp';
+            case 'ADMIN':
+                return 'Quản trị viên';
+            case 'SUB_ADMIN':
+                return 'Phó quản trị';
+            case 'EMPLOYEE':
+                return 'Nhân viên quèn';
+            default:
+                return roleName; // Trả về tên gốc nếu không có chuyển đổi
+        }
+    };
 
     return (
         <>
@@ -21,9 +54,9 @@ const UserNav = ({profileImg, userName, userRole}) => {
                                 data-bs-toggle="collapse" data-bs-target="#usernav" aria-expanded="false"
                                 aria-controls="usernav">
                         <span className="dropdown-toggle d-flex justify-content-center align-items-center">
-                            <h5 className="mb-0 me-3">{userName}</h5>
+                            <h5 className="mb-0 ">{userName}</h5>
                         </span>
-                            <small className="text-body-secondary">Vai trò: {userRole}</small>
+                            <p className="text-body-secondary">Vai trò: {getRoleDisplayName(userRole)}</p>
                         </button>
                         <div id="usernav" className="nav flex-column collapse" bis_skin_checked="1">
                             {isUniversityUser && (
@@ -36,7 +69,7 @@ const UserNav = ({profileImg, userName, userRole}) => {
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}
-                            <NavLink to={"/"} className="nav-link">
+                            <NavLink onClick={handleLogout} className="nav-link" to={''}>
                                 <i className="demo-pli-unlock fs-5 me-2"></i>
                                 <span className="ms-1">Đăng xuất</span>
                             </NavLink>

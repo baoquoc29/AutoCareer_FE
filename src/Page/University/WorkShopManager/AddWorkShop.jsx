@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Form, Input, Upload, Button, Select, DatePicker, Row, Col, Modal, notification} from "antd";
+import {Form, Input, Upload, Select, DatePicker, Row, Col, Modal, notification} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,6 +74,8 @@ const ButtonGroup = styled.div`
 
 const AddWorkShop = ({ visible, onCancel, onFinish }) => {
     const [form] = Form.useForm();
+    const primaryColor = '#1677ff'; // Định nghĩa biến primaryColor
+    const dangerColor = '#dc3545'; // Định nghĩa biến màu đỏ cho nút hủy
     const [selectedProvince, setSelectedProvince] = useState(null);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [fileList, setFileList] = useState([]);
@@ -298,10 +300,10 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
             <Form form={form} layout="vertical" autocomplete="off">
                 <Form.Item
                     rules={[
-                        { required: true, message: 'Vui lòng nhập tiêu đề.' },
-                        { min: 10, message: 'Tiêu đề phải có ít nhất 10 ký tự.' },
-                        { max: 256, message: 'Tiêu đề không được vượt quá 256 ký tự.' },
-                        { pattern: /^[^\s].*$/, message: 'Tiêu đề không được có dấu cách ở đầu.' }
+                        {required: true, message: 'Vui lòng nhập tiêu đề.'},
+                        {min: 10, message: 'Tiêu đề phải có ít nhất 10 ký tự.'},
+                        {max: 256, message: 'Tiêu đề không được vượt quá 256 ký tự.'},
+                        {pattern: /^[^\s].*$/, message: 'Tiêu đề không được có dấu cách ở đầu.'}
                     ]}
                     label="Tiêu đề"
                     name="title"
@@ -315,11 +317,11 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                         <FormItem
                             label="Ngày bắt đầu"
                             name="startDate"
-                            rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu' }]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày bắt đầu'}]}
                         >
                             <DatePicker
                                 format="YYYY-MM-DD HH:mm"
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 placeholder="Chọn ngày bắt đầu"
                                 showTime
                                 disabledDate={disablePastDates}
@@ -331,11 +333,11 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                         <FormItem
                             label="Ngày kết thúc"
                             name="endDate"
-                            rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc' }]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày kết thúc'}]}
                         >
                             <DatePicker
                                 format="YYYY-MM-DD HH:mm"
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 placeholder="Chọn ngày kết thúc"
                                 showTime
                                 disabledDate={disableEndDate}
@@ -347,10 +349,10 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                         <FormItem
                             label="Ngày hết hạn"
                             name="expirationDate"
-                            rules={[{ required: true, message: 'Vui lòng chọn ngày hết hạn' }]}
+                            rules={[{required: true, message: 'Vui lòng chọn ngày hết hạn'}]}
                         >
                             <DatePicker
-                                style={{ width: "100%" }}
+                                style={{width: "100%"}}
                                 placeholder="Chọn ngày hết hạn"
                                 disabledDate={disableExpirationDate}
                             />
@@ -407,10 +409,10 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                     label="Địa chỉ chi tiết"
                     name="detailAddress"
                     rules={[
-                        { pattern: /^[^\s].*$/, message: 'Địa chỉ chi tiết không được có dấu cách ở đầu.' }
+                        {pattern: /^[^\s].*$/, message: 'Địa chỉ chi tiết không được có dấu cách ở đầu.'}
                     ]}
                 >
-                    <Input.TextArea placeholder="Nhập địa chỉ chi tiết" />
+                    <Input.TextArea placeholder="Nhập địa chỉ chi tiết"/>
                 </Form.Item>
 
 
@@ -464,11 +466,53 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
                         <img alt="preview" style={{width: '100%'}} src={previewImage}/>
                     </Modal>
                 </FormItem>
+                <div className="col-12 text-end">
+                    <button
+                        type="button"
+                        className="btn btn-outline-danger mt-3 mx-3"
+                        onClick={onCancel}
+                        style={{
+                            borderColor: dangerColor,
+                            color: dangerColor,
+                            transition: 'background-color 0.3s ease, color 0.3s ease'
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.backgroundColor = dangerColor;
+                            e.target.style.color = 'white';
+                            e.target.style.transform = 'scale(1.05)';
 
-                <ButtonGroup>
-                    <Button onClick={onCancel}>Hủy</Button>
-                    <Button onClick={handleOk} type="primary">Lưu</Button>
-                </ButtonGroup>
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.backgroundColor = '';
+                            e.target.style.color = dangerColor;
+                            e.target.style.transform = 'scale(1)';
+
+                        }}
+                    >
+                        Hủy bỏ
+                    </button>
+                    <button
+                        type="submit"
+                        className="btn btn-outline-primary mt-3 "
+                        onClick={handleOk}
+                        style={{
+                            borderColor: primaryColor,
+                            backgroundColor: primaryColor,
+                            color: 'white',
+                            transition: 'background-color 0.3s ease, color 0.3s ease, transform 0.2s ease',
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.backgroundColor = primaryColor;
+                            e.target.style.color = 'white';
+                            e.target.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.transform = 'scale(1)';
+                        }}
+                    >
+                        Thêm
+                    </button>
+                </div>
             </Form>
         </Container>
     );

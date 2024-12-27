@@ -19,7 +19,7 @@ export function BusinessTemplate() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(get_business_by_id(businessId));
-    }, [dispatch]);
+    }, [dispatch, businessId]);
 
     const {userData} = useSelector((state) => state.UserReducer);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +28,20 @@ export function BusinessTemplate() {
     };
 
     const menuItems = [
+
+        ...(user?.role?.name === "BUSINESS"
+            ? [
+                {
+                    label: "Thống kê",
+                    icon: "fa-duotone fa-solid fa-chart-line",
+                    subMenu: [
+                        {label: "Thống kê ngành nghề", link: "/dashboard-industry", icon: ""},
+                        // {label: "Thống kê công việc", link: "/dashboard-job", icon: ""},
+                    ],
+                },
+            ]
+            : []),
+
         {
             label: "Doanh nghiệp",
             icon: "fa-solid fa-school",
@@ -42,32 +56,27 @@ export function BusinessTemplate() {
                     link: "/job-manager",
                     icon: "",
                 },
-                {label: "Danh sách nhân viên",
+                {
+                    label: "Danh sách nhân viên",
                     link: "/employee-manager",
-                    icon: ""},
+                    icon: ""
+                },
+            ],
+        },
+        {
+            label: "Yêu cầu hợp tác",
+            icon: "fa-solid fa-store",
+            subMenu: [
+                {label: "Danh sách yêu cầu", link: "/cooperation-business-manager", icon: ""},
             ],
         },
         {
             label: "Sự kiện",
             icon: "fa-solid fa-store",
             subMenu: [
-                {label: "Danh sách sự kiện", link: "/workshop-manager", icon: ""},
-                {label: "Công ty tham gia", link: "/section-manager", icon: ""},
-                {label: "Công ty chờ duyệt", link: "/major-manager", icon: ""},
+                {label: "Danh sách hội thảo", link: "/business-workshop", icon: ""},
             ],
         },
-        ...(user?.role?.name === "BUSINESS"
-            ? [
-                {
-                    label: "Thống kê",
-                    icon: "fa-duotone fa-solid fa-chart-line",
-                    subMenu: [
-                        {label: "Thống kê ngành nghề", link: "/dashboard-industry", icon: ""},
-                        {label: "Thống kê công việc", link: "/dashboard-job", icon: ""},
-                    ],
-                },
-            ]
-            : []),
     ];
     return (
         <>

@@ -17,10 +17,6 @@ import {
 } from "../../Utils/Setting/Config";
 import {userService} from "../../Service/UserService/UserService";
 import {toast} from "react-toastify";
-import * as logger from "react-dom/test-utils";
-
-
-
 
 export const loginUser = (username, password) => async (dispatch) => {
     try {

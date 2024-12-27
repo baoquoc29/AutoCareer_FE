@@ -6,14 +6,14 @@ export class SubAdminService extends baseService {
         super();
     };
 
-    create = (formData) => {
-        return this.postFormData('api/sub-admin/create', formData)
+    create_sub_admin = (formData) => {
+        return this.postResponse('api/sub-admin/create', formData)
     };
     delete_sub_admin = (id) => {
         return this.delete(`api/sub-admin/delete?id=${id}`)
     }
     update_sub_admin = (formData) => {
-        return this.putFormData('api/sub-admin/update', formData)
+        return this.putResponse('api/sub-admin/update', formData)
     }
     get_paging_sub_admin = (page, pageSize, keyword) => {
         return this.get(`api/sub-admin/get-paging?pageNo=${page}&pageSize=${pageSize}&keyword=${keyword}`)
