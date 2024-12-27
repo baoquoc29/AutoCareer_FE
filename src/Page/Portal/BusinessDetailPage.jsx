@@ -16,6 +16,9 @@ const BusinessDetailPage = () => {
     const [searchKeyword, setSearchKeyword] = useState(""); // Từ khóa tìm kiếm
     const [locationFilter, setLocationFilter] = useState(""); // Lọc theo địa điểm
 
+    useEffect(() => {
+
+    }, []);
 
     useEffect(() => {
         // Sử dụng dữ liệu tạm thời

@@ -36,6 +36,12 @@ const HomeSearchBusiness = () => {
         setPageSize(pageSize);
     };
 
+    const truncateDescription = (description, length) => {
+        if (!description) {
+            return "";
+        }
+        return description.length > length ? `${description.substring(0, length)}...` : description;
+    };
     return (
         <div className="contain-search-business">
             <HeaderPortal />
@@ -82,9 +88,9 @@ const HomeSearchBusiness = () => {
                         <div className="company-list">
                             {resultSearchBusiness.map((business) => (
                                 <div className="company-item company-item-hover">
-                                    <a onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business.id } })} className="item-logo-business">
+                                    <a onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business?.id } })} className="item-logo-business">
                                         <img className="item-logo-business-img"
-                                             src={business.imageID ? `${GET_IMAGE_URI}${business.imageID}` : 'placeholder-avatar.jpg'}
+                                             src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'}
                                              alt="FPT Shop"
                                         />
                                     </a>
@@ -92,13 +98,13 @@ const HomeSearchBusiness = () => {
                                         <div className="item-info-business-title">
                                             <strong>
                                                 <a className="item-info-business-company-name"
-                                                   onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business.id } })}
-                                                   target="_blank">{business.name}
+                                                   onClick={() => navigate(`/business-portal-detail`, {state: {businessId: business?.id}})}
+                                                   target="_blank">{business?.name}
                                                 </a>
                                             </strong>
                                             <span className="item-info-business-countJob">
                                             <i className="fa-solid fa-circle circle"></i>
-                                            Đang tuyển {business.totalJobRecruit} vị trí
+                                            Đang tuyển {business?.totalJobRecruit} vị trí
                                         </span>
                                         </div>
 
@@ -114,14 +120,14 @@ const HomeSearchBusiness = () => {
                                             }}>
                                                 Trụ sở chính:
                                             </span>
-                                                {business.province}, {business.district}, {business.ward}, {business.locationDescription}.
+                                                {business?.province}, {business?.district}, {business?.ward}, {business?.locationDescription}.
                                         </span>
                                         </div>
 
                                         <div className="item-info-business-description">
                                             <i className="fa-solid fa-circle-info"></i>
                                             <p style={{color: 'black'}}>
-                                                {business.description.length > 170 ? `${business.description.substring(0,170)}...` : business.description}
+                                                {truncateDescription(business?.description, 170)}
                                             </p>
                                         </div>
                                     </div>
@@ -149,7 +155,7 @@ const HomeSearchBusiness = () => {
                                 <div class="featured-company-img">
                                     <div class="box-img">
                                         <a href="https://www.topcv.vn/brand/ctycpdatxanhmiennam?id=153046" target="_blank">
-                                        <img src={business.imageID ? `${GET_IMAGE_URI}${business.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
+                                        <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
                                         </a>
                                     </div>
                                 </div>
