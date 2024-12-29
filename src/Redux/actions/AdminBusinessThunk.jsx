@@ -1,4 +1,4 @@
-import {STATUS_CODE} from "../../Utils/Setting/Config";
+import {DISPLAY_LOADING, HIDE_LOADING, STATUS_CODE} from "../../Utils/Setting/Config";
 import {adminBusinessService} from "../../Service/AdminService/AdminBusinessService";
 import {toast} from "react-toastify";
 import {
@@ -11,6 +11,7 @@ import {
 
 export const approved_business = (req) => {
     return async (dispatch) => {
+        dispatch({type: DISPLAY_LOADING});
         try {
             const res = await adminBusinessService.approved_business(req);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -22,12 +23,15 @@ export const approved_business = (req) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        } finally {
+            dispatch({type: HIDE_LOADING});
         }
     }
 }
 
 export const rejected_business = (req) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await adminBusinessService.rejected_business(req);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -39,6 +43,8 @@ export const rejected_business = (req) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        } finally {
+            dispatch({type: HIDE_LOADING});
         }
     }
 }

@@ -29,5 +29,8 @@ export class CooperationService extends baseService{
     cancel_request = (universityId) =>{
         return this.put(`api/cooperation/cancel-request?universityId=${universityId}`)
     }
+    get_detail_cooperation_business = (id) => {
+        return this.get(`api/cooperation/detail-request?id=${id}`)
+    }
 }
 export default CooperationService = new CooperationService();

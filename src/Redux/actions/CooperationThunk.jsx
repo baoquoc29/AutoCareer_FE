@@ -1,13 +1,13 @@
 import {toast} from "react-toastify";
 import cooperationService from "../../Service/UniversityService/CooperationService";
 import {
-    APPROVE_COOPERATION, CANCEL_REQUEST,
+    APPROVE_COOPERATION, CANCEL_REQUEST, DETAIL_COOPERATION,
     REJECT_COOPERATION,
     SET_COOPERATION,
     SET_COOPERATION_BUSINESS,
     TOTAL_COOPERATION
 } from "../types/CooperationType";
-import {STATUS_CODE} from "../../Utils/Setting/Config";
+import {DISPLAY_LOADING, HIDE_LOADING, STATUS_CODE} from "../../Utils/Setting/Config";
 
 export const get_all_cooperation_of_university_page = (page = 1, size = 7, keyword = '', statusConnected = '') => {
     return async dispatch => {
@@ -49,6 +49,7 @@ export const get_all_cooperation_of_university_page = (page = 1, size = 7, keywo
 }
 export const approved_cooperation = (formData) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await cooperationService.approve_cooperation_of_university(formData);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -59,11 +60,14 @@ export const approved_cooperation = (formData) => {
             }
         } catch (error) {
             toast.error(error.response.data.message);
+        } finally {
+            dispatch({ type: HIDE_LOADING });
         }
     }
 }
 export const reject_cooperation = (formData) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await cooperationService.reject_cooperation_of_university(formData);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -74,6 +78,8 @@ export const reject_cooperation = (formData) => {
             }
         } catch (error) {
             toast.error(error.response.data.message);
+        } finally {
+            dispatch({ type: HIDE_LOADING });
         }
     }
 }
@@ -137,6 +143,22 @@ export const cancel_request = (universityId) => {
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: CANCEL_REQUEST,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    }
+}
+
+export const get_detail_cooperation_business = (id) => {
+    return async (dispatch) => {
+        try {
+            const res = await cooperationService.get_detail_cooperation_business(id);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: DETAIL_COOPERATION,
                     payload: res.data
                 })
             }

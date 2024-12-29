@@ -1,4 +1,4 @@
-import {STATUS_CODE} from "../../Utils/Setting/Config";
+import {DISPLAY_LOADING, HIDE_LOADING, STATUS_CODE} from "../../Utils/Setting/Config";
 import {toast} from "react-toastify";
 import {
     APPROVED_JOB,
@@ -11,6 +11,7 @@ import {adminJobService} from "../../Service/AdminService/AdminJobService.jsx";
 
 export const approved_job = (id) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await adminJobService.approved_job(id);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -22,12 +23,15 @@ export const approved_job = (id) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        } finally {
+            dispatch({type: HIDE_LOADING})
         }
     }
 }
 
 export const rejected_job = (id) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await adminJobService.rejected_job(id);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -39,6 +43,8 @@ export const rejected_job = (id) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        } finally {
+            dispatch({type: HIDE_LOADING})
         }
     }
 }
