@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_university_id} from "../../Redux/actions/UniversityThunk";
 import {Footer} from "../../Component/FooterComponent/Footer";
-import {UsergroupAddOutlined} from "@ant-design/icons";
 
 
 export function UniversityTemplate() {
@@ -59,13 +58,6 @@ export function UniversityTemplate() {
 
             ]
         },
-        {
-            label: 'Thống kê',
-            icon: 'home',
-            subMenu: [
-                {label: '123', link: '', icon: ''},
-            ]
-        }
     ];
     return (
         <>

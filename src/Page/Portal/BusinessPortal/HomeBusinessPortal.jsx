@@ -17,6 +17,9 @@ const HomeBusinessPortal = () => {
     }, [dispatch]);
 
     const truncateDescription = (description, wordLimit = 80) => {
+        if(!description){
+            description = "Không có mô tả";
+        }
         const words = description.split(' ');
         if (words.length > wordLimit) {
             return words.slice(0, wordLimit).join(' ') + '...';
