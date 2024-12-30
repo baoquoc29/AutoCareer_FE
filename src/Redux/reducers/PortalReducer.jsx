@@ -1,7 +1,9 @@
 import {
     CHECK_STATUS_REQUEST,
     CLEAR_JOBS_LIST,
-    GET_ALL_BUSINESS_FEATURE, GET_ALL_BUSINESS_HOME,
+    GET_ALL_BUSINESS_FEATURE,
+    GET_ALL_BUSINESS_HOME,
+    GET_ALL_UNIVERSITY_HOME,
     GET_ALL_JOB_LIST,
     GET_TOTAL_JOB_INDUSTRY,
     GET_UNIVERSITY_TOTAL,
@@ -22,6 +24,7 @@ const initialState = {
     totalWorkShopFeatures: 0,
     totalJobFeatures: 0,
     businessListHome: [],
+    universityListHome: [],
     error : null,
     statusWorkshop: null,
     requestSuccess: null,
@@ -95,6 +98,17 @@ export const PortalReducer = (state = initialState, action) => {
             return {
                 ...state,
                 businessListHome: [],
+            };
+        case GET_ALL_UNIVERSITY_HOME:
+            if (action.payload && action.payload.code === 200) {
+                return {
+                    ...state,
+                    universityListHome: action.payload.data,
+                };
+            }
+            return {
+                ...state,
+                universityListHome: [],
             };
         case GET_TOTAL_JOB_INDUSTRY:
             if (action.payload && action.payload.code === 200) {

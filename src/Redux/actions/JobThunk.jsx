@@ -1,5 +1,5 @@
 import {jobService} from "../../Service/JobService/JobService";
-import {CREATE_JOB, GET_JOB_DETAIL, INACTIVE_JOB, SET_JOBS, UPDATE_JOB} from "../types/JobType";
+import {CREATE_JOB, GET_JOB_DETAIL, GET_LIST_JOB_PORTAL, INACTIVE_JOB, SET_JOBS, UPDATE_JOB} from "../types/JobType";
 import {toast} from "react-toastify";
 
 export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '', statusBrowse = '', industryId='') => {
@@ -16,6 +16,34 @@ export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '',
                         pageSize, // Số bản ghi mỗi trang
                         currentPage,
                         keyword,// Trang hiện tại
+                        statusBrowse, // Trạng thái duyệt
+                        industryId, //Ngành nghề
+                    },
+                });
+            } else {
+                console.error("API returned data that is not an array");
+            }
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
+    };
+};
+
+export const get_all_job_of_business_paging_portal = (page = 1, size = 7, keyword = '',businessId = '', statusBrowse = '', industryId='') => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.get_all_job_of_business_paging_portal(page, size, keyword,businessId|| '', statusBrowse||'', industryId||'');
+            const {content, totalElements, pageSize, currentPage} = res.data;
+            if (Array.isArray(res.data.content)) {
+                dispatch({
+                    type: GET_LIST_JOB_PORTAL,
+                    payload: {
+                        content, // Dữ liệu công việc
+                        totalElements, // Tổng số bản ghi
+                        pageSize, // Số bản ghi mỗi trang
+                        currentPage,
+                        keyword,// Trang hiện tại
+                        businessId,// Id công
                         statusBrowse, // Trạng thái duyệt
                         industryId, //Ngành nghề
                     },

@@ -16,6 +16,10 @@ export class UniversityService extends baseService {
     update_university_id = (id, formData) => {
         return this.post(`api/university/update/${id}`, formData)
     }
+    get_all_search_university_page = (page, size, keyword='') =>{
+        return this.get
+        (`api/university/get-all-university-page?page=${page}&size=${size}&keyword=${keyword}`);
+    };
 }
 
 export const universityService = new UniversityService();
