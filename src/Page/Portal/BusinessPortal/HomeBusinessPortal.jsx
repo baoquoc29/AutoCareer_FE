@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import {get_all_business_home_portal} from "../../../Redux/actions/PortalThunk";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import {useNavigate} from "react-router-dom";
+import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 
 const HomeBusinessPortal = () => {
     const businesses = useSelector((state) => state.PortalReducer.businessListHome || []);
@@ -25,6 +26,12 @@ const HomeBusinessPortal = () => {
             return words.slice(0, wordLimit).join(' ') + '...';
         }
         return description;
+    };
+
+    const handleDetailsBusinessPortal = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/business-portal-detail/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
     };
 
     const handleSearch=()=>{
@@ -65,7 +72,10 @@ const HomeBusinessPortal = () => {
                     <div className='body-content-pb'>
                     <div className="body-content-portal-business">
                         {businesses.map((business) => (
-                            <div className="card-portal-business" key={business.id}>
+                            <div className="card-portal-business"
+                                 key={business.id}
+                                 onClick={() => handleDetailsBusinessPortal(business.id)}
+                            >
                                 <div className="logo-section">
                                     <img
                                         className="banner-image"

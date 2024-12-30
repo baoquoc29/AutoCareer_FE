@@ -24,6 +24,7 @@ const WorkshopDetailsScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [localStatus, setLocalStatus] = useState(status);
   const navigate = useNavigate();
+
   useEffect(() => {
     setEncryptedId(id);
   }, [id]);

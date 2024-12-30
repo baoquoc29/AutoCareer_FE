@@ -5,6 +5,7 @@ import { get_all_industry } from "../../Redux/actions/IndustryThunk";
 import { get_all_business_feature } from "../../Redux/actions/PortalThunk";
 import { DOMAIN } from "../../Utils/Setting/Config";
 import "../Portal/StylePortal/BusinessPortal.css";
+import {encryptId} from "../../Component/SecurityComponent/cryptoUtils";
 const BusinessPortal = () => {
     const [selectedIndustryId, setSelectedIndustryId] = useState(0); // Mặc định chọn "Tất cả" (id = 0)
     const locationListRef = useRef(null);
@@ -55,6 +56,12 @@ const BusinessPortal = () => {
         requestAnimationFrame(animateScroll);
     };
 
+    const handleDetailsBusinessPortal = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/business-portal-detail/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
+    };
+
     // Thay đổi ngành được chọn
     const onChangeIndustry = useCallback((industryId) => {
         setSelectedIndustryId(industryId);
@@ -97,7 +104,10 @@ const BusinessPortal = () => {
                     filteredBusiness.map((business, index) => (
                         <Col xs={24} sm={12} md={8} key={index}>
                             <div className="business-portal-card">
-                                <div className="business-portal-card-image">
+                                <div
+                                    className="business-portal-card-image"
+                                    onClick={() => handleDetailsBusinessPortal(business.id)}
+                                >
                                     <img
                                         src={`${DOMAIN}/api/v1/image/resource?imageId=${business.imageID}`}
                                         alt={business.businessName || "Job Image"}
