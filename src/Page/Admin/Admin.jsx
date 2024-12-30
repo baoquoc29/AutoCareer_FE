@@ -182,19 +182,8 @@ export function Admin() {
                             </Card>
                         </div>
                         <div className="col-md-2">
-                            <Card className="card-total-student">
-                                <h4>Tổng sự kiện tham gia</h4>
-                                <div className="card-body-header">
-                                    <FaUsers className="icon"/>
-                                    <h2 className="card-title">
-                                        <CountUp end={totals["workshopBusinessesTotal"]} duration={5}/>
-                                    </h2>
-                                </div>
-                            </Card>
-                        </div>
-                        <div className="col-md-2">
                             <Card className="card-total-workshop">
-                                <h4>Tổng số sự kiện</h4>
+                                <h4>Tổng số hội thảo</h4>
                                 <div className="card-body-header">
                                     <FaRegCalendarAlt className="icon"/>
                                     <h2 className="card-title">
@@ -204,8 +193,20 @@ export function Admin() {
                             </Card>
                         </div>
                         <div className="col-md-2">
+                            <Card className="card-total-student">
+                                <h4>Tổng kết nối giữa hội thảo - doanh nghiệp</h4>
+                                <div className="card-body-header">
+                                    <FaUsers className="icon"/>
+                                    <h2 className="card-title">
+                                        <CountUp end={totals["workshopBusinessesTotal"]} duration={5}/>
+                                    </h2>
+                                </div>
+                            </Card>
+                        </div>
+
+                        <div className="col-md-2">
                             <Card className="card-total-cooperation">
-                                <h4>Tổng số hợp tác</h4>
+                                <h4>Tổng số hợp tác giữa doanh nghiệp - nhà trường</h4>
                                 <div className="card-body-header">
                                     <FaHandshake className="icon"/>
                                     <h2 className="card-title">
