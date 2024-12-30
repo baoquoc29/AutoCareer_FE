@@ -98,7 +98,7 @@ export const UserDropdown = ({navigate}) => {
                                 loading="lazy"
                                 onError={(e) => {
                                     e.target.onerror = null; // Ngăn lặp vô hạn
-                                    e.target.src = "aotucareer-logo.svg"; // Fallback nếu ảnh không tồn tại
+                                    e.target.src = "placeholder-avatar.jpg"; // Fallback nếu ảnh không tồn tại
                                 }}
                             />
                         </div>
