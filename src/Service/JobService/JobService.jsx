@@ -13,6 +13,11 @@ export class JobService extends baseService {
             + (industryId ? `&industryId=${industryId}` : '')
         );
     };
+    get_all_job_portal = (page, size, keyword = '') => {
+        return this.get(
+            `api/job/get-all-job?page=${page}&size=${size}&keyword=${keyword}`
+        );
+    };
 
     get_all_job_of_business_paging_portal = (page, size, keyword = '',businessId = null, statusBrowse = null, industryId = null) => {
         return this.get(

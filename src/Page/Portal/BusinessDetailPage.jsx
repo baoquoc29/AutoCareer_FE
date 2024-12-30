@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select} from "antd";
+import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select, Pagination} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
 import DisplayRichText from "../../../src/Component/TextEditDisplay/DisplayRichText";
 import {PlusOutlined} from "@ant-design/icons";
@@ -18,6 +18,9 @@ const BusinessDetailPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchKeyword, setSearchKeyword] = useState(""); // Từ khóa tìm kiếm
+    const [currentPage, setCurrenPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const totalElements = useSelector((state) => state.JobReducer.totalElements);
     const [locationFilter, setLocationFilter] = useState(""); // Lọc theo địa điểm
     const {businessId} = location.state;
     const businessData = useSelector((state) => state.BusinessReducer.business);
@@ -26,9 +29,8 @@ const BusinessDetailPage = () => {
 
     useEffect(() => {
         dispatch(get_business_by_id(businessId));
-        dispatch(get_all_job_of_business_paging_portal(1, 5, "", businessId));
-        console.log(jobData)
-    }, [dispatch, businessId]);
+        dispatch(get_all_job_of_business_paging_portal(currentPage, pageSize, encodeURIComponent(searchKeyword), businessId,));
+    }, [dispatch,currentPage, searchKeyword, pageSize, businessId]);
 
 
     const handleDetailsJob = (id) => {
@@ -36,6 +38,17 @@ const BusinessDetailPage = () => {
         ;  // Encrypt the ID first
         const url = `/job-portal-detail/${encodeURIComponent(encryptedId)}`; // Make sure the encrypted ID is properly encoded
         window.open(url, "_blank");  // Open in a new tab
+    };
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearchKeyword(value); // Cập nhật giá trị ô tìm kiếm
+        setCurrenPage(1);
+    };
+
+    const handlePageChange = (page, pageSize) => {
+        setCurrenPage(page);
+        setPageSize(pageSize);
     };
 
     if (!businessData) {
@@ -135,7 +148,7 @@ const BusinessDetailPage = () => {
                                                             <Input
                                                                 placeholder="Tìm kiếm công việc"
                                                                 value={searchKeyword}
-                                                                onChange={(e) => setSearchKeyword(e.target.value)}
+                                                                onChange={handleSearch}
                                                                 style={{width: "200px"}}
                                                             />
                                                             {/* Filter theo địa điểm */}
@@ -189,22 +202,27 @@ const BusinessDetailPage = () => {
                                                                                             {job.title}
                                                                                         </Text>
                                                                                         {/* Tên công ty */}
-                                                                                        <div>
+                                                                                        <div style={{marginBottom:"8px"}}>
                                                                                             <DisplayRichText
+
                                                                                                 content={businessData.name}/>
                                                                                         </div>
                                                                                     </div>
                                                                                     <Row gutter={[16, 16]} style={{
                                                                                         display: "flex",
-                                                                                        flexWrap: "wrap"
+                                                                                        flexWrap: "wrap",
+                                                                                        gap: "8px",
+
                                                                                     }}>
                                                                                         {/* Địa điểm làm việc */}
                                                                                         <Col
+
                                                                                             span={8}
                                                                                             style={{
                                                                                                 border: "1px solid #d9d9d9",
                                                                                                 backgroundColor: "#f0f0f0", // Màu xám
                                                                                                 borderRadius: "8px", // Bo góc
+
                                                                                                 padding: "5px", // Thêm padding để nội dung không sát mép
                                                                                             }}
                                                                                         >
@@ -262,10 +280,27 @@ const BusinessDetailPage = () => {
                                                                 </Card>
                                                             ))}
                                                         </div>
+                                                        <Pagination
+                                                            style={{
+                                                                textAlign: "right",
+                                                                marginTop: "16px",
+                                                                display: "flex",
+                                                                justifyContent: "center"
+                                                            }}
+                                                            current={currentPage} // Gán mặc định nếu currentPage không hợp lệ
+                                                            pageSize={pageSize}   // Gán mặc định nếu pageSize không hợp lệ
+                                                            defaultPageSize={5}
+                                                            defaultCurrent={1}
+                                                            total={totalElements} // Gán mặc định nếu totalElements không hợp lệ
+                                                            onChange={handlePageChange}
+                                                            showSizeChanger={true}
+                                                            pageSizeOptions={[5, 10, 20, 50, 100]} // Đảm bảo mọi giá trị trong mảng là chuỗi
+                                                        />
                                                     </Card>
                                                 </Col>
                                             </Row>
                                         </Col>
+
                                         {/* Thông tin liên hệ */}
                                         <Col span={6}>
                                             <Card bordered={false}>
@@ -303,7 +338,7 @@ const BusinessDetailPage = () => {
                                                 <Col span={24}>
                                                     <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
                                                         <Text strong>Website:</Text>
-                                                        <Text>{businessData.website}</Text>
+                                                        <a href={businessData.website}>{businessData.website}</a>
                                                     </Space>
                                                 </Col>
                                             </Card>
