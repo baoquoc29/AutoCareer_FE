@@ -37,7 +37,7 @@ export const get_all_job_of_business_paging = (page = 1, size = 7, keyword = '',
     };
 };
 
-export const get_all_job_of_business_paging_portal = (page = 1, size = 7, keyword = '',businessId = '', statusBrowse = '', industryId='') => {
+export const get_all_job_of_business_paging_portal = (page = 1, size = 5, keyword = '',businessId = '', statusBrowse = '', industryId='') => {
     return async (dispatch) => {
         try {
             const res = await jobService.get_all_job_of_business_paging_portal(page, size, keyword,businessId|| '', statusBrowse||'', industryId||'');
