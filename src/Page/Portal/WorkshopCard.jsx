@@ -42,7 +42,6 @@ const WorkshopCard = ({workshop}) => {
                 </div>
             </div>
             <div className="details">
-                <Space>
 
                     <span className={isUpcoming ? 'upcoming1' : ''}><i className="fa fa-calendar"
                                                                        aria-hidden="true"></i> Ngày bắt đầu: {workshop.startDate}</span>
@@ -54,7 +53,6 @@ const WorkshopCard = ({workshop}) => {
                                  aria-hidden="true"></i> Số công ty tham gia: {workshop.totalCompany}</span>
                         : null
                     }
-                </Space>
 
             </div>
         </div>
