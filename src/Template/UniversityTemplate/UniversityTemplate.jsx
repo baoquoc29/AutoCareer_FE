@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_university_id} from "../../Redux/actions/UniversityThunk";
 import {Footer} from "../../Component/FooterComponent/Footer";
-import {UsergroupAddOutlined} from "@ant-design/icons";
 
 
 export function UniversityTemplate() {
@@ -38,8 +37,6 @@ export function UniversityTemplate() {
             icon: 'fa-solid fa-store',
             subMenu: [
                 {label: 'Danh sách sự kiện', link: '/workshop-manager', icon: ''},
-                {label: 'Công ty tham gia', link: '/section-manager', icon: ''},
-                {label: 'Công ty chờ duyệt', link: '/major-manager', icon: ''},
             ]
         },
         {
@@ -47,8 +44,6 @@ export function UniversityTemplate() {
             icon: 'fa-solid fa-briefcase',
             subMenu: [
                 {label: 'Danh sách công việc', link: '/workshop-manager', icon: ''},
-                {label: 'Đề xuất công việc', link: '/section-manager', icon: ''},
-                {label: 'Yêu cầu hợp tác', link: '/section-manager', icon: ''}
             ]
         },
         {
@@ -59,22 +54,23 @@ export function UniversityTemplate() {
 
             ]
         },
-        {
-            label: 'Thống kê',
-            icon: 'home',
-            subMenu: [
-                {label: '123', link: '', icon: ''},
-            ]
-        }
     ];
+
+    const getProfileImage = () => {
+        return uni.logoImageId ? `${GET_IMAGE_URI}${uni.logoImageId}` : "placeholder-avatar.jpg";
+    };
+    const truncateUserName = (userName) => {
+        return userName.length > 20 ? userName.slice(0, 20) + '...' : userName;
+    };
+
     return (
         <>
             <div id="root" className={`root tm--primary-mn ${isMenuOpen ? 'mn--max' : 'mn--min'}`}>
                 <Header toggleSidebar={toggleSidebar} link={'/university'}/>
                 <SideBar
-                    userName={userData.username}
+                    userName={truncateUserName(userData.username)}
                     userRole={userData.role.name}
-                    profileImg={`${GET_IMAGE_URI}${uni.logoImageId}`}
+                    profileImg={getProfileImage()}
                     caption="Quản lý trường đại học"
                     menuItems={menuItems}
                 />

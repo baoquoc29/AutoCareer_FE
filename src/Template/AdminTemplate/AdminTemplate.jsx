@@ -67,11 +67,14 @@ export function AdminTemplate() {
         }
         return item;
     });
+    const truncateUserName = (userName) => {
+        return userName.length > 20 ? userName.slice(0, 20) + '...' : userName;
+    };
     return (<>
         <div id="root" className={`root tm--primary-mn ${isMenuOpen ? 'mn--max' : 'mn--min'}`}>
             <Header toggleSidebar={toggleSidebar} link={'/admin'}/>
             <SideBar
-                userName={userData.username}
+                userName={truncateUserName(userData.username)}
                 userRole={userData.role.name}
                 profileImg={subAdmin?.subAdminImageId ? `${GET_IMAGE_URI}${subAdmin.subAdminImageId}` : "aotucareer-logo.svg"}
                 caption="Quản lý hệ thống"
