@@ -7,25 +7,29 @@ import "./StylePortal/JobListPortal.css";
 import {get_all_job_portal} from "../../Redux/actions/JobThunk";
 import {BookOutlined, CalendarOutlined, EnvironmentOutlined, SearchOutlined} from "@ant-design/icons";
 import JobCard from "./JobCard";
+import {useLocation} from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const JobListPortal = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     // Redux state
+    const queryParams = new URLSearchParams(location.search);
+    const keywordFromURL = queryParams.get("keyword") || "";
     const job = useSelector((state) => state.JobReducer.jobsPortal || []);
     const totalElements = useSelector((state) => state.JobReducer.totalElements || 0);
     const [currentPage,setCurrentPage] = useState("1");
     const [pageSize,setPageSize] = useState("7");
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState("" || keywordFromURL);
 
     // Local state for pagination and filters
     const [filters, setFilters] = useState({
         dateRange: null,
         location: null,
         universityId: null,
-        searchTerm: "",
+        searchTerm: "" || keywordFromURL,
     });
 
     useEffect(() => {

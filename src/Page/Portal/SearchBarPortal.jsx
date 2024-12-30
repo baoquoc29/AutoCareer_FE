@@ -1,35 +1,93 @@
 import React from "react";
-import { Input, Select, Button } from "antd";
+import { Input, Button, Select } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
 const SearchBarPortal = () => {
+    const { userData, isAuthenticated } = useSelector((state) => state.UserReducer);
+
+    // Mặc định chọn "school" cho role "BUSINESS" và "business" cho role "UNIVERSITY"
+    const defaultSearchType = userData?.role?.name === "BUSINESS" ? "school" : "business";
+    const [searchType, setSearchType] = React.useState(defaultSearchType);
+    const [searchKeyword, setSearchKeyword] = React.useState("");
+    const navigate = useNavigate();
+
+    const handleSearchTypeChange = (value) => {
+        setSearchType(value);
+    };
+
+    const handleSearch = () => {
+        if (userData?.role?.name === "BUSINESS") {
+            if (searchType === "school") {
+                navigate(`/home-search-university?keyword=${searchKeyword}`);
+            } else if (searchType === "workshop") {
+                navigate(`/work-shop-all?keyword=${searchKeyword}`);
+            }
+        } else if (userData?.role?.name === "UNIVERSITY") {
+            if (searchType === "business") {
+                navigate(`/home-search-business?keyword=${searchKeyword}`);
+            } else if (searchType === "job") {
+                navigate(`/job-all-portal?keyword=${searchKeyword}`);
+            }
+        } else {
+            if (searchType === "school") {
+                navigate(`/home-search-university?keyword=${searchKeyword}`);
+            } else if (searchType === "workshop") {
+                navigate(`/work-shop-all?keyword=${searchKeyword}`);
+            } else if (searchType === "business") {
+                navigate(`/home-search-business?keyword=${searchKeyword}`);
+            } else if (searchType === "job") {
+                navigate(`/job-all-portal?keyword=${searchKeyword}`);
+            }
+        }
+    };
+
+    const handleInputChange = (e) => {
+        setSearchKeyword(e.target.value);
+    };
+
     return (
         <div style={styles.searchBar}>
-            {/* Select danh mục nghề */}
-            <Select
-                style={styles.select}
-                placeholder="Chọn danh mục nghề"
-                defaultValue="Danh mục Nghề"
-            >
-                <Option value="nhan-vien-kinh-doanh">Nhân viên kinh doanh</Option>
-                <Option value="ky-thuat">Kỹ thuật</Option>
-                <Option value="ke-toan">Kế toán</Option>
-            </Select>
-
-            {/* Ô nhập tìm kiếm */}
+            {/* Ô nhập từ khóa tìm kiếm */}
             <Input
                 style={styles.input}
-                placeholder="Nhập tên hoặc thông tin"
-                allowClear
+                placeholder="Nhập từ khóa tìm kiếm"
+                value={searchKeyword}
+                onChange={handleInputChange}
             />
 
-            {/* Select tỉnh/thành phố */}
-            <Select style={styles.selectLocation} defaultValue="Tất cả tỉnh/thành phố">
-                <Option value="all">Tất cả tỉnh/thành phố</Option>
-                <Option value="hanoi">Hà Nội</Option>
-                <Option value="hochiminh">Hồ Chí Minh</Option>
+            {/* Dropdown để chọn loại tìm kiếm */}
+            <Select
+                value={searchType}
+                onChange={handleSearchTypeChange}
+                style={styles.select}
+            >
+                {isAuthenticated ? (
+                    <>
+                        {userData?.role?.name === "BUSINESS" && (
+                            <>
+                                <Option value="school">Trường học</Option>
+                                <Option value="workshop">Hội thảo</Option>
+                            </>
+                        )}
+                        {userData?.role?.name === "UNIVERSITY" && (
+                            <>
+                                <Option value="business">Doanh nghiệp</Option>
+                                <Option value="job">Việc làm</Option>
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <Option value="school">Trường học</Option>
+                        <Option value="workshop">Hội thảo</Option>
+                        <Option value="business">Doanh nghiệp</Option>
+                        <Option value="job">Việc làm</Option>
+                    </>
+                )}
             </Select>
 
             {/* Nút tìm kiếm */}
@@ -37,6 +95,7 @@ const SearchBarPortal = () => {
                 type="primary"
                 icon={<SearchOutlined />}
                 style={styles.searchButton}
+                onClick={handleSearch}
             >
                 Tìm kiếm
             </Button>
@@ -47,38 +106,34 @@ const SearchBarPortal = () => {
 const styles = {
     searchBar: {
         display: "flex",
-        width: "620px",
+        width: "800px",
         alignItems: "center",
-        gap: "12px",  // Thêm khoảng cách giữa các phần tử
-        padding: "12px 20px",  // Padding thêm để các phần tử không quá sát nhau
-        backgroundColor: "#fff",  // Màu nền trắng sạch sẽ
-        borderRadius: "10px",  // Border-radius bo tròn đẹp
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",  // Thêm hiệu ứng bóng đổ nhẹ
-        maxWidth: "1000px",  // Đảm bảo chiều rộng không quá lớn
-        margin: "80px auto",  // Giữa trang
+        gap: "12px", // Khoảng cách giữa các phần tử
+        padding: "12px 20px", // Padding cho thanh tìm kiếm
+        backgroundColor: "#fff", // Màu nền trắng
+        borderRadius: "10px", // Border-radius để bo tròn
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Bóng đổ nhẹ
+        maxWidth: "1000px", // Đảm bảo chiều rộng không vượt quá 1000px
+        margin: "80px auto", // Căn giữa trang
         height: "75px",
     },
-    select: {
-        width: "220px",  // Thu hẹp kích thước select để dễ nhìn
-        borderRadius: "8px",  // Bo tròn các góc
-        border: "1px solid #d9d9d9",  // Viền màu nhẹ, phù hợp với nền trắng
-    },
     input: {
-        flex: 1,  // Chiếm hết chiều rộng còn lại
-        borderRadius: "8px",  // Bo tròn các góc
-        border: "1px solid #d9d9d9",  // Viền nhẹ
+        flex: 1, // Chiếm hết không gian còn lại
+        borderRadius: "8px", // Bo tròn các góc
+        border: "1px solid #d9d9d9", // Viền nhẹ
+        padding: "8px 12px", // Padding trong input
     },
-    selectLocation: {
-        width: "220px",  // Kích thước của select tỉnh/thành phố
-        borderRadius: "8px",  // Bo tròn các góc
-        border: "1px solid #d9d9d9",  // Viền nhẹ
+    select: {
+        width: "200px", // Kích thước cho dropdown
+        borderRadius: "8px", // Bo tròn các góc
+        border: "1px solid #d9d9d9", // Viền nhẹ
     },
     searchButton: {
-        backgroundColor: "#1890ff",  // Màu nền nút tìm kiếm nổi bật
-        borderColor: "#1890ff",  // Màu viền
+        backgroundColor: "#1890ff", // Màu nền nút tìm kiếm
+        borderColor: "#1890ff", // Màu viền
         borderRadius: "8px",
-        color: "#fff",  // Chữ màu trắng trên nền xanh
-        fontWeight: "bold",  // Làm đậm chữ
+        color: "#fff", // Màu chữ trắng
+        fontWeight: "bold", // Làm đậm chữ
     },
 };
 

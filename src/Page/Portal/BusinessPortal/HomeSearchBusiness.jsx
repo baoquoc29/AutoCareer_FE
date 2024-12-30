@@ -12,7 +12,9 @@ import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 const HomeSearchBusiness = () => {
     const location = useLocation();
     const dispatch = useDispatch();
-    const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery || "");
+    const queryParams = new URLSearchParams(location.search);
+    const keywordFromURL = queryParams.get("keyword") || "";
+    const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery || keywordFromURL ||  "");
     const [currentPage, setCurrenPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const totalElements = useSelector((state) => state.BusinessReducer.totalElements);

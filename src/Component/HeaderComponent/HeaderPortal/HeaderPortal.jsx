@@ -39,9 +39,6 @@ const HeaderPortal = () => {
     };
     const onFinish = (values) => {
         const {currentPassword, newPassword, confirmPassword} = values;
-        console.log('Mật khẩu hiện tại:', currentPassword);
-        console.log('Mật khẩu mới:', newPassword);
-        console.log('Xác nhận mật khẩu:', confirmPassword);
         const requestBody = {
             username: userData?.username,
             password: currentPassword,
@@ -166,7 +163,7 @@ const HeaderPortal = () => {
                     >
                         {userData?.role?.name !== "BUSINESS" && (
                             <Menu.Item key="/job-all-portal" onClick={handleToJobClick}>
-                                Việc làm
+                                Việc làm tốt nhất
                             </Menu.Item>
                         )}
                         {userData?.role?.name !== "UNIVERSITY" && (
@@ -181,12 +178,9 @@ const HeaderPortal = () => {
                         )}
                         {userData?.role?.name !== "BUSINESS" && (
                             <Menu.Item key="/business-section" onClick={() => navigate('/business-section')}>
-                                Công ty
+                                Doanh nghiệp tiểu biểu
                             </Menu.Item>
                         )}
-                        <Menu.Item key="/industry-section" onClick={() => navigate('/industry-section')}>
-                            Lĩnh vực
-                        </Menu.Item>
                     </Menu>
                 </div>
 

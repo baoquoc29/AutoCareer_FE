@@ -11,8 +11,10 @@ import {UniversityReducer} from "../../../Redux/reducers/UniversityReducer";
 
 const HomeSearchBusiness = () => {
     const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const keywordFromURL = queryParams.get("keyword") || "";
     const dispatch = useDispatch();
-    const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery || "");
+    const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery || keywordFromURL || "");
     const [currentPage, setCurrenPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const totalElements = useSelector((state) => state.UniversityReducer.totalElements);
@@ -36,6 +38,7 @@ const HomeSearchBusiness = () => {
         setCurrenPage(page);
         setPageSize(pageSize);
     };
+
 
     const truncateDescription = (description, length) => {
         if (!description) {

@@ -374,6 +374,7 @@ const JobPortal = () => {
                 pageSize={size}
                 total={totalElements}
                 onChange={handlePageChange}
+                showSizeChanger={false}
             />
         </div>
     );
