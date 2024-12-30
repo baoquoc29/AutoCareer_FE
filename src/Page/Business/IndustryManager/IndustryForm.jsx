@@ -59,10 +59,10 @@ const IndustryForm = ({selectData, load}) => {
         formik.resetForm(); // Reset the form values
     };
     return (
-        <Card title="Thêm ngành mới">
+        <Card title="Thêm ngành nghề mới">
             <form onSubmit={formik.handleSubmit}>
                 <Form.Item
-                    label="Tên ngành"
+                    label="Tên ngành nghề"
                     help={formik.errors.industries && formik.touched.industries ? formik.errors.industries : null}
                     validateStatus={formik.errors.industries && formik.touched.industries ? "error" : ""}
                 >
