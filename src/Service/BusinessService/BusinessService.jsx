@@ -8,7 +8,7 @@ export class BusinessService extends baseService {
     };
 
     get_business_by_id = (id) => {
-        return this.get(`api/business/${id}`)
+        return this.get(`api/business/get-by-id/${id}`)
     }
     update_business_id = (id, formData) => {
         return this.postFormData(`api/business/${id}`, formData)
