@@ -34,7 +34,7 @@ const UserNav = ({profileImg, userName, userRole}) => {
             case 'SUB_ADMIN':
                 return 'Phó quản trị';
             case 'EMPLOYEE':
-                return 'Nhân viên quèn';
+                return 'Nhân viên';
             default:
                 return roleName; // Trả về tên gốc nếu không có chuyển đổi
         }

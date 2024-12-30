@@ -83,13 +83,16 @@ export function University() {
     // Kiểm tra nếu không có sự kiện nào hoặc tất cả các sự kiện đều có countApproved bằng 0
     const noData = totalApprovedWorkShop.length === 0 || maxCountApproved === 0;
 
+    const getProfileImage = () => {
+        return universityDetails.logoImageId ? `${GET_IMAGE_URI}${universityDetails.logoImageId}` : "placeholder-avatar.jpg";
+    };
     return (
         <>
             <section className="section-university">
                 <div className="m-5 mt-1">
                     <header className="header-university mb-4 d-flex align-items-center justify-content-between">
                         <div className="header-logo d-flex align-items-center">
-                            <img src={`${GET_IMAGE_URI}${universityDetails.logoImageId}`} alt="logo"
+                            <img src={getProfileImage()} alt="logo"
                                  className="me-2"/>
                             <span>{universityDetails.name}</span>
                         </div>
