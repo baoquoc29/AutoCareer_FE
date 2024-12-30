@@ -214,7 +214,13 @@ const JobPortal = () => {
                         <p className="icon-business"/> {job.businessName}
                     </p>
                     <p className="salary">
-                        <p className="icon-salary"/> {job.salary} triệu
+                        <p className="icon-salary">
+                            {new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND'
+                            }).format(job.fromSalary)}
+                        </p>
+
                     </p>
                 </div>
 
@@ -329,7 +335,12 @@ const JobPortal = () => {
                                     </Popover>
                                     <p className="job-portal-card-company">{job.businessName}</p>
                                     <div className="job-portal-card-location-salary">
-                                        <span className="job-portal-card-tag">{job.salary}</span>
+                           <span className="job-portal-card-tag">
+  {job.fromSalary
+      ? new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(job.fromSalary)
+      : 'Liên hệ'}
+</span>
+
                                         <span className="job-portal-card-tag">{job.province}</span>
                                     </div>
                                 </div>
