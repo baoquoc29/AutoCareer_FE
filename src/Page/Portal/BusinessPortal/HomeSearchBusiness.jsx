@@ -160,9 +160,9 @@ const HomeSearchBusiness = () => {
                             {businessTop.map((business) => (
                                 <div class="featured-company-img">
                                     <div class="box-img">
-                                        <a href="https://www.topcv.vn/brand/ctycpdatxanhmiennam?id=153046" target="_blank">
-                                            <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
-                                        </a>
+                                        <div onClick={()=>handleDetailsBusinessPortal(business.id)} target="_blank">
+                                        <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
