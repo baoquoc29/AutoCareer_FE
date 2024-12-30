@@ -78,7 +78,7 @@ export function AppRouter() {
                     <Route path={"/job-all-portal"} element={<JobListPortal/>}/>
                     <Route path={"/home-search-university"} element={<HomeSearchUniversity/>}/>
                     <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
-                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
+                    <Route path={"/business-portal-detail/:id"} element={<BusinessDetailPage />} />
                     <Route path={"/university-section"} element={<HomeUniversityPortal/>}/>
 
                 </Route>

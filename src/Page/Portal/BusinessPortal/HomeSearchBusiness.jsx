@@ -7,6 +7,7 @@ import { get_all_result_search_business_page } from "../../../Redux/actions/Busi
 import "./CSS/HomeSearchBusiness.css";
 import {Pagination} from "antd";
 import {get_all_business_home_portal} from "../../../Redux/actions/PortalThunk";
+import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 
 const HomeSearchBusiness = () => {
     const location = useLocation();
@@ -18,13 +19,18 @@ const HomeSearchBusiness = () => {
     const [load, setLoad] = useState(false);
     const resultSearchBusiness = useSelector((state) => state.BusinessReducer.resultSearchBusiness);
     const businessTop= useSelector((state) => state.PortalReducer.businessListHome);
-    const navigate = useNavigate();
 
     console.log(resultSearchBusiness)
     useEffect(() => {
         dispatch(get_all_result_search_business_page(currentPage, pageSize, encodeURIComponent(searchQuery)));
         dispatch(get_all_business_home_portal())
     }, [dispatch, currentPage, searchQuery, pageSize, load]);
+
+    const handleDetailsBusinessPortal = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/business-portal-detail/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
+    };
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
@@ -88,7 +94,7 @@ const HomeSearchBusiness = () => {
                         <div className="company-list">
                             {resultSearchBusiness.map((business) => (
                                 <div className="company-item company-item-hover">
-                                    <a onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business?.id } })} className="item-logo-business">
+                                    <a onClick={() => handleDetailsBusinessPortal(business.id)} className="item-logo-business">
                                         <img className="item-logo-business-img"
                                              src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'}
                                              alt="FPT Shop"
@@ -98,7 +104,7 @@ const HomeSearchBusiness = () => {
                                         <div className="item-info-business-title">
                                             <strong>
                                                 <a className="item-info-business-company-name"
-                                                   onClick={() => navigate(`/business-portal-detail`, {state: {businessId: business?.id}})}
+                                                   onClick={() => handleDetailsBusinessPortal(business.id)}
                                                    target="_blank">{business?.name}
                                                 </a>
                                             </strong>
@@ -155,7 +161,7 @@ const HomeSearchBusiness = () => {
                                 <div class="featured-company-img">
                                     <div class="box-img">
                                         <a href="https://www.topcv.vn/brand/ctycpdatxanhmiennam?id=153046" target="_blank">
-                                        <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
+                                            <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
                                         </a>
                                     </div>
                                 </div>

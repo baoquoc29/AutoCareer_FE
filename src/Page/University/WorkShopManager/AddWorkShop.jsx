@@ -157,11 +157,10 @@ const AddWorkShop = ({ visible, onCancel, onFinish }) => {
 
 
     const disableExpirationDate = (current) => {
-        const startDate = form.getFieldValue("startDate");
         const endDate = form.getFieldValue("endDate");
-        if (!startDate || !endDate) return true; // Nếu chưa chọn ngày bắt đầu/kết thúc, disable tất cả
+        if (!endDate) return true; // Nếu chưa chọn ngày bắt đầu/kết thúc, disable tất cả
         // Disable dates outside the range of startDate and endDate, including hour and minute
-        return current && (current < dayjs(startDate).startOf('minute') || current > dayjs(endDate).endOf('minute'));
+        return current && (current > dayjs(endDate).endOf('minute'));
     };
 
     const handleStartDateChange = (value) => {
