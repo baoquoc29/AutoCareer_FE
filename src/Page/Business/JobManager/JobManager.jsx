@@ -152,7 +152,10 @@ const JobManager = () => {
             workingTime: job.workingTime,
             statusBrowse: job.statusBrowse,
             status: job.status,
-            createBy: job.createBy
+            createBy: job.createBy,
+            wards: job.wards,
+            districts: job.districts,
+            province: job.province
         }))
         : [];
 

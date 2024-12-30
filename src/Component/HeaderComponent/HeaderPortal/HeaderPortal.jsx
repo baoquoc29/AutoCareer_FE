@@ -67,6 +67,11 @@ const HeaderPortal = () => {
         window.location.href = `/work-shop-all`;
     };
 
+    const handleToJobClick = () => {
+        window.location.href = `/job-all-portal`;
+    };
+
+
     const handleRegisterClick = () => {
         window.location.href = '/account-type-selection';
     };
@@ -166,7 +171,7 @@ const HeaderPortal = () => {
                         selectedKeys={[currentPath]} // Đặt selectedKeys là đường dẫn hiện tại
                     >
                         {userData?.role?.name !== "BUSINESS" && (
-                            <Menu.Item key="/job-section" onClick={() => navigate('/job-section')}>
+                            <Menu.Item key="/job-all-portal" onClick={handleToJobClick}>
                                 Việc làm
                             </Menu.Item>
                         )}

@@ -52,7 +52,7 @@ const HomeScreen = () => {
 
             {/* Phần hiển thị tùy thuộc vào vai trò */}
             {userRole !== "BUSINESS" && (
-                <div className="job-section">
+                <div className="job-all-portal">
                     <JobPortal/>
                 </div>
             )}
