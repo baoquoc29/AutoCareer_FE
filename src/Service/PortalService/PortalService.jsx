@@ -24,6 +24,9 @@ export class PortalService extends baseService {
     get_list_business_home_portal = () => {
         return this.getResponse(`api/business/list-home`);
     }
+    get_list_university_home_portal = () => {
+        return this.getResponse(`api/university/list-home`);
+    }
     get_job_by_salary = (page, size, minSalary, maxSalary) => {
         return this.getResponse(`api/job/salary?page=${page}&size=${size}&minSalary=${minSalary}&maxSalary=${maxSalary}`);
     }

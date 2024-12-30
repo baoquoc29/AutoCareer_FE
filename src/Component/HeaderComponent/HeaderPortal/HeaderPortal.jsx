@@ -16,18 +16,18 @@ import {
     UserOutlined
 } from "@ant-design/icons";
 
-const { Header: AntHeader } = Layout;
+const {Header: AntHeader} = Layout;
 
 const HeaderPortal = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { isAuthenticated, userData } = useSelector(state => state.UserReducer);
+    const {isAuthenticated, userData} = useSelector(state => state.UserReducer);
     const location = useLocation();
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [newPassword, setNewPassword] = React.useState('');
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [currentPassword, setCurrentPassword] = React.useState('');
-    const { Title } = Typography;
+    const {Title} = Typography;
     const handleChangePasswordClick = () => {
         setIsModalVisible(true);
     };
@@ -38,14 +38,14 @@ const HeaderPortal = () => {
         form.submit();
     };
     const onFinish = (values) => {
-        const { currentPassword, newPassword, confirmPassword } = values;
+        const {currentPassword, newPassword, confirmPassword} = values;
         console.log('Mật khẩu hiện tại:', currentPassword);
         console.log('Mật khẩu mới:', newPassword);
         console.log('Xác nhận mật khẩu:', confirmPassword);
         const requestBody = {
-            username : userData?.username,
-            password : currentPassword,
-            newPassword : newPassword,
+            username: userData?.username,
+            password: currentPassword,
+            newPassword: newPassword,
             reNewPassword: confirmPassword,
 
         };
@@ -85,8 +85,7 @@ const HeaderPortal = () => {
             window.open('/admin', '_blank');
         } else if (userData?.role?.name === "EMPLOYEE") {
             window.open('/job-manager', '_blank');
-        }
-        else if (userData?.role?.name === "SUB-ADMIN") {
+        } else if (userData?.role?.name === "SUB-ADMIN") {
             window.open('/admin', '_blank');
         } else if (userData?.role?.name === "EMPLOYEE") {
             window.open('/job-manager', '_blank');
@@ -111,34 +110,29 @@ const HeaderPortal = () => {
     };
 
     const menuItems = userData?.role?.name === 'UNIVERSITY' ? [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/profile') },
-        { key: '2', label: 'Quản lý & đăng bài', icon: <SettingOutlined />, onClick: handleToManagerClick },
-        { key: '3', label: 'Đổi mật khẩu', icon: <LockOutlined />, onClick: () => handleChangePasswordClick() },
-        { key: '4', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+        {key: '1', label: 'Quản lý & đăng bài', icon: <SettingOutlined/>, onClick: handleToManagerClick},
+        {key: '2', label: 'Đổi mật khẩu', icon: <LockOutlined/>, onClick: () => handleChangePasswordClick()},
+        {key: '3', label: 'Đăng xuất', icon: <LogoutOutlined/>, onClick: handleLogout}
     ] : userData?.role?.name === 'ADMIN' ? [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/admin') },
-        { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />, onClick: handleToManagerClick },
-        { key: '3', label: 'Đổi mật khẩu', icon: <LockOutlined />, onClick: () => handleChangePasswordClick() },
-        { key: '4', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+        {key: '1', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined/>, onClick: handleToManagerClick},
+        {key: '2', label: 'Đổi mật khẩu', icon: <LockOutlined/>, onClick: () => handleChangePasswordClick()},
+        {key: '3', label: 'Đăng xuất', icon: <LogoutOutlined/>, onClick: handleLogout}
     ] : userData?.role?.name === 'BUSINESS' ? [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/business') },
-        { key: '2', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined />, onClick: handleToManagerClick },
-        { key: '3', label: 'Đổi mật khẩu', icon: <LockOutlined />, onClick: () => handleChangePasswordClick() },
-        { key: '4', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+        {key: '1', label: 'Quản lý người dùng', icon: <UsergroupDeleteOutlined/>, onClick: handleToManagerClick},
+        {key: '2', label: 'Đổi mật khẩu', icon: <LockOutlined/>, onClick: () => handleChangePasswordClick()},
+        {key: '3', label: 'Đăng xuất', icon: <LogoutOutlined/>, onClick: handleLogout}
     ] : userData?.role?.name === 'SUB_ADMIN' ? [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/admin') },
-        { key: '2', label: 'Quản lý người dùng', icon: <EditOutlined />, onClick: handleToManagerClick },
-        { key: '3', label: 'Đổi mật khẩu', icon: <LockOutlined />, onClick: () => handleChangePasswordClick() },
-        { key: '4', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+        {key: '1', label: 'Quản lý người dùng', icon: <EditOutlined/>, onClick: handleToManagerClick},
+        {key: '2', label: 'Đổi mật khẩu', icon: <LockOutlined/>, onClick: () => handleChangePasswordClick()},
+        {key: '3', label: 'Đăng xuất', icon: <LogoutOutlined/>, onClick: handleLogout}
     ] : userData?.role?.name === 'EMPLOYEE' ? [
-        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined />, onClick: () => navigate('/business') },
-        { key: '2', label: 'Quản lý công việc', icon: <ProjectOutlined />, onClick: handleToManagerClick },
-        { key: '3', label: 'Đổi mật khẩu', icon: <LockOutlined />, onClick: () => handleChangePasswordClick() },
-        { key: '4', label: 'Đăng xuất', icon: <LogoutOutlined />, onClick: handleLogout }
+        {key: '1', label: 'Quản lý công việc', icon: <ProjectOutlined/>, onClick: handleToManagerClick},
+        {key: '2', label: 'Đổi mật khẩu', icon: <LockOutlined/>, onClick: () => handleChangePasswordClick()},
+        {key: '3', label: 'Đăng xuất', icon: <LogoutOutlined/>, onClick: handleLogout}
     ] : [];
 
     const menu = (
-        <Menu items={menuItems} />
+        <Menu items={menuItems}/>
     );
     const getValidationMessage = (fieldName, value) => {
         const isPasswordField = ['currentPassword', 'newPassword', 'confirmPassword'].includes(fieldName);
@@ -200,8 +194,10 @@ const HeaderPortal = () => {
                 <div className="header-buttons-portal">
                     {!isAuthenticated ? (
                         <>
-                            <Button type="default" className="btn-login-portal" onClick={handleLoginClick}>Đăng nhập</Button>
-                            <Button type="primary" className="btn-register-portal" onClick={handleRegisterClick}>Đăng ký</Button>
+                            <Button type="default" className="btn-login-portal" onClick={handleLoginClick}>Đăng
+                                nhập</Button>
+                            <Button type="primary" className="btn-register-portal" onClick={handleRegisterClick}>Đăng
+                                ký</Button>
                         </>
                     ) : (
                         <Dropdown overlay={menu} placement="bottomRight" arrow>
@@ -209,7 +205,7 @@ const HeaderPortal = () => {
                                 <Space>
                                     <Avatar
                                         src={`${DOMAIN}/api/v1/image/resource?imageId=${userData?.university?.logoImageId || userData?.business?.businessImageId}`}
-                                        style={{backgroundColor: '#3E7494'  , objectFit: 'scale-down' }}
+                                        style={{backgroundColor: '#3E7494', objectFit: 'scale-down'}}
                                         icon={<UserOutlined/>}
                                     />
                                     <span style={{fontWeight: 500, fontSize: '16px'}}>
@@ -231,24 +227,24 @@ const HeaderPortal = () => {
                 okText="Xác nhận"
                 cancelText="Hủy"
             >
-                <Title level={5} style={{ textAlign: 'center' }}>Đổi mật khẩu</Title>
+                <Title level={5} style={{textAlign: 'center'}}>Đổi mật khẩu</Title>
                 <Form
                     onFinish={onFinish}
                     form={form}
                     name="change-password"
-                    labelCol={{ span: 10 }} // Tăng khoảng cách cho label
-                    wrapperCol={{ span: 16 }}
+                    labelCol={{span: 10}} // Tăng khoảng cách cho label
+                    wrapperCol={{span: 16}}
                     layout="horizontal"
                     labelAlign="left" // Căn label sang trái
-                    style={{ maxWidth: 400, margin: '0 auto' }}
+                    style={{maxWidth: 400, margin: '0 auto'}}
                 >
                     <Form.Item
                         label="Mật khẩu hiện tại"
                         name="currentPassword"
-                        style={{ marginBottom: '16px' }}
+                        style={{marginBottom: '16px'}}
                         rules={[
-                            { required: true,message: ""  },
-                            { validator: (_, value) => getValidationMessage('currentPassword', value) ? Promise.reject(getValidationMessage('currentPassword', value)) : Promise.resolve() }
+                            {required: true, message: ""},
+                            {validator: (_, value) => getValidationMessage('currentPassword', value) ? Promise.reject(getValidationMessage('currentPassword', value)) : Promise.resolve()}
                         ]}
                     >
                         <Input.Password
@@ -262,10 +258,10 @@ const HeaderPortal = () => {
                         label="Mật khẩu mới"
                         name="newPassword"
                         rules={[
-                            { required: true,message: ""  },
-                            { validator: (_, value) => getValidationMessage('newPassword', value) ? Promise.reject(getValidationMessage('newPassword', value)) : Promise.resolve() }
+                            {required: true, message: ""},
+                            {validator: (_, value) => getValidationMessage('newPassword', value) ? Promise.reject(getValidationMessage('newPassword', value)) : Promise.resolve()}
                         ]}
-                        style={{ marginBottom: '16px' }}
+                        style={{marginBottom: '16px'}}
                     >
                         <Input.Password
                             value={newPassword}
@@ -278,8 +274,8 @@ const HeaderPortal = () => {
                         label="Xác nhận mật khẩu"
                         name="confirmPassword"
                         rules={[
-                                    { required: true,message: ""  },
-                            { validator: (_, value) => getValidationMessage('confirmPassword', value) ? Promise.reject(getValidationMessage('confirmPassword', value)) : Promise.resolve() },
+                            {required: true, message: ""},
+                            {validator: (_, value) => getValidationMessage('confirmPassword', value) ? Promise.reject(getValidationMessage('confirmPassword', value)) : Promise.resolve()},
                             {
                                 validator: (_, value) => {
                                     if (!value || value === newPassword) {
@@ -289,7 +285,7 @@ const HeaderPortal = () => {
                                 },
                             },
                         ]}
-                        style={{ marginBottom: '16px' }}
+                        style={{marginBottom: '16px'}}
                     >
                         <Input.Password
                             value={confirmPassword}
@@ -299,7 +295,6 @@ const HeaderPortal = () => {
                     </Form.Item>
                 </Form>
             </Modal>
-
 
 
         </AntHeader>

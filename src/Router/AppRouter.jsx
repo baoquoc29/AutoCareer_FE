@@ -54,6 +54,8 @@ import HomeSearchBusiness from "../Page/Portal/BusinessPortal/HomeSearchBusiness
 import CooperationBusinessManager from "../Page/Business/CooperationBusinessManager/CooperationBusinessManager";
 import CooperationBusinessDetail from "../Page/Business/CooperationBusinessManager/CooperationBusinessDetail";
 import JobListPortal from "../Page/Portal/JobListPortal";
+import HomeUniversityPortal from "../Page/Portal/University/HomeUniversityPortal";
+import HomeSearchUniversity from "../Page/Portal/University/HomeSearchUniversity";
 
 export function AppRouter() {
     return (
@@ -74,6 +76,10 @@ export function AppRouter() {
                     <Route path={"/business-section"} element={<HomeBusinessPortal/>}/>
                     <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
                     <Route path={"/job-all-portal"} element={<JobListPortal/>}/>
+                    <Route path={"/home-search-university"} element={<HomeSearchUniversity/>}/>
+                    <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
+                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
+                    <Route path={"/university-section"} element={<HomeUniversityPortal/>}/>
 
                 </Route>
                 <Route element={<PrivateRoute>{" "}<UniversityTemplate/>{" "}</PrivateRoute>}>
@@ -103,8 +109,6 @@ export function AppRouter() {
                     <Route path={"/job-create"} element={<JobCreate />} />
                     <Route path={"/job-update"} element={<JobUpdate />} />
                     <Route path={"/job-detail"} element={<JobDetail />} />
-                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage />} />
-                    <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
                     <Route path={"/cooperation-business-manager"} element={<CooperationBusinessManager/>}/>
                     <Route path={"/cooperation-business-detail"} element={<CooperationBusinessDetail/>}/>
                     <Route path={"/business-workshop-detail"} element={<WorkshopBusinessDetail/>}/>

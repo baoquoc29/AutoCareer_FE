@@ -7,7 +7,6 @@ import {
 } from "@ant-design/icons";
 import React from "react";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
-import dayjs from "dayjs";
 
 const CooperationTable=({data,onInfo, onApprove, onReject}) => {
     const columns = [

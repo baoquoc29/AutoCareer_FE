@@ -1,32 +1,51 @@
 /* Footer container */
 .footer {
-    background-color: #FFFFFF;
-    color: black;
-    padding: 30px 0;
+    background-color: #24447f;
+
+    padding: 50px 0;
     border-top: 1px solid #1c1c23; /* Đặt màu và độ dày của đường gạch ngang */
     text-align: center;
 }
 
 /* Footer content section */
 .footer-content {
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
     margin: 0 auto;
     padding: 10px 20px;
     flex-wrap: wrap;
 }
 
+.footer-left {
+    display: flex;
+}
+
+.footer-left img {
+    width: 100px;
+    height: 100px;
+    margin-right: 3rem;
+}
+
 /* Left section */
 .footer-left h2 {
+    color: white;
     font-size: 24px;
     margin-bottom: 10px;
 }
 
 .footer-left p {
+    color: white;
     font-size: 14px;
     opacity: 0.7;
+}
+
+.footer-title {
+    display: inline-flex;
+    flex-direction: column;
+    /*align-items: center;*/
+    justify-content: center;
 }
 
 /* Center section (links) */
@@ -36,22 +55,28 @@
 }
 
 .footer-center ul li {
-    margin: 10px 0;
+    /*margin: 10px 0;*/
 }
 
 .footer-center ul li a {
-    color: black;
+    color: white;
     text-decoration: none;
     font-size: 16px;
 }
 
 .footer-center ul li a:hover {
-    color: #084f93;
+    color: black;
 }
 
 /* Right section (social icons) */
 .footer-right h3 {
+    color: white;
     font-size: 18px;
     margin-bottom: 10px;
+}
+
+.icons {
+    color: white;
+
 }
 

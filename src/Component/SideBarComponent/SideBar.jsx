@@ -11,6 +11,7 @@ export function SideBar({userName, userRole, profileImg, menuItems,caption }) {
             [index]: !prevState[index],
         }));
     };
+
     return (
         <>
             <nav id="mainnav-container" className="mainnav">

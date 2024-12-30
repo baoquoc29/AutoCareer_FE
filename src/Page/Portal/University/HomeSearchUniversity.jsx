@@ -3,10 +3,11 @@ import {useLocation, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import HeaderPortal from "../../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
 import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
-import { get_all_result_search_business_page } from "../../../Redux/actions/BusinessThunk";
-import "./CSS/HomeSearchBusiness.css";
+import "./CSS/HomeSearchUniversity.css";
 import {Pagination} from "antd";
-import {get_all_business_home_portal} from "../../../Redux/actions/PortalThunk";
+import {get_all_business_home_portal, get_all_university_home_portal} from "../../../Redux/actions/PortalThunk";
+import {get_all_result_search_university_page} from "../../../Redux/actions/UniversityThunk";
+import {UniversityReducer} from "../../../Redux/reducers/UniversityReducer";
 
 const HomeSearchBusiness = () => {
     const location = useLocation();
@@ -14,16 +15,16 @@ const HomeSearchBusiness = () => {
     const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery || "");
     const [currentPage, setCurrenPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
-    const totalElements = useSelector((state) => state.BusinessReducer.totalElements);
+    const totalElements = useSelector((state) => state.UniversityReducer.totalElements);
     const [load, setLoad] = useState(false);
-    const resultSearchBusiness = useSelector((state) => state.BusinessReducer.resultSearchBusiness);
-    const businessTop= useSelector((state) => state.PortalReducer.businessListHome);
+    const resultSearchUniversity = useSelector((state) => state.UniversityReducer.resultSearchUniversity);
+    const universityTop= useSelector((state) => state.PortalReducer.universityListHome);
     const navigate = useNavigate();
 
-    console.log(resultSearchBusiness)
+    console.log(resultSearchUniversity)
     useEffect(() => {
-        dispatch(get_all_result_search_business_page(currentPage, pageSize, encodeURIComponent(searchQuery)));
-        dispatch(get_all_business_home_portal())
+        dispatch(get_all_result_search_university_page(currentPage, pageSize, encodeURIComponent(searchQuery)));
+        dispatch(get_all_university_home_portal())
     }, [dispatch, currentPage, searchQuery, pageSize, load]);
 
     const handleSearchChange = (e) => {
@@ -86,11 +87,11 @@ const HomeSearchBusiness = () => {
                                 bạn</strong>
                         </p>
                         <div className="company-list">
-                            {resultSearchBusiness.map((business) => (
+                            {resultSearchUniversity.map((university) => (
                                 <div className="company-item company-item-hover">
-                                    <a onClick={() => navigate(`/business-portal-detail`, { state: { businessId: business?.id } })} className="item-logo-business">
+                                    <a onClick={() => navigate(`/university-portal-detail`, { state: { businessId: university?.id } })} className="item-logo-business">
                                         <img className="item-logo-business-img"
-                                             src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'}
+                                             src={university?.imageID ? `${GET_IMAGE_URI}${university?.imageID}` : 'placeholder-avatar.jpg'}
                                              alt="FPT Shop"
                                         />
                                     </a>
@@ -98,13 +99,13 @@ const HomeSearchBusiness = () => {
                                         <div className="item-info-business-title">
                                             <strong>
                                                 <a className="item-info-business-company-name"
-                                                   onClick={() => navigate(`/business-portal-detail`, {state: {businessId: business?.id}})}
-                                                   target="_blank">{business?.name}
+                                                   onClick={() => navigate(`/university-portal-detail`, {state: {businessId: university?.id}})}
+                                                   target="_blank">{university?.name}
                                                 </a>
                                             </strong>
                                             <span className="item-info-business-countJob">
                                             <i className="fa-solid fa-circle circle"></i>
-                                            Đang tuyển {business?.totalJobRecruit} vị trí
+                                            Đang tuyển {university?.totalJobRecruit} vị trí
                                         </span>
                                         </div>
 
@@ -120,14 +121,14 @@ const HomeSearchBusiness = () => {
                                             }}>
                                                 Trụ sở chính:
                                             </span>
-                                                {business?.province}, {business?.district}, {business?.ward}, {business?.locationDescription}.
+                                                {university?.province}, {university?.district}, {university?.ward}, {university?.locationDescription}.
                                         </span>
                                         </div>
 
                                         <div className="item-info-business-description">
                                             <i className="fa-solid fa-circle-info"></i>
                                             <p style={{color: 'black'}}>
-                                                {truncateDescription(business?.description, 170)}
+                                                {truncateDescription(university?.description, 170)}
                                             </p>
                                         </div>
                                     </div>
@@ -151,11 +152,11 @@ const HomeSearchBusiness = () => {
                     <div className="sidebar-business-search">
                         <h3 className="sidebar-business-search-h3">Nhà tuyển dụng hàng đầu</h3>
                         <div className="image-business-home-search">
-                            {businessTop.map((business) => (
+                            {universityTop.map((business) => (
                                 <div class="featured-company-img">
                                     <div class="box-img">
                                         <a href="https://www.topcv.vn/brand/ctycpdatxanhmiennam?id=153046" target="_blank">
-                                        <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="employer"/>
+                                        <img src={business?.imageID ? `${GET_IMAGE_URI}${business?.imageID}` : 'placeholder-avatar.jpg'} alt="university"/>
                                         </a>
                                     </div>
                                 </div>

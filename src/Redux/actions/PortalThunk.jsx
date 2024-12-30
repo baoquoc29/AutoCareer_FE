@@ -3,7 +3,7 @@ import {
     CHECK_STATUS_REQUEST,
     ERROR_PAGE,
     GET_ALL_BUSINESS_FEATURE, GET_ALL_BUSINESS_HOME,
-    GET_ALL_JOB_LIST,
+    GET_ALL_JOB_LIST, GET_ALL_UNIVERSITY_HOME,
     GET_TOTAL_JOB_INDUSTRY,
     GET_UNIVERSITY_TOTAL,
     GET_WORK_SHOP_BY_ID,
@@ -202,6 +202,19 @@ export const get_all_business_home_portal = () => {
             const res = await portalService.get_list_business_home_portal()
             dispatch({
                 type: GET_ALL_BUSINESS_HOME,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_all_university_home_portal = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_list_university_home_portal()
+            dispatch({
+                type: GET_ALL_UNIVERSITY_HOME,
                 payload: res
             })
         } catch (error) {
