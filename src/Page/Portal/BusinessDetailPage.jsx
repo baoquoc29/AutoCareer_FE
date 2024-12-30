@@ -89,7 +89,7 @@ const BusinessDetailPage = () => {
                                                         width: 150,
                                                         height: 150,
                                                         borderRadius: "50%",
-                                                        objectFit: "cover",
+                                                        objectFit: "scale-down",
                                                     }}
                                                 />
                                             </Col>
