@@ -8,13 +8,16 @@ import {
     accept_company_work_shop, get_all_company_accept,
     get_all_company_pending, reject_company_work_shop,
 } from "../../../Redux/actions/WorkShopThunk";
+import { useNavigate } from "react-router-dom";
 import {toast} from "react-toastify";
+import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 
 const { Text } = Typography;
 
 const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCompanies }) => {
     const { title, description, startDate, endDate, expireDate, workshopImageId, location } = workshop;
     const { province, district, ward, description: addressDescription } = location || {};
+    const navigate = useNavigate();
     const imageWorkshop = workshopImageId ? `${DOMAIN}/api/v1/image/resource?imageId=${workshopImageId}` : "";
     const dispatch = useDispatch();
     const { pendingCompany } = useSelector(state => state.WorkShopReducer);
@@ -31,7 +34,11 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
 
     const showModalPendingCompanies = () => setIsModalPendingCompaniesVisible(true);
     const handleCancelPendingCompanies = () => setIsModalPendingCompaniesVisible(false);
-
+    const handleDetailsBusinessPortal = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/business-portal-detail/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
+    };
     useEffect(() => {
         dispatch(get_all_company_pending(workshop.id));
          dispatch(get_all_company_accept(workshop.id));
@@ -213,9 +220,10 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                                        <Button
                                            key={`view-${item.id}`} // Unique key for this button
                                            icon={<EyeOutlined />}
+                                           onClick={() => navigate(`/business-portal-detail`, { state: { businessId: item.id } })}
                                            type="link"
-                                           onClick={() => onViewCompanyList(item)}
-                                       />,
+                                       />
+
                                    ]}
                         >
                             <span>{item.name}</span>
@@ -263,7 +271,7 @@ const WorkShopDetails = ({ workshop, onBack, onViewCompanyList, onViewPendingCom
                                                key={`view-${item.id}`} // Unique key for this button
                                                type="link"
                                                icon={<EyeOutlined />}
-                                               onClick={() => onViewPendingCompanies(item, "view")}
+                                               onClick={() => handleDetailsBusinessPortal(item.id)}
                                            />,
                                        ]}
                             >

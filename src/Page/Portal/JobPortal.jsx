@@ -26,18 +26,6 @@ const defaultLocations = [
     { id: 79, name: "Thành phố Hồ Chí Minh" },
 ];
 
-const salary = [
-    "Tất cả", "Dưới 10 triệu", "Từ 10-15 triệu", "Từ 15-20 triệu", "Từ 20-25 triệu", "Từ 25-30 triệu", "Thoả thuận"
-];
-
-const undergraduateStudent = [
-    { id: 0, name: "Tất cả" },
-    { id: 1, name: "Sinh viên năm 1" },
-    { id: 2, name: "Sinh viên năm 2" },
-    { id: 3, name: "Sinh viên năm 3" },
-    { id: 4, name: "Sinh viên năm 4" },
-    { id: 5, name: "Vừa ra trường" },
-];
 
 const JobPortal = () => {
 
@@ -67,14 +55,6 @@ const JobPortal = () => {
         switch (filter) {
             case "location":
                 setFilteredOptions(defaultLocations);
-                setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
-                break;
-            case "salary":
-                setFilteredOptions(salary.map((name, index) => ({ id: index, name })));
-                setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
-                break;
-            case "experience":
-                setFilteredOptions(undergraduateStudent);
                 setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
                 break;
             case "industry":
@@ -247,7 +227,16 @@ const JobPortal = () => {
                         <p className="icon-business"/> {job.businessName}
                     </p>
                     <p className="salary">
-                        <p className="icon-salary"/> {job.salary} triệu
+                        <p className="icon-salary">
+                            {job.fromSalary && job.fromSalary !== 1
+                                ? new Intl.NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND',
+                                }).format(job.fromSalary)
+                                : 'Thoả thuận'}
+                        </p>
+
+
                     </p>
                 </div>
 
@@ -259,7 +248,7 @@ const JobPortal = () => {
                     <FaMapMarkerAlt className="icon-location"/> {job.province}
                 </p>
                 <p className={"job-location-requirement"}>
-                    <FaFileAlt className="icon-requirement"/> Sinh viên năm {job.level}
+                    <FaFileAlt className="icon-requirement"/> {job.level}
                 </p>
                 <p className={"job-location-expireDate"}>
                     <FaCalendarAlt className="icon-calendar"/> {job.expireDate}
@@ -362,7 +351,13 @@ const JobPortal = () => {
                                     </Popover>
                                     <p className="job-portal-card-company">{job.businessName}</p>
                                     <div className="job-portal-card-location-salary">
-                                        <span className="job-portal-card-tag">{job.salary}</span>
+                           <span className="job-portal-card-tag">
+{job.fromSalary && job.fromSalary !== 1
+    ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(job.fromSalary)
+    : 'Thoả thuận'}
+
+</span>
+
                                         <span className="job-portal-card-tag">{job.province}</span>
                                     </div>
                                 </div>
