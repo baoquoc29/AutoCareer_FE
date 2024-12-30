@@ -7,7 +7,7 @@ import {Card, Divider} from "antd";
 import {get_total_ins} from "../../Redux/actions/InstructionalThunk";
 import {get_count_major_by_section, get_total_section} from "../../Redux/actions/SectionThunk";
 import {count_student_major, get_total_major, get_total_student} from "../../Redux/actions/MajorThunk";
-import {get_status_workShop, get_total_workshop} from "../../Redux/actions/WorkShopThunk";
+import {get_approved_workShop, get_status_workShop, get_total_workshop} from "../../Redux/actions/WorkShopThunk";
 import {get_total_cooperation} from "../../Redux/actions/CooperationThunk";
 import './Style/University.css'
 import CountUp from "react-countup";
@@ -27,7 +27,7 @@ export function University() {
     const totalInstruction = useSelector(state => state.InstructionalReducer.totalInstruction)
     const {totalSections} = useSelector(state => state.SectionReducer)
     const {totalStudent, totalMajor, countStudentMajor} = useSelector(state => state.MajorReducer)
-    const {totalWorkShop, statusWorkShop} = useSelector(state => state.WorkShopReducer)
+    const {totalWorkShop, statusWorkShop,totalApprovedWorkShop} = useSelector(state => state.WorkShopReducer)
     const totalCooperation = useSelector(state => state.CooperationReducer.totalCooperation)
 
     useEffect(() => {
@@ -40,6 +40,7 @@ export function University() {
         dispatch(get_count_major_by_section())
         dispatch(count_student_major(university?.id))
         dispatch(get_status_workShop())
+        dispatch(get_approved_workShop(university?.id))
     }, [dispatch]);
     useEffect(() => {
         if (university?.id) {
@@ -49,7 +50,7 @@ export function University() {
     const formattedDate = new Date().toLocaleDateString();
 
 
-
+    console.log('data',totalApprovedWorkShop)
 
     // Dữ liệu cho Bar Chart từ countStudentMajor
     const chartBarData2 = Object.values(countStudentMajor);
@@ -67,34 +68,20 @@ export function University() {
         (major, index) => chartBarData2[index] === minStudentCount
     );
 
-    // Dữ liệu cho Bar Chart từ statusWorkShop
-    const chartLabels = statusWorkShop.map(item => item.name);
-    const approvedData = statusWorkShop.map(item => item.approved);
-    const pendingData = statusWorkShop.map(item => item.pending);
 
-    const chartData = [
-        {
-            label: 'Duyệt ',
-            data: approvedData,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-        },
-        {
-            label: 'Chờ duyệt',
-            data: pendingData,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-        }
-    ];
-    // Tìm sự kiện có số lượt chấp nhận nhiều nhất và ít nhất
-    const maxApproveCount = Math.max(...approvedData); // Lấy số lượt chấp nhận lớn nhất
-    const minApproveCount = Math.min(...approvedData); // Lấy số lượt chấp nhận nhỏ nhất
+    // Dữ liệu cho Bar Chart từ totalApprovedWorkShop
+    const chartBarData = totalApprovedWorkShop.map(workshop => workshop["countApproved"]);
+    const chartLabelsBar = totalApprovedWorkShop.map(workshop => workshop["nameWorkshop"]);
 
-// Lọc các sự kiện có số lượt chấp nhận nhiều nhất và ít nhất
-    const maxApprovedEvents = statusWorkShop.filter(item => item.approved === maxApproveCount);
-    const minApprovedEvents = statusWorkShop.filter(item => item.approved === minApproveCount);
+    // Tìm sự kiện có số lượng được phê duyệt nhiều nhất và ít nhất
+    const maxCountApproved = Math.max(...chartBarData);
+    const minCountApproved = Math.min(...chartBarData);
+
+    const maxApprovedWorkshops = totalApprovedWorkShop.filter(workshop => workshop["countApproved"] === maxCountApproved);
+    const minApprovedWorkshops = totalApprovedWorkShop.filter(workshop => workshop["countApproved"] === minCountApproved);
+
+    // Kiểm tra nếu không có sự kiện nào hoặc tất cả các sự kiện đều có countApproved bằng 0
+    const noData = totalApprovedWorkShop.length === 0 || maxCountApproved === 0;
 
     return (
         <>
@@ -227,44 +214,40 @@ export function University() {
                                             <FireOutlined style={{color: "#ff4d4f", marginRight: "8px"}}/>
                                             Sự kiện tham gia nhiều
                                         </Divider>
-                                        <p style={{fontWeight: 'bold'}}>
-                                            {maxApprovedEvents.map((event, index) => (
-                                                <span key={index}>
-                                                    {event.name} ({event.approved} lượt chấp nhận)
-                                                    <br/>
-                                                </span>
-                                            ))}
-                                        </p>
+                                        {noData ? (
+                                            <p>Không có dữ liệu</p>
+                                        ) : (
+                                            maxApprovedWorkshops.map((workshop, index) => (
+                                                <p key={index} style={{fontWeight: 'bold'}}>
+                                                    {workshop["nameWorkshop"]} - {workshop["countApproved"]} người tham gia
+                                                </p>
+                                            ))
+                                        )}
                                     </Card>
                                     <Card className="card-infoMajor-barChart mt-5">
                                         <Divider orientation="left">
                                             <FireOutlined style={{color: "#ff4d4f", marginRight: "8px"}}/>
                                             Sự kiện tham gia ít
                                         </Divider>
-                                        <p style={{fontWeight: 'bold'}}>
-                                            {minApprovedEvents.map((event, index) => (
-                                                <span key={index}>
-                                                    {event.name} ({event.approved} lượt chấp nhận)
-                                                    <br/>
-                                                 </span>
-                                            ))}
-                                        </p>
+                                        {noData ? (
+                                            <p>Không có dữ liệu</p>
+                                        ) : (
+                                            minApprovedWorkshops.map((workshop, index) => (
+                                                <p key={index} style={{fontWeight: 'bold'}}>
+                                                    {workshop["nameWorkshop"]} - {workshop["countApproved"]} người tham gia
+                                                </p>
+                                            ))
+                                        )}
                                     </Card>
                                 </div>
                             </div>
                             <div className="col-9 mt-3">
-                                <BarChartComponent
-                                    data={chartData}
-                                    labels={chartLabels}
-                                    title="Thống kê trạng thái sự kiện "
-                                />
+                                <BarChartComponent data={chartBarData} labels={chartLabelsBar} title="Số lượng doanh nghiệp tham gia sự kiện " />
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
-
         </>
     );
 }

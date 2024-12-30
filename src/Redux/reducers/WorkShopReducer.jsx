@@ -6,7 +6,12 @@ import {
     GET_ALL_WARD_BY_ID_DISTRICT,
     DELETE_WORK_SHOP,
     UPDATE_WORK_SHOP,
-    GET_ALL_COMPANY_PENDING, GET_ALL_COMPANY_ACCEPT, GET_TOTAL_WORK_SHOP, GET_STATUS_WORK_SHOP, GET_WORK_SHOP_BUSINESS
+    GET_ALL_COMPANY_PENDING,
+    GET_ALL_COMPANY_ACCEPT,
+    GET_TOTAL_WORK_SHOP,
+    GET_STATUS_WORK_SHOP,
+    GET_WORK_SHOP_BUSINESS,
+    GET_COUNT_APPROVED_WORK_SHOP
 } from "../types/WorkShopType";
 import {CLEAR_RESPONSE} from "../../Utils/Setting/Config";
 
@@ -22,6 +27,7 @@ const initialState = {
     responseWorkShop: null,
     totalWorkShop: 0,
     statusWorkShop: [],
+    totalApprovedWorkShop: [],
 };
 
 
@@ -109,6 +115,11 @@ export const WorkShopReducer = (state = initialState, action) => {
             return {
                ...state,
                 statusWorkShop: action.payload,
+            };
+        case GET_COUNT_APPROVED_WORK_SHOP:
+            return {
+               ...state,
+                totalApprovedWorkShop: action.payload,
             };
         default:
             return state;

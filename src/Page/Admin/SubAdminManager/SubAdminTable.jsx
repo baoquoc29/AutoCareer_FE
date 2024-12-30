@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Space, Table, Tag, Tooltip } from "antd";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
+import {Button, Space, Table, Tag, Tooltip} from "antd";
+import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 
-const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
+const SubAdminTable = ({data, onInfo, onEdit, onDelete}) => {
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/A"; // Trả về "N/A" nếu không có ngày giờ
@@ -15,17 +15,17 @@ const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
     };
     const columns = [
         {
-            title:"STT",
+            title: "STT",
             dataIndex: "stt",
             key: "stt",
             align: 'center', // Giữ căn giữa
         }, {
-            title:"Mã quản trị viên",
+            title: "Mã quản trị viên",
             dataIndex: "subAdminCode",
             key: "subAdminCode",
             align: 'left', // Giữ căn giữa
         }, {
-            title:"Ảnh",
+            title: "Ảnh",
             dataIndex: "subAdminImageId",
             key: "subAdminImageId",
             align: 'center', // Giữ căn giữa
@@ -44,7 +44,7 @@ const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
                 />
             ),
         }, {
-            title:"Họ và tên",
+            title: "Họ và tên",
             dataIndex: "name",
             key: "name",
             align: 'left', // Căn trái
@@ -52,7 +52,7 @@ const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
                 return name && name.length > 35 ? `${name.slice(0, 35)} ....` : name;
             },
         }, {
-            title:"Email",
+            title: "Email",
             dataIndex: "email",
             key: "email",
             align: 'left', // Căn trái
@@ -65,7 +65,7 @@ const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
                 return formatDate(createdAt);
             }
         }, {
-            title:"Trạng thái",
+            title: "Trạng thái",
             key: "status",
             dataIndex: "status",
             align: 'center', // Giữ căn giữa
@@ -94,19 +94,21 @@ const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
                 );
             },
         }, {
-            title:"Thao tác",
+            title: "Thao tác",
             key: 'actions',
             align: 'center', // Giữ căn giữa
             render: (text, record) => (
-                <Space size="small" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Space size="small" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Tooltip title="Xem chi tiết">
-                        <Button type={"primary"} icon={<EyeOutlined />} onClick={() => onInfo(record)} />
+                        <Button type={"primary"} icon={<EyeOutlined/>} onClick={() => onInfo(record)}/>
                     </Tooltip>
                     <Tooltip title="Chỉnh sửa">
-                        <Button style={{ backgroundColor: "yellow" }} icon={<EditOutlined />} onClick={() => onEdit(record.id)} />
+                        <Button style={{backgroundColor: "yellow"}} icon={<EditOutlined/>}
+                                onClick={() => onEdit(record.id)}/>
                     </Tooltip>
                     <Tooltip title="Xóa">
-                        <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined />} onClick={() => onDelete(record.id)} />
+                        <Button variant={"solid"} color={"danger"} icon={<DeleteOutlined/>}
+                                onClick={() => onDelete(record.id)}/>
                     </Tooltip>
                 </Space>
             ),
@@ -116,7 +118,13 @@ const SubAdminTable = ({ data, onInfo, onEdit, onDelete }) => {
 
     return (
         <>
-            <Table  columns={columns} dataSource={data} pagination={false} rowKey="id" />
+            <Table columns={columns}
+                   dataSource={data}
+                   pagination={false} rowKey="id"
+                   locale={{
+                       emptyText: "Không có dữ liệu", // Hiển thị khi bảng trống
+                   }}
+            />
         </>
     );
 };

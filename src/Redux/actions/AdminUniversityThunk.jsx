@@ -1,4 +1,4 @@
-import {STATUS_CODE} from "../../Utils/Setting/Config";
+import {DISPLAY_LOADING, HIDE_LOADING, STATUS_CODE} from "../../Utils/Setting/Config";
 import {
     APPROVED_UNIVERSITY,
     GET_ALL_UNIVERSITIES,
@@ -13,6 +13,7 @@ import {adminUniversityService} from "../../Service/AdminService/AdminUniversity
 
 export const approved_university = (id) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await adminUniversityService.approved_university(id);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -24,12 +25,15 @@ export const approved_university = (id) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        } finally {
+            dispatch({ type: HIDE_LOADING});
         }
     }
 }
 
 export const rejected_university = (req) => {
     return async (dispatch) => {
+        dispatch({ type: DISPLAY_LOADING });
         try {
             const res = await adminUniversityService.rejected_university(req);
             if (res.code === STATUS_CODE.SUCCESS) {
@@ -41,6 +45,8 @@ export const rejected_university = (req) => {
             }
         } catch (error) {
             toast.error(error.response.data.message)
+        } finally {
+            dispatch({ type: HIDE_LOADING });
         }
     }
 }

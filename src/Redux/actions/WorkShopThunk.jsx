@@ -1,10 +1,19 @@
 import {workShopService} from "../../Service/UniversityService/WorkShopService";
 import {
     ACCEPT_WORK_SHOP,
-    CREATE_WORK_SHOP, DELETE_WORK_SHOP, GET_ALL_COMPANY, GET_ALL_COMPANY_ACCEPT, GET_ALL_COMPANY_PENDING,
+    CREATE_WORK_SHOP,
+    DELETE_WORK_SHOP,
+    GET_ALL_COMPANY,
+    GET_ALL_COMPANY_ACCEPT,
+    GET_ALL_COMPANY_PENDING,
     GET_ALL_DISTRICT_BY_ID,
     GET_ALL_LOCATION,
-    GET_ALL_WARD_BY_ID_DISTRICT, GET_STATUS_WORK_SHOP, GET_TOTAL_WORK_SHOP, GET_WORK_SHOP_BUSINESS, REJECT_WORK_SHOP,
+    GET_ALL_WARD_BY_ID_DISTRICT,
+    GET_COUNT_APPROVED_WORK_SHOP,
+    GET_STATUS_WORK_SHOP,
+    GET_TOTAL_WORK_SHOP,
+    GET_WORK_SHOP_BUSINESS,
+    REJECT_WORK_SHOP,
     SET_WORK_SHOP,
     UPDATE_WORK_SHOP,
 } from "../types/WorkShopType";
@@ -265,6 +274,19 @@ export const get_status_workShop = () => {
             });
         } catch (error) {
             console.error("Error fetching status workshop:", error);
+        }
+    };
+}
+export const get_approved_workShop = (universityId) => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.count_approved_workshop(universityId);
+            dispatch({
+                type: GET_COUNT_APPROVED_WORK_SHOP,
+                payload: res,
+            });
+        } catch (error) {
+            console.error("Error fetching workshop by status:", error);
         }
     };
 }

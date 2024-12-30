@@ -10,7 +10,7 @@ import ResultSummary from "../../../Component/Paging/ResultsSummary";
 import * as XLSX from "xlsx";
 import {
     approved_cooperation,
-    get_all_cooperation_of_university_page,
+    get_all_cooperation_of_university_page, get_detail_cooperation_business,
     reject_cooperation
 } from "../../../Redux/actions/CooperationThunk";
 import CooperationTable from "./CooperationTable";
@@ -37,9 +37,9 @@ const CooperationManager = () => {
 
     //chinh xem chi tiết doanh nghiệp
     const handleInfo = (id) => {
-        const cooperation = list_cooperation.find(c => c.id === id);
-        setSelectedCooperation(cooperation);
-        navigate(`/cooperation-detail`, {state: {cooperation}}); // Điều hướng với đối tượng cooperation
+        // setSelectedCooperation(cooperation);
+        dispatch(get_detail_cooperation_business(id))
+        navigate(`/cooperation-detail`); // Điều hướng với đối tượng cooperation
     };
 
     const handlePageChange = (page, pageSize) => {
