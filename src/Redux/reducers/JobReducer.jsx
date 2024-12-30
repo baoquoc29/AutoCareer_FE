@@ -1,8 +1,9 @@
-import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB, INACTIVE_JOB, GET_LIST_JOB_PORTAL} from "../types/JobType";
+import {GET_JOB_DETAIL, SET_JOBS, CREATE_JOB, UPDATE_JOB, INACTIVE_JOB, JOB_PORTAL, GET_LIST_JOB_PORTAL} from "../types/JobType";
 
 const initialState = {
     jobs: [],
     selectedJobDetail: {},
+    jobsPortal:[],
     listJopPortal: [],
 };
 
@@ -47,6 +48,14 @@ export const JobReducer = (state = initialState, action) => {
                 jobs: state.jobs.map((job) =>
                     job.jobId === action.payload.jobId ? {...job, status: 'INACTIVE'} : job
                 ),
+            };
+        case JOB_PORTAL:
+            return {
+                ...state,
+                jobsPortal: action.payload.content,
+                totalElements: action.payload.totalElements,
+                pageSize: action.payload.pageSize,
+                currentPage: action.payload.currentPage,
             };
         default:
             return {...state};
