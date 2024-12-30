@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import {get_all_university_home_portal} from "../../../Redux/actions/PortalThunk";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import {useNavigate} from "react-router-dom";
+import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 
 const HomeBusinessPortal = () => {
     const university = useSelector((state) => state.PortalReducer.universityListHome || []);
@@ -17,6 +18,11 @@ const HomeBusinessPortal = () => {
         console.log(university);
     }, [dispatch]);
 
+    const handleDetailsPortal = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/university-portal-detail/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
+    };
     const truncateDescription = (description, wordLimit = 80) => {
         if (!description)
             description = "Không có nội dung";
@@ -65,7 +71,9 @@ const HomeBusinessPortal = () => {
                     <div className='body-content-pb'>
                     <div className="body-content-portal-business">
                         {university.map((univer) => (
-                            <div className="card-portal-business" key={univer.id}>
+                            <div className="card-portal-business" key={univer.id}
+                                 onClick={() => handleDetailsPortal(univer.id)}
+                            >
                                 <div className="logo-section">
                                     <img
                                         className="banner-image"

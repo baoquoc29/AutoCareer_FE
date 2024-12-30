@@ -14,6 +14,9 @@ export class WorkShopService extends baseService {
         const queryParams = new URLSearchParams(param).toString();
         return this.get(`api/work-shop/business/${businessId}?${queryParams}`);
     };
+    get_workshops_in_university = (idUniversity, page, size) => {
+        return this.getResponse(`api/work-shop/get-by-university?universityId=${idUniversity}&page=${page}&size=${size}`)
+    }
 
     create_work_shop = (formData) => {
         return this.postFormData(`api/work-shop`, formData);
