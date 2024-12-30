@@ -20,12 +20,18 @@ export class AdminBusinessService extends baseService {
         return this.get(`api/admin/get-rejected-businesses?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
     };
 
-
-    approved_business = (id)=>{
+    approved_business = (id) => {
         return this.post('api/admin/approved-business', id);
     }
-    rejected_business = (id)=> {
+    rejected_business = (id) => {
         return this.post('api/admin/rejected-business', id);
+    }
+
+    get_total = () => {
+        return this.get('api/statistic/get-total')
+    }
+    get_date_total = (startDate, endDate) => {
+        return this.get(`api/statistic/get-date-total?startDate=${startDate}&endDate=${endDate}`)
     }
 }
 

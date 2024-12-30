@@ -77,13 +77,9 @@ export function AdminTemplate() {
                 caption="Quản lý hệ thống"
                 menuItems={filteredMenuItems}
             />
-            <Outlet/>
             <section id="content" className="content">
                 <div className="content__header content__boxed rounded-2">
                     <Outlet/>
-                    {/*<div className="content__wrap">*/}
-                    {/*    <Outlet/>*/}
-                    {/*</div>*/}
                 </div>
                 <Footer/>
             </section>

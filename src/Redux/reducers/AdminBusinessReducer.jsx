@@ -1,18 +1,20 @@
 import {
     APPROVED_BUSINESS, GET_ALL_BUSINESSES,
-    GET_APPROVED_BUSINESSES,
+    GET_APPROVED_BUSINESSES, GET_DATE_TOTAL,
     GET_PENDING_BUSINESSES,
-    GET_REJECTED_BUSINESSES, REJECTED_BUSINESS
+    GET_REJECTED_BUSINESSES, GET_TOTAL, REJECTED_BUSINESS
 } from "../types/AdminBusinessType";
 
 
 const initialState = {
     businesses: [],
-    approvedBusinesses:[],
-    pendingBusinesses:[],
-    rejectedBusinesses:[],
+    approvedBusinesses: [],
+    pendingBusinesses: [],
+    rejectedBusinesses: [],
     businessId: {},
     business: {},
+    totals: {},
+    totals_date: {},
 }
 
 export const AdminBusinessReducer = (state = initialState, action) => {
@@ -61,6 +63,16 @@ export const AdminBusinessReducer = (state = initialState, action) => {
             return {
                 ...state,
             };
+        case GET_TOTAL:
+            return {
+                ...state,
+                totals: action.payload,
+            }
+        case GET_DATE_TOTAL:
+            return {
+                ...state,
+                totals_date: action.payload,
+            }
         default:
             return {...state}
     }
