@@ -17,8 +17,8 @@ export const DISPLAY_LOADING = 'DISPLAY_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 export const CLEAN_LOCAL_STORAGE = 'CLEAN_LOCAL_STORAGE';
 
-// export const DOMAIN = 'http://192.168.0.152:8081/auto-career'
-export const DOMAIN = 'http://localhost:8081/auto-career'
+export const DOMAIN = 'http://192.168.0.152:8081/auto-career'
+// export const DOMAIN = 'http://localhost:8081/auto-career'
 //domain firebase
 
 export const GET_IMAGE_URI = `${DOMAIN}/api/v1/image/resource?imageId=`

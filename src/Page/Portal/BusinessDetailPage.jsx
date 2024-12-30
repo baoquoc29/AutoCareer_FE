@@ -8,6 +8,8 @@ import {get_business_by_id} from "../../Redux/actions/BusinessThunk";
 import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_all_job_of_business_paging_portal} from "../../Redux/actions/JobThunk";
+import dayjs from "dayjs";
+import {encryptId} from "../../Component/SecurityComponent/cryptoUtils";
 
 const {Text, Title} = Typography;
 
@@ -19,13 +21,22 @@ const BusinessDetailPage = () => {
     const [locationFilter, setLocationFilter] = useState(""); // Lọc theo địa điểm
     const {businessId} = location.state;
     const businessData = useSelector((state) => state.BusinessReducer.business);
-    const JobData = useSelector((state) => state.JobReducer.listJobPortal);
+    const jobData = useSelector((state) => state.JobReducer.listJopPortal);
+
 
     useEffect(() => {
         dispatch(get_business_by_id(businessId));
         dispatch(get_all_job_of_business_paging_portal(1, 5, "", businessId));
-        console.log(JobData)
-    }, [dispatch,businessId]);
+        console.log(jobData)
+    }, [dispatch, businessId]);
+
+
+    const handleDetailsJob = (id) => {
+        const encryptedId = encryptId(id)
+        ;  // Encrypt the ID first
+        const url = `/job-portal-detail/${encodeURIComponent(encryptedId)}`; // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
+    };
 
     if (!businessData) {
         return (
@@ -40,13 +51,6 @@ const BusinessDetailPage = () => {
             </section>
         );
     }
-
-    // Lọc dữ liệu tuyển dụng theo từ khóa và địa điểm
-    // const filteredRecruitments = businessData.recruitments.filter((job) => {
-    //     const matchesSearch = job.title.toLowerCase().includes(searchKeyword.toLowerCase());
-    //     const matchesLocation = locationFilter ? job.location === locationFilter : true;
-    //     return matchesSearch && matchesLocation;
-    // });
 
     return (
         <div>
@@ -64,7 +68,7 @@ const BusinessDetailPage = () => {
                                             <Col>
                                                 <img
                                                     src={businessData?.businessImageId
-                                                        ?`${GET_IMAGE_URI}${businessData["businessImageId"]}`
+                                                        ? `${GET_IMAGE_URI}${businessData["businessImageId"]}`
                                                         : "placeholder-avatar.jpg"}
                                                     alt="Logo công ty"
                                                     style={{
@@ -90,19 +94,10 @@ const BusinessDetailPage = () => {
                                                     </Col>
                                                     <Col>
                                                         <Text type="secondary">Quy
-                                                            mô: {businessData.companySize || "Không xác định"} nhân viên</Text>
+                                                            mô: {businessData.companySize || "Không xác định"} nhân
+                                                            viên</Text>
                                                     </Col>
                                                 </Row>
-                                            </Col>
-                                            {/* Nút Theo dõi */}
-                                            <Col flex="auto" style={{textAlign: "right"}}>
-                                                <Button
-                                                    type="primary"
-                                                    style={{borderRadius: "20px"}}
-                                                    onClick={() => alert("Theo dõi công ty!")}
-                                                >
-                                                    <PlusOutlined/> Theo dõi công ty
-                                                </Button>
                                             </Col>
                                         </Row>
                                     </Card>
@@ -156,110 +151,121 @@ const BusinessDetailPage = () => {
                                                             </Select>
                                                         </Space>
 
-                                                        {/*{filteredRecruitments.length > 0 ? (*/}
-                                                        {/*    filteredRecruitments.map((job) => (*/}
-                                                        {/*        <Card key={job.id} bordered={false}*/}
-                                                        {/*              style={{marginBottom: "10px"}}>*/}
-                                                        {/*            <Row gutter={[16, 16]}*/}
-                                                        {/*                 style={{display: 'flex', flexWrap: 'wrap'}}>*/}
-                                                        {/*                /!* Ảnh công ty *!/*/}
-                                                        {/*                <Col span={5} style={{*/}
-                                                        {/*                    display: "flex",*/}
-                                                        {/*                    alignItems: "center"*/}
-                                                        {/*                }}>*/}
-                                                        {/*                    <img*/}
-                                                        {/*                        src={"aotucareer-logo.svg"} // lấy ra ảnh từ công ty*/}
-                                                        {/*                        alt="Company Logo"*/}
-                                                        {/*                        width={50}*/}
-                                                        {/*                        height={50}*/}
-                                                        {/*                        style={{*/}
-                                                        {/*                            borderRadius: "5px",*/}
-                                                        {/*                            marginRight: "10px"*/}
-                                                        {/*                        }}*/}
-                                                        {/*                    />*/}
-                                                        {/*                </Col>*/}
-                                                        {/*                <Col span={19} style={{textAlign: "left"}}>*/}
-                                                        {/*                    <Row gutter={[16, 16]} style={{*/}
-                                                        {/*                        display: 'flex',*/}
-                                                        {/*                        flexWrap: 'wrap'*/}
-                                                        {/*                    }}>*/}
-                                                        {/*                        <Col span={20}*/}
-                                                        {/*                             style={{textAlign: "left"}}>*/}
-                                                        {/*                            /!* Nút xem chi tiết *!/*/}
-                                                        {/*                            <div>*/}
-                                                        {/*                                /!* Tiêu đề công việc *!/*/}
-                                                        {/*                                <Text strong style={{*/}
-                                                        {/*                                    fontSize: "16px",*/}
-                                                        {/*                                    color: "#096dd9"*/}
-                                                        {/*                                }}>{job.title}</Text>*/}
-                                                        {/*                                /!* Tên công ty *!/*/}
-                                                        {/*                                <div>*/}
-                                                        {/*                                    <DisplayRichText*/}
-                                                        {/*                                        content={businessData.name}/>*/}
-                                                        {/*                                </div>*/}
-                                                        {/*                            </div>*/}
-                                                        {/*                            <Row gutter={[16, 16]} style={{*/}
-                                                        {/*                                display: 'flex',*/}
-                                                        {/*                                flexWrap: 'wrap'*/}
-                                                        {/*                            }}>*/}
-                                                        {/*                                /!* Địa điểm làm việc *!/*/}
-                                                        {/*                                <Col span={8} style={{*/}
-                                                        {/*                                    border: '1px solid #d9d9d9',*/}
-                                                        {/*                                    backgroundColor: '#f0f0f0', // Màu xám*/}
-                                                        {/*                                    borderRadius: '8px', // Bo góc*/}
-                                                        {/*                                    padding: '5px' // Thêm padding để nội dung không sát mép*/}
-                                                        {/*                                }}>*/}
-                                                        {/*                                    <Text style={{*/}
-                                                        {/*                                        fontSize: "13px"*/}
-                                                        {/*                                    }}>{job.location}</Text>*/}
-                                                        {/*                                </Col>*/}
-                                                        {/*                                /!* Ngày hết hạn *!/*/}
-                                                        {/*                                <Col span={8} style={{*/}
-                                                        {/*                                    textAlign: "left",*/}
-                                                        {/*                                    border: '1px solid #d9d9d9',*/}
-                                                        {/*                                    backgroundColor: '#f0f0f0', // Màu xám*/}
-                                                        {/*                                    borderRadius: '8px', // Bo góc*/}
-                                                        {/*                                    padding: '5px' // Thêm padding để nội dung không sát mép*/}
-                                                        {/*                                }}>*/}
-                                                        {/*                                    <Text*/}
-                                                        {/*                                        style={{fontSize: "13px"}}>{job.remainingDays} ngày*/}
-                                                        {/*                                        còn hạn</Text>*/}
-                                                        {/*                                </Col>*/}
-                                                        {/*                            </Row>*/}
-                                                        {/*                        </Col>*/}
-                                                        {/*                        /!* Lương *!/*/}
-                                                        {/*                        <Col span={4}*/}
-                                                        {/*                             style={{textAlign: "right"}}>*/}
-                                                        {/*                            <Text strong style={{*/}
-                                                        {/*                                fontSize: "16px",*/}
-                                                        {/*                                color: "#096dd9"*/}
-                                                        {/*                            }}>12M</Text>*/}
-                                                        {/*                        </Col>*/}
-                                                        {/*                    </Row>*/}
-                                                        {/*                </Col>*/}
-                                                        {/*            </Row>*/}
+                                                        <div>
+                                                            {jobData.map((job) => (
+                                                                <Card key={job.jobId} bordered={false}
+                                                                      style={{marginBottom: "10px"}}>
+                                                                    <Row gutter={[16, 16]}
+                                                                         style={{display: "flex", flexWrap: "wrap"}}>
+                                                                        {/* Ảnh công ty */}
+                                                                        <Col span={5} style={{
+                                                                            display: "flex",
+                                                                            alignItems: "center"
+                                                                        }}>
+                                                                            <img
+                                                                                src={`${GET_IMAGE_URI}${job?.businessImageId}`}
+                                                                                alt="Company Logo"
+                                                                                style={{
+                                                                                    width: "100px",
+                                                                                    height: "100px",
+                                                                                    borderRadius: "8px",
+                                                                                    objectFit: " scale-down",
+                                                                                }}
+                                                                            />
+                                                                        </Col>
+                                                                        <Col span={19} style={{textAlign: "left"}}>
+                                                                            <Row gutter={[16, 16]} style={{
+                                                                                display: "flex",
+                                                                                flexWrap: "wrap"
+                                                                            }}>
+                                                                                <Col span={18}
+                                                                                     style={{textAlign: "left"}}>
+                                                                                    <div>
+                                                                                        {/* Tiêu đề công việc */}
+                                                                                        <Text strong style={{
+                                                                                            fontSize: "16px",
+                                                                                            color: "#096dd9"
+                                                                                        }}>
+                                                                                            {job.title}
+                                                                                        </Text>
+                                                                                        {/* Tên công ty */}
+                                                                                        <div>
+                                                                                            <DisplayRichText
+                                                                                                content={businessData.name}/>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <Row gutter={[16, 16]} style={{
+                                                                                        display: "flex",
+                                                                                        flexWrap: "wrap"
+                                                                                    }}>
+                                                                                        {/* Địa điểm làm việc */}
+                                                                                        <Col
+                                                                                            span={8}
+                                                                                            style={{
+                                                                                                border: "1px solid #d9d9d9",
+                                                                                                backgroundColor: "#f0f0f0", // Màu xám
+                                                                                                borderRadius: "8px", // Bo góc
+                                                                                                padding: "5px", // Thêm padding để nội dung không sát mép
+                                                                                            }}
+                                                                                        >
+                                                                                            <Text
+                                                                                                style={{fontSize: "13px"}}>{job?.province}</Text>
+                                                                                        </Col>
+                                                                                        {/* Ngày hết hạn */}
+                                                                                        <Col
+                                                                                            span={8}
+                                                                                            style={{
+                                                                                                textAlign: "left",
+                                                                                                border: "1px solid #d9d9d9",
+                                                                                                backgroundColor: "#f0f0f0", // Màu xám
+                                                                                                borderRadius: "8px", // Bo góc
+                                                                                                padding: "5px", // Thêm padding để nội dung không sát mép
+                                                                                            }}
+                                                                                        >
+                                                                                            <Text
+                                                                                                style={{fontSize: "13px"}}>
+                                                                                                {job.expireDate ? dayjs(job.expireDate).format("DD/MM/YYYY") : "N/A"}
+                                                                                            </Text>
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                </Col>
+                                                                                {/* Lương */}
+                                                                                <Col span={6}
+                                                                                     style={{textAlign: "right"}}>
+                                                                                    <Text
+                                                                                        strong
+                                                                                        style={{
+                                                                                            fontSize: "16px",
+                                                                                            color: "#096dd9",
+                                                                                        }}
+                                                                                    >
+                                                                                        {/* Format lương với dấu phẩy và thêm "VND" */}
+                                                                                        {job.fromSalary
+                                                                                            ? new Intl.NumberFormat("vi-VN").format(job.fromSalary) + " VND"
+                                                                                            : "12,000,000 VND"}
+                                                                                    </Text>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                    </Row>
 
-                                                        {/*            /!* Nút xem chi tiết *!/*/}
-                                                        {/*            <Row justify="end">*/}
-                                                        {/*                <Button*/}
-                                                        {/*                    type="link"*/}
-                                                        {/*                    onClick={() => navigate(`/job-detail/${job.id}`)}*/}
-                                                        {/*                    style={{padding: 0}}*/}
-                                                        {/*                >*/}
-                                                        {/*                    Xem chi tiết*/}
-                                                        {/*                </Button>*/}
-                                                        {/*            </Row>*/}
-                                                        {/*        </Card>*/}
-                                                        {/*    ))*/}
-                                                        {/*) : (*/}
-                                                        {/*    <Text>Không có thông tin tuyển dụng.</Text>*/}
-                                                        {/*)}*/}
+                                                                    {/* Nút xem chi tiết */}
+                                                                    <Row justify="end">
+                                                                        <Button
+                                                                            type="link"
+                                                                            onClick={() => handleDetailsJob(job.jobId)}
+                                                                            style={{padding: 0}}
+                                                                        >
+                                                                            Xem chi tiết
+                                                                        </Button>
+                                                                    </Row>
+                                                                </Card>
+                                                            ))}
+                                                        </div>
                                                     </Card>
                                                 </Col>
-
                                             </Row>
                                         </Col>
-
                                         {/* Thông tin liên hệ */}
                                         <Col span={6}>
                                             <Card bordered={false}>
