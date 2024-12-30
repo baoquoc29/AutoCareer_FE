@@ -1,36 +1,37 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select, Pagination} from "antd";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import DisplayRichText from "../../../src/Component/TextEditDisplay/DisplayRichText";
-import {PlusOutlined} from "@ant-design/icons";
 import HeaderPortal from "../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
 import {get_business_by_id} from "../../Redux/actions/BusinessThunk";
 import {useDispatch, useSelector} from "react-redux";
 import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_all_job_of_business_paging_portal} from "../../Redux/actions/JobThunk";
 import dayjs from "dayjs";
-import {encryptId} from "../../Component/SecurityComponent/cryptoUtils";
+import {decryptId, encryptId} from "../../Component/SecurityComponent/cryptoUtils";
 
 const {Text, Title} = Typography;
 
 const BusinessDetailPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
     const [searchKeyword, setSearchKeyword] = useState(""); // Từ khóa tìm kiếm
     const [currentPage, setCurrenPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const totalElements = useSelector((state) => state.JobReducer.totalElements);
     const [locationFilter, setLocationFilter] = useState(""); // Lọc theo địa điểm
-    const {businessId} = location.state;
     const businessData = useSelector((state) => state.BusinessReducer.business);
     const jobData = useSelector((state) => state.JobReducer.listJopPortal);
-
+    const { id } = useParams();
+    const [encryptedId, setEncryptedId] = useState(null);
 
     useEffect(() => {
-        dispatch(get_business_by_id(businessId));
-        dispatch(get_all_job_of_business_paging_portal(currentPage, pageSize, encodeURIComponent(searchKeyword), businessId,));
-    }, [dispatch,currentPage, searchKeyword, pageSize, businessId]);
+        setEncryptedId(id);
+    }, [id]);
+
+    useEffect(() => {
+        dispatch(get_business_by_id(decryptId(encryptedId)));
+        dispatch(get_all_job_of_business_paging_portal(currentPage, pageSize, encodeURIComponent(searchKeyword), decryptId(encryptedId),));
+    }, [dispatch,currentPage, searchKeyword, pageSize, encryptedId]);
 
 
     const handleDetailsJob = (id) => {
@@ -258,9 +259,9 @@ const BusinessDetailPage = () => {
                                                                                         }}
                                                                                     >
                                                                                         {/* Format lương với dấu phẩy và thêm "VND" */}
-                                                                                        {job.fromSalary
+                                                                                        {job.fromSalary !== 1
                                                                                             ? new Intl.NumberFormat("vi-VN").format(job.fromSalary) + " VND"
-                                                                                            : "12,000,000 VND"}
+                                                                                            : "Thoả thuận"}
                                                                                     </Text>
                                                                                 </Col>
                                                                             </Row>
@@ -313,10 +314,10 @@ const BusinessDetailPage = () => {
                                                     <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
                                                         <Text strong>Địa chỉ:</Text>
                                                         <Text>
-                                                            {businessData.location?.province.fullName},
-                                                            {businessData.location?.district.fullName},
+                                                            {businessData.location?.description},
                                                             {businessData.location?.ward.fullName},
-                                                            {businessData.location?.description}
+                                                            {businessData.location?.district.fullName},
+                                                            {businessData.location?.province.fullName}
                                                         </Text>
                                                     </Space>
                                                 </Col>
