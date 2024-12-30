@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, Col, Input, Modal, Pagination, Row} from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { toast } from "react-toastify";
-import { GET_IMAGE_URI } from "../../../Utils/Setting/Config";
+import {PlusOutlined, SearchOutlined} from "@ant-design/icons";
+import {toast} from "react-toastify";
+import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import SubAdminTable from "./SubAdminTable";
 import SubAdminDetailModal from "./SubAdminDetailModal";
 import SubAdminCreateForm from "./SubAdminCreateForm";
@@ -126,34 +126,35 @@ const SubAdminManager = () => {
                                     onInfo={handleDetail}
                                     onEdit={handleUpdate}
                                     onDelete={handleDelete}
-                                /></div>
-                                <ResultSummary totalElements={totalElements}></ResultSummary>
-                                <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
-                                    <Pagination
-                                        current={pageNo}
-                                        pageSize={pageSize}
-                                        total={totalElements}
-                                        onChange={handlePageChange}
-                                        pageSizeOptions={[7, 10, 20, 50, 100]}
-                                        showSizeChanger={true}
-                                    />
-                                </div>
-
-                                <SubAdminDetailModal
-                                    open={isDetailModalOpen}
-                                    onClose={closeDetailModal}
                                 />
-
-                                <SubAdminCreateForm
-                                    open={isCreateModalOpen}
-                                    onClose={closeCreateModal}
+                            </div>
+                            <ResultSummary totalElements={totalElements}></ResultSummary>
+                            <div style={{display: "flex", justifyContent: "center", marginTop: "10px"}}>
+                                <Pagination
+                                    current={pageNo}
+                                    pageSize={pageSize}
+                                    total={totalElements}
+                                    onChange={handlePageChange}
+                                    pageSizeOptions={[7, 10, 20, 50, 100]}
+                                    showSizeChanger={true}
                                 />
+                            </div>
 
-                                <SubAdminUpdate
-                                    open={isUpdateModalOpen}
-                                    onClose={closeUpdateModal}
-                                    subAdminData={selectedSubAdmin}
-                                />
+                            <SubAdminDetailModal
+                                open={isDetailModalOpen}
+                                onClose={closeDetailModal}
+                            />
+
+                            <SubAdminCreateForm
+                                open={isCreateModalOpen}
+                                onClose={closeCreateModal}
+                            />
+
+                            <SubAdminUpdate
+                                open={isUpdateModalOpen}
+                                onClose={closeUpdateModal}
+                                subAdminData={selectedSubAdmin}
+                            />
                         </Card>
                     </div>
                 </div>

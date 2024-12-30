@@ -231,4 +231,18 @@ export const get_avg_salary_industry = () => {
     };
 };
 
+export const get_all_industries_of_business = (id) => {
+    return async (dispatch) => {
+        try {
+            const res = await industryService.get_all_industries_of_business(id);
+            dispatch({
+                type: SET_INDUSTRIES_NO_PAG,
+                payload: res.data,
+            });
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
+    };
+};
+
 

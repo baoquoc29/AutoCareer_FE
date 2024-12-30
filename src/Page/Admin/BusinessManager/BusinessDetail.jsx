@@ -26,9 +26,9 @@ const BusinessDetail = ({open, onClose}) => {
             cancelText: 'Hủy',
             onOk() {
                 console.log(`Rejected business: ${business.name}`);
-                let req = {id: business.key, message: message};
+                let req = {id: business.id, message: message};
                 dispatch(rejected_business(req)).then(()=>{
-                    dispatch(get_business_by_id(business.key))
+                    dispatch(get_business_by_id(business.id))
                 });
                 setMessage(""); // Reset lý do từ chối
                 setIsRejectModalVisible(false); // Đóng modal
@@ -44,7 +44,7 @@ const BusinessDetail = ({open, onClose}) => {
             cancelText: 'Hủy',
             onOk() {
                 console.log(`Approved business: ${business.name}`);
-                dispatch(approved_business({id: business.key})).then(()=>{
+                dispatch(approved_business({id: business.id})).then(()=>{
                     dispatch(get_business_by_id(business.id))
                 }); // Gửi lý do từ chối
             },
