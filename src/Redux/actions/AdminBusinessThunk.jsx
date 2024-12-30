@@ -3,9 +3,9 @@ import {adminBusinessService} from "../../Service/AdminService/AdminBusinessServ
 import {toast} from "react-toastify";
 import {
     APPROVED_BUSINESS, GET_ALL_BUSINESSES,
-    GET_APPROVED_BUSINESSES,
+    GET_APPROVED_BUSINESSES, GET_DATE_TOTAL,
     GET_PENDING_BUSINESSES,
-    GET_REJECTED_BUSINESSES,
+    GET_REJECTED_BUSINESSES, GET_TOTAL,
     REJECTED_BUSINESS,
 } from "../types/AdminBusinessType";
 
@@ -102,6 +102,36 @@ export const get_rejected_businesses = (pageNo, pageSize, keyword) => {
             if (res.code === STATUS_CODE.SUCCESS) {
                 dispatch({
                     type: GET_REJECTED_BUSINESSES,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+export const get_statistic_admin = () => {
+    return async (dispatch) => {
+        try {
+            const res = await adminBusinessService.get_total();
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: GET_TOTAL,
+                    payload: res.data
+                })
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+}
+export const get_date_total_admin = (startDate, endDate) => {
+    return async (dispatch)=>{
+        try {
+            const res = await adminBusinessService.get_date_total(startDate, endDate);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: GET_DATE_TOTAL,
                     payload: res.data
                 })
             }

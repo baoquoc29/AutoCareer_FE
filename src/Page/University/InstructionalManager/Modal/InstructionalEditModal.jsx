@@ -32,7 +32,6 @@ const InstructionalEditModal = ({open, onClose, instructional, onSubmit}) => {
             universityId: instructional?.universityId || "",
         },
         enableReinitialize: true,
-        validationSchema: InstructionalValidation,
         onSubmit: async (values) => {
             Modal.confirm({
                 title: 'Xác nhận chỉnh sửa',
@@ -46,6 +45,10 @@ const InstructionalEditModal = ({open, onClose, instructional, onSubmit}) => {
                         Object.keys(values).forEach((key) => {
                             if (key !== "instructionalImageId") formData.append(key, values[key]);
                         });
+                        // Kiểm tra và thêm file ảnh vào FormData
+                        if (values.instructionalImageId) {
+                            formData.append("instructionalImageId", values.instructionalImageId);
+                        }
                         await dispatch(update_ins(instructional.id, formData));
                         // Khi nhấn Xác nhận, thực hiện gửi dữ liệu đi
                         await onSubmit(values); // Chờ xử lý cập nhật section
@@ -110,15 +113,14 @@ const InstructionalEditModal = ({open, onClose, instructional, onSubmit}) => {
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Ngày sinh" required={true}
-                                   validateStatus={formik.errors.dateOfBirth && formik.touched.dateOfBirth ? 'error' : ''}
-                                   help={formik.errors.dateOfBirth && formik.touched.dateOfBirth ? formik.errors.dateOfBirth : ''}>
+                        <Form.Item label="Ngày sinh" required={true}>
                             <Input
                                 id="dateOfBirth"
                                 type="date"
                                 className="form-control"
                                 value={formik.values.dateOfBirth}
                                 onChange={formik.handleChange}
+                                disabled={true}
                             />
                         </Form.Item>
                     </Col>

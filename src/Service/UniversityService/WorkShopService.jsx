@@ -60,6 +60,9 @@ export class WorkShopService extends baseService {
         const queryParams = new URLSearchParams(param).toString();
         return this.put(`api/work-shop/business/cancel?${queryParams}`);
     };
+    count_approved_workshop=(universityId)=>{
+        return this.get(`api/work-shop/countWorkshopApproved?universityId=${universityId}&state=APPROVED`)
+    }
 }
 
 // Instantiate WorkShopService
