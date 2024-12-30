@@ -248,7 +248,7 @@ const JobPortal = () => {
                     <FaMapMarkerAlt className="icon-location"/> {job.province}
                 </p>
                 <p className={"job-location-requirement"}>
-                    <FaFileAlt className="icon-requirement"/> Sinh viên năm {job.level}
+                    <FaFileAlt className="icon-requirement"/> {job.level}
                 </p>
                 <p className={"job-location-expireDate"}>
                     <FaCalendarAlt className="icon-calendar"/> {job.expireDate}

@@ -23,6 +23,8 @@ const WorkshopListPortal = () => {
     const totalElements = useSelector((state) => state.PortalReducer.totalElements || 0);
     const {provinces} = useSelector(state => state.WorkShopReducer);
     const {universities} = useSelector(state => state.PortalReducer);
+    const [pageSize, setPageSize] = useState(7); // Số mục mặc định
+
     // Local state for pagination and filters
     const [currentPage, setCurrentPage] = useState(1);
     const [filters, setFilters] = useState({
@@ -32,7 +34,7 @@ const WorkshopListPortal = () => {
         searchTerm: "",
     });
 
-    const pageSize = 7;
+
     useEffect(() => {
         const { dateRange, location, searchTerm,universityId } = filters;
         const [startDate, endDate] = dateRange ? dateRange : [];
@@ -152,10 +154,11 @@ const WorkshopListPortal = () => {
                 <div className="pagination-container">
                     <Pagination
                         current={currentPage}
-                        total={totalElements}
                         pageSize={pageSize}
                         onChange={handlePageChange}
-                        showSizeChanger={false}
+                        showSizeChanger={true}
+                        total={totalElements}
+                        pageSizeOptions={[7, 10, 20, 50, 100]}
                         className="pagination"
                     />
                 </div>
