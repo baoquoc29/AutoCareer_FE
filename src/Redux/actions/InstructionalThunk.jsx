@@ -26,6 +26,7 @@ export const create_instructional = (formData) => {
     return async (dispatch) => {
         try {
             const res = await instructionalService.create_instructional(formData);
+            console.log(res)
             if (res.code === STATUS_CODE.SUCCESS) {
                 toast.success("Thêm giáo vụ thành công")
                 dispatch({

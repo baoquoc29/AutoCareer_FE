@@ -7,7 +7,6 @@ import './style.css'
 
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
-    console.log(user.username)
     // Kiểm tra loại người dùng
     const isUniversityUser = user && user.role.name === 'UNIVERSITY';
     const isBusinessUser = user && user.role.name === 'BUSINESS';
@@ -117,10 +116,6 @@ export const UserDropdown = ({navigate}) => {
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}
-                            <NavLink className="list-group-item list-group-item-action mt-auto" to={"/lock-screen"}>
-                                <i className="demo-pli-computer-secure fs-5 me-2"></i> Khóa màn hình
-                            </NavLink>
-
                             <NavLink to={''} onClick={handleLogout} className={"list-group-item list-group-item-action"}>
                                 <i className="demo-pli-unlock fs-5 me-2"></i>
                                 Đăng xuất

@@ -124,10 +124,10 @@ export const get_total_major = (universityId) => {
         }
     }
 }
-export const get_total_student = () => {
+export const get_total_student = (universityId) => {
     return async (dispatch) => {
         try {
-            const res = await majorService.get_total_students();
+            const res = await majorService.get_total_students(universityId);
             dispatch({
                 type: TOTAL_STUDENT,
                 payload: res,

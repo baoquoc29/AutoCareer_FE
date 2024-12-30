@@ -1,12 +1,12 @@
 import React from "react";
-import { Button, Space, Table, Tag, Tooltip } from "antd";
+import {Button, Space, Table, Tag, Tooltip} from "antd";
 import {DeleteOutlined, EyeOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
-const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
+const WorkShopBusinessTable = ({workshops, onDelete, onView, page, size}) => {
         const columns = [
             {
                 title: "STT",
@@ -14,8 +14,8 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                 align: "center",
                 render: (_, __, index) => index + 1 + (page - 1) * size, // Tính số thứ tự dựa trên trang hiện tại
                 sorter: (a, b) => a.id - b.id,
-                width: 80, // Adjust the width as needed
-                ellipsis: true, // Optional: Adds ellipsis if the content overflows
+                // width: 80, // Adjust the width as needed
+                // ellipsis: true, // Optional: Adds ellipsis if the content overflows
             },
             {
                 title: <div style={{textAlign: 'center'}}>Tiêu đề</div>, // Center the column header
@@ -27,8 +27,8 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                         {text}
                     </div>
                 ),
-                width: 280,
-                ellipsis: true, // Tự động cắt và thêm dấu ba chấm
+                // width: 280,
+                // ellipsis: true, // Tự động cắt và thêm dấu ba chấm
                 align: "left", // Keep the content aligned to the left (or you can use "center" if needed)
             }
             ,
@@ -37,7 +37,7 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                 dataIndex: "startDate",
                 key: "startDate",
                 align: "center",
-                width: 150,
+                // width: 150,
                 sorter: (a, b) =>
                     dayjs(a.startDate, "DD/MM/YYYY HH:mm").unix() -
                     dayjs(b.startDate, "DD/MM/YYYY HH:mm").unix(),
@@ -45,12 +45,12 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                     startDate
                         ? dayjs(startDate, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY")
                         : "N/A",
-                ellipsis: true,
+                // ellipsis: true,
             },
             {
                 title: "Ngày kết thúc",
                 dataIndex: "endDate",
-                width: 150,
+                // width: 150,
                 align: "center",
                 key: "endDate",
                 sorter: (a, b) =>
@@ -65,7 +65,7 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                 title: "Ngày hết hạn",
                 dataIndex: "expireDate",
                 key: "expireDate",
-                width: 150,
+                // width: 150,
                 align: "center",
                 sorter: (a, b) =>
                     dayjs(a.expireDate, "DD/MM/YYYY").unix() -
@@ -77,22 +77,22 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
             },
             {
                 title: "Địa điểm",
-                dataIndex: "address",
+                dataIndex: "province",
                 align: "center",
-                key: "address",
-                render: (address) => (
+                key: "province",
+                render: (province) => (
                     <div style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                        {address ? address : "N/A"}
+                        {province ? province : "N/A"}
                     </div>
                 ),
-                ellipsis: true, // Tự động cắt và thêm dấu ba chấm
+                // ellipsis: true, // Tự động cắt và thêm dấu ba chấm
             },
             {
                 title: "Trạng thái",
                 dataIndex: "statusBusiness",
                 align: "center",
                 key: "statusBusiness",
-                width: 170,
+                // width: 170,
                 sorter: (a, b) => a.statusBusiness.localeCompare(b.statusBusiness),
                 render: (status) => {
 
@@ -122,7 +122,7 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                             <Tooltip title="Xem chi tiết">
                                 <Button
                                     type="primary"
-                                    icon={<EyeOutlined />}
+                                    icon={<EyeOutlined/>}
                                     onClick={() => onView(record)}
                                 />
                             </Tooltip>
@@ -130,7 +130,7 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
                                 <Button
                                     variant="solid"
                                     color="danger"
-                                    icon={<DeleteOutlined />}
+                                    icon={<DeleteOutlined/>}
                                     onClick={() => onDelete(record.id, record.title)}
                                     disabled={!isApproved} // Vô hiệu hoá nếu trạng thái không phải "approved"
                                 />
@@ -145,18 +145,19 @@ const WorkShopBusinessTable = ({ workshops, onDelete, onView,page,size }) => {
         ];
 
         return (
-            <Table
-                style={{marginTop: 50}}
-                locale={{
-                    emptyText: "Không tìm thấy kết quả tương ứng."
-                }}
-                columns={columns}
-                dataSource={workshops}
-                rowKey="id"
-                bordered
-                pagination={false}
-            />
+            <>
+                <Table
+                    locale={{
+                        emptyText: "Không tìm thấy kết quả tương ứng."
+                    }}
+                    columns={columns}
+                    dataSource={workshops}
+                    rowKey="id"
+                    // bordered
+                    pagination={false}
+                />
+            </>
         );
     }
-    ;
+;
 export default WorkShopBusinessTable;

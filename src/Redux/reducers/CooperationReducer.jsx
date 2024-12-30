@@ -1,5 +1,5 @@
 import {
-    APPROVE_COOPERATION, CANCEL_REQUEST,
+    APPROVE_COOPERATION, CANCEL_REQUEST, DETAIL_COOPERATION,
     REJECT_COOPERATION,
     SET_COOPERATION,
     SET_COOPERATION_BUSINESS,
@@ -10,7 +10,8 @@ const initialState = {
     cooperation: [],
     cooperationId: null,
     totalCooperation:0,
-    cooperationBusiness:[]
+    cooperationBusiness:[],
+    cooperationDetail: {},
 }
 
 export const CooperationReducer = (state = initialState, action) => {
@@ -53,6 +54,11 @@ export const CooperationReducer = (state = initialState, action) => {
             return {
                 ...state,
             };
+        case DETAIL_COOPERATION:
+            return {
+                ...state,
+                cooperationDetail: action.payload,
+            }
         default:
             return {...state}
     }
