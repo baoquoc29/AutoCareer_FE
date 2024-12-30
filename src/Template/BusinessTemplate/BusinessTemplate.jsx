@@ -78,6 +78,9 @@ export function BusinessTemplate() {
             ],
         },
     ];
+    const truncateUserName = (userName) => {
+        return userName.length > 20 ? userName.slice(0, 20) + '...' : userName;
+    };
     return (
         <>
             <div
@@ -86,7 +89,7 @@ export function BusinessTemplate() {
             >
                 <Header toggleSidebar={toggleSidebar} link={"/profile-business"}/>
                 <SideBar
-                    userName={userData.username}
+                    userName={truncateUserName(userData.username)}
                     userRole={userData.role.name}
                     profileImg={bus?.businessImageId ? `${GET_IMAGE_URI}${bus.businessImageId}` : "placeholder-avatar.jpg"}
                     caption="Quản lý doanh nghiệp"

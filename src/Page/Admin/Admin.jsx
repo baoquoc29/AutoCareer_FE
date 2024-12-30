@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {useDispatch, useSelector} from "react-redux";
 import {get_date_total_admin, get_statistic_admin} from "../../Redux/actions/AdminBusinessThunk";
-import {Card, Divider} from "antd";
+import {Button, Card, DatePicker, Divider, Space} from "antd";
 import {FaBriefcase, FaBuilding, FaHandshake, FaRegCalendarAlt, FaSchool, FaUsers} from "react-icons/fa";
 import CountUp from "react-countup";
 import { format, subDays } from 'date-fns';
@@ -10,6 +10,7 @@ import LineChartComponent from "../../Component/ChartComponent/LineChartComponen
 import {FireOutlined} from "@ant-design/icons";
 
 
+const { RangePicker } = DatePicker;
 // Hàm tính toán ngày bắt đầu và ngày kết thúc
 const calculateDateRange = () => {
     const today = new Date();
@@ -21,13 +22,27 @@ export function Admin() {
     const dispatch = useDispatch();
     const {totals,totals_date} = useSelector(state => state.AdminBusinessReducer);
     const user = useSelector(state => state.UserReducer.userData)
+    const [startDate, setStartDate] = useState(format(subDays(new Date(), 7), 'yyyy-MM-dd'));
+    const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'))
+
     useEffect(() => {
-        const { startDate, endDate } = calculateDateRange();
         dispatch(get_statistic_admin());
         dispatch(get_date_total_admin(startDate, endDate ))
-    }, [dispatch]);
+    }, [dispatch, endDate, startDate]);
+
+    const handleDateChange = (dates) => {
+        if (dates) {
+            setStartDate(format(dates[0].toDate(), 'yyyy-MM-dd'));
+            setEndDate(format(dates[1].toDate(), 'yyyy-MM-dd'));
+        }
+    };
+    const handleButtonClick = () => {
+        const { startDate, endDate } = calculateDateRange();
+        setStartDate(startDate);
+        setEndDate(endDate);
+        dispatch(get_date_total_admin(startDate, endDate));
+    };
     const formattedDate = new Date().toLocaleDateString();
-    // Prepare data for LineChartComponent
     const dates = Object.keys(totals_date);
     const datasets = [
         {
@@ -204,10 +219,16 @@ export function Admin() {
                     <h2 className="mt-5">Biểu đồ tổng quan</h2>
                     <div className="row g-4 card-container">
                         <div className="col-9">
+                            <h4 className="mb-4">Chọn khoảng thời gian để xem dữ liệu</h4>
+                            <Space direction="horizontal" size="large" className="mb-4">
+                                <RangePicker onChange={handleDateChange}
+                                             placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}/>
+                                <Button type="primary" onClick={handleButtonClick}>Xem</Button>
+                            </Space>
                             <LineChartComponent labels={dates} datasets={datasets}/>
                         </div>
                         <div className="col-3 mt-4">
-                            <div className="info-barChart">
+                        <div className="info-barChart">
                                 <Card className="card-infoMajor-barChart">
                                     <Divider orientation="left">
                                         <FireOutlined style={{color: "#ff4d4f", marginRight: "8px"}}/>
