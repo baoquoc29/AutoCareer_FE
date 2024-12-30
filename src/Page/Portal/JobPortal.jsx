@@ -92,6 +92,7 @@ const JobPortal = () => {
         }
     }, [filter, industries]);
 
+
     // Lọc dữ liệu theo ngành nghề
     const onHandleChangeIndustry = (industryId) => {
         setSelectedOption(industryId);
@@ -139,7 +140,39 @@ const JobPortal = () => {
     // Thay đổi trang
     const handlePageChange = (page) => {
         setCurrentPage(page);
-        dispatch(get_all_job((page - 1), size));
+        switch (filter) {
+            case "location":
+                if (selectedOption === 0) {
+                    dispatch(get_all_job(page - 1, size));
+                } else if (selectedOption === 3 || selectedOption === 7) {
+                    dispatch(get_all_job_by_region(page - 1, size, selectedOption));
+                } else {
+                    dispatch(get_all_job_by_province(page - 1, size, selectedOption));
+                }
+                break;
+
+            case "industry":
+                if (selectedOption === 0) {
+                    dispatch(get_all_job(page - 1, size));
+                } else {
+                    dispatch(get_all_job_by_industry(page - 1, size, selectedOption));
+                }
+                break;
+
+            // case "salary":
+            //     // Tùy chỉnh nếu bạn muốn xử lý lọc theo mức lương
+            //     dispatch(get_all_job(page - 1, size));
+            //     break;
+            //
+            // case "experience":
+            //     // Tùy chỉnh nếu bạn muốn xử lý lọc theo năm học
+            //     dispatch(get_all_job(page - 1, size));
+            //     break;
+
+            default:
+                dispatch(get_all_job(page - 1, size));
+                break;
+        }
     };
 
     // Cuộn danh sách
@@ -182,12 +215,12 @@ const JobPortal = () => {
             <Menu.Item key="location">
                 <i className="fas fa-map-pin"></i> Địa điểm
             </Menu.Item>
-            <Menu.Item key="salary">
-                <i className="fas fa-money-bill"></i> Mức lương
-            </Menu.Item>
-            <Menu.Item key="experience">
-                <i className="fas fa-user-tie"></i> Năm học
-            </Menu.Item>
+            {/*<Menu.Item key="salary">*/}
+            {/*    <i className="fas fa-money-bill"></i> Mức lương*/}
+            {/*</Menu.Item>*/}
+            {/*<Menu.Item key="experience">*/}
+            {/*    <i className="fas fa-user-tie"></i> Năm học*/}
+            {/*</Menu.Item>*/}
             <Menu.Item key="industry">
                 <i className="fas fa-industry"></i> Ngành nghề
             </Menu.Item>

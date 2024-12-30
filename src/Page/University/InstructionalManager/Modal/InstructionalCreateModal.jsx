@@ -17,7 +17,7 @@ const InstructionalCreateModal = ({open, onClose, onCreate, uniId}) => {
             universityId: uniId || "",
 
         },
-        validationSchema: instructionalValidation,
+        validationSchema: instructionalValidation(true),
         onSubmit: (values, ) => {
             onCreate(values);
             onClose()
