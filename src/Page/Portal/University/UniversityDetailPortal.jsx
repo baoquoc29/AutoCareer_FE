@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select, Pagination} from "antd";
+import {Button, Card, Col, Divider, Modal, notification, Pagination, Row, Space, Typography} from "antd";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import DisplayRichText from "../../../../src/Component/TextEditDisplay/DisplayRichText";
 import {PlusOutlined} from "@ant-design/icons";
-import {get_business_by_id} from "../../../Redux/actions/BusinessThunk";
 import {useDispatch, useSelector} from "react-redux";
 import {get_university_id} from "../../../Redux/actions/UniversityThunk";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
@@ -11,30 +10,52 @@ import {get_workshops_by_university} from "../../../Redux/actions/WorkShopThunk"
 import WorkshopCard from "../WorkshopCard";
 import {decryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 import HeaderPortal from "../../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
+import {send_request} from "../../../Redux/actions/CooperationThunk";
 
 const {Text, Title} = Typography;
 
 const UniversityDetailPortal = () => {
-
+        const [isModalVisible, setIsModalVisible] = useState(false); // Quản lý trạng thái hiển thị của Modal
         const navigate = useNavigate();
         const dispatch = useDispatch();
         const location = useLocation();
         const {id} = useParams();
         const universityData = useSelector(state => state.UniversityReducer.university);
         const workshopsData = useSelector(state => state.WorkShopReducer.workshops);
-        const [locationData, setLocationData] = useState(null);
         const [page, setPage] = useState(1);
         const [size, setSize] = useState(10);
-        const [encryptedId, setEncryptedId] = useState(null);
         const totalElements = useSelector((state) => state.WorkShopReducer.totalRecords);
-        // useEffect(() => {
-        //     setEncryptedId(id);
-        // }, [id]);
+        const {isAuthenticated, userData} = useSelector((state) => state.UserReducer);
+        const isLoggedIn = isAuthenticated && userData?.business.id;
+
         useEffect(() => {
             dispatch(get_university_id(decryptId(id)));
             dispatch(get_workshops_by_university(decryptId(id), page - 1, size))
             console.log(universityData)
         }, [dispatch, page, size]);
+
+
+        const handleFollowUniversity = () => {
+            if (!isLoggedIn) {
+                setIsModalVisible(true); // Hiển thị modal nếu chưa đăng nhập
+                return;
+            }
+            // Gửi yêu cầu hợp tác (nếu đã đăng nhập)
+            dispatch(send_request(decryptId(id)));
+        };
+
+        const handleConfirmLogin = () => {
+            setIsModalVisible(false); // Đóng modal
+            notification.warning({
+                message: "Chưa đăng nhập",
+                description: "Bạn đang được điều hướng đến trang đăng nhập.",
+            });
+            navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`); // Chuyển hướng đến trang login
+        };
+
+        const handleCancel = () => {
+            setIsModalVisible(false); // Đóng modal nếu người dùng hủy
+        };
         const handlePageChange = (page, pageSize) => {
             setPage(page);
             setSize(pageSize);
@@ -108,10 +129,23 @@ const UniversityDetailPortal = () => {
                                                     <Button
                                                         type="primary"
                                                         style={{borderRadius: "20px"}}
-                                                        onClick={() => alert("Theo dõi công ty!")}
+                                                        onClick={handleFollowUniversity}
                                                     >
-                                                        <PlusOutlined/> Theo dõi trường học
+                                                        <PlusOutlined/> Yêu cầu hợp tác
                                                     </Button>
+                                                    <Modal
+                                                        title="Xác nhận đăng nhập"
+                                                        visible={isModalVisible}
+                                                        onOk={handleConfirmLogin}
+                                                        onCancel={handleCancel}
+                                                        okText="Đồng ý"
+                                                        cancelText="Hủy"
+                                                    >
+                                                        <p>
+                                                            Bạn cần đăng nhập để tiếp tục yêu cầu hợp tác. Bạn có muốn đăng nhập
+                                                            không?
+                                                        </p>
+                                                    </Modal>
                                                 </Col>
                                             </Row>
                                         </Card>

@@ -167,3 +167,20 @@ export const get_detail_cooperation_business = (id) => {
         }
     }
 }
+
+export const send_request = (universityId) => {
+    return async (dispatch) => {
+        try {
+            const res = await cooperationService.send_request_cooperation_business(universityId);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: CANCEL_REQUEST,
+                    payload: res.data
+                })
+            }
+            toast.success(res.data)
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    }
+}
