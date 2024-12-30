@@ -8,6 +8,7 @@ import {Pagination} from "antd";
 import {get_all_business_home_portal, get_all_university_home_portal} from "../../../Redux/actions/PortalThunk";
 import {get_all_result_search_university_page} from "../../../Redux/actions/UniversityThunk";
 import {UniversityReducer} from "../../../Redux/reducers/UniversityReducer";
+import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
 
 const HomeSearchBusiness = () => {
     const location = useLocation();
@@ -45,6 +46,11 @@ const HomeSearchBusiness = () => {
             return "";
         }
         return description.length > length ? `${description.substring(0, length)}...` : description;
+    };
+    const handleDetailsPortal = (id) => {
+        const encryptedId = encryptId(id);  // Encrypt the ID first
+        const url = `/university-portal-detail/${encodeURIComponent(encryptedId)}`;  // Make sure the encrypted ID is properly encoded
+        window.open(url, "_blank");  // Open in a new tab
     };
     return (
         <div className="contain-search-business">
@@ -92,7 +98,7 @@ const HomeSearchBusiness = () => {
                         <div className="company-list">
                             {resultSearchUniversity.map((university) => (
                                 <div className="company-item company-item-hover">
-                                    <a onClick={() => navigate(`/university-portal-detail`, { state: { businessId: university?.id } })} className="item-logo-business">
+                                    <a onClick={() => handleDetailsPortal(university?.id)} className="item-logo-business">
                                         <img className="item-logo-business-img"
                                              src={university?.imageID ? `${GET_IMAGE_URI}${university?.imageID}` : 'placeholder-avatar.jpg'}
                                              alt="FPT Shop"
@@ -102,7 +108,7 @@ const HomeSearchBusiness = () => {
                                         <div className="item-info-business-title">
                                             <strong>
                                                 <a className="item-info-business-company-name"
-                                                   onClick={() => navigate(`/university-portal-detail`, {state: {businessId: university?.id}})}
+                                                   onClick={() => handleDetailsPortal(university?.id)}
                                                    target="_blank">{university?.name}
                                                 </a>
                                             </strong>

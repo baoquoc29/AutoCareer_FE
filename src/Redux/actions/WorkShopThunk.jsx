@@ -52,6 +52,20 @@ export const get_all_workshop_by_business = (idBusiness,param) => {
         }
     };
 };
+export const get_workshops_by_university = (idBusiness,page, size) => {
+    return async (dispatch) => {
+        try {
+            const res = await workShopService.get_workshops_in_university(idBusiness, page, size);
+            dispatch({
+                type: SET_WORK_SHOP,
+                payload: res.data,  // Update the state with the fetched workshops list
+            });
+        } catch (error) {
+            console.error("Error fetching workshops:", error);
+            // Optionally, you can dispatch an error action or show a notification
+        }
+    };
+};
 export const get_all_workshop_by_state = (state, page, size) => {
     return async (dispatch) => {
         try {

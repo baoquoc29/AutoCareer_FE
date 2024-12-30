@@ -88,22 +88,22 @@ const BusinessDetail = ({open, onClose}) => {
                 ) : "Chưa cập nhật"}</p>
                 <p><strong>Email:</strong> {business?.email || "Chưa cập nhật"}</p>
                 <p><strong>Điện Thoại:</strong> {business?.phone || "Chưa cập nhật"}</p>
-                <div className="row mb-4">
-                    <p><strong>Ảnh Giấy Phép Kinh Doanh:</strong></p>
-                    {business?.licenseImageId ? (
-                        <div className="text-center">
-                            <Image
-                                src={business?.licenseImageId ? `${GET_IMAGE_URI}${business?.licenseImageId}` : "/placeholder-logo.png"}
-                                alt="Logo Doanh Nghiệp"
-                                className="img-fluid logo-image rounded"
-                                style={{maxHeight: "150px"}}
-                                preview={true}
-                            />
-                        </div>
-                    ) : (
-                        <p>Chưa có ảnh giấy phép kinh doanh.</p>
-                    )}
-                </div>
+                {/*<div className="row mb-4">*/}
+                {/*    <p><strong>Ảnh Giấy Phép Kinh Doanh:</strong></p>*/}
+                {/*    {business?.licenseImageId ? (*/}
+                {/*        <div className="text-center">*/}
+                {/*            <Image*/}
+                {/*                src={business?.licenseImageId ? `${GET_IMAGE_URI}${business?.licenseImageId}` : "/placeholder-logo.png"}*/}
+                {/*                alt="Logo Doanh Nghiệp"*/}
+                {/*                className="img-fluid logo-image rounded"*/}
+                {/*                style={{maxHeight: "150px"}}*/}
+                {/*                preview={true}*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*    ) : (*/}
+                {/*        <p>Chưa có ảnh giấy phép kinh doanh.</p>*/}
+                {/*    )}*/}
+                {/*</div>*/}
             </div>
             {/* Action Buttons */}
             <div style={{textAlign: "right", marginTop: "16px"}}>
