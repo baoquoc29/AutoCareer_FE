@@ -8,15 +8,15 @@ import './style.css'
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
     // Kiểm tra loại người dùng
-    const isUniversityUser = user && user.role.name === 'UNIVERSITY';
-    const isBusinessUser = user && user.role.name === 'BUSINESS';
-    const isAdminUser = user && user.role.name === 'ADMIN';
-    const isSubAdminUser = user && user.role.name === 'SUB_ADMIN';
-    const isEmployeeUser = user && user.role.name === 'EMPLOYEE';
+    const isUniversityUser = user && user?.role?.name === 'UNIVERSITY';
+    const isBusinessUser = user && user?.role?.name === 'BUSINESS';
+    const isAdminUser = user && user?.role?.name === 'ADMIN';
+    const isSubAdminUser = user && user?.role?.name === 'SUB_ADMIN';
+    const isEmployeeUser = user && user?.role?.name === 'EMPLOYEE';
 
     const dispatch = useDispatch();
     const userId = user ? user.id : null;
-    const userType = user ? user.role.name : null;
+    const userType = user ? user?.role?.name : null;
     useEffect(() => {
         return () => {
             dispatch(clearLocalStorage());
@@ -104,9 +104,9 @@ export const UserDropdown = ({navigate}) => {
                         </div>
                         <div className="flex-grow-1 ms-3">
                             <h5 className="mb-0">
-                                {user.username.length > 10 ? user.username.slice(0, 18) + "..." : user.username}
+                                {user?.username.length > 10 ? user.username?.slice(0, 18) + "..." : user?.username}
                             </h5>
-                            <span className="text-body-secondary role-name">Vai trò:{getRoleDisplayName(user.role.name)}</span>
+                            <span className="text-body-secondary role-name">Vai trò:{getRoleDisplayName(user?.role?.name)}</span>
                         </div>
                     </div>
                     <div>

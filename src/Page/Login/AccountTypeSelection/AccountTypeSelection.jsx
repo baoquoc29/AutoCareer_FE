@@ -1,6 +1,12 @@
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import React from 'react';
 import './AccountTypeSelection.css'
+
+const NavLinkButton = React.memo(({ to, className, children }) => (
+    <Link to={to} className={className}>
+        {children}
+    </Link>
+));
 export function AccountTypeSelection() {
     return (
 
@@ -14,8 +20,12 @@ export function AccountTypeSelection() {
                                     <h1 className="h3">Chọn loại tài khoản</h1>
                                     <p>Vui lòng chọn loại tài khoản bạn muốn đăng ký</p>
                                     <div className="d-grid gap-3 mt-4">
-                                        <NavLink to="/signup-university" className="btn btn-primary btn-lg">Trường đại học</NavLink>
-                                        <NavLink to="/signup-business" className="btn btn-secondary btn-lg">Doanh nghiệp</NavLink>
+                                        <NavLinkButton to="/signup-university" className="btn btn-primary btn-lg">
+                                            Trường đại học
+                                        </NavLinkButton>
+                                        <NavLinkButton to="/signup-business" className="btn btn-secondary btn-lg">
+                                            Doanh nghiệp
+                                        </NavLinkButton>
                                     </div>
                                 </div>
                             </div>

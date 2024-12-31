@@ -50,7 +50,6 @@ export function University() {
     const formattedDate = new Date().toLocaleDateString();
 
 
-    console.log('data',totalApprovedWorkShop)
 
     // Dữ liệu cho Bar Chart từ countStudentMajor
     const chartBarData2 = Object.values(countStudentMajor);

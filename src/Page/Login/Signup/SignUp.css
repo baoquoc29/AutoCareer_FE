@@ -2,9 +2,10 @@
     color: red;
 }
 .signup-root {
+    display: flex;
     width: 100%;
     height: 100%;
-    background: url("../background-1.jpg") fixed center;
+    /*background: url("../background-1.jpg") fixed center;*/
 }
 .file-upload {
     border: 2px dashed #ccc;
@@ -27,4 +28,11 @@
 
 .file-upload input[type="file"] {
     display: none;
+}
+.signup-business{
+    flex: 1;
+    display: flex;
+    position: relative;
+    transform: translateX(1rem); /* Dịch chuyển sang phải 10px */
+    width: 100%;
 }
