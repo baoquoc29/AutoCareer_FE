@@ -7,6 +7,7 @@ import {
     send_code_forgot,
     send_new_password,
 } from "../../../Redux/actions/UserThunk";
+import './PasswordReminder.css'
 
 export const PasswordReminder = () => {
     const [form] = Form.useForm();
@@ -98,9 +99,16 @@ export const PasswordReminder = () => {
     }, []); // This effect will run when the component is first mounted
 
     return (
-        <div id="root" className="root front-container">
-            <section id="content" className="content">
-                <div className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <div id="root" className="root front-container passwordReminder">
+            <div className="signin-image">
+                <img
+                    src="https://img.freepik.com/free-vector/forgot-password-concept-illustration_114360-1095.jpg"
+                    alt="Placeholder Image"
+                />
+            </div>
+            <section id="content" className="content passwordReminder-content">
+                <div
+                    className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
                     <div className="content__wrap">
                         <div className="card shadow-lg">
                             <div className="card-body">
@@ -117,10 +125,10 @@ export const PasswordReminder = () => {
                                     <Form.Item
                                         name="email"
                                         rules={[
-                                            { required: true, message: "Vui lòng nhập email hợp lệ!" },
-                                            { type: "email", message: "Định dạng email không hợp lệ!" },
-                                            { pattern: /^[^\s].*$/, message: "Email không được có dấu cách ở đầu." },
-                                            { min: 5,max:50, message: 'Email không hợp lệ!' },
+                                            {required: true, message: "Vui lòng nhập email hợp lệ!"},
+                                            {type: "email", message: "Định dạng email không hợp lệ!"},
+                                            {pattern: /^[^\s].*$/, message: "Email không được có dấu cách ở đầu."},
+                                            {min: 5, max: 50, message: 'Email không hợp lệ!'},
                                         ]}
                                     >
                                         <Input placeholder="Nhập email" autoFocus/>
@@ -166,14 +174,14 @@ export const PasswordReminder = () => {
                     placeholder="Nhập mã xác minh"
                     value={code}
                     onChange={handleCodeChange}
-                    style={{ marginBottom: 10 }}
+                    style={{marginBottom: 10}}
                 />
                 <p>Thời gian còn lại: <b>{timer}s</b></p> {/* Display remaining time */}
                 {canResend && (
                     <Button
                         type="link"
                         onClick={handleResendCode}
-                        style={{ marginTop: 10 }}
+                        style={{marginTop: 10}}
                         block
                     >
                         Gửi lại mã xác minh

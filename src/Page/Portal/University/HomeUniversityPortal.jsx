@@ -12,11 +12,13 @@ const HomeBusinessPortal = () => {
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
 
+
+
     useEffect(() => {
         dispatch(get_all_university_home_portal());
         console.log(university);
     }, [dispatch]);
-
+    console.log('uni',university)
     const truncateDescription = (description, wordLimit = 80) => {
         if (!description)
             description = "Không có nội dung";

@@ -38,6 +38,12 @@ export const SignIn = () => {
 
     return (
         <div className="signin-container">
+            <div className="signin-image">
+                <img
+                    src="https://static.vecteezy.com/system/resources/previews/012/912/110/non_2x/character-hand-holding-smartphone-with-sms-authentication-key-and-typing-password-on-laptop-with-online-login-form-on-screen-secure-user-authorization-concept-isometric-modern-illustration-vector.jpg"
+                    alt="Placeholder Image"
+                />
+            </div>
             <section className="signin-content">
                 <div className="signin-boxed">
                     <div className="signin-wrap">
@@ -94,8 +100,10 @@ export const SignIn = () => {
                                     </Form.Item>
                                 </Form>
                                 <div className="d-flex justify-content-between gap-md-5 mt-4">
-                                    <NavLink to="/reset-password" className="btn-link text-decoration-none">Quên mật khẩu?</NavLink>
-                                    <NavLink to="/account-type-selection" className="btn-link text-decoration-none">Đăng ký tài khoản</NavLink>
+                                    <NavLink to="/reset-password" className="btn-link text-decoration-none">Quên mật
+                                        khẩu?</NavLink>
+                                    <NavLink to="/account-type-selection" className="btn-link text-decoration-none">Đăng
+                                        ký tài khoản</NavLink>
                                 </div>
                             </div>
                         </div>

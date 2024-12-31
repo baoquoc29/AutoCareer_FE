@@ -237,237 +237,166 @@ export function SignUpBusiness() {
     };
     return (
         <div className="signup-root">
+            <div className="signin-image">
+                <img
+                    src="https://static.vecteezy.com/system/resources/previews/003/689/223/non_2x/online-registration-or-sign-up-login-for-account-on-smartphone-app-user-interface-with-secure-password-mobile-application-for-ui-web-banner-access-cartoon-people-illustration-vector.jpg"
+                    alt="Placeholder Image"
+                />
+            </div>
             <div className="signup-business">
-                <div className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-                    <div
-                        className="card shadow-lg"
-                        style={{
-                            width: '90%',
-                            maxWidth: 650,
-                            padding: '20px',
-                            borderRadius: '10px',
-                            backgroundColor: '#f8f9fa',
-                        }}
-                    >
+                <div
+                    className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+                    <div className="card shadow-lg" style={{
+                        width: '90%',
+                        maxWidth: 650,
+                        borderRadius: '10px',
+                        backgroundColor: '#f8f9fa'
+                    }}>
                         <div className="card-body">
-                            <h1 className="h3 text-center mb-4" style={{color: '#333'}}>
+                            <h1 className="h3 text-center" style={{color: '#333'}}>
                                 Đăng ký tài khoản doanh nghiệp
                             </h1>
-                            <p className="text-center text-muted mb-4">Tham gia cộng đồng Auto Career!</p>
+                            <p className="text-center text-muted">Tham gia cộng đồng Auto Career!</p>
                             <Form form={form} layout="vertical" onFinish={handleSendCode}>
-                                <Form.Item
-                                    label="Tên doanh nghiệp"
-                                    name="companyName"
-                                    rules={[
-                                        {required: true, message: ''},
-                                        {
-                                            validator: (_, value) =>
-                                                getValidationMessage('companyName', value)
-                                                    ? Promise.reject(getValidationMessage('companyName', value))
-                                                    : Promise.resolve(),
-                                        },
-                                    ]}
-                                >
+                                {/* Tên doanh nghiệp */}
+                                <Form.Item label="Tên doanh nghiệp" name="companyName" rules={[
+                                    {required: true, message: ''},
+                                    {validator: (_, value) => getValidationMessage('companyName', value) ? Promise.reject(getValidationMessage('companyName', value)) : Promise.resolve()}
+                                ]}>
                                     <Input placeholder="Nhập tên doanh nghiệp" size="large"/>
                                 </Form.Item>
 
-                                <Form.Item
-                                    label="Mã số thuế"
-                                    name="taxCode"
-                                    rules={[
-                                        {required: true, message: ''},
-                                        {
-                                            validator: (_, value) =>
-                                                getValidationMessage('taxCode', value)
-                                                    ? Promise.reject(getValidationMessage('taxCode', value))
-                                                    : Promise.resolve(),
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder="Nhập mã số thuế" size="large"/>
-                                </Form.Item>
+                                {/* Mã số thuế và Email */}
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item label="Mã số thuế" name="taxCode"
+                                                   rules={[{required: true, message: ''}]}>
+                                            <Input placeholder="Nhập mã số thuế" size="large"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item label="Email" name="email" rules={[
+                                            {required: true, message: ''},
+                                            {validator: (_, value) => getValidationMessage('email', value) ? Promise.reject(getValidationMessage('email', value)) : Promise.resolve()}
+                                        ]}>
+                                            <Input placeholder="Nhập email" size="large"/>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
 
-                                <Form.Item
-                                    label="Email"
-                                    name="email"
-                                    rules={[
-                                        {required: true, message: ''},
-                                        {
-                                            validator: (_, value) =>
-                                                getValidationMessage('email', value)
-                                                    ? Promise.reject(getValidationMessage('email', value))
-                                                    : Promise.resolve(),
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder="Nhập email" size="large"/>
-                                </Form.Item>
-
-                                <Form.Item
-                                    rules={[{required: true, message: 'Ảnh là bắt buộc.'}]}
-                                    label="Ảnh thương hiệu"
-                                    name="image"
-                                >
-                                    <Upload
-                                        listType="picture"
-                                        fileList={fileList}
-                                        onChange={handleFileChange}
-                                        beforeUpload={() => false}
-                                        maxCount={1}
-                                        onPreview={handleImagePreview}
-                                    >
-                                        <Button icon={<UploadOutlined/>} size="large">
-                                            Chọn ảnh thương hiệu
-                                        </Button>
+                                {/* Ảnh thương hiệu */}
+                                <Form.Item label="Ảnh thương hiệu" name="image"
+                                           rules={[{required: true, message: 'Ảnh là bắt buộc.'}]}>
+                                    <Upload listType="picture" fileList={fileList} onChange={handleFileChange}
+                                            beforeUpload={() => false} maxCount={1} onPreview={handleImagePreview}>
+                                        <Button icon={<UploadOutlined/>} size="large">Chọn ảnh thương hiệu</Button>
                                     </Upload>
                                 </Form.Item>
 
+                                {/* Tỉnh/Thành phố, Quận/Huyện, Xã/Phường */}
                                 <Row gutter={16}>
                                     <Col span={8}>
-                                        <Form.Item
-                                            label="Tỉnh/Thành phố"
-                                            name="province"
-                                            rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố.'}]}
-                                        >
+                                        <Form.Item label="Tỉnh/Thành phố" name="province"
+                                                   rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố.'}]}>
                                             <Select placeholder="Chọn tỉnh/thành phố" onChange={handleProvinceChange}>
                                                 {provinces.map((province) => (
-                                                    <Select.Option key={province.id} value={province.id}>
-                                                        {province.name}
-                                                    </Select.Option>
+                                                    <Select.Option key={province.id}
+                                                                   value={province.id}>{province.name}</Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
                                     </Col>
                                     <Col span={8}>
-                                        <Form.Item
-                                            label="Quận/Huyện"
-                                            name="district"
-                                            rules={[{required: true, message: 'Vui lòng chọn quận/huyện.'}]}
-                                        >
-                                            <Select
-                                                placeholder="Chọn quận/huyện"
-                                                onChange={handleDistrictChange}
-                                                disabled={!selectedProvince}
-                                            >
+                                        <Form.Item label="Quận/Huyện" name="district"
+                                                   rules={[{required: true, message: 'Vui lòng chọn quận/huyện.'}]}>
+                                            <Select placeholder="Chọn quận/huyện" onChange={handleDistrictChange}
+                                                    disabled={!selectedProvince}>
                                                 {districts.map((district) => (
-                                                    <Select.Option key={district.id} value={district.id}>
-                                                        {district.name}
-                                                    </Select.Option>
+                                                    <Select.Option key={district.id}
+                                                                   value={district.id}>{district.name}</Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
                                     </Col>
                                     <Col span={8}>
-                                        <Form.Item
-                                            label="Xã/Phường"
-                                            name="ward"
-                                            rules={[{required: true, message: 'Vui lòng chọn xã/phường.'}]}
-                                        >
+                                        <Form.Item label="Xã/Phường" name="ward"
+                                                   rules={[{required: true, message: 'Vui lòng chọn xã/phường.'}]}>
                                             <Select placeholder="Chọn xã/phường" disabled={!selectedDistrict}>
                                                 {wards.map((ward) => (
-                                                    <Select.Option key={ward.id} value={ward.id}>
-                                                        {ward.name}
-                                                    </Select.Option>
+                                                    <Select.Option key={ward.id}
+                                                                   value={ward.id}>{ward.name}</Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
                                     </Col>
                                 </Row>
 
-                                <Form.Item
-                                    label="Mật khẩu"
-                                    name="password"
-                                    rules={[
-                                        {required: true, message: ''},
-                                        {
-                                            validator: (_, value) =>
-                                                getValidationMessage('password', value)
-                                                    ? Promise.reject(getValidationMessage('password', value))
-                                                    : Promise.resolve(),
-                                        },
-                                    ]}
-                                >
-                                    <Input.Password placeholder="Nhập mật khẩu" size="large"/>
-                                </Form.Item>
+                                {/* Mật khẩu và Xác nhận mật khẩu */}
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item label="Mật khẩu" name="password" rules={[
+                                            {required: true, message: ''},
+                                            {validator: (_, value) => getValidationMessage('password', value) ? Promise.reject(getValidationMessage('password', value)) : Promise.resolve()}
+                                        ]}>
+                                            <Input.Password placeholder="Nhập mật khẩu" size="large"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item label="Xác nhận mật khẩu" name="confirmPassword" rules={[
+                                            {required: true, message: 'Xác nhận mật khẩu là bắt buộc.'},
+                                            ({getFieldValue}) => ({
+                                                validator(_, value) {
+                                                    if (!value || getFieldValue('password') === value) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(new Error('Xác nhận mật khẩu không trùng khớp!'));
+                                                },
+                                            }),
+                                        ]}>
+                                            <Input.Password placeholder="Nhập lại mật khẩu" size="large"/>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
 
-                                <Form.Item
-                                    label="Xác nhận mật khẩu"
-                                    name="confirmPassword"
-                                    rules={[
-                                        {required: true, message: 'Xác nhận mật khẩu là bắt buộc.'},
-                                        ({getFieldValue}) => ({
-                                            validator(_, value) {
-                                                if (!value || getFieldValue('password') === value) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(new Error('Xác nhận mật khẩu không trùng khớp!'));
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input.Password placeholder="Nhập lại mật khẩu" size="large"/>
-                                </Form.Item>
-
+                                {/* Submit Button */}
                                 <Button type="primary" htmlType="submit" block size="large" disabled={!canResend}>
                                     {isLoading ? <Spin/> : 'Đăng ký tài khoản'}
                                 </Button>
                             </Form>
 
-                            <Modal
-                                open={showModal}
-                                title="Nhập mã xác minh"
-                                onCancel={() => setShowModal(false)}
-                                footer={[
-                                    <Button key="cancel" onClick={() => setShowModal(false)}>
-                                        Hủy
-                                    </Button>,
-                                    <Button
-                                        key="submit"
-                                        type="primary"
-                                        onClick={handleVerifyCodeSubmit}
-                                        disabled={!code}
-                                    >
-                                        Xác nhận
-                                    </Button>
-                                ]}
-                            >
-                                <Input
-                                    placeholder="Nhập mã xác minh"
-                                    value={code}
-                                    onChange={(e) => setCode(e.target.value)}
-                                    style={{marginBottom: 10}}
-                                />
+                            {/* Modal for Verification Code */}
+                            <Modal open={showModal} title="Nhập mã xác minh" onCancel={() => setShowModal(false)}
+                                   footer={[
+                                       <Button key="cancel" onClick={() => setShowModal(false)}>Hủy</Button>,
+                                       <Button key="submit" type="primary" onClick={handleVerifyCodeSubmit}
+                                               disabled={!code}>Xác nhận</Button>
+                                   ]}>
+                                <Input placeholder="Nhập mã xác minh" value={code}
+                                       onChange={(e) => setCode(e.target.value)} style={{marginBottom: 10}}/>
                                 <p>Thời gian còn lại: <b>{timer}s</b></p>
                                 {canResend && (
-                                    <Button
-                                        type="link"
-                                        onClick={handleResendCode}
-                                        style={{marginTop: 10}}
-                                        block
-                                    >
+                                    <Button type="link" onClick={handleResendCode} style={{marginTop: 10}} block>
                                         Gửi lại mã xác minh
                                     </Button>
                                 )}
                             </Modal>
 
+                            {/* Image Preview Modal */}
                             <Modal open={showImageModal} footer={null} onCancel={() => setShowImageModal(false)}>
                                 <img alt="preview" style={{width: '100%'}} src={imagePreview}/>
                             </Modal>
+
                             <div className="d-flex justify-content-end align-items-center gap-md-3 mt-4">
                                 <p className="mb-0 fs-6">Bạn đã có tài khoản?</p>
-                                <NavLink
-                                    to={"/login"}
-                                    className="btn-link text-decoration-none ms-1 fs-6"
-                                >
-                                    Đăng nhập
-                                </NavLink>
+                                <NavLink to={"/login"} className="btn-link text-decoration-none ms-1 fs-6">Đăng
+                                    nhập</NavLink>
                             </div>
-
 
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

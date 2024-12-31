@@ -187,18 +187,25 @@ export function SignUpUniversity() {
     };
     return (
         <div className="signup-root">
+            <div className="signin-image">
+                <img
+                    src="https://static.vecteezy.com/system/resources/previews/003/689/223/non_2x/online-registration-or-sign-up-login-for-account-on-smartphone-app-user-interface-with-secure-password-mobile-application-for-ui-web-banner-access-cartoon-people-illustration-vector.jpg"
+                    alt="Placeholder Image"
+                />
+            </div>
             <div className="signup-business">
-                <div className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-                    <div className="card shadow-lg" style={{ width: '80%', maxWidth: 650 }}>
-                        <div className="card-body" >
+                <div
+                    className="content__boxed w-100 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+                    <div className="card shadow-lg" style={{width: '100%', maxWidth: 650}}>
+                        <div className="card-body">
                             <h1 className="h3 text-center">Đăng ký tài khoản trường đại học</h1>
                             <p className="text-center">Tham gia cộng đồng Auto Career!</p>
 
                             <Form form={form} layout="vertical" onFinish={handleSendCode}>
                                 <Form.Item label="Tên trường đại học" name="universityName"
                                            rules={[
-                                               { required: true,message: ""  },
-                                               { validator: (_, value) => getValidationMessage('universityName', value) ? Promise.reject(getValidationMessage('universityName', value)) : Promise.resolve() }
+                                               {required: true, message: ""},
+                                               {validator: (_, value) => getValidationMessage('universityName', value) ? Promise.reject(getValidationMessage('universityName', value)) : Promise.resolve()}
                                            ]}
                                 >
                                     <Input placeholder="Nhập tên trường đại học"/>
@@ -206,8 +213,8 @@ export function SignUpUniversity() {
 
                                 <Form.Item label="Số điện thoại" name="numberPhone"
                                            rules={[
-                                               { required: true,message: ""  },
-                                               { validator: (_, value) => getValidationMessage('numberPhone', value) ? Promise.reject(getValidationMessage('numberPhone', value)) : Promise.resolve() }
+                                               {required: true, message: ""},
+                                               {validator: (_, value) => getValidationMessage('numberPhone', value) ? Promise.reject(getValidationMessage('numberPhone', value)) : Promise.resolve()}
                                            ]}
                                 >
                                     <Input placeholder="Nhập số điện thoại"/>
@@ -215,69 +222,70 @@ export function SignUpUniversity() {
 
                                 <Form.Item label="Email" name="email"
                                            rules={[
-                                               { required: true,message: ""  },
-                                               { validator: (_, value) => getValidationMessage('email', value) ? Promise.reject(getValidationMessage('email', value)) : Promise.resolve() }
+                                               {required: true, message: ""},
+                                               {validator: (_, value) => getValidationMessage('email', value) ? Promise.reject(getValidationMessage('email', value)) : Promise.resolve()}
                                            ]}
                                 >
                                     <Input placeholder="Nhập email"/>
 
                                 </Form.Item>
-                                    <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' ,marginTop: '20px'}}>
-                                        <Col span={8}>
-                                            <Form.Item
-                                                label="Tỉnh/Thành phố"
-                                                name="province"
-                                                rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố.' }]}
+                                <Row gutter={16} align="middle"
+                                     style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            label="Tỉnh/Thành phố"
+                                            name="province"
+                                            rules={[{required: true, message: 'Vui lòng chọn tỉnh/thành phố.'}]}
+                                        >
+                                            <Select placeholder="Chọn tỉnh/thành phố" onChange={handleProvinceChange}>
+                                                {provinces.map((province) => (
+                                                    <Select.Option key={province.id} value={province.id}>
+                                                        {province.name}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            label="Quận/Huyện"
+                                            name="district"
+                                            rules={[{required: true, message: 'Vui lòng chọn quận/huyện.'}]}
+                                        >
+                                            <Select
+                                                placeholder="Chọn quận/huyện"
+                                                onChange={handleDistrictChange}
+                                                disabled={!selectedProvince}
                                             >
-                                                <Select placeholder="Chọn tỉnh/thành phố" onChange={handleProvinceChange}>
-                                                    {provinces.map((province) => (
-                                                        <Select.Option key={province.id} value={province.id}>
-                                                            {province.name}
-                                                        </Select.Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={8}>
-                                            <Form.Item
-                                                label="Quận/Huyện"
-                                                name="district"
-                                                rules={[{ required: true, message: 'Vui lòng chọn quận/huyện.' }]}
-                                            >
-                                                <Select
-                                                    placeholder="Chọn quận/huyện"
-                                                    onChange={handleDistrictChange}
-                                                    disabled={!selectedProvince}
-                                                >
-                                                    {districts.map((district) => (
-                                                        <Select.Option key={district.id} value={district.id}>
-                                                            {district.name}
-                                                        </Select.Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={8}>
-                                            <Form.Item
-                                                label="Xã/Phường"
-                                                name="ward"
-                                                rules={[{ required: true, message: 'Vui lòng chọn xã/phường.' }]}
-                                            >
-                                                <Select placeholder="Chọn xã/phường" disabled={!selectedDistrict}>
-                                                    {wards.map((ward) => (
-                                                        <Select.Option key={ward.id} value={ward.id}>
-                                                            {ward.name}
-                                                        </Select.Option>
-                                                    ))}
-                                                </Select>
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                                                {districts.map((district) => (
+                                                    <Select.Option key={district.id} value={district.id}>
+                                                        {district.name}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            label="Xã/Phường"
+                                            name="ward"
+                                            rules={[{required: true, message: 'Vui lòng chọn xã/phường.'}]}
+                                        >
+                                            <Select placeholder="Chọn xã/phường" disabled={!selectedDistrict}>
+                                                {wards.map((ward) => (
+                                                    <Select.Option key={ward.id} value={ward.id}>
+                                                        {ward.name}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
 
                                 <Form.Item label="Mật khẩu" name="password"
                                            rules={[
-                                               { required: true,message: ""  },
-                                               { validator: (_, value) => getValidationMessage('password', value) ? Promise.reject(getValidationMessage('password', value)) : Promise.resolve() }
+                                               {required: true, message: ""},
+                                               {validator: (_, value) => getValidationMessage('password', value) ? Promise.reject(getValidationMessage('password', value)) : Promise.resolve()}
                                            ]}
                                 >
                                     <Input.Password placeholder="Nhập mật khẩu"/>
@@ -285,8 +293,8 @@ export function SignUpUniversity() {
 
                                 <Form.Item label="Xác nhận mật khẩu" name="confirmPassword"
                                            rules={[
-                                               { required: true, message: 'Xác nhận mật khẩu là bắt buộc.' },
-                                               ({ getFieldValue }) => ({
+                                               {required: true, message: 'Xác nhận mật khẩu là bắt buộc.'},
+                                               ({getFieldValue}) => ({
                                                    validator(_, value) {
                                                        if (!value || getFieldValue('password') === value) {
                                                            return Promise.resolve();

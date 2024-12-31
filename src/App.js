@@ -26,16 +26,15 @@ import { getAnalytics } from "firebase/analytics";
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
-function App() {
+    function App() {
 
-    return (
-        <>
-            <Loading />
-            <AppRouter/>
+        return (
+            <>
+                <Loading />
+                <AppRouter/>
+                <ToastContainer />
+            </>
+        );
+    }
 
-            <ToastContainer />
-        </>
-    );
-}
-
-export default App;
+    export default App;
