@@ -10,12 +10,14 @@ import {Footer} from "../../Component/FooterComponent/Footer";
 
 export function UniversityTemplate() {
     const user = useSelector(state => state.UserReducer.userData);
-    const universityId = user.university.id;
+    const universityId = user?.university?.id;
     const uni = useSelector(state => state.UniversityReducer.university);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(get_university_id(universityId));
-        console.log(universityId);
+        if (universityId) {
+            console.log('Dispatching get_university_id with universityId:', universityId); // Kiểm tra
+            dispatch(get_university_id(universityId));
+        }
     }, [dispatch,universityId]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {userData} = useSelector((state) => state.UserReducer);
@@ -60,7 +62,7 @@ export function UniversityTemplate() {
         return uni.logoImageId ? `${GET_IMAGE_URI}${uni.logoImageId}` : "placeholder-avatar.jpg";
     };
     const truncateUserName = (userName) => {
-        return userName.length > 20 ? userName.slice(0, 20) + '...' : userName;
+        return userName?.length > 20 ? userName.slice(0, 20) + '...' : userName;
     };
 
     return (
@@ -68,8 +70,8 @@ export function UniversityTemplate() {
             <div id="root" className={`root tm--primary-mn ${isMenuOpen ? 'mn--max' : 'mn--min'}`}>
                 <Header toggleSidebar={toggleSidebar} link={'/university'}/>
                 <SideBar
-                    userName={truncateUserName(userData.username)}
-                    userRole={userData.role.name}
+                    userName={truncateUserName(userData?.username)}
+                    userRole={userData?.role?.name}
                     profileImg={getProfileImage()}
                     caption="Quản lý trường đại học"
                     menuItems={menuItems}

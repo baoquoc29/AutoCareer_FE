@@ -40,6 +40,7 @@ const initialState = {
     response : null,
     error: null,
     change_password : null,
+
 }
 
 export const UserReducer = (state = initialState, action) => {

@@ -21,23 +21,24 @@ import {toast} from "react-toastify";
 export const loginUser = (username, password) => async (dispatch) => {
     try {
         const res = await userService.login(username, password);
-        console.log(res.data);
-        if (res.data && res.data.accessToken) {
-            const {accessToken, ...userDetails } = res.data;
-            localStorage.setItem(TOKEN, accessToken);
-            localStorage.setItem(USER_LOGIN, JSON.stringify(userDetails));
-            dispatch({
-                type: LOGIN_SUCCESS,
-                payload: {
-                    userData: userDetails,
-                    token: accessToken
-                }
-            });
-        } else {
-            console.log("Login failed, no token returned");
+        if (res.code === STATUS_CODE.SUCCESS) {
+            toast.success(res.message);
+            if (res.data && res.data.accessToken) {
+                const {accessToken, ...userDetails} = res.data;
+                localStorage.setItem(TOKEN, accessToken);
+                localStorage.setItem(USER_LOGIN, JSON.stringify(userDetails));
+                dispatch({
+                    type: LOGIN_SUCCESS,
+                    payload: {
+                        userData: userDetails,
+                        token: accessToken
+                    }
+                });
+            } else {
+                console.log("Login failed, no token returned");
+            }
         }
-    }
-    catch (error) {
+    } catch (error) {
         toast.error(error.response.data.message)
         console.log(error.response.data.message)
         dispatch({
@@ -53,7 +54,8 @@ export const logoutUser = (token) => async (dispatch) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
     try {
         const res = await userService.logout(token);
-        if (res === STATUS_CODE.SUCCESS) {
+        console.log(res)
+        if (res.code === STATUS_CODE.SUCCESS) {
             localStorage.removeItem(USER_LOGIN);
             localStorage.removeItem(TOKEN);
             dispatch({
@@ -67,7 +69,7 @@ export const logoutUser = (token) => async (dispatch) => {
 }
 export const change_password = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });
+        dispatch({type: DISPLAY_LOADING});
         try {
             const res = await userService.change_password(formData);
 
@@ -84,13 +86,13 @@ export const change_password = (formData) => {
             console.log('change error:', error);
             toast.error('Đã xảy ra lỗi khi thay đổi mật khẩu. Vui lòng thử lại.!');
         } finally {
-            dispatch({ type: HIDE_LOADING });
+            dispatch({type: HIDE_LOADING});
         }
     };
 };
 export const sign_up_university = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });  // Show loading state
+        dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.sign_up_university(formData);
@@ -101,19 +103,19 @@ export const sign_up_university = (formData) => {
         } catch (error) {
             console.log('sign_up_university error:', error);
         } finally {
-            dispatch({ type: HIDE_LOADING });  // Hide loading state
+            dispatch({type: HIDE_LOADING});  // Hide loading state
         }
     };
 };
 export const clearResponseBusiness = () => {
-    return { type: CLEAR_RESPONSE };
+    return {type: CLEAR_RESPONSE};
 };
 export const clearLocalStorage = () => {
-    return { type: CLEAN_LOCAL_STORAGE };
+    return {type: CLEAN_LOCAL_STORAGE};
 };
 export const sign_up_business = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });  // Show loading state
+        dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
           //  await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.sign_up_business(formData);
@@ -124,14 +126,14 @@ export const sign_up_business = (formData) => {
         } catch (error) {
             console.log('sign_up_business error:', error);
         } finally {
-            dispatch({ type: HIDE_LOADING });  // Hide loading state
+            dispatch({type: HIDE_LOADING});  // Hide loading state
         }
     };
 };
 
 export const verify_account_business = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });  // Show loading state
+        dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_verify_code_business(formData);
@@ -142,14 +144,14 @@ export const verify_account_business = (formData) => {
         } catch (e) {
             console.log('verify_account_business error:', e);
         } finally {
-            dispatch({ type: HIDE_LOADING });  // Hide loading state
+            dispatch({type: HIDE_LOADING});  // Hide loading state
         }
     };
 };
 
 export const verify_account_university = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });  // Show loading state
+        dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_verify_code_university(formData);
@@ -160,14 +162,14 @@ export const verify_account_university = (formData) => {
         } catch (e) {
             console.log('verify_account_university error:', e);
         } finally {
-            dispatch({ type: HIDE_LOADING });  // Hide loading state
+            dispatch({type: HIDE_LOADING});  // Hide loading state
         }
     };
 };
 
 export const send_code_forgot = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });
+        dispatch({type: DISPLAY_LOADING});
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_forgot_code(formData);
@@ -178,13 +180,13 @@ export const send_code_forgot = (formData) => {
         } catch (e) {
             console.log('verify_account_business error:', e);
         } finally {
-            dispatch({ type: HIDE_LOADING });
+            dispatch({type: HIDE_LOADING});
         }
     };
 };
 export const send_new_password = (formData) => {
     return async (dispatch) => {
-        dispatch({ type: DISPLAY_LOADING });
+        dispatch({type: DISPLAY_LOADING});
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.send_new_password(formData);
@@ -196,7 +198,7 @@ export const send_new_password = (formData) => {
         } catch (e) {
             console.log('verify_account_business error:', e);
         } finally {
-            dispatch({ type: HIDE_LOADING });
+            dispatch({type: HIDE_LOADING});
         }
     };
 };

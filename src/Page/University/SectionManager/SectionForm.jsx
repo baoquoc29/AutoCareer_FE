@@ -1,6 +1,6 @@
 import {useDispatch} from "react-redux";
 import {useFormik} from "formik";
-import {create_section} from "../../../Redux/actions/SectionThunk";
+import {create_section, get_all_sections} from "../../../Redux/actions/SectionThunk";
 import {Button, Card, Form, Input} from "antd";
 import SectionValidation from "../../../Utils/Validation/University/SectionValidation";
 import {PlusOutlined} from "@ant-design/icons";
@@ -24,7 +24,11 @@ export const SectionForm = ({universityId}) => {
                 name: values.name.trim(),
                 description: values.description.trim(),
             };
-            dispatch(create_section(trimmedValues));
+            dispatch(create_section(trimmedValues))
+                .then(() => {
+                    // Callback sau khi create_section hoàn thành
+                    dispatch(get_all_sections(universityId));
+                });
         }
     });
     return (
