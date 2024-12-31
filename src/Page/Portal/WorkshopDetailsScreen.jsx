@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import {useParams, NavLink, useNavigate, useLocation} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {get_work_shop_by_id, request_work_shop, status_work_shop} from "../../Redux/actions/PortalThunk";
-import { decryptId } from '../../Component/SecurityComponent/cryptoUtils';
+import {decryptId, encryptId} from '../../Component/SecurityComponent/cryptoUtils';
 import PageError from "../PageError404/PageError"
 
 const { Title, Text } = Typography;
@@ -42,6 +42,11 @@ const WorkshopDetailsScreen = () => {
       }
     }
   }, [dispatch, encryptedId]);
+  const handleClick = () => {
+    const encryptedId = encryptId(workshop.idUniversity);
+    const url = `/university-portal-detail/${encodeURIComponent(encryptedId)}`;
+    window.open(url, "_blank");
+  };
   useEffect(() => {
     setLocalStatus(status); // Cập nhật localStatus khi status từ Redux store thay đổi
   }, [status]);
@@ -191,9 +196,18 @@ const WorkshopDetailsScreen = () => {
                       {workshop.hostWorkshop}
                     </Title>
                     <div className="info-item-workshop-details">
-                      <NavLink to={`/workshop/${workshop.id}`} style={{ fontWeight: 'bold', justifyContent: "center", marginLeft: "50px", color: '#1890ff' }}>
+                      <div
+                          onClick={handleClick}
+                          style={{
+                            fontWeight: "bold",
+                            justifyContent: "center",
+                            marginLeft: "50px",
+                            color: "#1890ff",
+                            cursor: "pointer", // Thêm con trỏ chuột để biểu thị là clickable
+                          }}
+                      >
                         Xem chi tiết
-                      </NavLink>
+                      </div>
                     </div>
                   </Col>
                 </Row>
@@ -203,7 +217,7 @@ const WorkshopDetailsScreen = () => {
               <Card className="card-workshop-details">
                 <Title level={3}>Thông tin chung</Title>
                 <div className="info-item-workshop-details">
-                  <Text>Số lượng công ty đã đăng kí: {workshop.totalCompany} công ty</Text>
+                <Text>Số lượng công ty đã đăng kí: {workshop.totalCompany} công ty</Text>
                 </div>
                 <div className="info-item-workshop-details">
                   <Text>Trạng thái: Sẵn sàng </Text>
