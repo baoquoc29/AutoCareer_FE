@@ -52,6 +52,7 @@ import HomeBusinessPortal from "../Page/Portal/BusinessPortal/HomeBusinessPortal
 import HomeSearchBusiness from "../Page/Portal/BusinessPortal/HomeSearchBusiness";
 import CooperationBusinessManager from "../Page/Business/CooperationBusinessManager/CooperationBusinessManager";
 import CooperationBusinessDetail from "../Page/Business/CooperationBusinessManager/CooperationBusinessDetail";
+import JobListPortal from "../Page/Portal/JobListPortal";
 import HomeUniversityPortal from "../Page/Portal/University/HomeUniversityPortal";
 import HomeSearchUniversity from "../Page/Portal/University/HomeSearchUniversity";
 import {AnimatePresence} from "framer-motion";
@@ -98,12 +99,14 @@ export function AppRouter() {
                     <Route path={"/"} element={<HomeScreen/>}/>
                     <Route path={"/work-shop-all"} element={<WorkshopListPortal/>}/>
                     <Route path={"/business-section"} element={<HomeBusinessPortal/>}/>
-                    <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
-                    <Route path={"/business-portal-detail"} element={<BusinessDetailPage/>}/>
+                    <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
+                    <Route path={"/job-all-portal"} element={<JobListPortal/>}/>
+                    <Route path={"/home-search-university"} element={<HomeSearchUniversity/>}/>
+                    <Route path={"/university-portal-detail/:id"} element={<UniversityDetailPortal/>}/>
+                    <Route path={"/business-portal-detail/:id"} element={<BusinessDetailPage />} />
                     <Route path={"/university-section"} element={<HomeUniversityPortal/>}/>
                     <Route path="/workshop-details/:id" element={<WorkshopDetailsScreen/>}/>
                     <Route path={"/job-portal-detail/:id"} element={<JobDetailPortal/>}/>
-
                     <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
                     <Route path={"/home-search-university"} element={<HomeSearchUniversity/>}/>
                 </Route>
@@ -117,6 +120,7 @@ export function AppRouter() {
                     <Route path={"/workshop-manager"} element={<WorkShopManager/>}/>
                     <Route path={"/cooperation-manager"} element={<CooperationManager/>}/>
                     <Route path={"/cooperation-detail"} element={<CooperationDetail/>}/>
+
                 </Route>
                 <Route element={<PrivateRoute><BusinessTemplate/></PrivateRoute>}>
                     <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
@@ -138,7 +142,7 @@ export function AppRouter() {
 
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>
-                <Route element={<PrivateRoute><AdminTemplate/></PrivateRoute>}>
+                <Route element={<PrivateRoute>{" "}<AdminTemplate/>{" "}</PrivateRoute>}>
                     <Route path={"/admin"} element={<Admin/>}/>
                     <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
                     <Route path={"/industry-admin-manager"} element={<IndustryAdminManager/>}/>
@@ -153,73 +157,3 @@ export function AppRouter() {
         </>
     );
 }
-
-// <Routes >
-//     <Route element={<UserTemplate/>}>
-//         <Route path={"*"} element={<PageError/>}/>
-//         <Route element={<AnimatedOutletV1/>}>
-//             <Route path={"/login"} element={<SignIn/>}/>
-//             <Route path={"/account-type-selection"} element={<AccountTypeSelection/>}/>
-//             <Route path={"/signup-university"} element={<SignUpUniversity/>}/>
-//             <Route path={"/signup-business"} element={<SignUpBusiness/>}/>
-//             <Route path={"/reset-password"} element={<PasswordReminder/>}/>
-//         </Route>
-//         {/*<Route path={"/login"} element={<PageTransition><SignIn/></PageTransition>}/>*/}
-//         {/*<Route path={"/account-type-selection"} element={<AccountTypeSelection/>}/>*/}
-//         {/*<Route path={"/signup-university"} element={<SignUpUniversity/>}/>*/}
-//         {/*<Route path={"/signup-business"} element={<SignUpBusiness/>}/>*/}
-//         {/*<Route path={"/reset-password"} element={<PasswordReminder/>}/>*/}
-//         <Route path={"/"} element={<HomeScreen/>}/>
-//         <Route path={"/work-shop-all"} element={<WorkshopListPortal/>}/>
-//         <Route path="/workshop-details/:id" element={<WorkshopDetailsScreen/>}/>
-//         <Route path={"/job-portal-detail/:id"} element={<JobDetailPortal/>}/>
-//         <Route path={"/business-section"} element={<HomeBusinessPortal/>}/>
-//         <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
-//         <Route path={"/home-search-university"} element={<HomeSearchUniversity/>}/>
-//         <Route path={"/university-portal-detail"} element={<UniversityDetailPortal/>}/>
-//         <Route path={"/business-portal-detail"} element={<BusinessDetailPage/>}/>
-//         <Route path={"/university-section"} element={<HomeUniversityPortal/>}/>
-//     </Route>
-//     <Route element={<PrivateRoute><UniversityTemplate/></PrivateRoute>}>
-//         <Route path={"/university"} element={<University/>}/>
-//         <Route path={"/profile-university"} element={<ProfileUniversity/>}/>
-//         <Route path={"/profile-university-edit"} element={<ProfileUniversityEdit/>}/>
-//         <Route path={"/major-manager"} element={<MajorManager/>}/>
-//         <Route path={"/instructional-manager"} element={<InstructionalManager/>}/>
-//         <Route path={"/section-manager"} element={<SectionManager/>}/>
-//         <Route path={"/workshop-manager"} element={<WorkShopManager/>}/>
-//         <Route path={"/cooperation-manager"} element={<CooperationManager/>}/>
-//         <Route path={"/cooperation-detail"} element={<CooperationDetail/>}/>
-//     </Route>
-//     <Route element={<PrivateRoute><BusinessTemplate/></PrivateRoute>}>
-//         <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
-//         <Route path={"/dashboard-job"} element={<DashboardJob/>}/>
-//         <Route path={"/business-workshop"} element={<WorkshopBusinessManager/>}/>
-//         <Route path={"/industry-manager"} element={<IndustryManager/>}/>
-//         <Route path={"/employee-manager"} element={<EmployeeManager/>}/>
-//         <Route path={"/employee-create"} element={<EmployeeCreate/>}/>
-//         <Route path={"/employee-edit"} element={<EmployeeEdit/>}/>
-//         <Route path={"/profile-business"} element={<ProfileBusiness/>}/>
-//         <Route path={"/profile-business-edit"} element={<ProfileBusinessEdit/>}/>
-//         <Route path={"/job-manager"} element={<JobManager/>}/>
-//         <Route path={"/job-create"} element={<JobCreate/>}/>
-//         <Route path={"/job-update"} element={<JobUpdate/>}/>
-//         <Route path={"/job-detail"} element={<JobDetail/>}/>
-//         <Route path={"/cooperation-business-manager"} element={<CooperationBusinessManager/>}/>
-//         <Route path={"/cooperation-business-detail"} element={<CooperationBusinessDetail/>}/>
-//         <Route path={"/business-workshop-detail"} element={<WorkshopBusinessDetail/>}/>
-//
-//     </Route>
-//     <Route path={"*"} element={<PageError/>}/>
-//     <Route element={<PrivateRoute><AdminTemplate/></PrivateRoute>}>
-//         <Route path={"/admin"} element={<Admin/>}/>
-//         <Route path={"/sub-admin-manager"} element={<SubAdminManager/>}/>
-//         <Route path={"/industry-admin-manager"} element={<IndustryAdminManager/>}/>
-//         <Route path={"/admin-business-manager"} element={<BusinessManager/>}/>
-//         <Route path={"/admin-university-manager"} element={<UniversityManager/>}/>
-//         <Route path={"/admin-job-manager"} element={<AdminJobManager/>}/>
-//         <Route path={"/admin-job-detail"} element={<AdminJobDetail/>}/>
-//         <Route path={"/admin-workshop-manager"} element={<AdminWorkshopManager/>}/>
-//         <Route path={"/admin-workshop-detail"} element={<AdminWorkshopDetail/>}/>
-//     </Route>
-// </Routes>

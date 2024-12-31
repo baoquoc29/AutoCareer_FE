@@ -32,5 +32,8 @@ export class CooperationService extends baseService{
     get_detail_cooperation_business = (id) => {
         return this.get(`api/cooperation/detail-request?id=${id}`)
     }
+    send_request_cooperation_business = (id) => {
+        return this.post(`api/cooperation/send-request?universityId=${id}`)
+    }
 }
 export default CooperationService = new CooperationService();

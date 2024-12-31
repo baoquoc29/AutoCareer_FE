@@ -46,13 +46,12 @@ const HomeScreen = () => {
                     <h1 className="slogan-portal">Nơi kết nối doanh nghiệp và trường đại học</h1>
                     <h3 className="sub-slogan-portal">Tiếp cận 400+ công ty và trường đại học</h3>
                 </div>
-                <SearchBarPortal/>
             </div>
             <BannerPortal/>
 
             {/* Phần hiển thị tùy thuộc vào vai trò */}
             {userRole !== "BUSINESS" && (
-                <div className="job-section">
+                <div className="job-all-portal">
                     <JobPortal/>
                 </div>
             )}

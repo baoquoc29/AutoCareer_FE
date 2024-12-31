@@ -23,7 +23,6 @@ const IndustryManager = () => {
     const totalElements = useSelector((state) => state.IndustryReducer.totalElements); // Tổng số bản ghi
     const [currentPage,setCurentPage] = useState("1");
     const [pageSize,setPageSize] = useState("7");
-    const keyword = useSelector((state) => state.IndustryReducer.keyword); // Từ khóa tìm kiếm
     const [searchText, setSearchText] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [open, setOpen] = useState(false);
@@ -31,9 +30,9 @@ const IndustryManager = () => {
     const [selectedRows, setSelectedRows] = useState([]); // Lưu trữ các bản ghi đã chọn
 
     useEffect(() => {
-        dispatch(get_all_industry_business(currentPage, pageSize, encodeURIComponent(keyword)));
+        dispatch(get_all_industry_business(currentPage, pageSize, encodeURIComponent(searchText)));
         dispatch(get_all_industry());
-    }, [dispatch, currentPage, pageSize, load]);
+    }, [dispatch, currentPage, pageSize, load, searchText]);
 
     useEffect(() => {
         setFilteredData(industryTable);

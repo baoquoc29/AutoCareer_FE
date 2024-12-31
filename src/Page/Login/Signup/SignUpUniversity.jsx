@@ -36,7 +36,7 @@ export function SignUpUniversity() {
     useEffect(() => {
         if (responseSignUpUniversity?.code === 200) {
             toast.success('Đăng ký tài khoản của bạn sẽ được xem xét!' );
-            navigate("/");
+            // navigate("/");
         } else if (responseSignUpUniversity?.message) {
             toast.error (responseSignUpUniversity.message || 'Mã xác minh không chính xác!' );
         }
@@ -122,8 +122,7 @@ export function SignUpUniversity() {
         };
 
         setIsLoading(true);
-        dispatch(verify_account_university(requestBody));
-
+       dispatch(verify_account_university(requestBody));
     };
 
     // Gửi lại mã xác nhận

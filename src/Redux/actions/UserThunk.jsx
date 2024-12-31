@@ -117,9 +117,8 @@ export const sign_up_business = (formData) => {
     return async (dispatch) => {
         dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+          //  await new Promise(resolve => setTimeout(resolve, 1000));
             const res = await userService.sign_up_business(formData);
-            console.log(res);
             dispatch({
                 type: SIGNUP_BUSINESS_SUCCESS,
                 payload: res,
