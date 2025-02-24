@@ -6,7 +6,7 @@ import {Button, Form, Input, Upload, Select, Row, Col,} from "antd";
 import {get_business_by_id, update_business} from "../../../Redux/actions/BusinessThunk";
 import {UploadOutlined} from '@ant-design/icons';
 import {useLocation, useNavigate} from "react-router-dom";
-import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/WorkShopThunk";
+import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/LocationThunk";
 import {toast} from "react-toastify";
 
 const {Option} = Select;

@@ -29,5 +29,5 @@ export class NotificationService extends baseService {
 
 }
 
-// Instantiate WorkShopService
+// Instantiate LocationService
 export const notificationService = new NotificationService();

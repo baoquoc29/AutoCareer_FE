@@ -46,14 +46,6 @@ export function Admin() {
     const dates = Object.keys(totals_date);
     const datasets = [
         {
-            label: 'Số lượng trường học.',
-            data: dates.map(date => totals_date[date]["universitiesNo"]),
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderWidth: 1,
-            fill: false,
-        },
-        {
             label: 'Số lượng doanh nghiệp',
             data: dates.map(date => totals_date[date]["businessesNo"]),
             borderColor: 'rgba(192, 75, 75, 1)',
@@ -69,30 +61,6 @@ export function Admin() {
             borderWidth: 1,
             fill: false,
         },
-        {
-            label: 'Số lượng sự kiện',
-            data: dates.map(date => totals_date[date]["workshopsNo"]),
-            borderColor: 'rgba(192, 192, 75, 1)',
-            backgroundColor: 'rgba(192, 192, 75, 0.2)',
-            borderWidth: 1,
-            fill: false,
-        },
-        {
-            label: 'Số lượng đăng ký sự kiện',
-            data: dates.map(date => totals_date[date]["workshopsBusinessesNo"]),
-            borderColor: 'rgba(75, 192, 75, 1)',
-            backgroundColor: 'rgba(75, 192, 75, 0.2)',
-            borderWidth: 1,
-            fill: false,
-        },
-        {
-            label: 'Số lượng hợp tác doanh nghiệp-trường học',
-            data: dates.map(date => totals_date[date]["universityBusinessNo"]),
-            borderColor: 'rgba(192, 75, 192, 1)',
-            backgroundColor: 'rgba(192, 75, 192, 0.2)',
-            borderWidth: 1,
-            fill: false,
-        }
     ];
 
     // Tìm ngày có số lượng sự kiện cao nhất
@@ -172,7 +140,7 @@ export function Admin() {
                         </div>
                         <div className="col-md-2">
                             <Card className="card-total-major">
-                                <h4>Tổng trường học</h4>
+                                <h4>Tổng ứng viên</h4>
                                 <div className="card-body-header">
                                     <FaSchool className="icon"/>
                                     <h2 className="card-title">
@@ -181,40 +149,7 @@ export function Admin() {
                                 </div>
                             </Card>
                         </div>
-                        <div className="col-md-2">
-                            <Card className="card-total-workshop">
-                                <h4>Tổng số hội thảo</h4>
-                                <div className="card-body-header">
-                                    <FaRegCalendarAlt className="icon"/>
-                                    <h2 className="card-title">
-                                        <CountUp end={totals["workshopsTotal"]} duration={5}/>
-                                    </h2>
-                                </div>
-                            </Card>
-                        </div>
-                        <div className="col-md-2">
-                            <Card className="card-total-student">
-                                <h4>Tổng kết nối giữa hội thảo - doanh nghiệp</h4>
-                                <div className="card-body-header">
-                                    <FaUsers className="icon"/>
-                                    <h2 className="card-title">
-                                        <CountUp end={totals["workshopBusinessesTotal"]} duration={5}/>
-                                    </h2>
-                                </div>
-                            </Card>
-                        </div>
 
-                        <div className="col-md-2">
-                            <Card className="card-total-cooperation">
-                                <h4>Tổng số hợp tác giữa doanh nghiệp - nhà trường</h4>
-                                <div className="card-body-header">
-                                    <FaHandshake className="icon"/>
-                                    <h2 className="card-title">
-                                        <CountUp end={totals["universityBusinessTotal"]} duration={5}/>
-                                    </h2>
-                                </div>
-                            </Card>
-                        </div>
                     </div>
                     <h2 className="mt-5">Biểu đồ tổng quan</h2>
                     <div className="row g-4 card-container">

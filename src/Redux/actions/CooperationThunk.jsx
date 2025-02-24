@@ -1,5 +1,5 @@
 import {toast} from "react-toastify";
-import cooperationService from "../../Service/UniversityService/CooperationService";
+import cooperationService from "../../Service/CandidateService/CooperationService";
 import {
     APPROVE_COOPERATION, CANCEL_REQUEST, DETAIL_COOPERATION,
     REJECT_COOPERATION,

@@ -56,7 +56,7 @@ const AdminJobManager = () => {
             default:
                 break;
         }
-        console.log(jobs)
+
     };
     useEffect(() => {
         setFilteredData(jobs)

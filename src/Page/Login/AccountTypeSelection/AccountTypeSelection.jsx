@@ -20,8 +20,8 @@ export function AccountTypeSelection() {
                                     <h1 className="h3">Chọn loại tài khoản</h1>
                                     <p>Vui lòng chọn loại tài khoản bạn muốn đăng ký</p>
                                     <div className="d-grid gap-3 mt-4">
-                                        <NavLinkButton to="/signup-university" className="btn btn-primary btn-lg">
-                                            Trường đại học
+                                        <NavLinkButton to="/signup-candidate" className="btn btn-primary btn-lg">
+                                            Ứng viên
                                         </NavLinkButton>
                                         <NavLinkButton to="/signup-business" className="btn btn-secondary btn-lg">
                                             Doanh nghiệp

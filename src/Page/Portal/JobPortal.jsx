@@ -4,14 +4,14 @@ import { DownOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { get_all_industry } from "../../Redux/actions/IndustryThunk";
 import {
-    get_all_job,
+    get_all_job, get_all_job_by_experience,
     get_all_job_by_industry,
     get_all_job_by_province,
-    get_all_job_by_region
+    get_all_job_by_region, get_all_job_by_salary
 } from "../../Redux/actions/PortalThunk";
 import "../Portal/StylePortal/JobPortal.css";
 import DOMPurify from 'dompurify';
-import { DOMAIN } from "../../Utils/Setting/Config";
+import {DOMAIN, USER_LOGIN} from "../../Utils/Setting/Config";
 import {
     FaCalendarAlt,
     FaExternalLinkAlt,
@@ -19,12 +19,7 @@ import {
     FaMapMarkerAlt,
 } from "react-icons/fa";
 import {encryptId} from "../../Component/SecurityComponent/cryptoUtils";
-
-const defaultLocations = [
-    { id: 0, name: "Tất cả" },
-    { id: 1, name: "Hà Nội" },
-    { id: 79, name: "Thành phố Hồ Chí Minh" },
-];
+import {get_all_district, get_all_provinces} from "../../Redux/actions/LocationThunk";
 
 
 const JobPortal = () => {
@@ -32,6 +27,8 @@ const JobPortal = () => {
     const response = useSelector((state) => state.PortalReducer || []);
     const industries = useSelector((state) => state.IndustryReducer.industriesAll || []);
     const totalElements = useSelector((state) => state.PortalReducer.totalJobFeatures || 0);
+    const provinces = useSelector(state => state.LocationReducer.provinces);
+    const districts = useSelector(state => state.LocationReducer.districts);
     const [filter, setFilter] = useState("location");
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredOptions, setFilteredOptions] = useState([]);
@@ -41,22 +38,26 @@ const JobPortal = () => {
     const locationListRef = useRef(null);
 
     const dispatch = useDispatch();
-
+    const data = JSON.parse(localStorage.getItem(USER_LOGIN));
 
     useEffect(() => {
         dispatch(get_all_job(0, size));
         dispatch(get_all_industry());
+        dispatch(get_all_provinces());
     }, [dispatch, size]);
-    useEffect(() => {
-        localStorage.setItem('totalJobElements', totalElements);
-    }, [totalElements]); // Dễ dàng theo dõi thay đổi của totalElements
     // Cập nhật các option lọc khi filter thay đổi
     useEffect(() => {
         switch (filter) {
             case "location":
-                setFilteredOptions(defaultLocations);
-                setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
+                if (!data) {
+                    setFilteredOptions([{ id: 0, name: "Tất cả" }, ...provinces]);
+                } else {
+                    dispatch(get_all_district(data?.candidateResponse?.location.province.id));
+                    setFilteredOptions([{ id: 0, name: "Tất cả" }, ...districts]);
+                }
+                setSelectedOption(0);
                 break;
+
             case "industry":
                 if (industries.length > 0) {
                     const updatedIndustries = [{ id: 0, name: "Tất cả" }, ...industries.map((industry) => ({ id: industry.id, name: industry.name }))];
@@ -65,6 +66,31 @@ const JobPortal = () => {
                     setFilteredOptions([]);
                 }
                 break;
+            case "salary":
+                const salaryRanges = [
+                    { id: 0, name: "Tất cả", start: null, end: null },
+                    { id: 1, name: "Dưới 5 triệu", start: 0, end: 5000000 },
+                    { id: 2, name: "5 - 10 triệu", start: 5000000, end: 10000000 },
+                    { id: 3, name: "10 - 20 triệu", start: 10000000, end: 20000000 },
+                    { id: 4, name: "20 - 50 triệu", start: 20000000, end: 50000000 },
+                    { id: 5, name: "Trên 50 triệu", start: 50000000, end: null }
+                ];
+                setFilteredOptions(salaryRanges);
+                break;
+            case "experience":
+                const experienceRanges = [
+                    { id: 0, name: "Tất cả", data: "null" }, // Tùy chọn mặc định
+                    { id: 1, name: "Không yêu cầu kinh nghiệm" }, // Không yêu cầu kinh nghiệm
+                    { id: 2, name: "1 năm kinh nghiệm"}, // 1 năm kinh nghiệm
+                    { id: 3, name: "2 năm kinh nghiệm"}, // 2 năm kinh nghiệm
+                    { id: 4, name: "3 năm kinh nghiệm" }, // 3 năm kinh nghiệm
+                    { id: 5, name: "4 năm kinh nghiệm"}, // 4 năm kinh nghiệm
+                    { id: 6, name: "Trên 5 năm kinh nghiệm" } // Trên 5 năm kinh nghiệm
+                ];
+                setFilteredOptions(experienceRanges);
+                break;
+
+
             default:
                 setFilteredOptions([]);
                 setSelectedOption(0); // Đặt tùy chọn mặc định là "Tất cả"
@@ -85,6 +111,27 @@ const JobPortal = () => {
             }
         }
     };
+    const onHandleChangeSalary = (id, start, end) => {
+        console.log("Selected Salary Range:", { id, start, end });
+        setSelectedOption(id); // Cập nhật state
+
+        if (id === 0) {
+            dispatch(get_all_job(currentPage - 1, size));
+        } else {
+            console.log("goi");
+            dispatch(get_all_job_by_salary(currentPage - 1, size, start, end));
+        }
+    };
+    const onHandleChangeLevel = (id, level) => {
+        setSelectedOption(id); // Cập nhật state
+
+        if (id === 0) {
+            dispatch(get_all_job(currentPage - 1, size));
+        } else {
+            console.log("goi");
+            dispatch(get_all_job_by_experience(currentPage - 1, size, level));
+        }
+    };
 
     const handleDetailsJob = (id) => {
         const encryptedId = encryptId(id);  // Encrypt the ID first
@@ -96,9 +143,7 @@ const JobPortal = () => {
     const onHandleChangeProvince = (provinceId) => {
         setSelectedOption(provinceId);
         if (filter === "location") {
-            if (provinceId === 3 || provinceId === 7) {
-                dispatch(get_all_job_by_region(currentPage - 1, size, provinceId));
-            } else if (provinceId === 0) {
+             if (provinceId === 0) {
                 dispatch(get_all_job(currentPage - 1, size));
             } else {
                 dispatch(get_all_job_by_province(currentPage - 1, size, provinceId));
@@ -139,11 +184,15 @@ const JobPortal = () => {
                 }
                 break;
 
-            // case "salary":
-            //     // Tùy chỉnh nếu bạn muốn xử lý lọc theo mức lương
-            //     dispatch(get_all_job(page - 1, size));
-            //     break;
-            //
+            case "salary":
+                if (selectedOption && selectedOption.id === 0) {
+                    dispatch(get_all_job(page - 1, size));
+                } else if (selectedOption) {
+                    console.log(selectedOption.start);
+                    dispatch(get_all_job_by_salary(page - 1, size, selectedOption.start, selectedOption.end));
+                }
+                break;
+
             // case "experience":
             //     // Tùy chỉnh nếu bạn muốn xử lý lọc theo năm học
             //     dispatch(get_all_job(page - 1, size));
@@ -195,12 +244,12 @@ const JobPortal = () => {
             <Menu.Item key="location">
                 <i className="fas fa-map-pin"></i> Địa điểm
             </Menu.Item>
-            {/*<Menu.Item key="salary">*/}
-            {/*    <i className="fas fa-money-bill"></i> Mức lương*/}
-            {/*</Menu.Item>*/}
-            {/*<Menu.Item key="experience">*/}
-            {/*    <i className="fas fa-user-tie"></i> Năm học*/}
-            {/*</Menu.Item>*/}
+            <Menu.Item key="salary">
+                <i className="fas fa-money-bill"></i> Mức lương
+            </Menu.Item>
+            <Menu.Item key="experience">
+                <i className="fas fa-user-tie"></i> Kinh nghiệm
+            </Menu.Item>
             <Menu.Item key="industry">
                 <i className="fas fa-industry"></i> Ngành nghề
             </Menu.Item>
@@ -318,6 +367,8 @@ const JobPortal = () => {
                                     onClick={() => {
                                         if (filter === "location") onHandleChangeProvince(option.id);
                                         if (filter === "industry") onHandleChangeIndustry(option.id);
+                                        if (filter === "salary") onHandleChangeSalary(option.id,option.start,option.end);
+                                        if (filter === "experience") onHandleChangeLevel(option.id,option.name);
                                         setSelectedOption(option.id); // Cập nhật selectedOption
                                     }}
                                 >

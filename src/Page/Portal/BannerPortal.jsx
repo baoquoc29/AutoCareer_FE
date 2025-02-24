@@ -21,9 +21,6 @@ const BannerPortal = () => {
         });
     }, []);
 
-    useEffect(() => {
-        dispatch(get_university_total());
-    }, [dispatch]);
 
     return (
         <div className="banner-portal" data-aos="fade-up">
@@ -46,7 +43,7 @@ const BannerPortal = () => {
                         <h2>
                             <CountUp start={0} end={totalUniversities || 0} duration={2.5} />
                         </h2>
-                        <p>Trường đại học</p>
+                        <p>Ứng viên</p>
                     </div>
                     <div className="stat-item-portal" data-aos="fade-up">
                         <h2>
@@ -64,7 +61,7 @@ const BannerPortal = () => {
                         <h2>
                             <CountUp start={0} end={totalWorkShopFeatures || 0} duration={2.5} />
                         </h2>
-                        <p>Hội thảo</p>
+                        <p>Tỉ lệ tìm việc</p>
                     </div>
                 </div>
             </div>

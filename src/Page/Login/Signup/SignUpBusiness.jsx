@@ -6,7 +6,7 @@ import {clearResponseBusiness, sign_up_business, verify_account_business} from "
 import {NavLink, useNavigate} from 'react-router-dom';
 import "./SignUp.css";
 import {toast} from "react-toastify";
-import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/WorkShopThunk";
+import {get_all_district, get_all_provinces, get_all_ward} from "../../../Redux/actions/LocationThunk";
 export function SignUpBusiness() {
     const [form] = Form.useForm();
     const [showModal, setShowModal] = useState(false);
@@ -19,7 +19,7 @@ export function SignUpBusiness() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {provinces, districts, wards} = useSelector(state => state.WorkShopReducer);
+    const {provinces, districts, wards} = useSelector(state => state.LocationReducer);
     const [selectedProvince, setSelectedProvince] = useState(null);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
 

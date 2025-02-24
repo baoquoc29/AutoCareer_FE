@@ -24,9 +24,6 @@ export function AdminTemplate() {
                 link: '/sub-admin-manager',
                 icon: ''
             }, {label: 'Tài khoản doanh nghiệp', link: '/admin-business-manager', icon: ''}, {
-                label: 'Tài khoản trường học',
-                link: '/admin-university-manager',
-                icon: ''
             },]
         },
 
@@ -38,13 +35,6 @@ export function AdminTemplate() {
                 link: '/admin-job-manager',
                 icon: ''
             },]
-        }, {
-            label: 'Quản lý hội thảo',
-            icon: 'fa-solid fa-briefcase',
-            subMenu: [{
-                label: 'Danh sách hội thảo',
-                link: '/admin-workshop-manager',
-                icon: ''},]
         },
         {
             label: 'Quản lý ngành nghề',
@@ -55,9 +45,16 @@ export function AdminTemplate() {
                 icon: ''
             }]
         },
-        // {
-        //     label: 'Thống kê', icon: 'home', subMenu: [{label: '123', link: '', icon: ''},]
-        // }
+        {
+            label: ' Chăm sóc khách hàng',
+            icon: 'fa-solid fa-headset', // Biểu tượng headset phù hợp với chăm sóc khách hàng
+            subMenu: [{
+                label: ' Hỗ trợ tin nhắn',
+                link: '/messages-manager',
+                icon: 'fa-solid fa-envelope' // Biểu tượng phong bì phù hợp với tin nhắn
+            }]
+
+        },
         ];
     const filteredMenuItems = menuItems.map(item => {
         if (item.label === 'Quản lý tài khoản' && userData.role.name === 'SUB_ADMIN') {

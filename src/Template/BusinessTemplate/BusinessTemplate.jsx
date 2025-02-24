@@ -43,7 +43,7 @@ export function BusinessTemplate() {
             : []),
 
         {
-            label: "Doanh nghiệp",
+            label: "Quản lý doanh nghiệp",
             icon: "fa-solid fa-school",
             subMenu: [
                 {
@@ -64,17 +64,30 @@ export function BusinessTemplate() {
             ],
         },
         {
-            label: "Yêu cầu hợp tác",
-            icon: "fa-solid fa-store",
+            label: "Quản lý hồ sơ",
+            icon: "fa-solid fa-school",
             subMenu: [
-                {label: "Danh sách yêu cầu", link: "/cooperation-business-manager", icon: ""},
+                {
+                    label: "Danh sách ứng viên",
+                    link: "/job-business-apply",
+                    icon: "",
+                },
+                {
+                    label: "Tìm kiếm ứng viên qua AI",
+                    link: "/job-business-search",
+                    icon: "",
+                },
             ],
         },
         {
-            label: "Sự kiện",
-            icon: "fa-solid fa-store",
+            label: "Kết nối ứng viên",
+            icon: "fa-solid fa-school",
             subMenu: [
-                {label: "Danh sách hội thảo", link: "/business-workshop", icon: ""},
+                {
+                    label: "Quản lý tin nhắn",
+                    link: "/message-manager-business",
+                    icon: "",
+                },
             ],
         },
     ];

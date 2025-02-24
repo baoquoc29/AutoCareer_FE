@@ -1,11 +1,10 @@
+import {locationService} from "../../Service/CandidateService/LocationService";
 import {
     GET_ALL_DISTRICT_BY_ID,
     GET_ALL_LOCATION,
-    GET_ALL_WARD_BY_ID_DISTRICT
+    GET_ALL_WARD_BY_ID_DISTRICT,
 } from "../types/LocationType";
-import {locationService} from "../../Service/LocationService/LocationService";
 
-// Action to fetch all provinces
 export const get_all_provinces = () => {
     return async (dispatch) => {
         try {

@@ -9,9 +9,6 @@ export class PortalService extends baseService {
     get_job_all = (page, size) => {
         return this.getResponse(`api/job/job-all?page=${page}&size=${size}`);
     };
-    get_job_by_district = (page, size, districtId) => {
-        return this.getResponse(`api/job/district/${districtId}?page=${page}&size=${size}`);
-    }
     get_job_by_region = (page, size, regionId) => {
         return this.getResponse(`api/job/district/${regionId}?page=${page}&size=${size}`);
     }
@@ -24,11 +21,11 @@ export class PortalService extends baseService {
     get_list_business_home_portal = () => {
         return this.getResponse(`api/business/list-home`);
     }
-    get_list_university_home_portal = () => {
-        return this.getResponse(`api/university/list-home`);
-    }
     get_job_by_salary = (page, size, minSalary, maxSalary) => {
         return this.getResponse(`api/job/salary?page=${page}&size=${size}&minSalary=${minSalary}&maxSalary=${maxSalary}`);
+    }
+    get_job_by_experience = (page, size,experience) => {
+        return this.getResponse(`api/job/level?page=${page}&size=${size}&level=${experience}`);
     }
     get_business_by_feature = (industryId) => {
         return this.getResponse(`api/business/feature-business?${industryId}`);
@@ -36,35 +33,10 @@ export class PortalService extends baseService {
     get_total_job_all = () => {
         return this.getResponse(`api/job/total-job`);
     };
-    get_work_shop_feature = (param) => {
-        const queryParams = new URLSearchParams(param).toString();
-
-        return this.getResponse(`api/work-shop/display?${queryParams}`);
-    };
     get_university_total = () => {
         return this.getResponse(`api/university/get-total`);
     }
-    get_workshop_by_id = (id) => {
-        return this.getResponse(`api/work-shop/display/${id}`);
-    }
-    request_workshop_by_id = (body) => {
-        return this.postResponse(`api/work-shop/request`, body);
-    }
-    get_status_workshop_by_id = (id, businessId) => {
-        return this.getResponse(`api/work-shop/status?workShopId=${id}&businessId=${businessId}`);
-    }
-    get_total_work_shop = () => {
-        return this.getResponse(`api/work-shop/countTotalWorkshop`);
-    }
-    get_total_business = () => {
-        return this.getResponse(`api/business/countTotalBusiness`);
-    }
-    get_total_university = () => {
-        return this.getResponse(`api/university/countTotalUniversity`);
-    }
-    get_total_job = () => {
-        return this.getResponse(`api/job/countTotalJob`);
-    }
+
 
 }
 export const portalService = new PortalService();

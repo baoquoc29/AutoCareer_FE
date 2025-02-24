@@ -1,23 +1,24 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Row, Space, Typography} from "antd";
+import {Button, Card, Col, Modal, Row, Space, Typography} from "antd";
 import "../StylePortal/JobDetails.css";
 import HeaderPortal from "../../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
 import FooterPortal from "../FooterPortal";
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {get_job_detail} from "../../../Redux/actions/JobThunk";
-import {decryptId} from '../../../Component/SecurityComponent/cryptoUtils';
+import {decryptId, encryptId} from '../../../Component/SecurityComponent/cryptoUtils';
 import PageError from "../../PageError404/PageError"
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
+import {apply_job, save_job, status_job} from "../../../Redux/actions/MatchingThunk";
 import {
     AppstoreAddOutlined,
     EnvironmentOutlined,
-    HomeOutlined,
+    HomeOutlined, SaveOutlined, SendOutlined,
     TeamOutlined,
     TrophyOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import {DOMAIN, GET_IMAGE_URI} from "../../../Utils/Setting/Config";
+import {DOMAIN, GET_IMAGE_URI, USER_LOGIN} from "../../../Utils/Setting/Config";
 
 const {Title, Text} = Typography;
 
@@ -28,11 +29,31 @@ const JobDetailPortal = () => {
     const [encryptedId, setEncryptedId] = useState(null);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const data = JSON.parse(localStorage.getItem(USER_LOGIN));
+    const [applied, setApplied] = useState(false);
+    const [saved, setSaved] = useState(false);
+    useEffect(() => {
+        if (!data?.candidateResponse?.id) return;
+        const fetchStatus = async () => {
+            try {
+                const waitingResponse = await dispatch(status_job(data.candidateResponse.id, decryptId(encryptedId), "WAITING"));
+                const savedResponse = await dispatch(status_job(data.candidateResponse.id, decryptId(encryptedId), "SAVED"));
+
+                // Kiểm tra response đúng cấu trúc API
+                if (waitingResponse?.success && waitingResponse.payload?.code === 200) setApplied(true);
+                if (savedResponse?.success && savedResponse.payload?.code === 200) setSaved(true);
+            } catch (error) {
+                console.error("Lỗi khi cập nhật trạng thái:", error);
+            }
+        };
+
+        fetchStatus();
+    }, [data?.candidateResponse?.id, decryptId(encryptedId), dispatch]);
+
 
     useEffect(() => {
         setEncryptedId(id);
     }, [id]);
-
     useEffect(() => {
         if (encryptedId) {
             setLoading(true);
@@ -53,6 +74,69 @@ const JobDetailPortal = () => {
     if (!job) {
         return <PageError></PageError>
     }
+    const handleApplyJob = async () => {
+        if (!data?.candidateResponse?.id) {
+            const redirectUrl = encodeURIComponent(window.location.pathname);
+            Modal.warning({
+                title: "Bạn chưa đăng nhập",
+                content: "Vui lòng đăng nhập để tiếp tục ứng tuyển.",
+                onOk: () => navigate(`/login?redirect=${redirectUrl}`),
+            });
+            return;
+        }
+
+        Modal.confirm({
+            title: "Xác nhận ứng tuyển",
+            content: "Bạn có chắc chắn muốn ứng tuyển vào công việc này?",
+            onOk: async () => {
+                try {
+                    await dispatch(apply_job(data.candidateResponse.id, decryptId(encryptedId), "WAITING"));
+                    setApplied(true); // Cập nhật trạng thái
+                    Modal.success({
+                        title: "Ứng tuyển thành công",
+                        content: "Hồ sơ của bạn đã được gửi đi!",
+                    });
+                } catch (error) {
+                    Modal.error({
+                        title: "Ứng tuyển thất bại",
+                        content: error.message || "Đã có lỗi xảy ra. Vui lòng thử lại!",
+                    });
+                }
+            },
+        });
+    };
+
+    const handleSaveJob = async () => {
+        if (!data?.candidateResponse?.id) {
+            const redirectUrl = encodeURIComponent(window.location.pathname);
+            Modal.warning({
+                title: "Bạn chưa đăng nhập",
+                content: "Vui lòng đăng nhập để tiếp tục lưu tin.",
+                onOk: () => navigate(`/login?redirect=${redirectUrl}`),
+            });
+            return;
+        }
+
+        Modal.confirm({
+            title: "Xác nhận lưu tin",
+            content: "Bạn có chắc chắn muốn lưu công việc này?",
+            onOk: async () => {
+                try {
+                    await dispatch(save_job(data.candidateResponse.id,decryptId(encryptedId), "SAVED"));
+                    setSaved(true); // Cập nhật trạng thái
+                    Modal.success({
+                        title: "Lưu tin thành công",
+                        content: "Công việc đã được lưu vào danh sách của bạn!",
+                    });
+                } catch (error) {
+                    Modal.error({
+                        title: "Lưu tin thất bại",
+                        content: error.message || "Đã có lỗi xảy ra. Vui lòng thử lại!",
+                    });
+                }
+            },
+        });
+    };
 
     return (
         <div className={"app-container-job-details-root"}>
@@ -113,9 +197,40 @@ const JobDetailPortal = () => {
                                                     </Col>
                                                 </div>
                                             </div>
+                                            <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
+                                                <Col span={19}>
+                                                    <Button
+                                                        onClick={handleApplyJob}
+                                                        type="primary"
+                                                        icon={<SendOutlined />}
+                                                        style={{
+                                                            width: "100%",
+                                                            backgroundColor: applied ? "#52c41a" : "#1d56c8", // Màu xanh nếu đã ứng tuyển
+                                                            borderColor: applied ? "#52c41a" : "#1d56c8",
+                                                        }}
+                                                        disabled={applied} // Vô hiệu hóa nút sau khi ứng tuyển
+                                                    >
+                                                        {applied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}
+                                                    </Button>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <Button
+                                                        onClick={handleSaveJob}
+                                                        type="default"
+                                                        icon={<SaveOutlined />}
+                                                        style={{ width: "100%" }}
+                                                        disabled={saved} // Vô hiệu hóa nút sau khi lưu
+                                                    >
+                                                        {saved ? "Đã lưu" : "Lưu tin"}
+                                                    </Button>
+                                                </Col>
+                                            </Row>
+
+
                                         </Card>
                                     </Col>
                                 </Row>
+
                             </Col>
                             {/* Thông tin tuyển dụng */}
                             <Col span={24}>
@@ -222,7 +337,7 @@ const JobDetailPortal = () => {
                                 <Col span={24} style={{textAlign: 'center'}}>
                                     <Button
                                         type="link"
-                                        onClick={() => navigate(`/job-detail/${job.id}`)}
+                                        onClick={() => navigate(`/business-portal-detail/${encodeURIComponent(encryptId(job.business.id))}`)}
                                         style={{padding: 0}}
                                     >
                                         Xem chi tiết

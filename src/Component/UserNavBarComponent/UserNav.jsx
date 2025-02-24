@@ -7,7 +7,7 @@ const UserNav = ({profileImg, userName, userRole}) => {
     const dispatch = useDispatch();
 
     const {userData} = useSelector((state) => state.UserReducer);
-    const isUniversityUser = userData && userData.role.name === 'UNIVERSITY';
+    const isCandidateUser = userData && userData.role.name === 'CANDIDATE';
     const isBusinessUser = userData && userData.role.name === 'BUSINESS';
     const navigate = useNavigate();
     const handleLogout = async () => {
@@ -25,8 +25,8 @@ const UserNav = ({profileImg, userName, userRole}) => {
     };
     const getRoleDisplayName = (roleName) => {
         switch (roleName) {
-            case 'UNIVERSITY':
-                return 'Trường đại học';
+            case 'CANDIDATE':
+                return 'Ứng viên';
             case 'BUSINESS':
                 return 'Doanh nghiệp';
             case 'ADMIN':
@@ -44,7 +44,7 @@ const UserNav = ({profileImg, userName, userRole}) => {
         <>
             <div id="_dm-mainnavProfile" className="mainnav__widget my-3 hv-outline-parent" bis_skin_checked="1">
                 <div className="mininav-toggle text-center py-2" bis_skin_checked="1">
-                    <img className="mainnav__avatar img-md rounded-circle hv-oc" src={profileImg}
+                    <img className="mainnav__avatar img-md rounded-circle hv-oc"  style={{ objectFit: "scale-down" }} src={profileImg}
                          alt="UserNav Picture"/>
                 </div>
                 <div className="mininav-content collapse d-mn-max" bis_skin_checked="1">
@@ -59,8 +59,8 @@ const UserNav = ({profileImg, userName, userRole}) => {
                             <p className="text-body-secondary">Vai trò: {getRoleDisplayName(userRole)}</p>
                         </button>
                         <div id="usernav" className="nav flex-column collapse" bis_skin_checked="1">
-                            {isUniversityUser && (
-                                <NavLink to={'/profile-university'} className="list-group-item list-group-item-action">
+                            {isCandidateUser && (
+                                <NavLink to={'/profile-candidate'} className="list-group-item list-group-item-action">
                                     <i className="demo-pli-male fs-5 me-2"></i> Thông tin
                                 </NavLink>
                             )}

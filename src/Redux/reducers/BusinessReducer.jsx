@@ -1,4 +1,3 @@
-import {} from "../types/SectionType";
 import {SET_BUSINESS, SET_BUSINESS_PAGE, UPDATE_BUSINESS} from "../types/BusinessType";
 
 const initialState = {

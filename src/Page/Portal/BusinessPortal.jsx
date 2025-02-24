@@ -109,6 +109,7 @@ const BusinessPortal = () => {
                                     onClick={() => handleDetailsBusinessPortal(business.id)}
                                 >
                                     <img
+
                                         src={`${DOMAIN}/api/v1/image/resource?imageId=${business.imageID}`}
                                         alt={business.businessName || "Job Image"}
                                     />

@@ -7,9 +7,9 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
     SEND_CODE_BUSINESS_SUCCESS,
-    SEND_CODE_UNIVERSITY_SUCCESS, SEND_NEW_PASSWORD,
+    SEND_CODE_CANDIDATE_SUCCESS, SEND_NEW_PASSWORD,
     SIGNUP_BUSINESS_SUCCESS,
-    SIGNUP_UNIVERSITY_SUCCESS,
+    SIGNUP_CANDIDATE_SUCCESS,
     STATUS_CODE,
     TOKEN,
     USER_LOGIN,
@@ -90,18 +90,18 @@ export const change_password = (formData) => {
         }
     };
 };
-export const sign_up_university = (formData) => {
+export const sign_up_candidate = (formData) => {
     return async (dispatch) => {
         dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            const res = await userService.sign_up_university(formData);
+            const res = await userService.sign_up_candidate(formData);
             dispatch({
-                type: SIGNUP_UNIVERSITY_SUCCESS,
+                type: SIGNUP_CANDIDATE_SUCCESS,
                 payload: res,
             });
         } catch (error) {
-            console.log('sign_up_university error:', error);
+            console.log('error:', error);
         } finally {
             dispatch({type: HIDE_LOADING});  // Hide loading state
         }
@@ -149,18 +149,18 @@ export const verify_account_business = (formData) => {
     };
 };
 
-export const verify_account_university = (formData) => {
+export const verify_account_candidate = (formData) => {
     return async (dispatch) => {
         dispatch({type: DISPLAY_LOADING});  // Show loading state
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            const res = await userService.send_verify_code_university(formData);
+            const res = await userService.send_verify_code_candidate(formData);
             dispatch({
-                type: SEND_CODE_UNIVERSITY_SUCCESS,
+                type: SEND_CODE_CANDIDATE_SUCCESS,
                 payload: res,
             });
         } catch (e) {
-            console.log('verify_account_university error:', e);
+            console.log('error:', e);
         } finally {
             dispatch({type: HIDE_LOADING});  // Hide loading state
         }

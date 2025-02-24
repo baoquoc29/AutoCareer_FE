@@ -48,6 +48,7 @@
     color: #ffffff;
     height: auto;
     margin-right: 10px;
+    object-fit: scale-down;
 }
 .card-slogan-portal {
     position: relative; /* Để định vị ảnh trong container */

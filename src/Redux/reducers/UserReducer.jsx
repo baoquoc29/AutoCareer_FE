@@ -6,17 +6,16 @@ import {
     VERIFY_CODE_SUCCESS,
     VERIFY_CODE_FAIL,
     SEND_CODE_REMINDER_SUCCESS,
-    SEND_CODE_UNIVERSITY_SUCCESS,
+    SEND_CODE_CANDIDATE_SUCCESS,
     SEND_CODE_BUSINESS_SUCCESS,
     SIGNUP_BUSINESS_SUCCESS,
     CLEAR_RESPONSE,
-    SIGNUP_UNIVERSITY_SUCCESS,
+    SIGNUP_CANDIDATE_SUCCESS,
     SEND_NEW_PASSWORD,
     CLEAN_LOCAL_STORAGE, CHANGE_PASS_WORD, LOGIN_FAILURE,
 } from "../../Utils/Setting/Config";
 import { jwtDecode } from 'jwt-decode';
 import {toast} from "react-toastify";
-import {change_password} from "../actions/UserThunk";
 
 const isTokenExpired = (token) => {
     if (!token) return true;
@@ -30,12 +29,12 @@ const initialState = {
     userData: JSON.parse(localStorage.getItem(USER_LOGIN)) || null,
     token: localStorage.getItem(TOKEN) || null,
     verificationCode : null,
-    responseUniversity: null,
+    responseCandidate: null,
     responseBusiness: null,
     responsePasswordReminder: null,
     responseSendPassWordCode : null,
     responseSignUpBusiness : null,
-    responseSignUpUniversity : null,
+    responseSignUpCandidate : null,
     responseSendNewPassword : null,
     response : null,
     error: null,
@@ -62,13 +61,13 @@ export const UserReducer = (state = initialState, action) => {
         case CLEAR_RESPONSE:
             return {
                 ...state,
-                responseUniversity: null,
+                responseCandidate: null,
                 responseBusiness: null,
                 responsePasswordReminder: null,
                 responseSendPassWordCode : null,
                 responseSignUpBusiness : null,
                 response : null,
-                responseSignUpUniversity: null,
+                responseSignUpCandidate: null,
                 responseSendNewPassword: null,
             };
         case CLEAN_LOCAL_STORAGE:
@@ -102,11 +101,11 @@ export const UserReducer = (state = initialState, action) => {
                 responseBusiness: action.payload,
                 error: null,
             };
-        case SEND_CODE_UNIVERSITY_SUCCESS:
+        case SEND_CODE_CANDIDATE_SUCCESS:
             return {
                 ...state,
                 verificationCode: action.payload,
-                responseUniversity: action.payload,
+                responseCandidate: action.payload,
                 error: null,
             };
         case SEND_CODE_REMINDER_SUCCESS:
@@ -122,10 +121,10 @@ export const UserReducer = (state = initialState, action) => {
                 responseSignUpBusiness: action.payload,
                 error: null,
             }
-            case SIGNUP_UNIVERSITY_SUCCESS:
+            case SIGNUP_CANDIDATE_SUCCESS:
                 return {
                     ...state,
-                    responseSignUpUniversity: action.payload,
+                    responseSignUpCandidate: action.payload,
                     error: null,
                 }
         case SEND_NEW_PASSWORD:

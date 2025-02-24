@@ -6,6 +6,7 @@ import { loginUser } from "../../../Redux/actions/UserThunk";
 import { useFormik } from "formik";
 import SigninValidation from "../../../Utils/Validation/User/SigninValidation";
 import { Form, Input } from "antd";
+import {USER_LOGIN} from "../../../Utils/Setting/Config";
 
 export const SignIn = () => {
     const dispatch = useDispatch();
@@ -28,9 +29,20 @@ export const SignIn = () => {
         if (isAuthenticated) {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('redirect');
-            if (redirectUrl) {
+            const userDetails = JSON.parse(localStorage.getItem(USER_LOGIN));
+            console.log(userDetails);
+            if (redirectUrl && userDetails.role.name === "CANDIDATE") {
                 navigate(redirectUrl);
-            } else {
+            } else if(userDetails.role.name === "BUSINESS") {
+                navigate('/profile-business');
+            }
+            else if(userDetails.role.name === "EMPLOYEE") {
+                navigate('/job-manager');
+            }
+            else if(userDetails.username === "admin@domain.com") {
+                navigate('/admin');
+            }
+            else {
                 navigate('/');
             }
         }

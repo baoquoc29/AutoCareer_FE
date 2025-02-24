@@ -9,6 +9,7 @@ import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_all_job_of_business_paging_portal} from "../../Redux/actions/JobThunk";
 import dayjs from "dayjs";
 import {decryptId, encryptId} from "../../Component/SecurityComponent/cryptoUtils";
+import {PlusOutlined} from "@ant-design/icons";
 
 const {Text, Title} = Typography;
 
@@ -76,7 +77,7 @@ const BusinessDetailPage = () => {
                             <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
                                 {/* Khối chia tên công ty */}
                                 <Col span={24}>
-                                    <Card bordered={false}>
+                                    <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
                                         <Row align="middle" justify="start">
                                             {/* Logo hình tròn */}
                                             <Col>
@@ -94,24 +95,26 @@ const BusinessDetailPage = () => {
                                                 />
                                             </Col>
 
-                                            <Col style={{marginLeft: "12px"}}>
+                                            <Col style={{ marginLeft: "12px" }}>
                                                 {/* Tên công ty */}
-                                                <Title level={3} style={{margin: 0, marginBottom: "10px"}}>
+                                                <Title level={3} style={{ margin: 0, marginBottom: "10px" }}>
                                                     {businessData.name}
                                                 </Title>
 
                                                 {/* Thông tin email và quy mô */}
                                                 <Row gutter={[16, 8]}>
                                                     <Col>
-                                                        <Text
-                                                            type="secondary">Email: {businessData.email || "Chưa có email"}</Text>
+                                                        <Text type="secondary">Email: {businessData.email || "Chưa có email"}</Text>
                                                     </Col>
                                                     <Col>
-                                                        <Text type="secondary">Quy
-                                                            mô: {businessData.companySize || "Không xác định"} nhân
-                                                            viên</Text>
+                                                        <Text type="secondary">Quy mô: {businessData.companySize || "Không xác định"} nhân viên</Text>
                                                     </Col>
                                                 </Row>
+                                            </Col>
+                                            <Col flex="auto" style={{ textAlign: "right" }}>
+                                                <Button type="primary" shape="round" size="large">
+                                                    <PlusOutlined /> Theo dõi công ty
+                                                </Button>
                                             </Col>
                                         </Row>
                                     </Card>
@@ -127,7 +130,7 @@ const BusinessDetailPage = () => {
                                             {/* Giới thiệu công ty */}
                                             <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
                                                 <Col span={24}>
-                                                    <Card bordered={false}>
+                                                    <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }} >
                                                         <Divider orientation="left"
                                                                  style={{fontSize: "18px", color: "#096dd9"}}>
                                                             Giới thiệu công ty
@@ -137,10 +140,10 @@ const BusinessDetailPage = () => {
                                                 </Col>
                                                 {/* Thông tin tuyển dụng */}
                                                 <Col span={24}>
-                                                    <Card bordered={false}>
+                                                    <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
                                                         <Divider orientation="left"
                                                                  style={{fontSize: "18px", color: "#096dd9"}}>
-                                                            Tuyển dụng
+                                                            Tin tuyển dụng
                                                         </Divider>
 
                                                         {/* Tìm kiếm và lọc theo địa điểm */}
@@ -168,7 +171,7 @@ const BusinessDetailPage = () => {
                                                         <div>
                                                             {jobData.map((job) => (
                                                                 <Card key={job.jobId} bordered={false}
-                                                                      style={{marginBottom: "10px"}}>
+                                                                      style={{ marginBottom: "10px", boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
                                                                     <Row gutter={[16, 16]}
                                                                          style={{display: "flex", flexWrap: "wrap"}}>
                                                                         {/* Ảnh công ty */}
@@ -304,7 +307,7 @@ const BusinessDetailPage = () => {
 
                                         {/* Thông tin liên hệ */}
                                         <Col span={6}>
-                                            <Card bordered={false}>
+                                            <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
                                                 <Divider orientation="left"
                                                          style={{fontSize: "18px", color: "#096dd9"}}>
                                                     Thông tin liên hệ
@@ -314,7 +317,6 @@ const BusinessDetailPage = () => {
                                                     <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
                                                         <Text strong>Địa chỉ:</Text>
                                                         <Text>
-                                                            {businessData.location?.description},
                                                             {businessData.location?.ward.fullName},
                                                             {businessData.location?.district.fullName},
                                                             {businessData.location?.province.fullName}
@@ -344,6 +346,7 @@ const BusinessDetailPage = () => {
                                                 </Col>
                                             </Card>
                                         </Col>
+
                                     </Row>
                                 </Col>
                             </Row>

@@ -1,48 +1,121 @@
-/* ProfileUniversity.css */
-.profile-university {
-    padding: 20px;
-    max-width: 2000px;
-    margin: 0 auto;
+/* Custom CSS */
+.profile-card, .info-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+}
+@media print {
+    #action-buttons {
+        display: none !important;
+    }
+    #header-candidate-apply{
+        display: none !important;
+    }
+
 }
 
-.profile-university .university-logo {
-    max-width: 100px;
-    max-height: 100px;
-    margin-right: 20px;
-    border-radius: 8px;
+.info-card {
+    background-color: #f9f9f9;
 }
 
-.profile-university .university-header {
+.university-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
-.profile-university .university-title {
+.university-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 16px;
+    object-fit: cover;
+}
+
+.university-title {
     margin: 0;
-}
-
-.profile-university .divider-title {
-    font-size: 18px;
     color: #096dd9;
 }
-.badge {
-    display: inline-block;
-    padding: 0.5em 0.75em;
-    font-size: 0.875em;
-    font-weight: 600;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 10px;
+
+.custom-divider {
+    border-color: #f0f0f0;
 }
 
-.badge-pill {
-    border-radius: 50rem;
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.badge-blue {
-    background-color: #1890ff;
+.info-icon {
+    font-size: 16px;
+    color: #096dd9;
+    margin-right: 8px;
+}
+
+.info-label {
+    color: #096dd9;
+    margin-right: 8px;
+}
+
+.info-value {
+    color: #333;
+}
+
+.description-section {
+    margin: 16px 0;
+}
+
+.description-text {
+    font-size: 14px;
+    color: #555;
+}
+
+.skill-item {
+    margin-bottom: 16px;
+}
+
+.skill-name {
+    font-size: 14px;
+    color: #333;
+}
+
+.education-item, .award-item {
+    margin-bottom: 16px;
+}
+
+.education-school, .award-name {
+    font-size: 14px;
+    color: #096dd9;
+}
+
+.education-degree, .award-description {
+    font-size: 13px;
+    color: #555;
+}
+
+.education-duration, .award-year {
+    font-size: 12px;
+    color: #888;
+}
+
+.career-goal-section {
+    margin: 16px 0;
+}
+
+.career-goal-text {
+    font-size: 14px;
+    color: #555;
+}
+
+.edit-button {
+    background-color: #096dd9;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-size: 14px;
+}
+.empty-text {
+    color: gray;
+    font-style: italic;
 }

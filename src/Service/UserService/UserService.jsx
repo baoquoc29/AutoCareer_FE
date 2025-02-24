@@ -14,11 +14,11 @@ export class UserService extends baseService {
     sign_up_business = (formData)=>{
             return this.postFormData('api/business/register',formData)
     }
-    sign_up_university = (formData)=>{
-        return this.postResponse('api/university/register',formData)
+    sign_up_candidate = (formData)=>{
+        return this.postResponse('api/candidate/register',formData)
     }
-    send_verify_code_university = (body)=>{
-        return this.postResponse('api/university/verify-university',body)
+    send_verify_code_candidate = (body)=>{
+        return this.postResponse('api/candidate/verify-candidate',body)
     }
     send_verify_code_business = (formData)=>{
         return this.postFormData('api/business/verify-business',formData)

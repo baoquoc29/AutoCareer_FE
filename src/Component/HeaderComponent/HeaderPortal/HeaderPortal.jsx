@@ -60,9 +60,6 @@ const HeaderPortal = () => {
         window.location.href = `/login?redirect=${encodeURIComponent(currentUrl)}`; // Lưu URL vào query param
     };
 
-    const handleToWorkShopClick = () => {
-        window.location.href = `/work-shop-all`;
-    };
 
     const handleToJobClick = () => {
         window.location.href = `/job-all-portal`;
@@ -76,8 +73,8 @@ const HeaderPortal = () => {
     const handleToManagerClick = () => {
         if (userData?.role?.name === "BUSINESS") {
             window.open('/dashboard-industry', '_blank');
-        } else if (userData?.role?.name === "UNIVERSITY") {
-            window.open('/university', '_blank');
+        } else if (userData?.role?.name === "CANDIDATE") {
+            window.open('/profile-candidate', '_blank');
         } else if (userData?.role?.name === "ADMIN") {
             window.open('/admin', '_blank');
         } else if (userData?.role?.name === "EMPLOYEE") {
@@ -106,8 +103,8 @@ const HeaderPortal = () => {
         }
     };
 
-    const menuItems = userData?.role?.name === 'UNIVERSITY' ? [
-        {key: '1', label: 'Quản lý & đăng bài', icon: <SettingOutlined/>, onClick: handleToManagerClick},
+    const menuItems = userData?.role?.name === 'CANDIDATE' ? [
+        {key: '1', label: 'Quản lý hồ sơ', icon: <SettingOutlined/>, onClick: handleToManagerClick},
         {key: '2', label: 'Đổi mật khẩu', icon: <LockOutlined/>, onClick: () => handleChangePasswordClick()},
         {key: '3', label: 'Đăng xuất', icon: <LogoutOutlined/>, onClick: handleLogout}
     ] : userData?.role?.name === 'ADMIN' ? [
@@ -166,16 +163,6 @@ const HeaderPortal = () => {
                                 Việc làm tốt nhất
                             </Menu.Item>
                         )}
-                        {userData?.role?.name !== "UNIVERSITY" && (
-                            <Menu.Item key="/work-shop-all" onClick={handleToWorkShopClick}>
-                                Hội thảo
-                            </Menu.Item>
-                        )}
-                        {userData?.role?.name !== "UNIVERSITY" && (
-                            <Menu.Item key="/university-section" onClick={() => navigate('/university-section')}>
-                                Trường học
-                            </Menu.Item>
-                        )}
                         {userData?.role?.name !== "BUSINESS" && (
                             <Menu.Item key="/business-section" onClick={() => navigate('/business-section')}>
                                 Doanh nghiệp tiểu biểu
@@ -198,12 +185,12 @@ const HeaderPortal = () => {
                             <Button type="link" className="btn-username-portal" style={{padding: 0, height: 'auto'}}>
                                 <Space>
                                     <Avatar
-                                        src={`${DOMAIN}/api/v1/image/resource?imageId=${userData?.university?.logoImageId || userData?.business?.businessImageId}`}
+                                        src={`${DOMAIN}/api/v1/image/resource?imageId=${userData?.candidateResponse?.profileImageId || userData?.business?.businessImageId}`}
                                         style={{backgroundColor: '#3E7494', objectFit: 'scale-down'}}
                                         icon={<UserOutlined/>}
                                     />
                                     <span style={{fontWeight: 500, fontSize: '16px'}}>
-                                        {userData?.university?.name || userData?.business?.name || userData?.role?.description || 'Người dùng'}
+                                        {userData?.candidateResponse?.fullName || userData?.business?.name || userData?.role?.description || 'Người dùng'}
                                     </span>
                                     <DownOutlined/>
                                 </Space>

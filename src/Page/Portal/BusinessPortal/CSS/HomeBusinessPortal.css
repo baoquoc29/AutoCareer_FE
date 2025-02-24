@@ -140,7 +140,7 @@
 .banner-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Giúp ảnh nền hiển thị toàn bộ và giữ tỷ lệ */
+    object-fit: scale-down; /* Giúp ảnh nền hiển thị toàn bộ và giữ tỷ lệ */
 }
 
 .logo-iamge-bp {
@@ -149,7 +149,7 @@
     left: 10px; /* Khoảng cách từ trái sang */
     width: 60px; /* Kích thước logo */
     height: 60px;
-    object-fit: cover; /* Giữ tỷ lệ của logo */
+    object-fit: scale-down; /* Giữ tỷ lệ của logo */
     border-radius: 50%; /* Tạo hình tròn cho logo */
     border: 2px solid #fff; /* Đường viền trắng quanh logo */
     background-color: #fff; /* Nền trắng phía sau logo */

@@ -3,19 +3,16 @@ import {GET_IMAGE_URI, TOKEN, USER_LOGIN} from "../../Utils/Setting/Config";
 import {clearLocalStorage, logoutUser} from "../../Redux/actions/UserThunk";
 import {NavLink} from "react-router-dom";
 import {useEffect} from "react";
-import './style.css'
 
 export const UserDropdown = ({navigate}) => {
     const user = useSelector(state => state.UserReducer.userData);
     // Kiểm tra loại người dùng
-    const isUniversityUser = user && user?.role?.name === 'UNIVERSITY';
+    const isCandidateUser = user && user?.role?.name === 'CANDIDATE';
     const isBusinessUser = user && user?.role?.name === 'BUSINESS';
-    const isAdminUser = user && user?.role?.name === 'ADMIN';
     const isSubAdminUser = user && user?.role?.name === 'SUB_ADMIN';
     const isEmployeeUser = user && user?.role?.name === 'EMPLOYEE';
 
     const dispatch = useDispatch();
-    const userId = user ? user.id : null;
     const userType = user ? user?.role?.name : null;
     useEffect(() => {
         return () => {
@@ -35,29 +32,13 @@ export const UserDropdown = ({navigate}) => {
             console.log('No token found');
         }
     };
-    // Hàm chuyển đổi tên vai trò
-    const getRoleDisplayName = (roleName) => {
-        switch (roleName) {
-            case 'UNIVERSITY':
-                return 'Trường đại học';
-            case 'BUSINESS':
-                return 'Doanh nghiệp';
-            case 'ADMIN':
-                return 'Quản trị viên ';
-            case 'SUB_ADMIN':
-                return 'Phó quản trị';
-            case 'EMPLOYEE':
-                return 'Nhân viên quèn';
-            default:
-                return roleName; // Trả về tên gốc nếu không có chuyển đổi
-        }
-    };
+
     const getUserImage = () => {
         if (!user) return "aotucareer-logo.svg";
 
         switch (userType) {
-            case 'UNIVERSITY':
-                return `${GET_IMAGE_URI}${user.university.logoImageId}`;
+            case 'CANDIDATE':
+                return `${GET_IMAGE_URI}${user.candidateResponse.profileImageId}`;
             case 'BUSINESS':
                 return `${GET_IMAGE_URI}${user.business.businessImageId}`;
             case 'SUB_ADMIN':
@@ -69,7 +50,7 @@ export const UserDropdown = ({navigate}) => {
         }
     };
     const getUserProfileLink = () => {
-        if (isUniversityUser) return '/profile-university';
+        if (isCandidateUser) return '/profile-candidate';
         if (isBusinessUser) return '/profile-business';
         if (isSubAdminUser) return '/admin-dashboard';
         if (isEmployeeUser) return '/business';
@@ -93,6 +74,7 @@ export const UserDropdown = ({navigate}) => {
                         <div className="flex-shrink-0">
                             <img
                                 className="img-sm rounded-circle"
+                                style={{ objectFit: "scale-down" }}
                                 src={getUserImage()}
                                 alt="UserNav Picture"
                                 loading="lazy"
@@ -106,7 +88,7 @@ export const UserDropdown = ({navigate}) => {
                             <h5 className="mb-0">
                                 {user?.username.length > 10 ? user.username?.slice(0, 18) + "..." : user?.username}
                             </h5>
-                            <span className="text-body-secondary role-name">Vai trò:{getRoleDisplayName(user?.role?.name)}</span>
+                            <span className="text-body-secondary role-name">Vai trò:{user?.role?.description}</span>
                         </div>
                     </div>
                     <div>
