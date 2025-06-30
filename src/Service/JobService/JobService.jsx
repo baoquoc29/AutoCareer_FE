@@ -13,11 +13,30 @@ export class JobService extends baseService {
             + (industryId ? `&industryId=${industryId}` : '')
         );
     };
-    get_all_job_portal = (page, size, keyword = '') => {
-        return this.get(
-            `api/job/get-all-job?page=${page}&size=${size}&keyword=${keyword}`
-        );
+    get_all_job_portal = (page, size, keyword, provinceId, fromDate, toDate) => {
+        let url = `api/job/get-all-job?page=${page}&size=${size}`;
+
+        const params = new URLSearchParams();
+
+        if (keyword) {
+            params.append('keyword', keyword);
+        }
+        if (provinceId) {
+            params.append('provinceId', provinceId);
+        }
+        if (fromDate) {
+            params.append('fromDate', fromDate);
+        }
+        if (toDate) {
+            params.append('toDate', toDate);
+        }
+
+        // Append the query parameters to the base URL
+        url += `&${params.toString()}`;
+
+        return this.get(url);
     };
+
 
     get_all_job_of_business_paging_portal = (page, size, keyword = '',businessId = null, statusBrowse = null, industryId = null) => {
         return this.get(
@@ -39,6 +58,9 @@ export class JobService extends baseService {
     };
     inactive_job = (jobId) => {
         return this.put(`api/job/inactive-job?jobId=${jobId}`);
+    };
+    get_job_top = () => {
+        return this.get(`api/job/top-job`);
     };
 }
 

@@ -32,6 +32,7 @@ import { getAnalytics } from "firebase/analytics";
             <>
                 <Loading />
                 <AppRouter/>
+
                 <ToastContainer />
             </>
         );

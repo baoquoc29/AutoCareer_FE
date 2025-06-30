@@ -79,6 +79,21 @@ export const get_job_detail = (id) => {
         }
     };
 };
+export const get_job_top = () => {
+    return async (dispatch) => {
+        try {
+            const res = await jobService.get_job_top();
+            dispatch({
+                type: "GET_TOP_JOB",
+                payload: res.data,
+            });
+            return res.data;
+        } catch (error) {
+            console.error("Failed to fetch job details:", error);
+            toast.error(error.response.data.message);
+        }
+    };
+};
 
 export const create_job = (jobData) => {
     return async (dispatch) => {
@@ -134,10 +149,10 @@ export const inactive_job = (jobId) => {
     };
 };
 
-export const get_all_job_portal= (page = 1, size = 7, keyword = '') => {
+export const get_all_job_portal= (page = 1, size = 7, keyword = '',provinceId, fromDate, toDate) => {
     return async (dispatch) => {
         try {
-            const res = await jobService.get_all_job_portal(page, size, keyword);
+            const res = await jobService.get_all_job_portal(page, size, keyword, provinceId, fromDate, toDate);
             const {content, totalElements, pageSize, currentPage} = res.data;
             if (Array.isArray(res.data.content)) {
                 dispatch({

@@ -1,10 +1,11 @@
 import {
-    GET_ALL_JOBS_APPLY, STATUS_JOB
+    GET_ALL_JOBS_APPLY, STATUS_JOB,GET_CANDIDATES
 } from "../types/MatchingType";
 import {GET_ALL_JOBS} from "../types/AdminJobType";
 const initialState = {
    matchingList: [],
     totalElements: 0,
+    candidates: [],
     totalJob: [],
     status : null
 };
@@ -23,6 +24,11 @@ export const MatchingReducer = (state = initialState, action) => {
             return {
                 ...state,
                 status: action.payload.data
+            }
+        case GET_CANDIDATES:
+            return {
+                ...state,
+                candidates: action.payload.data.best_matches
             }
         case GET_ALL_JOBS:
             return {

@@ -139,11 +139,11 @@ const JobTable = ({data, onDelete, onRestore, selectedRows, onSelectChange, page
 
                     <Button style={{backgroundColor: "yellow"}} variant="outlined" icon={<EditOutlined/>}
                             onClick={() => handleEdit(record.key)}
-                            disabled={username !== record.createBy}/>
+                          />
                     {record.status === 'ACTIVE' ? (
                         <Button variant={"solid"} danger={true} color={"danger"} icon={<DeleteOutlined/>}
                                 onClick={() => confirmDelete(record, record.createBy)}
-                                disabled={username !== record.createBy}/>
+                                />
                     ) : (
                         <Button icon={<ReloadOutlined/>} onClick={() => onRestore(record)}/>
                     )}

@@ -18,6 +18,21 @@ export const get_business_by_id = (id) => {
     }
 }
 
+export const get_top_business = () => {
+    return async (dispatch) => {
+        try {
+            const res = await businessService.get_top_follow_business();
+            dispatch({
+                type: "TOP_5_BUSINESS",
+                payload: res.data
+            })
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 export const update_business = (id, formData) => {
     return async (dispatch) => {
         try {

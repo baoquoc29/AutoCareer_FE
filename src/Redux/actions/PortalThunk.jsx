@@ -1,14 +1,9 @@
 import {portalService} from "../../Service/PortalService/PortalService";
 import {
-    CHECK_STATUS_REQUEST,
-    ERROR_PAGE,
     GET_ALL_BUSINESS_FEATURE, GET_ALL_BUSINESS_HOME,
-    GET_ALL_JOB_LIST, GET_ALL_UNIVERSITY_HOME,
+    GET_ALL_JOB_LIST, GET_TOP_BUSINESS,
     GET_TOTAL_JOB_INDUSTRY,
     GET_UNIVERSITY_TOTAL,
-    GET_WORK_SHOP_BY_ID,
-    GET_WORK_SHOP_FEATURE,
-    TOTAL_BUSINESS, TOTAL_JOB, TOTAL_UNIVERSITY, TOTAL_WORK_SHOP
 
 } from "../types/PortalType";
 
@@ -29,9 +24,23 @@ export const get_all_business_feature = (industryId) => {
     return async (dispatch) => {
         try {
             const res = await portalService.get_business_by_feature(industryId)
-            console.log(industryId);
+            console.log(res);
             dispatch({
                 type: GET_ALL_BUSINESS_FEATURE,
+                payload: res
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const get_all_business_top = () => {
+    return async (dispatch) => {
+        try {
+            const res = await portalService.get_top_business();
+            console.log(res.data);
+            dispatch({
+                type: GET_TOP_BUSINESS,
                 payload: res
             })
         } catch (error) {

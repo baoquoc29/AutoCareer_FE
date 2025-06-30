@@ -28,7 +28,7 @@ const BannerPortal = () => {
                 {/* Left content with text and logos */}
                 <div className="left-content-portal" data-aos="fade-up">
                     <h2>
-                        Sự hợp tác giữa trường học và doanh nghiệp: Kết nối tri thức với thực tiễn, mở ra cơ hội nghề nghiệp, và xây dựng nền tảng vững chắc cho tương lai. Cùng nhau phát triển, cùng nhau thành công!
+                        Thành công không phải là đích đến, mà là cả một hành trình. Mỗi bước đi trong sự nghiệp đều là một cơ hội để học hỏi và phát triển.
                     </h2>
                     <div className="companies-portal">
                         <img src="/spotify.png" alt="Spotify" />

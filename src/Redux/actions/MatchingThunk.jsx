@@ -1,6 +1,6 @@
 import {matchingJobService} from "../../Service/CandidateService/MatchingJobService";
 import {
-    APPLY_JOB, GET_ALL_JOBS, GET_ALL_JOBS_APPLY, STATUS_JOB
+    APPLY_JOB, GET_ALL_JOBS, GET_ALL_JOBS_APPLY, GET_CANDIDATES, STATUS_JOB
 } from "../types/MatchingType";
 
 
@@ -37,6 +37,19 @@ export const listJobsByBusiness = (param) => {
             dispatch({
                 type: GET_ALL_JOBS,
                 payload: res.data
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const listCandidateMatch = (param) => {
+    return async (dispatch) => {
+        try {
+            const res = await matchingJobService.candidateList(param);
+            dispatch({
+                type: GET_CANDIDATES,
+                payload: res
             })
         } catch (error) {
             console.log(error);

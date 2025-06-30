@@ -47,6 +47,12 @@ import CandidateMessage from "../Page/ProfileUser/ProfileUniversity/CandidateMes
 import ApplyJobBusiness from "../Page/ProfileUser/ProfileBusiness/ApplyJobBusiness";
 import MessageManagerBusiness from "../Page/ProfileUser/ProfileBusiness/MessageManagerBusiness";
 import ProfileCandidateApply from "../Page/ProfileUser/ProfileBusiness/ProfileCandidateApply";
+import MBTIQuestion from "../Page/Portal/MBTIQuestion";
+import FreeCourses from "../Page/Portal/FreeCourses";
+import CoursePlayer from "../Page/Portal/CourseVideo";
+import CandidateFollow from "../Page/ProfileUser/ProfileUniversity/CandidateFollow";
+import AISearchCandidate from "../Page/ProfileUser/ProfileUniversity/AISearchCandidate";
+import HeroSection from "../Page/Portal/HeroSection";
 
 
 function AnimatedOutletV1() {
@@ -93,7 +99,10 @@ export function AppRouter() {
                     <Route path={"/job-portal-detail/:id"} element={<JobDetailPortal/>}/>
                     <Route path={"/home-search-business"} element={<HomeSearchBusiness/>}/>
                     <Route path="/profile-candidate-apply" element={<ProfileCandidateApply />} />
-
+                    <Route path="/mbti-question" element={<MBTIQuestion />} />
+                    <Route path="/free-courses" element={<FreeCourses />} />
+                    <Route path="/course/:courseId" element={<CoursePlayer  />} />
+                    <Route path="/test" element={<HeroSection  />} />
                 </Route>
                 <Route element={<PrivateRoute><CandidateTemplate/></PrivateRoute>}>
                     <Route path={"/candidate"} element={<Candidate/>}/>
@@ -102,6 +111,7 @@ export function AppRouter() {
                     <Route path={"/apply-job"} element={<ApplyJob/>}/>
                     <Route path={"/saved-job"} element={<SavedJob/>}/>
                     <Route path={"/candidate-messages"} element={<CandidateMessage/>}/>
+                    <Route path={"/company-follow"} element={<CandidateFollow/>}/>
                 </Route>
                 <Route element={<PrivateRoute><BusinessTemplate/></PrivateRoute>}>
                     <Route path={"/dashboard-industry"} element={<DashboardIndustry/>}/>
@@ -111,14 +121,13 @@ export function AppRouter() {
                     <Route path={"/employee-create"} element={<EmployeeCreate/>}/>
                     <Route path={"/employee-edit"} element={<EmployeeEdit/>}/>
                     <Route path={"/profile-business"} element={<ProfileBusiness/>}/>
-
-
                     <Route path={"/profile-business-edit"} element={<ProfileBusinessEdit/>}/>
                     <Route path={"/job-manager"} element={<JobManager/>}/>
                     <Route path={"/job-create"} element={<JobCreate/>}/>
                     <Route path={"/job-update"} element={<JobUpdate/>}/>
                     <Route path={"/job-detail"} element={<JobDetail/>}/>
                     <Route path={"/job-business-apply"} element={< ApplyJobBusiness/>}/>
+                    <Route path={"/job-business-search"} element={< AISearchCandidate/>}/>
                     <Route path={"/message-manager-business"} element={< MessageManagerBusiness/>}/>
 
                 </Route>

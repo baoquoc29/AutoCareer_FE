@@ -17,6 +17,9 @@ export class BusinessService extends baseService {
         return this.get
         (`api/business/get-all-business-page?page=${page}&size=${size}&keyword=${keyword}`);
     };
+    get_top_follow_business = () => {
+        return this.get(`api/business/dashboard/top`,true);
+    }
 }
 
 export const businessService = new BusinessService();

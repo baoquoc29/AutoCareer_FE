@@ -8,7 +8,13 @@ import {
     GET_TOTAL_JOB_INDUSTRY,
     GET_UNIVERSITY_TOTAL,
     GET_WORK_SHOP_BY_ID,
-    GET_WORK_SHOP_FEATURE, REQUEST_WORK_SHOP, TOTAL_BUSINESS, TOTAL_JOB, TOTAL_UNIVERSITY, TOTAL_WORK_SHOP
+    GET_WORK_SHOP_FEATURE,
+    REQUEST_WORK_SHOP,
+    TOTAL_BUSINESS,
+    TOTAL_JOB,
+    TOTAL_UNIVERSITY,
+    TOTAL_WORK_SHOP,
+    GET_TOP_BUSINESS
 } from "../types/PortalType";
 
 const initialState = {
@@ -19,6 +25,7 @@ const initialState = {
     workShopFeatures: [],
     workShopDetails: {},
     universities: [],
+    businessTop: [],
     totalUniversities: 0,
     totalBusinessFeatures: 0,
     totalWorkShopFeatures: 0,
@@ -82,6 +89,17 @@ export const PortalReducer = (state = initialState, action) => {
                     ...state,
                     businessFeatures: action.payload.data,
                     totalBusinessFeatures: action.payload.data.length,
+                };
+            }
+            return {
+                ...state,
+                businessFeatures: [],
+            };
+        case GET_TOP_BUSINESS:
+            if (action.payload && action.payload.code === 200) {
+                return {
+                    ...state,
+                    businessTop: action.payload.data,
                 };
             }
             return {

@@ -38,7 +38,7 @@ export function CandidateTemplate() {
             label: " Quản lý tương tác",
             icon: "fa-solid fa-handshake",
             subMenu: [
-                { label: "  Công ty đang theo dõi" },
+                { label: "  Công ty đang theo dõi",link : "/company-follow" },
             ],
         },
         {
@@ -47,15 +47,7 @@ export function CandidateTemplate() {
             subMenu: [
                 { label: "Kết nối doanh nghiệp"  , link: "/candidate-messages",},
             ],
-        },
-        {
-            label: " Cài đặt nâng cao",
-            icon: "fa-solid fa-gear",
-            subMenu: [
-                { label: "  Cài đặt gợi ý việc làm" },
-                { label: "  AI gợi ý việc làm" },
-            ],
-        },
+        }
     ];
 
     const getProfileImage = () => {

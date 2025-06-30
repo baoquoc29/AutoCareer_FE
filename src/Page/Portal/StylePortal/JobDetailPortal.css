@@ -1,0 +1,136 @@
+/* Compact Job Portal Header */
+.compact-portal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.compact-portal-title {
+    font-size: 18px;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 600;
+}
+
+.compact-view-all-btn {
+    background: none;
+    border: none;
+    color: #3498db;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.compact-view-all-btn:hover {
+    background: #f0f8ff;
+    color: #2980b9;
+}
+
+.compact-view-all-btn::after {
+    content: "→";
+    margin-left: 5px;
+    transition: transform 0.2s;
+}
+
+.compact-view-all-btn:hover::after {
+    transform: translateX(3px);
+}
+
+/* Các style cũ giữ nguyên */
+.compact-job-portal {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 10px;
+}
+
+.compact-jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 15px;
+}
+
+.compact-job-card {
+    width: 350px;
+    height: 250px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.compact-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.compact-company-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.compact-job-title {
+    font-size: 14px;
+    margin: 0;
+    color: #333;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* hoặc width cụ thể */
+}
+
+
+.compact-company-name {
+    font-size: 12px;
+    margin: 3px 0 0;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.compact-job-details {
+    margin: 10px 0;
+}
+
+.compact-detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #444;
+}
+
+.compact-detail-item svg {
+    margin-right: 8px;
+    color: #555;
+}
+
+.compact-apply-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.compact-apply-btn:hover {
+    background: #2980b9;
+}

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SearchBarPortal from "./SearchBarPortal";
 import HeaderPortal from "../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
 import JobPortal from "./JobPortal";
 import BusinessPortal from "./BusinessPortal";
@@ -10,7 +9,11 @@ import { USER_LOGIN } from "../../Utils/Setting/Config";
 import { useSelector } from "react-redux";
 import ChatBox from "./SupportChat"; // Import ChatBox
 import "./StylePortal/HomeScreen.css";
-
+import HeroSection from "./HeroSection";
+import TestimonialsSection from "./Quote";
+import CareerTips from "./StylePortal/CareerTips";
+import CareerDevelopment from "./CareerDevelopment";
+import MotivationalSteps from "./MotivationalSteps";
 const HomeScreen = () => {
     const { isAuthenticated } = useSelector((state) => state.UserReducer);
     const [userRole, setUserRole] = useState("");
@@ -31,47 +34,34 @@ const HomeScreen = () => {
 
     return (
         <div className="home-screen-container">
-            <HeaderPortal />
-            <div className="card-slogan-portal">
-                <div className="corner-image top-left"></div>
-                <div className="corner-image top-right"></div>
-                <div className="corner-image middle-left"></div>
-                <div className="corner-image middle-right"></div>
-                <div className="corner-image bottom-left"></div>
-                <div className="corner-image bottom-right"></div>
+            <HeaderPortal/>
+            <HeroSection></HeroSection>
+            <BannerPortal/>
 
-                <div className="slogan-container">
-                    <h1 className="slogan-portal">Nơi kết nối doanh nghiệp và trường đại học</h1>
-                    <h3 className="sub-slogan-portal">Tiếp cận 400+ công ty và trường đại học</h3>
-                </div>
-                <SearchBarPortal />
-            </div>
-            <BannerPortal />
-
-            {userRole !== "BUSINESS" && (
                 <div className="job-all-portal">
-                    <JobPortal />
+                    <JobPortal/>
                 </div>
-            )}
 
-            {userRole !== "BUSINESS" && (
                 <div className="business-section">
-                    <BusinessPortal />
+                    <BusinessPortal/>
                 </div>
-            )}
 
 
             <div className="industry-section">
-                <IndustryPortal />
+                <IndustryPortal/>
             </div>
-            <FooterPortal />
+            <TestimonialsSection></TestimonialsSection>
+            <CareerTips></CareerTips>
+            <CareerDevelopment></CareerDevelopment>
+            <MotivationalSteps></MotivationalSteps>
+            <FooterPortal/>
 
             <div className="chat-icon" onClick={toggleChatBox}>
-                <img src="/kh.png" alt="Chat Icon" />
+                <img src="/kh.png" alt="Chat Icon"/>
             </div>
 
             {/* Gọi component ChatBox */}
-            <ChatBox showChatBox={showChatBox} toggleChatBox={toggleChatBox} />
+            <ChatBox showChatBox={showChatBox} toggleChatBox={toggleChatBox}/>
         </div>
     );
 };

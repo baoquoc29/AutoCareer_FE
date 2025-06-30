@@ -33,6 +33,9 @@ export class MatchingJobService extends baseService {
         const queryParams = new URLSearchParams(param).toString();
         return this.getResponse(`api/job/get-all-job-business?${queryParams}`);
     };
+    candidateList = (jobId) => {
+        return this.getResponse(`api/matching/fetch-matching-candidates?jobId=${jobId}`);
+    };
 
 }
 

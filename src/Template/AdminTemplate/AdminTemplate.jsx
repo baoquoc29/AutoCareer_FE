@@ -19,11 +19,7 @@ export function AdminTemplate() {
         {
             label: 'Quản lý tài khoản',
             icon: 'fa-solid fa-school',
-            subMenu: [{
-                label: 'Tài khoản quản trị viên',
-                link: '/sub-admin-manager',
-                icon: ''
-            }, {label: 'Tài khoản doanh nghiệp', link: '/admin-business-manager', icon: ''}, {
+            subMenu: [{label: 'Tài khoản doanh nghiệp', link: '/admin-business-manager', icon: ''}, {
             },]
         },
 

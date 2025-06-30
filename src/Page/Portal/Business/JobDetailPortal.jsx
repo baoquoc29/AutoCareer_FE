@@ -6,10 +6,10 @@ import FooterPortal from "../FooterPortal";
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {get_job_detail} from "../../../Redux/actions/JobThunk";
-import {decryptId, encryptId} from '../../../Component/SecurityComponent/cryptoUtils';
 import PageError from "../../PageError404/PageError"
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
 import {apply_job, save_job, status_job} from "../../../Redux/actions/MatchingThunk";
+import {decryptId, encryptId} from "../../../Component/SecurityComponent/cryptoUtils"
 import {
     AppstoreAddOutlined,
     EnvironmentOutlined,
@@ -36,8 +36,8 @@ const JobDetailPortal = () => {
         if (!data?.candidateResponse?.id) return;
         const fetchStatus = async () => {
             try {
-                const waitingResponse = await dispatch(status_job(data.candidateResponse.id, decryptId(encryptedId), "WAITING"));
-                const savedResponse = await dispatch(status_job(data.candidateResponse.id, decryptId(encryptedId), "SAVED"));
+                const waitingResponse = await dispatch(status_job(data.candidateResponse.id, encryptedId, "WAITING"));
+                const savedResponse = await dispatch(status_job(data.candidateResponse.id, encryptedId, "SAVED"));
 
                 // Kiểm tra response đúng cấu trúc API
                 if (waitingResponse?.success && waitingResponse.payload?.code === 200) setApplied(true);
@@ -48,7 +48,7 @@ const JobDetailPortal = () => {
         };
 
         fetchStatus();
-    }, [data?.candidateResponse?.id, decryptId(encryptedId), dispatch]);
+    }, [data?.candidateResponse?.id, encryptedId, dispatch]);
 
 
     useEffect(() => {
@@ -58,7 +58,7 @@ const JobDetailPortal = () => {
         if (encryptedId) {
             setLoading(true);
             try {
-                dispatch(get_job_detail(decryptId(encryptedId))).finally(() => setLoading(false));
+                dispatch(get_job_detail(encryptedId)).finally(() => setLoading(false));
             } catch (error) {
                 setLoading(false);
             }
@@ -90,7 +90,7 @@ const JobDetailPortal = () => {
             content: "Bạn có chắc chắn muốn ứng tuyển vào công việc này?",
             onOk: async () => {
                 try {
-                    await dispatch(apply_job(data.candidateResponse.id, decryptId(encryptedId), "WAITING"));
+                    await dispatch(apply_job(data.candidateResponse.id, encryptedId, "WAITING"));
                     setApplied(true); // Cập nhật trạng thái
                     Modal.success({
                         title: "Ứng tuyển thành công",
@@ -122,7 +122,7 @@ const JobDetailPortal = () => {
             content: "Bạn có chắc chắn muốn lưu công việc này?",
             onOk: async () => {
                 try {
-                    await dispatch(save_job(data.candidateResponse.id,decryptId(encryptedId), "SAVED"));
+                    await dispatch(save_job(data.candidateResponse.id,encryptedId, "SAVED"));
                     setSaved(true); // Cập nhật trạng thái
                     Modal.success({
                         title: "Lưu tin thành công",

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select, Pagination} from "antd";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Button, Card, Col, Divider, Row, Space, Typography, Input, Select, Pagination, Tag, notification} from "antd";
+import {useParams} from "react-router-dom";
 import DisplayRichText from "../../../src/Component/TextEditDisplay/DisplayRichText";
 import HeaderPortal from "../../Component/HeaderComponent/HeaderPortal/HeaderPortal";
 import {get_business_by_id} from "../../Redux/actions/BusinessThunk";
@@ -9,9 +9,30 @@ import {GET_IMAGE_URI} from "../../Utils/Setting/Config";
 import {get_all_job_of_business_paging_portal} from "../../Redux/actions/JobThunk";
 import dayjs from "dayjs";
 import {decryptId, encryptId} from "../../Component/SecurityComponent/cryptoUtils";
-import {PlusOutlined} from "@ant-design/icons";
-
-const {Text, Title} = Typography;
+import {
+    ApartmentOutlined,
+    ArrowRightOutlined, BankOutlined,
+    BulbOutlined,
+    CalendarOutlined, CheckOutlined,
+    ContactsOutlined,
+    EnvironmentOutlined,
+    GlobalOutlined, InfoCircleOutlined,
+    MailOutlined,
+    PhoneOutlined,
+    PlusOutlined, SearchOutlined, TeamOutlined, UsergroupAddOutlined
+} from "@ant-design/icons";
+import FooterPortal from "./FooterPortal";
+import "./StylePortal/BusinessDetail.css";
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import {check_follow, count_follower, post_follow, un_follow} from "../../Redux/actions/CandidateThunk";
+import {toast} from "react-toastify";
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 const BusinessDetailPage = () => {
     const dispatch = useDispatch();
@@ -24,7 +45,9 @@ const BusinessDetailPage = () => {
     const jobData = useSelector((state) => state.JobReducer.listJopPortal);
     const { id } = useParams();
     const [encryptedId, setEncryptedId] = useState(null);
-
+    const [isFollowing, setIsFollowing] = useState(false);
+    const user = useSelector(state => state.UserReducer.userData);
+    const [totalFollowing, setTotalFollowing] = useState(0);
     useEffect(() => {
         setEncryptedId(id);
     }, [id]);
@@ -34,11 +57,45 @@ const BusinessDetailPage = () => {
         dispatch(get_all_job_of_business_paging_portal(currentPage, pageSize, encodeURIComponent(searchKeyword), decryptId(encryptedId),));
     }, [dispatch,currentPage, searchKeyword, pageSize, encryptedId]);
 
+    useEffect(() => {
+        if (user) {
+            const checkFollowStatus = async () => {
+                try {
+                    const res = await dispatch(check_follow(decryptId(encryptedId), user.candidateResponse.id));
+                    if (res.success && res.payload.data === true) {
+                        setIsFollowing(true);
+                    } else {
+                        setIsFollowing(false);
+                    }
+                } catch (error) {
+                    toast.error(error.response?.data?.message || "Lỗi kiểm tra trạng thái theo dõi");
+                }
+            };
+
+            checkFollowStatus(); // ✅ Gọi trong if
+        }
+    }, [businessData, user]);
+
+
+
+    useEffect(() => {
+        const countFollow = async () => {
+            try {
+                const res = await dispatch(count_follower(decryptId(encryptedId)));
+                if (res.payload.data !== 0) {
+                    setTotalFollowing(res.payload.data);
+                }
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Lỗi kiểm tra trạng thái theo dõi");
+            }
+        };
+         countFollow();
+    }, [encryptedId,isFollowing]);
 
     const handleDetailsJob = (id) => {
         const encryptedId = encryptId(id)
         ;  // Encrypt the ID first
-        const url = `/job-portal-detail/${encodeURIComponent(encryptedId)}`; // Make sure the encrypted ID is properly encoded
+        const url = `/job-portal-detail/${id}`; // Make sure the encrypted ID is properly encoded
         window.open(url, "_blank");  // Open in a new tab
     };
 
@@ -67,292 +124,334 @@ const BusinessDetailPage = () => {
         );
     }
 
+    const followBusiness = async () => {
+        if (!decryptId(encryptedId) || !user?.candidateResponse?.id) {
+            toast.error("Dữ liệu không hợp lệ, vui lòng kiểm tra lại dữ liệu đầu vào.");
+            return;
+        }
+
+        try {
+            await dispatch(post_follow(decryptId(encryptedId), user.candidateResponse.id));
+
+            setIsFollowing(true);
+            toast.success("Đã theo dõi công ty!");
+        } catch (error) {
+            toast.error("Có lỗi xảy ra, vui lòng thử lại.");
+        }
+    };
+    const unfollowBusiness = async () => {
+        if (!businessData?.id || !user?.candidateResponse?.id) {
+            toast.error("Dữ liệu không hợp lệ, vui lòng kiểm tra lại dữ liệu đầu vào.");
+            return;
+        }
+
+        try {
+            await dispatch(un_follow(decryptId(encryptedId), user.candidateResponse.id));
+
+            setIsFollowing(false);
+            toast.success("Đã huỷ theo dõi công ty!");
+        } catch (error) {
+            toast.error("Có lỗi xảy ra, vui lòng thử lại.");
+        }
+    };
+
+
     return (
-        <div>
+        <div className="company-profile-page">
             <HeaderPortal/>
             <section id="content" className="content">
                 <div className="content__header content__boxed rounded-0">
                     <div className="content__wrap">
-                        <div style={{padding: "20px", maxWidth: "1200px", margin: "auto"}}>
-                            <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                                {/* Khối chia tên công ty */}
+                        <div className="company-profile-container">
+                            {/* Company Header Section */}
+                            <Row gutter={[24, 24]}>
                                 <Col span={24}>
-                                    <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                                        <Row align="middle" justify="start">
-                                            {/* Logo hình tròn */}
-                                            <Col>
-                                                <img
-                                                    src={businessData?.businessImageId
-                                                        ? `${GET_IMAGE_URI}${businessData["businessImageId"]}`
-                                                        : "placeholder-avatar.jpg"}
-                                                    alt="Logo công ty"
-                                                    style={{
-                                                        width: 150,
-                                                        height: 150,
-                                                        borderRadius: "50%",
-                                                        objectFit: "scale-down",
-                                                    }}
-                                                />
+                                    <Card
+                                        bordered={false}
+                                        className="company-header-card"
+                                        bodyStyle={{ padding: '24px' }}
+                                    >
+                                        <Row align="middle" gutter={[24, 16]}>
+                                            {/* Company Logo */}
+                                            <Col flex="none">
+                                                <div className="company-logo-container">
+                                                    <img
+                                                        src={businessData?.businessImageId
+                                                            ? `${GET_IMAGE_URI}${businessData["businessImageId"]}`
+                                                            : "/images/default-company-logo.png"}
+                                                        alt="Company logo"
+                                                        className="company-logo"
+                                                        onError={(e) => {
+                                                            e.target.src = "/images/default-company-logo.png"
+                                                        }}
+                                                    />
+                                                </div>
                                             </Col>
 
-                                            <Col style={{ marginLeft: "12px" }}>
-                                                {/* Tên công ty */}
-                                                <Title level={3} style={{ margin: 0, marginBottom: "10px" }}>
-                                                    {businessData.name}
-                                                </Title>
+                                            {/* Company Info */}
+                                            <Col flex="auto">
+                                                <div className="company-info">
+                                                    <h1 className="company-name">{businessData.name}</h1>
 
-                                                {/* Thông tin email và quy mô */}
-                                                <Row gutter={[16, 8]}>
-                                                    <Col>
-                                                        <Text type="secondary">Email: {businessData.email || "Chưa có email"}</Text>
-                                                    </Col>
-                                                    <Col>
-                                                        <Text type="secondary">Quy mô: {businessData.companySize || "Không xác định"} nhân viên</Text>
-                                                    </Col>
-                                                </Row>
+                                                    <div className="company-meta">
+                                                        <div className="meta-item">
+                                                            <MailOutlined className="meta-icon"/>
+                                                            <span>{businessData.email || "Email not provided"}</span>
+                                                        </div>
+                                                        <div className="meta-item">
+                                                            <BankOutlined   className="meta-icon"/>
+                                                            <span>{businessData.companySize || "Not specified"} nhân viên</span>
+                                                        </div>
+                                                        <div className="meta-item">
+                                                            <UsergroupAddOutlined className="meta-icon"/>
+                                                            <span>{totalFollowing || "0"} người theo dõi</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </Col>
-                                            <Col flex="auto" style={{ textAlign: "right" }}>
-                                                <Button type="primary" shape="round" size="large">
-                                                    <PlusOutlined /> Theo dõi công ty
+
+                                            {/* Follow Button */}
+                                            <Col flex="none">
+                                                <Button
+                                                    type="primary"
+                                                    shape="round"
+                                                    size="large"
+                                                    icon={isFollowing ? <CheckOutlined /> : <PlusOutlined />}
+                                                    className={`follow-btn ${isFollowing ? "unfollow" : "follow"}`}
+                                                    onClick={isFollowing ? unfollowBusiness : followBusiness}
+                                                    danger={isFollowing}
+                                                >
+                                                    {isFollowing ? "Huỷ theo dõi" : "Theo dõi công ty"}
                                                 </Button>
                                             </Col>
+
                                         </Row>
                                     </Card>
                                 </Col>
-                                <Col span={24}>
-                                    <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                                        {/* Khối chia phần giới thiệu công ty và thông tin tuyển dụng */}
-                                        <Col span={18} style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'flex-start'
-                                        }}>
-                                            {/* Giới thiệu công ty */}
-                                            <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                                                <Col span={24}>
-                                                    <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }} >
-                                                        <Divider orientation="left"
-                                                                 style={{fontSize: "18px", color: "#096dd9"}}>
-                                                            Giới thiệu công ty
-                                                        </Divider>
-                                                        <DisplayRichText content={businessData.description}/>
-                                                    </Card>
-                                                </Col>
-                                                {/* Thông tin tuyển dụng */}
-                                                <Col span={24}>
-                                                    <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                                                        <Divider orientation="left"
-                                                                 style={{fontSize: "18px", color: "#096dd9"}}>
-                                                            Tin tuyển dụng
-                                                        </Divider>
+                            </Row>
 
-                                                        {/* Tìm kiếm và lọc theo địa điểm */}
-                                                        <Space style={{marginBottom: "16px"}}>
-                                                            {/* Thanh tìm kiếm */}
-                                                            <Input
-                                                                placeholder="Tìm kiếm công việc"
-                                                                value={searchKeyword}
-                                                                onChange={handleSearch}
-                                                                style={{width: "200px"}}
-                                                            />
-                                                            {/* Filter theo địa điểm */}
-                                                            <Select
-                                                                placeholder="Chọn địa điểm"
-                                                                value={locationFilter}
-                                                                onChange={(value) => setLocationFilter(value)}
-                                                                style={{width: "200px"}}
-                                                            >
-                                                                <Select.Option value="">Tất cả</Select.Option>
-                                                                <Select.Option value="Hà Nội">Hà Nội</Select.Option>
-                                                                <Select.Option value="TP.HCM">TP.HCM</Select.Option>
-                                                            </Select>
-                                                        </Space>
+                            {/* Main Content Section */}
+                            <Row gutter={[24, 24]} className="main-content">
+                                {/* Left Column - Company Info & Jobs */}
+                                <Col xs={18} md={18}>
+                                    {/* Company Description */}
+                                    <Card
+                                        bordered={false}
+                                        className="info-card"
+                                    >
+                                        <div className="section-header">
+                                            <InfoCircleOutlined className="section-icon" />
+                                            <h2>Giới thiệu</h2>
+                                        </div>
+                                        <div className="description-content">
+                                            <DisplayRichText content={businessData.description}/>
+                                        </div>
+                                    </Card>
 
-                                                        <div>
-                                                            {jobData.map((job) => (
-                                                                <Card key={job.jobId} bordered={false}
-                                                                      style={{ marginBottom: "10px", boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                                                                    <Row gutter={[16, 16]}
-                                                                         style={{display: "flex", flexWrap: "wrap"}}>
-                                                                        {/* Ảnh công ty */}
-                                                                        <Col span={5} style={{
-                                                                            display: "flex",
-                                                                            alignItems: "center"
-                                                                        }}>
-                                                                            <img
-                                                                                src={`${GET_IMAGE_URI}${job?.businessImageId}`}
-                                                                                alt="Company Logo"
-                                                                                style={{
-                                                                                    width: "100px",
-                                                                                    height: "100px",
-                                                                                    borderRadius: "8px",
-                                                                                    objectFit: " scale-down",
-                                                                                }}
-                                                                            />
-                                                                        </Col>
-                                                                        <Col span={19} style={{textAlign: "left"}}>
-                                                                            <Row gutter={[16, 16]} style={{
-                                                                                display: "flex",
-                                                                                flexWrap: "wrap"
-                                                                            }}>
-                                                                                <Col span={18}
-                                                                                     style={{textAlign: "left"}}>
-                                                                                    <div>
-                                                                                        {/* Tiêu đề công việc */}
-                                                                                        <Text strong style={{
-                                                                                            fontSize: "16px",
-                                                                                            color: "#096dd9"
-                                                                                        }}>
-                                                                                            {job.title}
-                                                                                        </Text>
-                                                                                        {/* Tên công ty */}
-                                                                                        <div style={{marginBottom:"8px"}}>
-                                                                                            <DisplayRichText
+                                    {/* Job Openings */}
+                                    <Card
+                                        bordered={false}
+                                        className="info-card jobs-card"
+                                    >
+                                        <div className="section-header">
+                                            <BulbOutlined className="section-icon" />
+                                            <h2>Danh sách công việc</h2>
+                                        </div>
 
-                                                                                                content={businessData.name}/>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <Row gutter={[16, 16]} style={{
-                                                                                        display: "flex",
-                                                                                        flexWrap: "wrap",
-                                                                                        gap: "8px",
+                                        {/* Search and Filter */}
+                                        <div className="job-search-filters">
+                                            <Input
+                                                placeholder="Tìm kiếm công việc..."
+                                                value={searchKeyword}
+                                                onChange={handleSearch}
+                                                prefix={<SearchOutlined />}
+                                                className="search-input"
+                                            />
+                                            <Select
+                                                placeholder="Lọc theo địa chỉ"
+                                                value={locationFilter}
+                                                onChange={(value) => setLocationFilter(value)}
+                                                className="location-filter"
+                                                suffixIcon={<EnvironmentOutlined />}
+                                            >
+                                                <Select.Option value="">Tất cả</Select.Option>
+                                                <Select.Option value="Hà Nội">Hà Nội</Select.Option>
+                                                <Select.Option value="TP.HCM">TP.HCM</Select.Option>
+                                            </Select>
+                                        </div>
 
-                                                                                    }}>
-                                                                                        {/* Địa điểm làm việc */}
-                                                                                        <Col
+                                        {/* Job Listings */}
+                                        <div className="job-listings">
+                                            {jobData.map((job) => (
+                                                <Card
+                                                    key={job.jobId}
+                                                    bordered={false}
+                                                    className="job-card"
+                                                    onClick={() => handleDetailsJob(job.jobId)}
+                                                >
+                                                    <Row gutter={[16, 16]} align="middle">
+                                                        {/* Company Logo */}
+                                                        <Col xs={24} sm={5}>
+                                                            <div className="job-company-logo">
+                                                                <img
+                                                                    src={`${GET_IMAGE_URI}${job?.businessImageId}`}
+                                                                    alt="Company logo"
+                                                                    onError={(e) => {
+                                                                        e.target.src = "/images/default-company-logo.png"
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </Col>
 
-                                                                                            span={8}
-                                                                                            style={{
-                                                                                                border: "1px solid #d9d9d9",
-                                                                                                backgroundColor: "#f0f0f0", // Màu xám
-                                                                                                borderRadius: "8px", // Bo góc
+                                                        {/* Job Details */}
+                                                        <Col xs={24} sm={19}>
+                                                            <div className="job-details">
+                                                                <div className="job-title-row">
+                                                                    <h3 className="job-title">{job.title}</h3>
+                                                                    <div className="job-salary">
+                                                                        {job.fromSalary !== 1
+                                                                            ? `${new Intl.NumberFormat("vi-VN").format(job.fromSalary)} VND`
+                                                                            : "Negotiable"}
+                                                                    </div>
+                                                                </div>
 
-                                                                                                padding: "5px", // Thêm padding để nội dung không sát mép
-                                                                                            }}
-                                                                                        >
-                                                                                            <Text
-                                                                                                style={{fontSize: "13px"}}>{job?.province}</Text>
-                                                                                        </Col>
-                                                                                        {/* Ngày hết hạn */}
-                                                                                        <Col
-                                                                                            span={8}
-                                                                                            style={{
-                                                                                                textAlign: "left",
-                                                                                                border: "1px solid #d9d9d9",
-                                                                                                backgroundColor: "#f0f0f0", // Màu xám
-                                                                                                borderRadius: "8px", // Bo góc
-                                                                                                padding: "5px", // Thêm padding để nội dung không sát mép
-                                                                                            }}
-                                                                                        >
-                                                                                            <Text
-                                                                                                style={{fontSize: "13px"}}>
-                                                                                                {job.expireDate ? dayjs(job.expireDate).format("DD/MM/YYYY") : "N/A"}
-                                                                                            </Text>
-                                                                                        </Col>
-                                                                                    </Row>
-                                                                                </Col>
-                                                                                {/* Lương */}
-                                                                                <Col span={6}
-                                                                                     style={{textAlign: "right"}}>
-                                                                                    <Text
-                                                                                        strong
-                                                                                        style={{
-                                                                                            fontSize: "16px",
-                                                                                            color: "#096dd9",
-                                                                                        }}
-                                                                                    >
-                                                                                        {/* Format lương với dấu phẩy và thêm "VND" */}
-                                                                                        {job.fromSalary !== 1
-                                                                                            ? new Intl.NumberFormat("vi-VN").format(job.fromSalary) + " VND"
-                                                                                            : "Thoả thuận"}
-                                                                                    </Text>
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Col>
-                                                                    </Row>
+                                                                <div className="company-name">
+                                                                    {businessData.name}
+                                                                </div>
 
-                                                                    {/* Nút xem chi tiết */}
-                                                                    <Row justify="end">
-                                                                        <Button
-                                                                            type="link"
-                                                                            onClick={() => handleDetailsJob(job.jobId)}
-                                                                            style={{padding: 0}}
-                                                                        >
-                                                                            Xem chi tiết
-                                                                        </Button>
-                                                                    </Row>
-                                                                </Card>
-                                                            ))}
-                                                        </div>
-                                                        <Pagination
-                                                            style={{
-                                                                textAlign: "right",
-                                                                marginTop: "16px",
-                                                                display: "flex",
-                                                                justifyContent: "center"
-                                                            }}
-                                                            current={currentPage} // Gán mặc định nếu currentPage không hợp lệ
-                                                            pageSize={pageSize}   // Gán mặc định nếu pageSize không hợp lệ
-                                                            defaultPageSize={5}
-                                                            defaultCurrent={1}
-                                                            total={totalElements} // Gán mặc định nếu totalElements không hợp lệ
-                                                            onChange={handlePageChange}
-                                                            showSizeChanger={true}
-                                                            pageSizeOptions={[5, 10, 20, 50, 100]} // Đảm bảo mọi giá trị trong mảng là chuỗi
-                                                        />
-                                                    </Card>
-                                                </Col>
-                                            </Row>
-                                        </Col>
+                                                                <div className="job-tags">
+                                                                    <Tag icon={<EnvironmentOutlined />}>
+                                                                        {job?.province || "Location not specified"}
+                                                                    </Tag>
+                                                                    <Tag icon={<CalendarOutlined />}>
+                                                                        {job.expireDate
+                                                                            ? dayjs(job.expireDate).format("DD/MM/YYYY")
+                                                                            : "No deadline"}
+                                                                    </Tag>
+                                                                </div>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
 
-                                        {/* Thông tin liên hệ */}
-                                        <Col span={6}>
-                                            <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                                                <Divider orientation="left"
-                                                         style={{fontSize: "18px", color: "#096dd9"}}>
-                                                    Thông tin liên hệ
-                                                </Divider>
-                                                {/* Địa chỉ của công ty */}
-                                                <Col span={24}>
-                                                    <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                                        <Text strong>Địa chỉ:</Text>
-                                                        <Text>
-                                                            {businessData.location?.ward.fullName},
-                                                            {businessData.location?.district.fullName},
-                                                            {businessData.location?.province.fullName}
-                                                        </Text>
-                                                    </Space>
-                                                </Col>
-                                                {/* Email của công ty */}
-                                                <Col span={24}>
-                                                    <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                                        <Text strong>Email:</Text>
-                                                        <Text>{businessData.email}</Text>
-                                                    </Space>
-                                                </Col>
-                                                {/* Số điện thoại công ty */}
-                                                <Col span={24}>
-                                                    <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                                        <Text strong>Số điện thoại:</Text>
-                                                        <Text>{businessData.phone}</Text>
-                                                    </Space>
-                                                </Col>
-                                                {/* Website công ty */}
-                                                <Col span={24}>
-                                                    <Space direction="vertical" size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                                        <Text strong>Website:</Text>
-                                                        <a href={businessData.website}>{businessData.website}</a>
-                                                    </Space>
-                                                </Col>
-                                            </Card>
-                                        </Col>
+                                                    <div className="view-details-btn">
+                                                        <Button
+                                                            type="link"
+                                                            className="details-link"
+                                                        >
+                                                            Xem chi tiết <ArrowRightOutlined />
+                                                        </Button>
+                                                    </div>
+                                                </Card>
+                                            ))}
+                                        </div>
 
-                                    </Row>
+                                        {/* Pagination */}
+                                        <div className="jobs-pagination">
+                                            <Pagination
+                                                current={currentPage}
+                                                pageSize={pageSize}
+                                                total={totalElements}
+                                                onChange={handlePageChange}
+                                                showSizeChanger={true}
+                                                pageSizeOptions={['5', '10', '20', '50', '100']}
+                                                showTotal={(total, range) => `${range[0]}-${range[1]} trong ${total} công việc`}
+                                            />
+                                        </div>
+                                    </Card>
+                                </Col>
+
+
+                                <Col xs={24} md={6}>
+                                    <Card bordered={false} className="info-card contact-card">
+                                        <div className="section-header">
+                                            <ContactsOutlined className="section-icon" />
+                                            <h2>Thông tin liên hệ</h2>
+                                        </div>
+
+                                        <div className="contact-info">
+                                            <div className="contact-item">
+                                                <div className="contact-icon">
+                                                    <EnvironmentOutlined />
+                                                </div>
+                                                <div className="contact-details">
+                                                    <div className="contact-label">Địa chỉ</div>
+                                                    <div className="contact-value">
+                                                        {businessData.location?.ward.fullName},
+                                                        {businessData.location?.district.fullName},
+                                                        {businessData.location?.province.fullName}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="contact-item">
+                                                <div className="contact-icon">
+                                                    <MailOutlined />
+                                                </div>
+                                                <div className="contact-details">
+                                                    <div className="contact-label">Email</div>
+                                                    <div className="contact-value">
+                                                        {businessData.email || "Not provided"}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="contact-item">
+                                                <div className="contact-icon">
+                                                    <PhoneOutlined />
+                                                </div>
+                                                <div className="contact-details">
+                                                    <div className="contact-label">Phone</div>
+                                                    <div className="contact-value">
+                                                        {businessData.phone || "Not provided"}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="contact-item">
+                                                <div className="contact-icon">
+                                                    <GlobalOutlined />
+                                                </div>
+                                                <div className="contact-details">
+                                                    <div className="contact-label">Website</div>
+                                                    <div className="contact-value">
+                                                        {businessData.website ? (
+                                                            <a href={businessData.website} target="_blank" rel="noopener noreferrer">
+                                                                {businessData.website}
+                                                            </a>
+                                                        ) : "Not provided"}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Bản đồ ở đây */}
+                                            {/*{position && (*/}
+                                            {/*    <div style={{ marginTop: 20 }}>*/}
+                                            {/*        <MapContainer*/}
+                                            {/*            center={position}*/}
+                                            {/*            zoom={16}*/}
+                                            {/*            scrollWheelZoom={false}*/}
+                                            {/*            style={{ height: "300px", width: "100%", borderRadius: "10px" }}*/}
+                                            {/*        >*/}
+                                            {/*            <TileLayer*/}
+                                            {/*                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"*/}
+                                            {/*                attribution='&copy; OpenStreetMap contributors'*/}
+                                            {/*            />*/}
+                                            {/*            <Marker position={position}>*/}
+                                            {/*                <Popup>*/}
+                                            {/*                    {businessData.location?.ward.fullName}, {businessData.location?.district.fullName}, {businessData.location?.province.fullName}*/}
+                                            {/*                </Popup>*/}
+                                            {/*            </Marker>*/}
+                                            {/*        </MapContainer>*/}
+                                            {/*    </div>*/}
+                                            {/*)}*/}
+                                        </div>
+                                    </Card>
                                 </Col>
                             </Row>
                         </div>
                     </div>
                 </div>
+                <FooterPortal/>
             </section>
         </div>
     );

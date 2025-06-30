@@ -16,6 +16,24 @@ export class CandidateService extends baseService {
     update_candidate_id = (id, formData) => {
         return this.post(`api/candidate/${id}`, formData)
     }
+    post_follow_business = (businessId, candidateId) => {
+        return this.postResponse(`api/follow?candidateId=${candidateId}&businessId=${businessId}`);
+    }
+    un_follow_business = (businessId, candidateId) => {
+        return this.postResponse(`api/un-follow?candidateId=${candidateId}&businessId=${businessId}`);
+    }
+    check_follow_business = (businessId, candidateId) => {
+        return this.getResponse(`api/check-follow?candidateId=${candidateId}&businessId=${businessId}`);
+    }
+    count_follow_business = (businessId) => {
+        return this.getResponse(`api/count-follower?businessId=${businessId}`);
+    }
+    list_follow_business_by_candidate = (candidateId,keyword,page,size) => {
+        return  this.get(`api/follow-business?page=${page}&size=${size}&candidateId=${candidateId}&keyword=${keyword}`);
+    }
+    count_candidate = () => {
+        return this.get(`api/candidate/count`)
+    }
 }
 
 export const candidateService = new CandidateService();

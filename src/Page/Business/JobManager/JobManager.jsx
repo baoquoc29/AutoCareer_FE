@@ -214,7 +214,7 @@ const JobManager = () => {
                                             </div>
 
                                             <div style={{display: "flex", gap: "10px"}}>
-                                                {role === "EMPLOYEE" && (
+                                                {role === "BUSINESS" && (
                                                     <Button type="primary" icon={<PlusOutlined />}>
                                                         <NavLink to={"/job-create"} style={{ textDecoration: "none" }}>
                                                             Thêm công việc

@@ -30,6 +30,9 @@ export class PortalService extends baseService {
     get_business_by_feature = (industryId) => {
         return this.getResponse(`api/business/feature-business?${industryId}`);
     }
+    get_top_business= () => {
+        return this.getResponse(`api/business/top-business`);
+    }
     get_total_job_all = () => {
         return this.getResponse(`api/job/total-job`);
     };

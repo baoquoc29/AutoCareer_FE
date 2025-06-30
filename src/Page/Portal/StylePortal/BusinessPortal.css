@@ -1,206 +1,143 @@
+.business-portal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
 .business-portal-header {
-    width: 100%; /* Đảm bảo phủ toàn bộ container */
-    margin: 0; /* Loại bỏ khoảng cách */
-    padding: 15px 0; /* Khoảng cách trong */
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #3E7494;
-    background-color: #ffffff; /* Màu nền */
-    border-bottom: 1px solid #f0f0f0; /* Đường gạch dưới */
-    box-sizing: border-box; /* Tính cả padding vào width */
-}
-
-
-
-
-
-.business-portal-card-container {
-    margin-left: 109px;
-    margin-right: 109px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Keep pagination always at the bottom */
-
-}
-.grid-business-portal {
-    flex: 1;
-    height: calc(60vh); /* Điều chỉnh chiều cao cố định cho phần card */
-    margin-top: 30px;
-}
-.business-portal-pagination {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-
-/* Title */
-.title-business-portal {
-    font-size: 30px;
-    font-weight: bold;
-    color: #1a45c4;
     text-align: center;
     margin-bottom: 40px;
+}
+
+.business-portal-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 12px;
+}
+
+.business-portal-subtitle {
+    font-size: 16px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.business-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.business-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.business-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.business-image-container {
+    height: 160px;
+    overflow: hidden;
+}
+
+.business-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.business-card:hover .business-image {
+    transform: scale(1.05);
+}
+
+.business-card-content {
+    padding: 16px;
+}
+
+.business-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.business-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Scrollbar Container */
-.industry-scroll-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-}
-
-
-.industry-list {
-    display: flex;
-    gap: 16px;
-    scroll-behavior: auto;
-    padding: 0; /* Ensure no padding causing space */
-    margin: 0; /* Ensure no margins */
-    border: none; /* Ensure no border around the list */
-    scrollbar-width: none; /* bỏ gạch */
-    overflow-x: scroll;
-    overflow-y: hidden;
-}
-
-.industry-item {
-background-color: #fff;
-border: 1px solid transparent; /* No visible border */
-    border-radius: 20px;
-    color: #212f3f;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    font-size: 14px;
+.job-count-badge {
+    margin-left: 8px;
     font-weight: 500;
-    line-height: 20px;
-    padding: 8px 20px;
-    white-space: nowrap;
-    width: fit-content;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-    overflow: visible;
-    text-decoration: none; /* Remove any underline if it's a link */
 }
 
-.industry-item:hover {
-    background-color: #e8f4ff;
-    color: #3E7494;
-    border-color: #1a45c4; /* Highlight border color on hover */
-}
-
-.industry-item.active {
-    background-color: #3E7494;
-    color: white;
-    font-weight: bold;
-    border-color: #1a45c4;
-}
-
-/* Cards */
-.business-portal-card {
-    display: flex; /* Arrange elements horizontally */
-    flex-direction: row; /* Default direction is horizontal */
-    align-items: center; /* Center align content vertically */
-    gap: 16px; /* Space between image and content */
-    background-color: #fff; /* White background */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow effect */
-    padding: 16px; /* Padding inside the card */
-    transition: box-shadow 0.3s ease; /* Hover effect */
-    height: 130px;
-    overflow: hidden;
-}
-
-.business-portal-card-image {
-    flex-shrink: 0; /* Không cho ảnh co lại */
-
-}
-.business-portal-card-image img {
-    width: 90px; /* Chiều rộng cố định */
-    height: 90px; /* Chiều cao cố định */
-    border-radius: 10px; /* Bo góc */
-    object-fit: scale-down; /* Giữ tỷ lệ ảnh */
-}
-.no-business-message{
-    margin-top: 200px;
-    justify-content: center;
-    margin-left: 40%;
-}
-.business-portal-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    color: #3E7494;
-}
-
-.business-portal-card-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 8px;
-    white-space: nowrap; /* Ngăn không cho văn bản xuống dòng */
-    overflow: hidden; /* Ẩn phần dư thừa */
-    text-overflow: ellipsis; /* Hiển thị dấu ba chấm khi văn bản vượt quá */
-}
-
-/* Cài đặt cho phần nội dung có thể tràn */
-.business-portal-card-content {
-    overflow: hidden; /* Ẩn phần dư thừa nếu nội dung quá dài */
-    text-overflow: ellipsis; /* Hiển thị dấu ba chấm khi nội dung bị cắt */
-    white-space: nowrap; /* Ngăn nội dung xuống dòng */
-}
-
-.business-portal-card-company {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 10px;
-}
-
-.business-portal-card-location-salary {
+.business-location {
     display: flex;
-    gap: 12px;
     align-items: center;
+    color: #666;
+    margin-bottom: 12px;
+    font-size: 14px;
 }
 
-.business-portal-card-tag {
-    background-color: #e8f4ff;
-    color: #3E7494;
-    padding: 6px 12px;
-    border-radius: 20px;
+.location-icon {
+    margin-right: 6px;
+    color: #888;
+}
+
+.business-industries {
+    margin-top: 12px;
+}
+
+.industry-tag {
     font-size: 12px;
+    background: #f0f7ff;
+    color: #1890ff;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
 }
 
+.view-all-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
 
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    .business-portal-container {
-        margin: 20px;
-        padding: 16px;
+.view-all-button {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.business-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    color: #999;
+}
+
+@media (max-width: 768px) {
+    .business-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 
-    .industry-scroll-container {
-        max-width: 100%;
-    }
-
-    .business-portal-card {
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-    }
-
-    .business-portal-card-image img {
-        width: 70px;
-        height: 70px;
+    .business-portal-title {
+        font-size: 28px;
     }
 }

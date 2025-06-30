@@ -80,7 +80,7 @@ const ApplyJob = () => {
 
     const handleViewJob = (record) => {
         const encryptedId = encryptId(record.jobId);  // Encrypt the ID first
-        const url = `/job-portal-detail/${encodeURIComponent(encryptedId)}`; // Make sure the encrypted ID is properly encoded
+        const url = `/job-portal-detail/${record.jobId}`; // Make sure the encrypted ID is properly encoded
         window.open(url, "_blank");  // Open in a new tab
     };
 

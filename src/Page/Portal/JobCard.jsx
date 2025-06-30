@@ -17,8 +17,7 @@ const JobCard = ({job}) => {
     const isUpcoming = startDate > today ? 'upcoming' : '';
 
     const handleDetailsJob = (id) => {
-        const encryptedId = encryptId(id);  // Encrypt the ID first
-        const url = `/job-portal-detail/${encodeURIComponent(encryptedId)}`; // Make sure the encrypted ID is properly encoded
+        const url = `/job-portal-detail/${id}`; // Make sure the encrypted ID is properly encoded
         window.open(url, "_blank");  // Open in a new tab
     };
 

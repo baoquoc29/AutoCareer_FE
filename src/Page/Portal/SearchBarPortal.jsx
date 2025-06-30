@@ -20,29 +20,7 @@ const SearchBarPortal = () => {
     };
 
     const handleSearch = () => {
-        if (userData?.role?.name === "BUSINESS") {
-            if (searchType === "school") {
-                navigate(`/home-search-university?keyword=${searchKeyword}`);
-            } else if (searchType === "workshop") {
-                navigate(`/work-shop-all?keyword=${searchKeyword}`);
-            }
-        } else if (userData?.role?.name === "UNIVERSITY") {
-            if (searchType === "business") {
-                navigate(`/home-search-business?keyword=${searchKeyword}`);
-            } else if (searchType === "job") {
                 navigate(`/job-all-portal?keyword=${searchKeyword}`);
-            }
-        } else {
-            if (searchType === "school") {
-                navigate(`/home-search-university?keyword=${searchKeyword}`);
-            } else if (searchType === "workshop") {
-                navigate(`/work-shop-all?keyword=${searchKeyword}`);
-            } else if (searchType === "business") {
-                navigate(`/home-search-business?keyword=${searchKeyword}`);
-            } else if (searchType === "job") {
-                navigate(`/job-all-portal?keyword=${searchKeyword}`);
-            }
-        }
     };
 
     const handleInputChange = (e) => {
@@ -65,29 +43,11 @@ const SearchBarPortal = () => {
                 onChange={handleSearchTypeChange}
                 style={styles.select}
             >
-                {isAuthenticated ? (
                     <>
-                        {userData?.role?.name === "BUSINESS" && (
-                            <>
-                                <Option value="school">Trường học</Option>
-                                <Option value="workshop">Hội thảo</Option>
-                            </>
-                        )}
-                        {userData?.role?.name === "UNIVERSITY" && (
-                            <>
-                                <Option value="business">Doanh nghiệp</Option>
-                                <Option value="job">Việc làm</Option>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <>
-                        <Option value="school">Trường học</Option>
-                        <Option value="workshop">Hội thảo</Option>
                         <Option value="business">Doanh nghiệp</Option>
                         <Option value="job">Việc làm</Option>
                     </>
-                )}
+
             </Select>
 
             {/* Nút tìm kiếm */}

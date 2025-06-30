@@ -1,0 +1,225 @@
+/* HeroSection.css */
+
+/* Base Styles */
+.hero-section {
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+    background-color: #f8fafc;
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+}
+
+/* Content Styles */
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    color: #4a5568;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+/* Search Component */
+.hero-search-container {
+    margin-bottom: 2rem;
+    max-width: 100%;
+}
+
+.hero-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.hero-search-wrapper:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.hero-search-icon {
+    position: absolute;
+    left: 1rem;
+    color: #64748b;
+    z-index: 1;
+}
+
+.hero-search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: none;
+    font-size: 1rem;
+    background: transparent;
+    outline: none;
+}
+
+.hero-search-input::placeholder {
+    color: #94a3b8;
+}
+
+.voice-search-btn {
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+}
+
+.voice-search-btn:hover {
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+.voice-search-btn.listening {
+    animation: pulse 1.5s infinite;
+    color: #ef4444;
+    background: #fee2e2;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Badges */
+.hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.hero-badge {
+    background-color: #fff;
+    color: #475569;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+}
+
+.hero-badge:hover {
+    background-color: #f1f5f9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Image */
+.hero-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image {
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-image:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-subtitle {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-search-wrapper {
+        width: 100%;
+    }
+
+    .hero-badges {
+        justify-content: center;
+    }
+
+    .hero-image-container {
+        order: -1;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 3rem 0;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-search-input {
+        padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+    }
+}

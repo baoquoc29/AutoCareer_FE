@@ -8,6 +8,7 @@ import "./CSS/HomeSearchBusiness.css";
 import {Pagination} from "antd";
 import {get_all_business_home_portal} from "../../../Redux/actions/PortalThunk";
 import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
+import FooterPortal from "../FooterPortal";
 
 const HomeSearchBusiness = () => {
     const location = useLocation();
@@ -172,6 +173,7 @@ const HomeSearchBusiness = () => {
                     </div>
                 </div>
             </div>
+            <FooterPortal></FooterPortal>
         </div>
     );
 };

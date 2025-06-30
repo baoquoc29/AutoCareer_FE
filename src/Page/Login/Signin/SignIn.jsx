@@ -36,9 +36,6 @@ export const SignIn = () => {
             } else if(userDetails.role.name === "BUSINESS") {
                 navigate('/profile-business');
             }
-            else if(userDetails.role.name === "EMPLOYEE") {
-                navigate('/job-manager');
-            }
             else if(userDetails.username === "admin@domain.com") {
                 navigate('/admin');
             }

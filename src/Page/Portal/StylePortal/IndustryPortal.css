@@ -1,101 +1,150 @@
+
+.job-categories-section {
+    padding: 4rem 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .job-categories-container {
-    padding: 30px;
-    margin: 109px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.title-pagination-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.title {
-    margin: 0;
-    font-size: 24px;
-    font-weight: bold;
-    margin-left: 30px ;
-}
-
-.job-count-text {
-    display: block;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #666;
-}
-
-.job-category-card {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+.section-header {
     text-align: center;
-    border-radius: 8px;
-    background: #f3f5f7;
-    height: 200px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
+    margin-bottom: 3rem;
 }
 
-.icon {
-    font-size: 40px;
-    margin-bottom: 10px;
+.section-header h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.card-title {
-    font-weight: bold;
-    margin-bottom: 10px;
+.section-header p {
+    font-size: 1.125rem;
+    color: #64748b;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
 }
 
-.jobs-count {
-    color: #1890ff;
-    font-size: 14px;
+.industries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
-.ant-pagination {
+.industry-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.industry-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    border-color: #c7d2fe;
+    text-decoration: none;
+}
+
+.industry-icon-container {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    background-color: #e0e7ff;
+    border-radius: 50%;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
-/* Custom arrows */
-.prev-arrow, .next-arrow {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    border: none;
-    font-size: 18px;
-    padding: 8px;
+
+.industry-card:hover .industry-icon-container {
+    background-color: #6366f1;
+}
+
+.industry-icon {
+    font-size: 24px;
+    color: #4f46e5;
+    transition: all 0.3s ease;
+}
+
+.industry-card:hover .industry-icon {
+    color: white;
+}
+
+.industry-card h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.job-count {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.view-all-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 0.75rem 2rem;
+    background: white;
+    color: #4f46e5;
+    border: 1px solid #4f46e5;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-
+    transition: all 0.3s ease;
 }
 
-.prev-arrow {
-    left: 10px;
-
+.view-all-btn:hover {
+    background-color: #4f46e5;
+    color: white;
 }
 
-.next-arrow {
-    right: 10px;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .industries-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
 }
 
-/* Dot indicators styling */
-.ant-carousel .slick-dots li.slick-active button {
-    background: #1890ff;
+@media (max-width: 768px) {
+    .industries-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .section-header p {
+        font-size: 1rem;
+    }
 }
 
-.ant-carousel .slick-dots li button {
-    background: #bbb;
-    margin-top: 30px;
-}
-.arrow-left,
-.arrow-right {
-    font-size: 30px; /* Tăng kích thước icon */
-    font-weight: bold;
-    color: #3E7494; /* Màu sắc dễ nhìn */
-    cursor: pointer;
-}
+@media (max-width: 480px) {
+    .industries-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-.arrow-left:hover,
-.arrow-right:hover {
-    color: #40a9ff; /* Màu sắc khi hover */
+    .job-categories-section {
+        padding: 2.5rem 0;
+    }
 }

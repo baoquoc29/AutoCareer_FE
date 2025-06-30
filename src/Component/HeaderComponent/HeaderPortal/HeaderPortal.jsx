@@ -160,12 +160,22 @@ const HeaderPortal = () => {
                     >
                         {userData?.role?.name !== "BUSINESS" && (
                             <Menu.Item key="/job-all-portal" onClick={handleToJobClick}>
-                                Việc làm tốt nhất
+                                Tìm việc làm
                             </Menu.Item>
                         )}
                         {userData?.role?.name !== "BUSINESS" && (
                             <Menu.Item key="/business-section" onClick={() => navigate('/business-section')}>
-                                Doanh nghiệp tiểu biểu
+                                Công ty
+                            </Menu.Item>
+                        )}
+                        {userData?.role?.name !== "BUSINESS" && (
+                            <Menu.Item key="/mbti-question" onClick={() => navigate('/mbti-question')}>
+                                Nghề nghiệp phù hợp
+                            </Menu.Item>
+                        )}
+                        {userData?.role?.name !== "BUSINESS" && (
+                            <Menu.Item key="/free-courses" onClick={() => navigate('/free-courses')}>
+                                Khoá học miễn phí
                             </Menu.Item>
                         )}
                     </Menu>

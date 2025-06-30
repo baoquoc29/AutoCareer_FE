@@ -6,6 +6,7 @@ import {get_all_business_home_portal} from "../../../Redux/actions/PortalThunk";
 import {GET_IMAGE_URI} from "../../../Utils/Setting/Config";
 import {useNavigate} from "react-router-dom";
 import {encryptId} from "../../../Component/SecurityComponent/cryptoUtils";
+import FooterPortal from "../FooterPortal";
 
 const HomeBusinessPortal = () => {
     const businesses = useSelector((state) => state.PortalReducer.businessListHome || []);
@@ -14,8 +15,10 @@ const HomeBusinessPortal = () => {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
+        window.scrollTo(0, 0); // Luôn cuộn lên đầu trang khi component mount
         dispatch(get_all_business_home_portal());
     }, [dispatch]);
+
 
     const truncateDescription = (description, wordLimit = 80) => {
         if(!description){
@@ -98,6 +101,7 @@ const HomeBusinessPortal = () => {
 
                 </div>
             </div>
+            <FooterPortal></FooterPortal>
         </>
     );
 }
