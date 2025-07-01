@@ -53,6 +53,9 @@ import CoursePlayer from "../Page/Portal/CourseVideo";
 import CandidateFollow from "../Page/ProfileUser/ProfileUniversity/CandidateFollow";
 import AISearchCandidate from "../Page/ProfileUser/ProfileUniversity/AISearchCandidate";
 import HeroSection from "../Page/Portal/HeroSection";
+import DepositScreen from "../Page/Admin/BusinessManager/DepositScreen";
+import ScreenSuccess from "../Page/Admin/BusinessManager/ScreenSuccess";
+import PremiumPackages from "../Page/Admin/BusinessManager/PremiumPackages";
 
 
 function AnimatedOutletV1() {
@@ -129,6 +132,9 @@ export function AppRouter() {
                     <Route path={"/job-business-apply"} element={< ApplyJobBusiness/>}/>
                     <Route path={"/job-business-search"} element={< AISearchCandidate/>}/>
                     <Route path={"/message-manager-business"} element={< MessageManagerBusiness/>}/>
+                    <Route path={"/deposit"} element={< DepositScreen/>}/>
+                    <Route path={"/result"} element={< ScreenSuccess/>}/>
+                    <Route path={"/v"} element={< PremiumPackages/>}/>
 
                 </Route>
                 <Route path={"*"} element={<PageError/>}/>

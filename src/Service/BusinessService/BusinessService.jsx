@@ -20,6 +20,15 @@ export class BusinessService extends baseService {
     get_top_follow_business = () => {
         return this.get(`api/business/dashboard/top`,true);
     }
+    createdUrlPayment = (amount,orderInfo) => {
+        return this.post(`api/v1/payments/create?amount=${amount}&orderInfo=${orderInfo}`,null);
+    }
+    checkPayment = (username,amount) => {
+        return this.post(`api/v1/payments?username=${username}&amount=${amount}`,null);
+    }
+    checkBalance = (username) => {
+        return this.get(`api/v1/payments/check-balance?username=${username}`,null);
+    }
 }
 
 export const businessService = new BusinessService();

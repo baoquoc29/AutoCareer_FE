@@ -33,7 +33,7 @@ export function BusinessTemplate() {
             ? [
                 {
                     label: "Thống kê",
-                    icon: "fa-duotone fa-solid fa-chart-line",
+                    icon: "fa-solid fa-chart-line",
                     subMenu: [
                         {label: "Thống kê ngành nghề", link: "/dashboard-industry", icon: ""},
                         // {label: "Thống kê công việc", link: "/dashboard-job", icon: ""},
@@ -44,7 +44,7 @@ export function BusinessTemplate() {
 
         {
             label: "Quản lý doanh nghiệp",
-            icon: "fa-solid fa-school",
+            icon: "fa-solid fa-building",
             subMenu: [
                 {
                     label: "Danh sách ngành",
@@ -60,7 +60,7 @@ export function BusinessTemplate() {
         },
         {
             label: "Quản lý hồ sơ",
-            icon: "fa-solid fa-school",
+            icon: "fa-solid fa-users",
             subMenu: [
                 {
                     label: "Danh sách ứng viên",
@@ -75,8 +75,20 @@ export function BusinessTemplate() {
             ],
         },
         {
+            label: "Quản lý tài chính",
+            icon: "fa-solid fa-wallet",
+            subMenu: [
+                {
+                    label: "Nạp tiền",
+                    link: "/deposit",
+                    icon: "",
+                },
+
+            ],
+        },
+        {
             label: "Kết nối ứng viên",
-            icon: "fa-solid fa-school",
+            icon: "fa-solid fa-comments",
             subMenu: [
                 {
                     label: "Quản lý tin nhắn",
@@ -103,13 +115,9 @@ export function BusinessTemplate() {
                     caption="Quản lý doanh nghiệp"
                     menuItems={menuItems}
                 />
-                <Outlet/>
                 <section id="content" className="content">
                     <div className="content__header content__boxed rounded-2">
                         <Outlet/>
-                        {/*<div className="content__wrap">*/}
-                        {/*    <Outlet/>*/}
-                        {/*</div>*/}
                     </div>
                     <Footer/>
                 </section>

@@ -17,7 +17,47 @@ export const get_business_by_id = (id) => {
         }
     }
 }
-
+ export  const get_url_payment = (username,amount) => {
+    return async (dispatch) => {
+        try {
+            const res = await businessService.createdUrlPayment(username,amount);
+            dispatch({
+                type: "PAY",
+                payload: res.data
+            })
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const check = (username,amount) => {
+    return async (dispatch) => {
+        try {
+            const res = await businessService.checkPayment(username,amount);
+            dispatch({
+                type: "PAY",
+                payload: res.data
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const checkBalance = (username) => {
+    return async (dispatch) => {
+        try {
+            const res = await businessService.checkBalance(username);
+            dispatch({
+                type: "PAY",
+                payload: res.data
+            })
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 export const get_top_business = () => {
     return async (dispatch) => {
         try {
