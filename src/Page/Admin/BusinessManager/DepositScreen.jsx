@@ -52,7 +52,7 @@ const DepositScreen = () => {
 
             if (paymentUrl) {
                 // Open payment in new tab
-                window.open(paymentUrl, '_blank');
+                window.location.href = paymentUrl;
             } else {
                 message.error('Không thể tạo liên kết thanh toán');
             }

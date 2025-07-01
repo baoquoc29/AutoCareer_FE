@@ -83,6 +83,11 @@ export function BusinessTemplate() {
                     link: "/deposit",
                     icon: "",
                 },
+                {
+                    label: "Mua gói nâng cấp",
+                    link: "/v",
+                    icon: "",
+                },
 
             ],
         },

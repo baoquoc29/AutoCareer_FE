@@ -6,7 +6,6 @@ const PremiumPackages = () => {
         {
             id: 1,
             name: "Gói Cơ Bản",
-            level: "Cấp 1",
             price: "100,000đ",
             originalPrice: "150,000đ",
             duration: "1 tháng",
@@ -17,12 +16,11 @@ const PremiumPackages = () => {
                 "Hỗ trợ cơ bản"
             ],
             popular: false,
-            color: "#4e73df"
+            highlight: false
         },
         {
             id: 2,
             name: "Gói Nâng Cao",
-            level: "Cấp 2",
             price: "200,000đ",
             originalPrice: "250,000đ",
             duration: "1 tháng",
@@ -34,12 +32,11 @@ const PremiumPackages = () => {
                 "Ưu tiên hiển thị cao"
             ],
             popular: true,
-            color: "#1cc88a"
+            highlight: true
         },
         {
             id: 3,
             name: "Gói Cao Cấp",
-            level: "Cấp 3",
             price: "300,000đ",
             originalPrice: "400,000đ",
             duration: "1 tháng",
@@ -52,7 +49,7 @@ const PremiumPackages = () => {
                 "Thống kê chi tiết"
             ],
             popular: false,
-            color: "#f6c23e"
+            highlight: false
         }
     ];
 
@@ -61,56 +58,43 @@ const PremiumPackages = () => {
     return (
         <div className="premium-container">
             <div className="premium-header">
-                <h1 className="premium-title">Nâng Cấp Tài Khoản Premium</h1>
-                <p className="premium-subtitle">Lựa chọn gói phù hợp để tối ưu hiệu quả đăng bài tuyển dụng</p>
+                <h2>Nâng Cấp Tài Khoản</h2>
+                <p>Chọn gói phù hợp để tối ưu hiệu quả tuyển dụng</p>
             </div>
 
             <div className="packages-grid">
                 {packages.map((pkg) => (
                     <div
                         key={pkg.id}
-                        className={`package-card ${pkg.popular ? 'popular' : ''} ${selectedPackage === pkg.id ? 'selected' : ''}`}
+                        className={`package-card ${pkg.highlight ? 'highlight' : ''} ${selectedPackage === pkg.id ? 'selected' : ''}`}
                         onClick={() => setSelectedPackage(pkg.id)}
                     >
-                        {pkg.popular && (
-                            <div className="popular-badge" style={{ backgroundColor: pkg.color }}>
-                                PHỔ BIẾN
-                            </div>
-                        )}
+                        {pkg.popular && <div className="popular-tag">Phổ biến</div>}
 
-                        <div className="package-content">
-                            <div className="package-header" style={{ borderTopColor: pkg.color }}>
-                                <h3 className="package-name">{pkg.name}</h3>
-                                <div className="package-level" style={{ color: pkg.color }}>{pkg.level}</div>
-                            </div>
+                        <h3>{pkg.name}</h3>
 
-                            <div className="package-price-section">
-                                <div className="price-wrapper">
-                                    <span className="package-price">{pkg.price}</span>
-                                    <span className="original-price">{pkg.originalPrice}</span>
-                                </div>
-                                <div className="package-duration">{pkg.duration}</div>
-                            </div>
-
-                            <div className="package-posts">
-                                <span className="posts-count">{pkg.postsPerMonth}</span>
-                                <span className="posts-label">bài đăng/tháng</span>
-                            </div>
-
-                            <ul className="package-features">
-                                {pkg.features.map((feature, index) => (
-                                    <li key={index}>
-                                        <span className="feature-icon">✓</span>
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
+                        <div className="price-section">
+                            <span className="current-price">{pkg.price}</span>
+                            <span className="original-price">{pkg.originalPrice}</span>
+                            <span className="duration">/{pkg.duration}</span>
                         </div>
 
-                        <button
-                            className="select-button"
-                            style={{ backgroundColor: pkg.color }}
-                        >
+                        <div className="posts-count">
+                            <span>{pkg.postsPerMonth}</span> bài đăng/tháng
+                        </div>
+
+                        <ul className="features">
+                            {pkg.features.map((feature, index) => (
+                                <li key={index}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    {feature}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <button className={`select-btn ${selectedPackage === pkg.id ? 'selected' : ''}`}>
                             {selectedPackage === pkg.id ? 'Đã chọn' : 'Chọn gói'}
                         </button>
                     </div>
@@ -119,26 +103,19 @@ const PremiumPackages = () => {
 
             {selectedPackage && (
                 <div className="checkout-section">
-                    <div className="checkout-content">
-                        <h2>Xác nhận thanh toán</h2>
-                        <div className="selected-package-info">
-                            <div className="info-row">
-                                <span>Gói đã chọn:</span>
-                                <strong>{packages.find(p => p.id === selectedPackage).name}</strong>
-                            </div>
-                            <div className="info-row">
-                                <span>Giá:</span>
-                                <span className="package-price-checkout">
-                                    {packages.find(p => p.id === selectedPackage).price}
-                                </span>
-                            </div>
-                        </div>
-                        <button className="checkout-button">TIẾN HÀNH THANH TOÁN</button>
-                        <div className="secure-payment">
-                            <span className="lock-icon">🔒</span>
-                            Thanh toán an toàn & bảo mật
-                        </div>
+                    <div className="selected-package">
+                        <h4>Gói đã chọn: <strong>{packages.find(p => p.id === selectedPackage).name}</strong></h4>
+                        <p className="price">{packages.find(p => p.id === selectedPackage).price}</p>
                     </div>
+                    <button className="checkout-btn">Thanh toán ngay</button>
+                    <p className="secure-payment">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2"/>
+                            <path d="M17 8V7C17 5.89543 16.1046 5 15 5H5C3.89543 5 3 5.89543 3 7V13C3 14.1046 3.89543 15 5 15H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                            <path d="M20 12C20 14.2091 18.2091 16 16 16H8C5.79086 16 4 14.2091 4 12C4 9.79086 5.79086 8 8 8H16C18.2091 8 20 9.79086 20 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                        Thanh toán an toàn
+                    </p>
                 </div>
             )}
         </div>

@@ -10,14 +10,6 @@ import PageError from "../../PageError404/PageError"
 import DisplayRichText from "../../../Component/TextEditDisplay/DisplayRichText";
 import {apply_job, save_job, status_job} from "../../../Redux/actions/MatchingThunk";
 import {decryptId, encryptId} from "../../../Component/SecurityComponent/cryptoUtils"
-import {
-    AppstoreAddOutlined,
-    EnvironmentOutlined,
-    HomeOutlined, SaveOutlined, SendOutlined,
-    TeamOutlined,
-    TrophyOutlined,
-    UserOutlined
-} from "@ant-design/icons";
 import {DOMAIN, GET_IMAGE_URI, USER_LOGIN} from "../../../Utils/Setting/Config";
 
 const {Title, Text} = Typography;
@@ -141,260 +133,452 @@ const JobDetailPortal = () => {
     return (
         <div className={"app-container-job-details-root"}>
             <HeaderPortal/>
-            <div style={{padding: "20px", maxWidth: "1110px", margin: "auto"}}>
-                <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                    {/* Khối chia phần giới thiệu công ty và thông tin tuyển dụng */}
-                    <Col span={17} style={{
+            <div style={{padding: "32px 20px", maxWidth: "1200px", margin: "auto", backgroundColor: "#f8f9fa", minHeight: "100vh"}}>
+                <Row gutter={[32, 32]} style={{display: 'flex', flexWrap: 'wrap'}}>
+                    {/* Main Content - Job Details */}
+                    <Col span={16} style={{
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-start'
+                        flexDirection: 'column',
+                        gap: '20px'
                     }}>
-                        <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                            <Col span={24}>
-                                <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                                    <Col span={24}>
-                                        <Card bordered={true} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                                            <div>
-                                                {/* Tiêu đề công việc */}
-                                                <Text strong style={{
-                                                    textAlign: "center",
-                                                    fontSize: "23px",
-                                                    color: "#000103"
-                                                }}>{job.title}</Text>
-                                                {/* Tên công ty */}
-                                                <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                                                    <Col span={8}>
-                                                        <Space direction="vertical"
-                                                               size={4}>  {/* Tăng size từ 4 lên 8 */}
-                                                            <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
-                                                                Mức lương
-                                                            </Text>
-                                                            <Text>
-                                                                {job.fromSalary === 1 && job.toSalary === 1
-                                                                    ? "Lương thỏa thuận"
-                                                                    : `${formatSalary(job.fromSalary)} - ${formatSalary(job.toSalary)}`}
-                                                            </Text> </Space>
-                                                    </Col>
-                                                    <Col span={8}>
-                                                        <Space direction="vertical"
-                                                               size={4}>  {/* Tăng size từ 4 lên 8 */}
-                                                            <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
-                                                                Địa điểm
-                                                            </Text>
-                                                            <Text>
-                                                                {job.wards} - {job.districts} - {job.province}
-                                                            </Text> </Space>
-                                                    </Col>
-                                                    <Col span={8}>
-                                                        <Space direction="vertical"
-                                                               size={4}>  {/* Tăng size từ 4 lên 8 */}
-                                                            <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>
-                                                                Kinh nghiệm
-                                                            </Text>
-                                                            <Text>
-                                                                {job.level}
-                                                            </Text> </Space>
-                                                    </Col>
-                                                </div>
-                                            </div>
-                                            <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
-                                                <Col span={19}>
-                                                    <Button
-                                                        onClick={handleApplyJob}
-                                                        type="primary"
-                                                        icon={<SendOutlined />}
-                                                        style={{
-                                                            width: "100%",
-                                                            backgroundColor: applied ? "#52c41a" : "#1d56c8", // Màu xanh nếu đã ứng tuyển
-                                                            borderColor: applied ? "#52c41a" : "#1d56c8",
-                                                        }}
-                                                        disabled={applied} // Vô hiệu hóa nút sau khi ứng tuyển
-                                                    >
-                                                        {applied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}
-                                                    </Button>
-                                                </Col>
-                                                <Col span={5}>
-                                                    <Button
-                                                        onClick={handleSaveJob}
-                                                        type="default"
-                                                        icon={<SaveOutlined />}
-                                                        style={{ width: "100%" }}
-                                                        disabled={saved} // Vô hiệu hóa nút sau khi lưu
-                                                    >
-                                                        {saved ? "Đã lưu" : "Lưu tin"}
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-
-
-                                        </Card>
+                        {/* Job Header Card */}
+                        <Card 
+                            bordered={false} 
+                            style={{ 
+                                borderRadius: "12px",
+                                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
+                                backgroundColor: "#ffffff"
+                            }}
+                        >
+                            <div style={{ padding: "32px 24px" }}>
+                                {/* Job Title */}
+                                <div style={{ textAlign: "center", marginBottom: "32px" }}>
+                                    <Title level={1} style={{
+                                        color: "#1d56c8",
+                                        marginBottom: "8px",
+                                        fontSize: "28px",
+                                        fontWeight: "700",
+                                        lineHeight: "1.2"
+                                    }}>{job.title}</Title>
+                                    <Text style={{ 
+                                        color: "#666", 
+                                        fontSize: "16px",
+                                        fontWeight: "500"
+                                    }}>
+                                        {job?.business?.name}
+                                    </Text>
+                                </div>
+                                
+                                {/* Job Info Grid */}
+                                <Row gutter={[24, 24]} style={{ marginBottom: "32px" }}>
+                                    <Col span={8}>
+                                        <div style={{ 
+                                            textAlign: "center", 
+                                            padding: "24px 16px", 
+                                            backgroundColor: "#f0f7ff", 
+                                            borderRadius: "12px",
+                                            border: "1px solid #e6f4ff",
+                                            height: "100%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center"
+                                        }}>
+                                            <Text strong style={{color: "#1d56c8", fontSize: "14px", display: "block", marginBottom: "12px"}}>
+                                                Mức lương
+                                            </Text>
+                                            <Text style={{ color: "#333", fontSize: "15px", fontWeight: "600", lineHeight: "1.4" }}>
+                                                {job.fromSalary === 1 && job.toSalary === 1
+                                                    ? "Lương thỏa thuận"
+                                                    : `${formatSalary(job.fromSalary)} - ${formatSalary(job.toSalary)}`}
+                                            </Text>
+                                        </div>
+                                    </Col>
+                                    <Col span={8}>
+                                        <div style={{ 
+                                            textAlign: "center", 
+                                            padding: "24px 16px", 
+                                            backgroundColor: "#f0f7ff", 
+                                            borderRadius: "12px",
+                                            border: "1px solid #e6f4ff",
+                                            height: "100%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center"
+                                        }}>
+                                            <Text strong style={{color: "#1d56c8", fontSize: "14px", display: "block", marginBottom: "12px"}}>
+                                                Địa điểm
+                                            </Text>
+                                            <Text style={{ color: "#333", fontSize: "15px", fontWeight: "600", lineHeight: "1.4" }}>
+                                                {job.wards} - {job.districts} - {job.province}
+                                            </Text>
+                                        </div>
+                                    </Col>
+                                    <Col span={8}>
+                                        <div style={{ 
+                                            textAlign: "center", 
+                                            padding: "24px 16px", 
+                                            backgroundColor: "#f0f7ff", 
+                                            borderRadius: "12px",
+                                            border: "1px solid #e6f4ff",
+                                            height: "100%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center"
+                                        }}>
+                                            <Text strong style={{color: "#1d56c8", fontSize: "14px", display: "block", marginBottom: "12px"}}>
+                                                Kinh nghiệm
+                                            </Text>
+                                            <Text style={{ color: "#333", fontSize: "15px", fontWeight: "600", lineHeight: "1.4" }}>
+                                                {job.level}
+                                            </Text>
+                                        </div>
                                     </Col>
                                 </Row>
 
-                            </Col>
-                            {/* Thông tin tuyển dụng */}
-                            <Col span={24}>
-                                <Card bordered={true} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                                    <div>
-                                        <div>
-                                            <Text strong style={{
-                                                textAlign: "center",
-                                                fontSize: "20px",
-                                                color: "#000103"
-                                            }}>Chi tiết tin tuyển dụng</Text>
-                                        </div>
-                                        {/* Tiêu đề công việc */}
+                                {/* Action Buttons */}
+                                <Row gutter={[20, 16]}>
+                                    <Col span={16}>
+                                        <Button
+                                            onClick={handleApplyJob}
+                                            type="primary"
+                                            size="large"
+                                            style={{
+                                                width: "100%",
+                                                height: "52px",
+                                                fontSize: "16px",
+                                                fontWeight: "600",
+                                                backgroundColor: applied ? "#52c41a" : "#1d56c8",
+                                                borderColor: applied ? "#52c41a" : "#1d56c8",
+                                                borderRadius: "10px",
+                                                boxShadow: "0 4px 12px rgba(29, 86, 200, 0.2)"
+                                            }}
+                                            disabled={applied}
+                                        >
+                                            {applied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}
+                                        </Button>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Button
+                                            onClick={handleSaveJob}
+                                            type="default"
+                                            size="large"
+                                            style={{ 
+                                                width: "100%", 
+                                                height: "52px",
+                                                fontSize: "16px",
+                                                fontWeight: "600",
+                                                borderRadius: "10px",
+                                                borderColor: saved ? "#52c41a" : "#d9d9d9",
+                                                color: saved ? "#52c41a" : "#666",
+                                                backgroundColor: "#ffffff"
+                                            }}
+                                            disabled={saved}
+                                        >
+                                            {saved ? "Đã lưu" : "Lưu tin"}
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </Card>
 
-                                        {/* Tên công ty */}
-                                        <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                                            <Col span={24}>
-                                                <Space direction="vertical"
-                                                       size={4}>  {/* Tăng size từ 4 lên 8 */}
-                                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>Mô tả công
-                                                        việc</Text>
-                                                    <DisplayRichText content={job.jobDescription}></DisplayRichText>
-                                                </Space>
-                                            </Col>
-                                            <Col span={24}>
-                                                <Space direction="vertical"
-                                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>Yêu cầu
-                                                        ứng viên</Text>
-                                                    <DisplayRichText content={job.requirement}></DisplayRichText>
-                                                </Space>
-                                            </Col>
-                                            <Col span={24}>
-                                                <Space direction="vertical"
-                                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                                    <Text strong style={{color: "#1d56c8", fontSize: "16px"}}>Quyền
-                                                        lợi</Text>
-                                                    <DisplayRichText content={job.benefit}></DisplayRichText>
-                                                </Space>
-                                            </Col>
-                                        </div>
+                        {/* Job Details Card */}
+                        <Card 
+                            bordered={false} 
+                            style={{ 
+                                borderRadius: "12px",
+                                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
+                                backgroundColor: "#ffffff"
+                            }}
+                        >
+                            <div style={{ padding: "24px" }}>
+                                <div style={{
+                                    textAlign: "center",
+                                    marginBottom: "32px"
+                                }}>
+                                    <Title level={2} style={{
+                                        color: "#1d56c8",
+                                        margin: 0,
+                                        fontSize: "24px",
+                                        fontWeight: "700"
+                                    }}>Chi tiết tin tuyển dụng</Title>
+                                    <Text style={{ color: "#666", fontSize: "16px", marginTop: "8px" }}>
+                                        Tìm hiểu thêm về công việc này
+                                    </Text>
+                                </div>
+                            
+                            <Space direction="vertical" size={32} style={{ width: "100%" }}>
+                                {/* Job Description */}
+                                <div style={{ 
+                                    padding: "28px", 
+                                    backgroundColor: "#f8fffe", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #e6fffa",
+                                    borderLeft: "4px solid #1d56c8"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+                                        <Text strong style={{color: "#1d56c8", fontSize: "18px"}}>
+                                            Mô tả công việc
+                                        </Text>
                                     </div>
-                                </Card>
-                            </Col>
+                                    <div style={{ lineHeight: "1.7", fontSize: "15px", color: "#333" }}>
+                                        <DisplayRichText content={job.jobDescription}></DisplayRichText>
+                                    </div>
+                                </div>
 
-                        </Row>
+                                {/* Job Requirements */}
+                                <div style={{ 
+                                    padding: "28px", 
+                                    backgroundColor: "#fffef0", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #ffeaa7",
+                                    borderLeft: "4px solid #1d56c8"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+                                        <Text strong style={{color: "#1d56c8", fontSize: "18px"}}>
+                                            Yêu cầu ứng viên
+                                        </Text>
+                                    </div>
+                                    <div style={{ lineHeight: "1.7", fontSize: "15px", color: "#333" }}>
+                                        <DisplayRichText content={job.requirement}></DisplayRichText>
+                                    </div>
+                                </div>
+
+                                {/* Job Benefits */}
+                                <div style={{ 
+                                    padding: "28px", 
+                                    backgroundColor: "#f0fff4", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #b7eb8f",
+                                    borderLeft: "4px solid #1d56c8"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+                                        <Text strong style={{color: "#1d56c8", fontSize: "18px"}}>
+                                            Quyền lợi
+                                        </Text>
+                                    </div>
+                                    <div style={{ lineHeight: "1.7", fontSize: "15px", color: "#333" }}>
+                                        <DisplayRichText content={job.benefit}></DisplayRichText>
+                                    </div>
+                                </div>
+                            </Space>
+                            </div>
+                        </Card>
                     </Col>
 
-                    {/* Thông tin liên hệ */}
-                    <Col span={7} style={{justifyContent: 'space-between'}}>
-                        <Card style={{marginBottom: '16px', boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}> {/* Thêm marginBottom để cách nhau */}
-                            <Row gutter={[16, 16]} style={{display: 'flex', flexWrap: 'wrap'}}>
-                                <Col span={8} style={{marginBottom: 16}}>
-                                    <Space direction="vertical" size={4}>
+                    {/* Sidebar - Company & Job Info */}
+                    <Col span={8} style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
+                        {/* Company Info Card */}
+                        <Card 
+                            bordered={false}
+                            style={{ 
+                                borderRadius: "12px",
+                                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
+                                backgroundColor: "#ffffff"
+                            }}
+                        >
+                            <div style={{ padding: "32px 24px" }}>
+                                <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                                    <div style={{ 
+                                        width: "100px", 
+                                        height: "100px", 
+                                        margin: "0 auto 20px",
+                                        borderRadius: "16px",
+                                        overflow: "hidden",
+                                        border: "2px solid #f0f0f0",
+                                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
+                                    }}>
                                         <img
                                             src={job?.business?.businessImageId ? `${GET_IMAGE_URI}${job?.business?.businessImageId}` : "/placeholder-avatar.jpg"}
                                             alt="Logo công ty"
                                             style={{
-                                                width: "80px",
-                                                height: "80px",
-                                                objectFit: "scale-down",
+                                                width: "100%",
+                                                height: "100%",
+                                                objectFit: "cover",
                                             }}
                                         />
-                                    </Space>
-                                </Col>
-                                <Col span={16} style={{marginBottom: 16}}>
-                                    <Col span={24} style={{marginBottom: 16}}>
-                                        <Space direction="vertical" size={4}>
-                                            <Text strong style={{
-                                                textAlign: "center",
-                                                fontSize: "20px",
-                                                color: "#000103",
-                                            }}>{job?.business?.name || "Thông tin công ty không có sẵn"}</Text>
+                                    </div>
+                                    <Title level={4} style={{
+                                        color: "#1d56c8",
+                                        marginBottom: "8px",
+                                        fontSize: "18px",
+                                        fontWeight: "700",
+                                        lineHeight: "1.3"
+                                    }}>{job?.business?.name || "Thông tin công ty không có sẵn"}</Title>
+                                    <Text style={{ color: "#666", fontSize: "14px" }}>
+                                        Tìm hiểu thêm về nhà tuyển dụng
+                                    </Text>
+                                </div>
 
-                                        </Space>
-                                    </Col>
+                                <Space direction="vertical" size="large" style={{ width: "100%" }}>
+                                    <div style={{ 
+                                        padding: "20px", 
+                                        backgroundColor: "#f8fffe", 
+                                        borderRadius: "12px",
+                                        border: "1px solid #e6fffa"
+                                    }}>
+                                        <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                            <Text style={{color: "#666", fontSize: "14px", fontWeight: "500"}}>
+                                                Quy mô công ty
+                                            </Text>
+                                        </div>
+                                        <Text strong style={{color: "#333", fontSize: "16px"}}>
+                                            {job?.business?.companySize} nhân viên
+                                        </Text>
+                                    </div>
+                                    
+                                    <div style={{ 
+                                        padding: "20px", 
+                                        backgroundColor: "#f8fffe", 
+                                        borderRadius: "12px",
+                                        border: "1px solid #e6fffa"
+                                    }}>
+                                        <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                            <Text style={{color: "#666", fontSize: "14px", fontWeight: "500"}}>
+                                                Lĩnh vực hoạt động
+                                            </Text>
+                                        </div>
+                                        <Text strong style={{color: "#333", fontSize: "16px"}}>
+                                            {job?.industry?.name || "Chưa có thông tin"}
+                                        </Text>
+                                    </div>
+                                    
+                                    <div style={{ 
+                                        padding: "20px", 
+                                        backgroundColor: "#f8fffe", 
+                                        borderRadius: "12px",
+                                        border: "1px solid #e6fffa"
+                                    }}>
+                                        <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                            <Text style={{color: "#666", fontSize: "14px", fontWeight: "500"}}>
+                                                Địa chỉ
+                                            </Text>
+                                        </div>
+                                        <Text strong style={{color: "#333", fontSize: "16px", lineHeight: "1.4"}}>
+                                            {job.wards} - {job.districts} - {job.province}
+                                        </Text>
+                                    </div>
+                                </Space>
 
-                                </Col>
-                                <Col span={24}>
-                                    <Space size={4}>
-                                        <Text style={{color: "#00040b", fontSize: "15px"}}>
-                                            <TeamOutlined style={{marginRight: "8px"}}/>
-                                            Quy mô: <strong>{job?.business?.companySize} nhân viên</strong>
-                                        </Text>
-                                    </Space>
-                                </Col>
-                                <Col span={24}>
-                                    <Space size={4}>
-                                        <Text style={{color: "#00040b", fontSize: "15px"}}>
-                                            <AppstoreAddOutlined style={{marginRight: "8px"}}/>
-                                            Lĩnh vực: <strong>{job?.industry?.name || "Chưa có thông tin"}</strong>
-                                        </Text>
-                                    </Space>
-                                </Col>
-                                <Col span={24}>
-                                    <Space size={4}>
-                                        <Text style={{color: "#00040b", fontSize: "15px"}}>
-                                            <EnvironmentOutlined style={{marginRight: "8px"}}/>
-                                            Địa
-                                            điểm: <strong> {job.wards} - {job.districts} - {job.province}</strong>
-                                        </Text>
-                                    </Space>
-                                </Col>
-                                <Col span={24} style={{textAlign: 'center'}}>
+                                <div style={{textAlign: 'center', marginTop: "32px"}}>
                                     <Button
-                                        type="link"
+                                        type="primary"
                                         onClick={() => navigate(`/business-portal-detail/${encodeURIComponent(encryptId(job.business.id))}`)}
-                                        style={{padding: 0}}
+                                        style={{
+                                            borderRadius: "10px",
+                                            background: "#1d56c8",
+                                            borderColor: "#1d56c8",
+                                            fontWeight: "600",
+                                            height: "44px",
+                                            fontSize: "15px",
+                                            paddingLeft: "24px",
+                                            paddingRight: "24px",
+                                            boxShadow: "0 4px 12px rgba(29, 86, 200, 0.2)"
+                                        }}
                                     >
-                                        Xem chi tiết
+                                        Xem chi tiết công ty
                                     </Button>
-                                </Col>
-                            </Row>
+                                </div>
+                            </div>
                         </Card>
 
-                        <Card bordered={false} style={{ boxShadow: "0 0 5px rgba(169, 169, 169, 0.5)" }}>
-                            {/* Tiêu đề công việc */}
-                            <Text strong style={{
-                                textAlign: "center",
-                                fontSize: "20px",
-                                color: "#000103",
-                            }}>Thông tin chung</Text>
-                            {/* Kinh nghiệm */}
-                            <Col span={24}>
-                                <Space direction="vertical"
-                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
-                                        <UserOutlined style={{marginRight: "8px"}}/>Kinh nghiệm</Text>
-                                    <Text><strong>{job.level}</strong></Text>
-                                </Space>
-                            </Col>
-                            {/* Thời gian làm việc */}
-                            <Col span={24}>
-                                <Space direction="vertical"
-                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
-                                        <TrophyOutlined style={{marginRight: "8px"}}/>Cấp bậc</Text>
-                                    <Text><strong>{job.rank}</strong></Text>
-                                </Space>
-                            </Col>
-                            <Col span={24}>
-                                <Space direction="vertical"
-                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
-                                        <EnvironmentOutlined style={{marginRight: "8px"}}/>Số lượng tuyển</Text>
-                                    <Text><strong>{job.quantity} người </strong></Text>
-                                </Space>
-                            </Col>
-                            <Col span={24}>
-                                <Space direction="vertical"
-                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
-                                        <HomeOutlined style={{marginRight: "8px"}}/>Hình thức làm việc</Text>
-                                    <Text><strong>{job.workForm} </strong></Text>
-                                </Space>
-                            </Col>
-                            <Col span={24}>
-                                <Space direction="vertical"
-                                       size={8}>  {/* Tăng size từ 4 lên 8 */}
-                                    <Text style={{color: "#1d56c8", fontSize: "16px"}}>
-                                        <UserOutlined style={{marginRight: "8px"}}/>Giới tính</Text>
-                                    <Text><strong>{job.gender} </strong></Text>
-                                </Space>
-                            </Col>
+                        {/* Job General Info Card */}
+                        <Card 
+                            bordered={false} 
+                            style={{ 
+                                borderRadius: "12px",
+                                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
+                                backgroundColor: "#ffffff"
+                            }}
+                        >
+                            <div style={{ padding: "32px 24px" }}>
+                                <div style={{
+                                    textAlign: "center",
+                                    marginBottom: "24px"
+                                }}>
+                                    <Title level={4} style={{
+                                        color: "#1d56c8",
+                                        margin: 0,
+                                        fontSize: "18px",
+                                        fontWeight: "700",
+                                        marginBottom: "8px"
+                                    }}>Thông tin tuyển dụng</Title>
+                                    <Text style={{ color: "#666", fontSize: "14px" }}>
+                                        Các yêu cầu cơ bản cho vị trí này
+                                    </Text>
+                                </div>
+                            
+                            <Space direction="vertical" size="large" style={{ width: "100%" }}>
+                                <div style={{ 
+                                    padding: "20px", 
+                                    backgroundColor: "#fffef0", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #ffeaa7"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                        <Text style={{color: "#666", fontSize: "13px", fontWeight: "500"}}>
+                                            Kinh nghiệm làm việc
+                                        </Text>
+                                    </div>
+                                    <Text strong style={{fontSize: "15px", color: "#333"}}>{job.level}</Text>
+                                </div>
+                                
+                                <div style={{ 
+                                    padding: "20px", 
+                                    backgroundColor: "#fffef0", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #ffeaa7"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                        <Text style={{color: "#666", fontSize: "13px", fontWeight: "500"}}>
+                                            Cấp bậc
+                                        </Text>
+                                    </div>
+                                    <Text strong style={{fontSize: "15px", color: "#333"}}>{job.rank}</Text>
+                                </div>
+                                
+                                <div style={{ 
+                                    padding: "20px", 
+                                    backgroundColor: "#fffef0", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #ffeaa7"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                        <Text style={{color: "#666", fontSize: "13px", fontWeight: "500"}}>
+                                            Số lượng cần tuyển
+                                        </Text>
+                                    </div>
+                                    <Text strong style={{fontSize: "15px", color: "#333"}}>{job.quantity} người</Text>
+                                </div>
+                                
+                                <div style={{ 
+                                    padding: "20px", 
+                                    backgroundColor: "#fffef0", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #ffeaa7"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                        <Text style={{color: "#666", fontSize: "13px", fontWeight: "500"}}>
+                                            Hình thức làm việc
+                                        </Text>
+                                    </div>
+                                    <Text strong style={{fontSize: "15px", color: "#333"}}>{job.workForm}</Text>
+                                </div>
+                                
+                                <div style={{ 
+                                    padding: "20px", 
+                                    backgroundColor: "#fffef0", 
+                                    borderRadius: "12px", 
+                                    border: "1px solid #ffeaa7"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                                        <Text style={{color: "#666", fontSize: "13px", fontWeight: "500"}}>
+                                            Yêu cầu giới tính
+                                        </Text>
+                                    </div>
+                                    <Text strong style={{fontSize: "15px", color: "#333"}}>{job.gender}</Text>
+                                </div>
+                            </Space>
+                            </div>
                         </Card>
                     </Col>
                 </Row>

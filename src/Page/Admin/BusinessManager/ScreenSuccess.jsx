@@ -82,7 +82,7 @@ const PaymentResult = () => {
       const timer = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
-            navigate('/recharge-account');
+            navigate('/deposit');
             return 0;
           }
           return prev - 1;
@@ -199,10 +199,10 @@ const PaymentResult = () => {
                 title="Thanh toán không thành công"
                 subTitle="Đã xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại."
                 extra={[
-                  <Button type="primary" onClick={() => navigate('/recharge-account')} key="retry">
+                  <Button type="primary" onClick={() => navigate('/deposit')} key="retry">
                     Thử lại
                   </Button>,
-                  <Button onClick={() => navigate('/contact')} key="contact">
+                  <Button onClick={() => navigate('/')} key="contact">
                     Liên hệ hỗ trợ
                   </Button>,
                 ]}
