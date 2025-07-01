@@ -5,41 +5,45 @@ const PremiumPackages = () => {
     const packages = [
         {
             id: 1,
-            name: "Gói Cơ Bản",
-            price: "100,000đ",
-            originalPrice: "150,000đ",
-            duration: "1 tháng",
-            postsPerMonth: 10,
+            name: "Gói VIP - 1 Tháng",
+            price: "300,000đ",
+            originalPrice: "400,000đ",
+            duration: "1 tháng", // tương ứng 30 ngày
+            days: 30,
+            postsPerMonth: 30,
             features: [
                 "Đăng 10 bài/tháng",
-                "Ưu tiên hiển thị",
-                "Hỗ trợ cơ bản"
+                "Hỗ trợ 24/7 VIP",
+                "AI Tìm kiếm ứng viên",
+                "Thống kê chi tiết"
             ],
             popular: false,
             highlight: false
         },
         {
             id: 2,
-            name: "Gói Nâng Cao",
-            price: "200,000đ",
-            originalPrice: "250,000đ",
-            duration: "1 tháng",
-            postsPerMonth: 20,
+            name: "Gói VIP - 3 Tháng",
+            price: "850,000đ",
+            originalPrice: "1,200,000đ",
+            duration: "3 tháng", // tương ứng 90 ngày
+            days: 90,
+            postsPerMonth: 30,
             features: [
                 "Đăng 20 bài/tháng",
-                "Hỗ trợ 24/7",
+                "Hỗ trợ 24/7 VIP",
                 "AI Tìm kiếm ứng viên",
-                "Ưu tiên hiển thị cao"
+                "Thống kê chi tiết"
             ],
             popular: true,
             highlight: true
         },
         {
             id: 3,
-            name: "Gói Cao Cấp",
-            price: "300,000đ",
-            originalPrice: "400,000đ",
-            duration: "1 tháng",
+            name: "Gói VIP - 6 Tháng",
+            price: "1,600,000đ",
+            originalPrice: "2,400,000đ",
+            duration: "6 tháng", // tương ứng 180 ngày
+            days: 180,
             postsPerMonth: 30,
             features: [
                 "Đăng 30 bài/tháng",
@@ -52,6 +56,7 @@ const PremiumPackages = () => {
             highlight: false
         }
     ];
+
 
     const [selectedPackage, setSelectedPackage] = useState(null);
 
