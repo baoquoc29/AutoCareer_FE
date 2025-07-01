@@ -29,6 +29,13 @@ export class BusinessService extends baseService {
     checkBalance = (username) => {
         return this.get(`api/v1/payments/check-balance?username=${username}`,null);
     }
+    getVipDate = (userId) => {
+        console.log('Fetching VIP date for user:', userId);
+        return this.get(`api/v1/premium-plans/date-premium-plans/${userId}`,null);
+    }
+    buyPremiumPlan = (userId, planId) => {
+        return this.post(`api/v1/payments/buy-vip?username=${userId}&premiumPlanId=${planId}`, null);
+    }
 }
 
 export const businessService = new BusinessService();

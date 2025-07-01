@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PremiumPackages.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { notification } from 'antd';
+import { getVipDate, buyPremiumPlan } from '../../../Redux/actions/BusinessThunk';
 
 const PremiumPackages = () => {
     const vipPackage = {
@@ -24,8 +27,95 @@ const PremiumPackages = () => {
             "Quản lý tin tuyển dụng hiệu quả"
         ]
     };
-
+    const { userData } = useSelector((state) => state.UserReducer);
+    const dispatch = useDispatch();
     const [isSelected, setIsSelected] = useState(false);
+    const [vipExpiryDate, setVipExpiryDate] = useState(null);
+    const [remainingDays, setRemainingDays] = useState(0);
+    const [isVipActive, setIsVipActive] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    useEffect(() => {
+        if (userData?.id) {
+            fetchVipDate();
+        }
+    }, [userData]);
+
+    const fetchVipDate = async () => {
+        if (!userData?.id) return;
+        
+        try {
+            const result = await dispatch(getVipDate(userData.id));
+            if (result) {
+                setVipExpiryDate(result);
+                checkVipStatus(result);
+            }
+        } catch (error) {
+            console.error('Error fetching VIP date:', error);
+        }
+    };
+
+    const handlePurchase = async () => {
+        if (!userData?.username) {
+            notification.error({
+                message: 'Lỗi',
+                description: 'Không tìm thấy thông tin người dùng!',
+                placement: 'topRight',
+                duration: 3
+            });
+            return;
+        }
+
+        setIsProcessing(true);
+        try {
+            const result = await dispatch(buyPremiumPlan(userData.username, vipPackage.id));
+            if (result) {
+                notification.success({
+                    message: 'Thành công',
+                    description: 'Mua gói VIP thành công! Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi.',
+                    placement: 'topRight',
+                    duration: 4
+                });
+                setIsSelected(false);
+                // Refresh VIP status after successful purchase
+                fetchVipDate();
+            }
+        } catch (error) {
+            console.error('Purchase error:', error);
+            // Hiển thị message từ backend nếu có, nếu không thì hiển thị message mặc định
+            const errorMessage = error.response?.data?.message || 'Mua gói VIP thất bại! Vui lòng thử lại sau.';
+            notification.error({
+                message: 'Thanh toán thất bại',
+                description: errorMessage,
+                placement: 'topRight',
+                duration: 4
+            });
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    const checkVipStatus = (expiryDate) => {
+        if (!expiryDate) {
+            setIsVipActive(false);
+            setRemainingDays(0);
+            return;
+        }
+
+        const currentDate = new Date();
+        const expiry = new Date(expiryDate);
+        
+        if (expiry > currentDate) {
+            setIsVipActive(true);
+            const timeDiff = expiry.getTime() - currentDate.getTime();
+            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            setRemainingDays(daysDiff);
+        } else {
+            setIsVipActive(false);
+            setRemainingDays(0);
+        }
+    };
+
 
     return (
         <div className="premium-container">
@@ -81,22 +171,32 @@ const PremiumPackages = () => {
                     </div>
 
                     <button
-                        className={`select-btn ${isSelected ? 'selected' : ''}`}
-                        onClick={() => setIsSelected(!isSelected)}
+                        className={`select-btn ${isSelected ? 'selected' : ''} ${isVipActive ? 'disabled' : ''}`}
+                        onClick={() => !isVipActive && setIsSelected(!isSelected)}
+                        disabled={isVipActive}
                     >
-                        {isSelected ? 'Đã chọn gói VIP' : 'Chọn gói VIP'}
+                        {isVipActive 
+                            ? `Còn ${remainingDays} ngày VIP` 
+                            : (isSelected ? 'Đã chọn gói VIP' : 'Chọn gói VIP')
+                        }
                     </button>
                 </div>
             </div>
 
-            {isSelected && (
+            {isSelected && !isVipActive && (
                 <div className="checkout-section">
                     <div className="selected-package">
                         <h4>Gói đã chọn: <strong>{vipPackage.name}</strong></h4>
                         <p className="price">{vipPackage.price} <span className="original-price">{vipPackage.originalPrice}</span></p>
                         <p className="savings">{vipPackage.savings}</p>
                     </div>
-                    <button className="checkout-btn">Thanh toán ngay</button>
+                    <button 
+                        className="checkout-btn"
+                        onClick={handlePurchase}
+                        disabled={isProcessing}
+                    >
+                        {isProcessing ? 'Đang xử lý...' : 'Thanh toán ngay'}
+                    </button>
                     <p className="secure-payment">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2"/>

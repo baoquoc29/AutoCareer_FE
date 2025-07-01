@@ -58,6 +58,43 @@ export const checkBalance = (username) => {
         }
     }
 }
+
+export const getVipDate = (userId) => {
+    return async (dispatch) => {
+        try {
+            const res = await businessService.getVipDate(userId);
+            dispatch({
+                type: "PAY",
+                payload: res.data
+            })
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+export const buyPremiumPlan = (username, planId) => {
+    return async (dispatch) => {
+        try {
+            const res = await businessService.buyPremiumPlan(username, planId);
+            if (res.code === STATUS_CODE.SUCCESS) {
+                dispatch({
+                    type: "PAY",
+                    payload: res.data
+                })
+                return res.data;
+            } else if (res.code === STATUS_CODE.BAD_REQUEST) {
+                console.log(res.message);
+            } else {
+                throw new Error("Đã có lỗi xảy ra!");
+            }
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+}
+
 export const get_top_business = () => {
     return async (dispatch) => {
         try {
